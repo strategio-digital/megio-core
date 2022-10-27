@@ -43,8 +43,8 @@
         "phpstan": "vendor/bin/phpstan analyse -l 8 src bin --memory-limit 1G",
         "neon": "vendor/bin/neon-lint config",
         "analyse": [
-            "vendor/bin/phpstan analyse -l 8 src bin --memory-limit 1G",
-            "vendor/bin/neon-lint config"
+            "@phpstan",
+            "@neon"
         ]
     }
 }
