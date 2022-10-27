@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Copyright (c) 2022 Strategio Digital s.r.o.
+ * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
+ */
+declare(strict_types=1);
+require __DIR__ . '/../vendor/autoload.php';
+
+$startedAt = microtime(true);
+$container = (new \Framework\Bootstrap())
+    ->projectRootPath(__DIR__ . '/../')
+    ->configure([\Framework\Helper\Path::configDir() . '/app.neon'], $startedAt);
+
+/** @var \Framework\Console\App $app */
+$app = $container->getByType(\Framework\Console\App::class);
+$app->create($container)->run();

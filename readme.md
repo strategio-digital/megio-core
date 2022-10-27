@@ -2,15 +2,8 @@
 Framework for building REST APIs written in PHP 8.1.
 
 ## Installation guide
-
-1. `cp .env.example .env`
-2. `./project.sh serve`
-3. `./project.sh app`
-4. `composer i`
-5. `bin/console migrate`
-6. `bin/console install:permissions`
-7. `bin/console user:create-admin <email> <password>`
-8. Visit: [http://localhost:8090](http://localhost:8090)
+1. Install [Docker](https://docs.docker.com/desktop/) (on Windows use [Docker WSL2](https://docs.docker.com/desktop/windows/wsl/) ) 
+2. Run `curl -s bit.ly/3W8gS95 | bash /dev/stdin install`
 
 ## Features
 - 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)
