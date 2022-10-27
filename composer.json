@@ -40,8 +40,8 @@
         "phpstan/phpstan": "^1.8"
     },
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -l 8 src bin --memory-limit 1G",
-        "neon": "vendor/bin/neon-lint config",
+        "phpstan": "vendor/bin/phpstan analyse -l 8 src/ --memory-limit 1G",
+        "neon": "vendor/bin/neon-lint config/",
         "analyse": [
             "@phpstan",
             "@neon"

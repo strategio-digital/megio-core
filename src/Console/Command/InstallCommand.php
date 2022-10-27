@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Console;
+namespace Framework\Console\Command;
 
 use Framework\Database\Entity\Role\Resource;
 use Framework\Database\Entity\Role\Role;

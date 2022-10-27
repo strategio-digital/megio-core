@@ -15,7 +15,6 @@ use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\Token\DataSet;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Validation\Constraint;
 
@@ -29,7 +28,7 @@ class Jwt
     
     public function __construct()
     {
-        $filePath = Path::configDir() . '/jwt/jwt-RSA.key';
+        $filePath = Path::tempDir() . '/jwt/jwt-RSA.key';
         
         if (!is_file($filePath)) {
             $keyPair = KeyPair::generate();
