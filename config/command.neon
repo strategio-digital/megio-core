@@ -1,0 +1,3 @@
+services:
+    - Framework\Console\InstallCommand
+    - Framework\Console\UserCreateAdminCommand

@@ -1,0 +1,25 @@
+services:
+    routerFactory: Framework\Router\RouterFactory
+    response: Symfony\Component\HttpFoundation\Response
+    request:
+        factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
+    requestContext:
+        factory: Symfony\Component\Routing\RequestContext
+        setup:
+            - fromRequest(@request)
+    - Symfony\Component\Routing\Generator\UrlGenerator(@routerFactory::getRouteCollection(), @requestContext)
+
+    - Framework\App
+    - Framework\Bootstrap
+    - Framework\Debugger\Debugger
+    - Framework\Http\Request\Request
+    - Framework\Http\Response\Response
+    - Framework\Router\LinkGenerator
+    - Framework\Guard\Auth
+    - Framework\Security\JWT\Jwt
+    - Framework\Security\JWT\Claims
+    - Framework\Storage\Storage
+
+includes:
+   - command.neon
+   - doctrine.neon
