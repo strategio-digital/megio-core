@@ -31,7 +31,7 @@ if test "$1" = "create"; then
 
 elif test "$1" = "update"; then
   echo -e ""
-  echo -e "${GREEN}Framework files update started...${NC}"
+  echo -e "${GREEN}Project update started...${NC}"
 
   curl -L0 https://github.com/strategio-digital/framework/archive/refs/heads/${VERSION}.zip --output "./project.zip"
   unzip -q "./project.zip" -d "./.sframework/"
