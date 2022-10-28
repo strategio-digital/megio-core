@@ -23,7 +23,7 @@ then
     docker stop $(docker ps -a -q)
   fi
   docker-compose -f docker-compose.yml up -d
-elif test "$1" = "make-vendor-contribute"
+elif test "$1" = "mvc"
 then
   cd vendor/strategio/framework
   git init

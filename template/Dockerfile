@@ -20,7 +20,7 @@ RUN chmod -R ugo+w ./temp
 RUN chmod -R ugo+w ./log
 
 # Install and build dependencies
-RUN composer install --prefer-dist --no-scripts && rm -rf /root/.composer
+RUN composer install --no-cache --prefer-dist --no-scripts && rm -rf /root/.composer
 
 # Remove docker folder
 RUN rm -rf ./docker
