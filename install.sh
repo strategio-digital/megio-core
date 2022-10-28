@@ -11,7 +11,7 @@ NC='\033[0m'
 help() {
   echo -e "${YELLOW}COMMANDS:"
   echo -e "${GREEN}./install.sh create <project-folder>"
-  echo -e "./project.sh update"
+  echo -e "./install.sh update"
   echo -e "${NC}"
 }
 
