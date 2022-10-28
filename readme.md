@@ -1,5 +1,5 @@
 # SFramework
-Framework for building REST APIs written in PHP 8.1.
+Framework for building APIs in PHP 8.1
 
 ## Installation guide 
 1. Create project by `curl -sL bit.ly/3W8gS95 | bash /dev/stdin create <project-folder>`
