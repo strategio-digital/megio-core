@@ -3,19 +3,20 @@ Project backend build on top of SFramework.
 
 ## Installation guide
 
-1. `cp .env.example .env`
-2. `./project.sh serve`
-3. `./project.sh app`
-4. `composer i`
-5. `bin/console migrate`
-6. `bin/console install:permissions`
-7. `bin/console user:create-admin <email> <password>`
-8. Visit: [http://localhost:8090](http://localhost:8090)
+1. Properly install [Docker](https://docs.docker.com/desktop/) (on Windows [Docker WSL2](https://docs.docker.com/desktop/windows/wsl/))
+2. `cp .env.example .env`
+3. `./project.sh serve`
+4. `./project.sh app`
+5. `composer i`
+6. `bin/console migrate`
+7. `bin/console install:permissions`
+8. `bin/console user:create-admin <email> <password>`
+9. Visit: [http://localhost:8090](http://localhost:8090)
 
 ## Tutorials
 
-### If you want to use Postman
-Add this script into `Postman -> Collection -> Tests` section. 
+### If you want to use Postman to debug API
+Add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
 
 ```JS
 pm.test("set html", function() {

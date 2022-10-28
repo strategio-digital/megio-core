@@ -1,13 +1,9 @@
 # SFramework
 Framework for building REST APIs written in PHP 8.1.
 
-## Installation guide
-1. Properly install [Docker](https://docs.docker.com/desktop/) (on Windows [Docker WSL2](https://docs.docker.com/desktop/windows/wsl/)) 
-2. `curl -sL bit.ly/3W8gS95 | bash /dev/stdin create`
-
-## Update guide
-1. `cd <project-root>`
-2. `curl -sL bit.ly/3W8gS95 | bash /dev/stdin update`
+## Installation guide 
+1. Create project by `curl -sL bit.ly/3W8gS95 | bash /dev/stdin create <project-folder>`
+2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/framework/blob/master/template/readme.md)
 
 ## Features
 - 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)
@@ -28,11 +24,12 @@ Framework for building REST APIs written in PHP 8.1.
 - Vue 3 frontend (admin-login, user datagrid + revoke, admin datagrid, role access table, edit-profile + file uploader)
 - Visitor_id for each visitor
 - Make some docs on docusaurus.io
+- Create headless CMS in Vue 3 (Doctrine entity builder, migrations, CRUD, API)
 
 ## Tutorials
 
-### If you want to use Postman
-Add this script into `Postman -> Collection -> Tests` section. 
+### If you want to use Postman to debug API
+Add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
 
 ```JS
 pm.test("set html", function() {

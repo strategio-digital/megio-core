@@ -10,7 +10,6 @@ help() {
   echo -e "${YELLOW}COMMANDS:"
   echo -e "${GREEN}./project.sh app"
   echo -e "./project.sh serve --stop-others"
-  echo -e "./project.sh make-vendor-contribute"
   echo -e "${NC}"
 }
 
