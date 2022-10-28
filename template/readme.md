@@ -1,5 +1,5 @@
 # Project name
-Project backend build on top of SFramework.  
+Project backend build on top of [SFramework](https://github.com/strategio-digital/framework).  
 
 ## Installation guide
 
@@ -13,22 +13,5 @@ Project backend build on top of SFramework.
 8. `bin/console user:create-admin <email> <password>`
 9. Visit: [http://localhost:8090](http://localhost:8090)
 
-## Tutorials
-
-### If you want to use Postman to debug API
-Add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
-
-```JS
-pm.test("set html", function() {
-    var regex = /\"(.*)(\_tracy\_bar)/gm
-    var protocol = pm.request.url.protocol
-    var host = pm.request.url.host
-    var port = pm.request.url.port
-    var hostPort = port ? `${host}:${port}` : host
-
-    var html = pm.response.text()
-    var fixedHtml = html.replaceAll(regex, `${protocol}://${hostPort}$1$2`)
-
-    pm.visualizer.set(fixedHtml)
-});
-```
+## Video tutorials
+Learn framework by video tutorials on [this page](https://github.com/strategio-digital/framework#tutorials).
