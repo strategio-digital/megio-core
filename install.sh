@@ -19,9 +19,9 @@ if test "$1" = "create"; then
   echo -e "${GREEN}Starting installation process${NC}"
 
   curl -L0 https://github.com/strategio-digital/framework/archive/refs/heads/${VERSION}.zip --output ./project.zip
-  unzip -q project.zip -d ./
-  cp -a ./framework-${VERSION}/template/* ./
-  rm -rf framework-${VERSION} project.zip
+  unzip -q ./project.zip -d ./
+  cp -r ./framework-${VERSION}/template/ ./
+  rm -rf ./framework-${VERSION} ./project.zip
   cp ./.env.example ./.env
 
   {
