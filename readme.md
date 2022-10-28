@@ -23,7 +23,7 @@ Framework for building APIs in PHP 8.1
 - Vue 3 frontend (admin-login, user datagrid + revoke, admin datagrid, role access table, edit-profile + file uploader)
 - Visitor_id for each visitor
 - Make some docs on docusaurus.io
-- Create headless CMS in Vue 3 (Doctrine entity builder, migrations, CRUD, API)
+- Create admin dashboard like pocketbase.io in Vue 3 (Doctrine entity builder, migrations, CRUD, API)
 
 ## Tutorials
 
