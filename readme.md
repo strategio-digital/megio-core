@@ -7,16 +7,15 @@ Framework for building APIs in PHP 8.1
 
 ## Features
 - 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)
-- 🟢&nbsp; Roles, resources and resource-guards on controller's layer
-- 🟢&nbsp; Controllers & Requests with schema validation
+- 🟢&nbsp; Roles, resources and resource-guards on controller layer
+- 🟢&nbsp; Controller actions & requests schema validations
 - 🟢&nbsp; Doctrine database entities with PHP attributes and migrations
 - 🟢&nbsp; File storage with AWS S3 adapter
 - 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter
-- 🟢&nbsp; Sending emails via custom SMTP servers
+- 🟢&nbsp; Sending emails by custom SMTP servers
 - 🟢&nbsp; Symfony console commands
-- 🟢&nbsp; Static analysis with PHP-Stan level 8
-- 🟢&nbsp; One click deploy with Dockerfile and easypanel.io
-- 🟢&nbsp; And more powerful utilities for speed app-development
+- 🟢&nbsp; PHP-Stan static analysis on level 8
+- 🟢&nbsp; One click deployment with Dockerfile and easypanel.io
 
 ### Feature backlog
 - App.php refactoring
