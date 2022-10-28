@@ -2,10 +2,10 @@
 Framework for building REST APIs written in PHP 8.1.
 
 ## Installation guide
-1. Install [Docker](https://docs.docker.com/desktop/) (on Windows use [Docker WSL2](https://docs.docker.com/desktop/windows/wsl/) ) 
+1. Properly install [Docker](https://docs.docker.com/desktop/) (on Windows [Docker WSL2](https://docs.docker.com/desktop/windows/wsl/)) 
 2. `curl -sL bit.ly/3W8gS95 | bash /dev/stdin create`
 
-# Update guide
+## Update guide
 1. `cd <project-root>`
 2. `curl -sL bit.ly/3W8gS95 | bash /dev/stdin update`
 
