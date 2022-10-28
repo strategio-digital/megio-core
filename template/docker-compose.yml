@@ -23,7 +23,8 @@ services:
 
   postgres:
     image: postgres:15
-    restart: "no"
+    #restart: on-failure because postgres shutdown on first creation (permissions problem)
+    restart: "on-failure"
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -34,7 +35,6 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - ./docker/temp/postgres:/var/lib/postgresql/data:cached
-      - ./docker/temp/dumps:/dumps:cached
 
   adminer:
     image: dockette/adminer:dg

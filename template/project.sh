@@ -13,18 +13,14 @@ help() {
   echo -e "${NC}"
 }
 
-if test "$1" = "app"
-then
+if test "$1" = "app"; then
   docker-compose exec app bash
-elif test "$1" = "serve"
-then
-  if test "$2" = "--stop-others"
-  then
+elif test "$1" = "serve"; then
+  if test "$2" = "--stop-others"; then
     docker stop $(docker ps -a -q)
   fi
-  docker-compose -f docker-compose.yml up -d
-elif test "$1" = "mvc"
-then
+  docker-compose -f docker-compose.yml up -d --build
+elif test "$1" = "mvc"; then
   cd vendor/strategio/framework
   git init
   git remote add origin git@github.com:strategio-digital/framework.git
