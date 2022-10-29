@@ -39,13 +39,16 @@ Todo video...
 ### 4.  How to upload files with S3 storage adapter
 Todo video...
 
-### 5.  How to send e-mails & use Symfony commands
+### 5.  How to send e-mails & use console commands
 Todo video...
 
-### 6.  How to deploy with easypanel.io
+### 6.  How to protect data by resource-guards or custom guards
 Todo video...
 
-### 7. How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YKCGNpF)
+### 7.  How to deploy application with easypanel.io
+Todo video...
+
+### 8. How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YKCGNpF)
 If you want to use Postman to debug API, just add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
 
 ```JS
