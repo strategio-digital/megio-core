@@ -9,6 +9,7 @@ namespace Framework;
 
 use Framework\Debugger\Logger;
 use Framework\Helper\Path;
+use Framework\Security\Response\Cors;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
@@ -74,6 +75,10 @@ class Bootstrap
             'X-Xss-Protection' => '1; mode=block',
             'X-Content-Type-Options' => 'nosniff',
         ]);
+        
+        /** @var Cors $cors */
+        $cors = $container->getByType(Cors::class);
+        $cors->allow();
         
         return $container;
     }

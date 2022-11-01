@@ -18,6 +18,7 @@ services:
     - Framework\Guard\Auth
     - Framework\Security\JWT\Jwt
     - Framework\Security\JWT\Claims
+    - Framework\Security\Response\Cors
     - Framework\Storage\Storage
 
 includes:
