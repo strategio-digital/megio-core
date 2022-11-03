@@ -90,7 +90,7 @@ class Logger extends TracyLogger
                 $files = $this->storage->list("tracy-logs/blue-screens/{$bsFilePrefix}");
                 if (count($files) === 0) {
                     $file = new UploadedFile($bsFilePath, $bsFileName, 'text/html');
-                    $this->storage->upload($file, "tracy-logs/blue-screens/", false, false);
+                    $this->storage->upload($file, "tracy-logs/blue-screens/", false);
                 }
             }
             

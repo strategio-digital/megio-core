@@ -13,7 +13,6 @@ use Aws\S3\S3Client;
 use Framework\Storage\StorageAdapter;
 use Nette\Utils\Strings;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Uid\Ulid;
 
 class S3Storage implements StorageAdapter
 {
@@ -32,14 +31,13 @@ class S3Storage implements StorageAdapter
         ]);
     }
     
-    public function upload(UploadedFile $file, string $destination, bool $publish = true, bool $unique = true): \SplFileInfo
+    public function upload(UploadedFile $file, string $destination, bool $publish = true): \SplFileInfo
     {
         $ext = $file->getClientOriginalExtension();
         $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         
-        $ulid = Ulid::generate();
-        $uFileName = $unique ? "{$name}-{$ulid}.{$ext}" : "{$name}.{$ext}";
-        $destination = Strings::replace("{$destination}/{$uFileName}", '~\/+~', '/');
+        $fileName = "{$name}.{$ext}";
+        $destination = Strings::replace("{$destination}/{$fileName}", '~\/+~', '/');
         
         $uploader = new ObjectUploader(
             $this->client,

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface StorageAdapter
 {
-    public function upload(UploadedFile $file, string $destination, bool $publish = true, bool $unique = true): \SplFileInfo;
+    public function upload(UploadedFile $file, string $destination, bool $publish = true): \SplFileInfo;
     
     public function get(string $destination): ?string;
     
