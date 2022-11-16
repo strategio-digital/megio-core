@@ -1,4 +1,4 @@
-# Strategio Saas
+# Strategio SaaS
 Saas framework for building APIs in PHP 8.1
 
 ## Installation guide 

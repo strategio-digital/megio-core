@@ -1,5 +1,5 @@
 # Project name
-Project backend build on top of [Saas](https://github.com/strategio-digital/saas).  
+Project backend build on top of [Strategio SaaS](https://github.com/strategio-digital/saas).  
 
 ## Installation guide
 
