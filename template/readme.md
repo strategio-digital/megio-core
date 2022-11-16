@@ -14,4 +14,4 @@ Project backend build on top of [Strategio SaaS](https://github.com/strategio-di
 9. Visit: [http://localhost:8090](http://localhost:8090)
 
 ## Video tutorials
-Learn Saas framework by video tutorials on [this page](https://github.com/strategio-digital/saas#tutorials).
+Learn Strategio SaaS by video tutorials on [this page](https://github.com/strategio-digital/saas#tutorials).
