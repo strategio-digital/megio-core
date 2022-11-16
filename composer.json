@@ -1,6 +1,6 @@
 {
     "name": "strategio/saas",
-    "description": "SSaas",
+    "description": "Saas",
     "type": "library",
     "license": "MIT",
     "autoload": {
