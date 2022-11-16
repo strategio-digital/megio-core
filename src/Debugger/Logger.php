@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Debugger;
+namespace Saas\Debugger;
 
-use Framework\Mailer\SmtpMailer;
-use Framework\Storage\Adapter\S3Storage;
+use Saas\Mailer\SmtpMailer;
+use Saas\Storage\Adapter\S3Storage;
 use Nette\Mail\Message;
 use Nette\Utils\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

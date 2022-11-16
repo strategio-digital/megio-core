@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Http\Request;
+namespace Saas\Http\Request;
 
 interface IRequest
 {

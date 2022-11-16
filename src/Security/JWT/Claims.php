@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Security\JWT;
+namespace Saas\Security\JWT;
 
-use Framework\Database\Entity\Role\Resource;
-use Framework\Database\Entity\User\User;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\Entity\User\User;
 
 class Claims
 {

@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Security\JWT;
+namespace Saas\Security\JWT;
 
-use Framework\Helper\Path;
-use Framework\Security\SSL\KeyPair;
+use Saas\Helper\Path;
+use Saas\Security\SSL\KeyPair;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;

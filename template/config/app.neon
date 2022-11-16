@@ -2,4 +2,4 @@ services:
     routerFactory: App\Router\RouterFactory
 
 includes:
-    - ./../vendor/strategio/framework/config/app.neon
+    - ./../vendor/strategio/saas/config/app.neon

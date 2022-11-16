@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Field;
+namespace Saas\Database\Field;
 
-use Framework\Extension\Doctrine\UlidGenerator;
+use Saas\Extension\Doctrine\UlidGenerator;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

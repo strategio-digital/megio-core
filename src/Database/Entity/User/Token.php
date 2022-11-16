@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Entity\User;
+namespace Saas\Database\Entity\User;
 
-use Framework\Database\Field\TCreatedAt;
-use Framework\Database\Field\TUlid;
-use Framework\Database\Field\TUpdatedAt;
-use Framework\Database\Repository\UserTokenRepository;
+use Saas\Database\Field\TCreatedAt;
+use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TUpdatedAt;
+use Saas\Database\Repository\UserTokenRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 

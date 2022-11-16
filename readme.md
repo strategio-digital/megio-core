@@ -1,9 +1,9 @@
-# SFramework
-Framework for building APIs in PHP 8.1
+# Strategio Saas
+Saas framework for building APIs in PHP 8.1
 
 ## Installation guide 
-1. Create project by `curl -sL bit.ly/3W8gS95 | bash /dev/stdin create <project-folder>`
-2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/framework/blob/master/template/readme.md)
+1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
+2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
 
 ## Features
 - 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)

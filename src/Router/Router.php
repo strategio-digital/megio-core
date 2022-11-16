@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Router;
+namespace Saas\Router;
 
-use Framework\Controller\Error404;
+use Saas\Controller\Error404;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;

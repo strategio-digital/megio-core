@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Repository;
+namespace Saas\Database\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

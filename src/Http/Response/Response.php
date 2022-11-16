@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Http\Response;
+namespace Saas\Http\Response;
 
-use Framework\Debugger\Debugger;
+use Saas\Debugger\Debugger;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;

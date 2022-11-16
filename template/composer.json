@@ -17,7 +17,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "strategio/framework": "dev-master"
+        "strategio/saas": "dev-master"
     },
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse -l 8 src/ www/ bin/console  --memory-limit 1G",

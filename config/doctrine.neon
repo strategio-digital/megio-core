@@ -1,6 +1,6 @@
 services:
-    doctrine: Framework\Extension\Doctrine\Doctrine
-    entityManager: Framework\Database\EntityManager
+    doctrine: Saas\Extension\Doctrine\Doctrine
+    entityManager: Saas\Database\EntityManager
     entityManagerProvider: Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider(@doctrine::getEntityManager())
     migrationFactory: @doctrine::getMigrationFactory()
 

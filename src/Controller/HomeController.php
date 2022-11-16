@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Controller;
+namespace Saas\Controller;
 
-use Framework\Storage\Storage;
+use Saas\Storage\Storage;
 use Nette\DI\Container;
 
 class HomeController extends Controller

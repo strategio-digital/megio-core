@@ -1,11 +1,11 @@
 {
-    "name": "strategio/framework",
-    "description": "SFramework",
+    "name": "strategio/saas",
+    "description": "SSaas",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Framework\\": "src/"
+            "Saas\\": "src/"
         }
     },
     "authors": [

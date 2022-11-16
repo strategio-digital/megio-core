@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Framework;
+namespace Saas;
 
-use Framework\Controller\Controller;
-use Framework\Guard\ResourceResolver;
-use Framework\Guard\Attribute\ResourceGuard;
-use Framework\Http\Request\IRequest;
-use Framework\Router\Router;
+use Saas\Controller\Controller;
+use Saas\Guard\ResourceResolver;
+use Saas\Guard\Attribute\ResourceGuard;
+use Saas\Http\Request\IRequest;
+use Saas\Router\Router;
 use Nette\DI\Container;
 use Nette\Schema\ValidationException;
 

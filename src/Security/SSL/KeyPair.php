@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Security\SSL;
+namespace Saas\Security\SSL;
 
 use Nette\Utils\FileSystem;
 

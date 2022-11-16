@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Storage\Adapter;
+namespace Saas\Storage\Adapter;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\ObjectUploader;
 use Aws\S3\S3Client;
-use Framework\Storage\StorageAdapter;
+use Saas\Storage\StorageAdapter;
 use Nette\Utils\Strings;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Guard;
+namespace Saas\Guard;
 
-use Framework\Database\Entity\Role\Resource;
-use Framework\Database\EntityManager;
-use Framework\Http\Request\Request;
-use Framework\Http\Response\Response;
-use Framework\Security\JWT\Jwt;
-use Framework\Security\Permissions\DefaultRole;
-use Framework\Security\Permissions\IResource;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\EntityManager;
+use Saas\Http\Request\Request;
+use Saas\Http\Response\Response;
+use Saas\Security\JWT\Jwt;
+use Saas\Security\Permissions\DefaultRole;
+use Saas\Security\Permissions\IResource;
 
 class ResourceResolver
 {

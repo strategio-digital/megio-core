@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Debugger;
+namespace Saas\Debugger;
 
 use Nette\DI\Container;
 

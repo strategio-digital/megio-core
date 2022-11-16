@@ -1290,7 +1290,7 @@
             },
             "conflict": {
                 "laminas/laminas-stdlib": "<3.2.1",
-                "zendframework/zend-stdlib": "<3.2.1"
+                "zendsaas/zend-stdlib": "<3.2.1"
             },
             "replace": {
                 "ocramius/proxy-manager": "^2.1"
@@ -1451,7 +1451,7 @@
             "keywords": [
                 "client",
                 "curl",
-                "framework",
+                "saas",
                 "http",
                 "http client",
                 "psr-18",
@@ -1730,7 +1730,7 @@
             "keywords": [
                 "code",
                 "laminas",
-                "laminasframework"
+                "laminassaas"
             ],
             "support": {
                 "chat": "https://laminas.dev/chat",
@@ -3044,16 +3044,16 @@
             "time": "2022-09-27T15:03:11+00:00"
         },
         {
-            "name": "strategio/framework",
+            "name": "strategio/saas",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/strategio-digital/framework.git",
+                "url": "https://github.com/strategio-digital/saas.git",
                 "reference": "68db3f2b71e5270ce9ec2a80ad53e96aa355d126"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/strategio-digital/framework/zipball/68db3f2b71e5270ce9ec2a80ad53e96aa355d126",
+                "url": "https://api.github.com/repos/strategio-digital/saas/zipball/68db3f2b71e5270ce9ec2a80ad53e96aa355d126",
                 "reference": "68db3f2b71e5270ce9ec2a80ad53e96aa355d126",
                 "shasum": ""
             },
@@ -3085,7 +3085,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Framework\\": "src/"
+                    "Saas\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3098,10 +3098,10 @@
                     "email": "jz@strategio.digital"
                 }
             ],
-            "description": "SFramework",
+            "description": "SSaas",
             "support": {
-                "issues": "https://github.com/strategio-digital/framework/issues",
-                "source": "https://github.com/strategio-digital/framework/tree/master"
+                "issues": "https://github.com/strategio-digital/saas/issues",
+                "source": "https://github.com/strategio-digital/saas/tree/master"
             },
             "time": "2022-10-27T20:24:18+00:00"
         },
@@ -4770,7 +4770,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "strategio/framework": 20
+        "strategio/saas": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

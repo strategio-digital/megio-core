@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Entity\User;
+namespace Saas\Database\Entity\User;
 
-use Framework\Database\Entity\Role\Role;
-use Framework\Database\Field\TCreatedAt;
-use Framework\Database\Field\TUlid;
-use Framework\Database\Field\TUpdatedAt;
-use Framework\Database\Repository\UserRepository;
+use Saas\Database\Entity\Role\Role;
+use Saas\Database\Field\TCreatedAt;
+use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TUpdatedAt;
+use Saas\Database\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\InvalidArgumentException;
 use Nette\Security\Passwords;

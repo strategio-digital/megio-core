@@ -9,7 +9,7 @@ namespace App\Router;
 
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
-class RouterFactory extends \Framework\Router\RouterFactory
+class RouterFactory extends \Saas\Router\RouterFactory
 {
     public function create(): UrlMatcher
     {

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Helper;
+namespace Saas\Helper;
 
 class Path
 {
@@ -41,17 +41,17 @@ class Path
         return self::$projectPath . '/config';
     }
     
-    public static function frameworkSrcDir(): string
+    public static function saasSrcDir(): string
     {
-        return self::frameworkDir() . '/src';
+        return self::saasDir() . '/src';
     }
     
     public static function frameWorkConfigDir(): string
     {
-        return self::frameworkDir() . '/config';
+        return self::saasDir() . '/config';
     }
     
-    private static function frameworkDir(): string
+    private static function saasDir(): string
     {
         return __DIR__ . '/../../';
     }

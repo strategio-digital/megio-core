@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace Saas\Database;
 
-use Framework\Database\Entity\Role\Resource;
-use Framework\Database\Entity\Role\Role;
-use Framework\Database\Entity\User\Token;
-use Framework\Database\Entity\User\User;
-use Framework\Database\Repository\RoleRepository;
-use Framework\Database\Repository\RoleResourceRepository;
-use Framework\Database\Repository\UserRepository;
-use Framework\Database\Repository\UserTokenRepository;
-use Framework\Extension\Doctrine\Doctrine;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\Entity\Role\Role;
+use Saas\Database\Entity\User\Token;
+use Saas\Database\Entity\User\User;
+use Saas\Database\Repository\RoleRepository;
+use Saas\Database\Repository\RoleResourceRepository;
+use Saas\Database\Repository\UserRepository;
+use Saas\Database\Repository\UserTokenRepository;
+use Saas\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
 class EntityManager extends \Doctrine\ORM\EntityManager

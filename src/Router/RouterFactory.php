@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Router;
+namespace Saas\Router;
 
-use Framework\Controller\HomeController;
-use Framework\Controller\UserController;
+use Saas\Controller\HomeController;
+use Saas\Controller\UserController;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
 class RouterFactory extends Router

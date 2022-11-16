@@ -1,5 +1,5 @@
 services:
-    routerFactory: Framework\Router\RouterFactory
+    routerFactory: Saas\Router\RouterFactory
     response: Symfony\Component\HttpFoundation\Response
     request:
         factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
@@ -9,17 +9,17 @@ services:
             - fromRequest(@request)
     - Symfony\Component\Routing\Generator\UrlGenerator(@routerFactory::getRouteCollection(), @requestContext)
 
-    - Framework\App
-    - Framework\Bootstrap
-    - Framework\Debugger\Debugger
-    - Framework\Http\Request\Request
-    - Framework\Http\Response\Response
-    - Framework\Router\LinkGenerator
-    - Framework\Guard\Auth
-    - Framework\Security\JWT\Jwt
-    - Framework\Security\JWT\Claims
-    - Framework\Security\Response\Cors
-    - Framework\Storage\Storage
+    - Saas\App
+    - Saas\Bootstrap
+    - Saas\Debugger\Debugger
+    - Saas\Http\Request\Request
+    - Saas\Http\Response\Response
+    - Saas\Router\LinkGenerator
+    - Saas\Guard\Auth
+    - Saas\Security\JWT\Jwt
+    - Saas\Security\JWT\Claims
+    - Saas\Security\Response\Cors
+    - Saas\Storage\Storage
 
 includes:
    - command.neon

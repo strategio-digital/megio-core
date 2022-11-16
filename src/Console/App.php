@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Console;
+namespace Saas\Console;
 
-use Framework\Extension\Doctrine\Doctrine;
-use Framework\Extension\Doctrine\PostgresDefaultSchemaSubscriber;
+use Saas\Extension\Doctrine\Doctrine;
+use Saas\Extension\Doctrine\PostgresDefaultSchemaSubscriber;
 use Nette\DI\Container;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;

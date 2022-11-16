@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Guard;
+namespace Saas\Guard;
 
-use Framework\Database\Entity\User\User;
-use Framework\Database\EntityManager;
-use Framework\Http\Request\Request;
-use Framework\Http\Response\Response;
-use Framework\Security\JWT\Jwt;
-use Framework\Security\Permissions\DefaultRole;
+use Saas\Database\Entity\User\User;
+use Saas\Database\EntityManager;
+use Saas\Http\Request\Request;
+use Saas\Http\Response\Response;
+use Saas\Security\JWT\Jwt;
+use Saas\Security\Permissions\DefaultRole;
 use Lcobucci\JWT\Token;
 
 class Auth
@@ -56,7 +56,7 @@ class Auth
         
         $repo = $this->em->getUserTokenRepo();
         
-        /** @var \Framework\Database\Entity\User\Token|null $userToken */
+        /** @var \Saas\Database\Entity\User\Token|null $userToken */
         $userToken = $repo->createQueryBuilder('UserToken')
             ->addSelect('UserToken')
             ->addSelect('User')

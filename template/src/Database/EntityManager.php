@@ -7,6 +7,6 @@ declare(strict_types=1);
 
 namespace App\Database;
 
-class EntityManager extends \Framework\Database\EntityManager
+class EntityManager extends \Saas\Database\EntityManager
 {
 }

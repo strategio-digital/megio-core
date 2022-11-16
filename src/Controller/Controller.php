@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Controller;
+namespace Saas\Controller;
 
-use Framework\Http\Request\Request;
-use Framework\Http\Response\Response;
+use Saas\Http\Request\Request;
+use Saas\Http\Response\Response;
 
 abstract class Controller implements IController
 {
@@ -24,7 +24,7 @@ abstract class Controller implements IController
     }
     
     /**
-     * @return \Framework\Http\Response\Response
+     * @return \Saas\Http\Response\Response
      */
     public function getResponse(): Response
     {
@@ -32,7 +32,7 @@ abstract class Controller implements IController
     }
     
     /**
-     * @return \Framework\Http\Request\Request
+     * @return \Saas\Http\Request\Request
      */
     public function getRequest(): Request
     {

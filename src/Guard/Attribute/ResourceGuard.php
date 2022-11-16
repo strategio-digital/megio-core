@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Guard\Attribute;
+namespace Saas\Guard\Attribute;
 
-use Framework\Security\Permissions\IResource;
+use Saas\Security\Permissions\IResource;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_CLASS)]

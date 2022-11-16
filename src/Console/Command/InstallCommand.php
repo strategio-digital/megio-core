@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Console\Command;
+namespace Saas\Console\Command;
 
-use Framework\Database\Entity\Role\Resource;
-use Framework\Database\Entity\Role\Role;
-use Framework\Database\EntityManager;
-use Framework\Security\Permissions\DefaultAccess;
-use Framework\Security\Permissions\DefaultResource;
-use Framework\Security\Permissions\DefaultRole;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\Entity\Role\Role;
+use Saas\Database\EntityManager;
+use Saas\Security\Permissions\DefaultAccess;
+use Saas\Security\Permissions\DefaultResource;
+use Saas\Security\Permissions\DefaultRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

@@ -1,5 +1,5 @@
 # Project name
-Project backend build on top of [SFramework](https://github.com/strategio-digital/framework).  
+Project backend build on top of [Saas](https://github.com/strategio-digital/saas).  
 
 ## Installation guide
 
@@ -14,4 +14,4 @@ Project backend build on top of [SFramework](https://github.com/strategio-digita
 9. Visit: [http://localhost:8090](http://localhost:8090)
 
 ## Video tutorials
-Learn framework by video tutorials on [this page](https://github.com/strategio-digital/framework#tutorials).
+Learn Saas framework by video tutorials on [this page](https://github.com/strategio-digital/saas#tutorials).

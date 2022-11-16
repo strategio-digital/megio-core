@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Security\Permissions;
+namespace Saas\Security\Permissions;
 
 enum DefaultResource implements IResource
 {

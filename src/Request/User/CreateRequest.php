@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Request\User;
+namespace Saas\Request\User;
 
-use Framework\Database\Entity\Role\Role;
-use Framework\Database\Entity\User\User;
-use Framework\Database\EntityManager;
-use Framework\Http\Request\IRequest;
-use Framework\Http\Response\Response;
-use Framework\Security\Permissions\DefaultRole;
+use Saas\Database\Entity\Role\Role;
+use Saas\Database\Entity\User\User;
+use Saas\Database\EntityManager;
+use Saas\Http\Request\IRequest;
+use Saas\Http\Response\Response;
+use Saas\Security\Permissions\DefaultRole;
 use Nette\Schema\Expect;
 
 class CreateRequest implements IRequest

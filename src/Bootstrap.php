@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Framework;
+namespace Saas;
 
-use Framework\Debugger\Logger;
-use Framework\Helper\Path;
-use Framework\Security\Response\Cors;
+use Saas\Debugger\Logger;
+use Saas\Helper\Path;
+use Saas\Security\Response\Cors;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;

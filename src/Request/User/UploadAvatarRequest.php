@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Request\User;
+namespace Saas\Request\User;
 
-use Framework\Guard\Auth;
-use Framework\Http\Request\IRequest;
-use Framework\Http\Response\Response;
-use Framework\Storage\Storage;
+use Saas\Guard\Auth;
+use Saas\Http\Request\IRequest;
+use Saas\Http\Response\Response;
+use Saas\Storage\Storage;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

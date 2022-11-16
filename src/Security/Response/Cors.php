@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Security\Response;
+namespace Saas\Security\Response;
 
 class Cors
 {

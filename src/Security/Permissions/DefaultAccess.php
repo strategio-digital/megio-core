@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Security\Permissions;
+namespace Saas\Security\Permissions;
 
 class DefaultAccess
 {

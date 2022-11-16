@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Storage;
+namespace Saas\Storage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

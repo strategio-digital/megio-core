@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Request\User;
+namespace Saas\Request\User;
 
-use Framework\Database\EntityManager;
-use Framework\Guard\Auth;
-use Framework\Http\Request\IRequest;
-use Framework\Http\Response\Response;
+use Saas\Database\EntityManager;
+use Saas\Guard\Auth;
+use Saas\Http\Request\IRequest;
+use Saas\Http\Response\Response;
 use Doctrine\ORM\AbstractQuery;
 
 class ProfileRequest implements IRequest

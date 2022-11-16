@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Entity\Role;
+namespace Saas\Database\Entity\Role;
 
-use Framework\Database\Entity\User\User;
-use Framework\Database\Field\TCreatedAt;
-use Framework\Database\Field\TUlid;
-use Framework\Database\Repository\RoleRepository;
+use Saas\Database\Entity\User\User;
+use Saas\Database\Field\TCreatedAt;
+use Saas\Database\Field\TUlid;
+use Saas\Database\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

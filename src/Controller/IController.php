@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Controller;
+namespace Saas\Controller;
 
-use Framework\Http\Request\Request;
-use Framework\Http\Response\Response;
+use Saas\Http\Request\Request;
+use Saas\Http\Response\Response;
 
 interface IController
 {

@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Extension\Doctrine;
+namespace Saas\Extension\Doctrine;
 
-use Framework\Helper\Path;
+use Saas\Helper\Path;
 use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -29,7 +29,7 @@ class Doctrine
     public function __construct()
     {
         $srcEntityPath = Path::srcDir() . '/Database/Entity';
-        $entityPaths = array_merge([Path::frameworkSrcDir() . '/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
+        $entityPaths = array_merge([Path::saasSrcDir() . '/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             $entityPaths,

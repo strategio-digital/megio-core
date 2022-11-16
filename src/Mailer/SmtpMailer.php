@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Mailer;
+namespace Saas\Mailer;
 
 use Nette\Mail\Message;
 

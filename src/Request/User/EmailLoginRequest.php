@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Request\User;
+namespace Saas\Request\User;
 
-use Framework\Database\Entity\Role\Resource;
-use Framework\Database\Entity\User\Token;
-use Framework\Database\EntityManager;
-use Framework\Http\Request\IRequest;
-use Framework\Http\Response\Response;
-use Framework\Security\JWT\Claims;
-use Framework\Security\JWT\Jwt;
-use Framework\Security\Permissions\DefaultRole;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\Entity\User\Token;
+use Saas\Database\EntityManager;
+use Saas\Http\Request\IRequest;
+use Saas\Http\Response\Response;
+use Saas\Security\JWT\Claims;
+use Saas\Security\JWT\Jwt;
+use Saas\Security\Permissions\DefaultRole;
 use Nette\Schema\Expect;
 use Nette\Security\Passwords;
 
@@ -42,14 +42,14 @@ class EmailLoginRequest implements IRequest
         $userRepo = $this->em->getUserRepo();
         $userTokenRepo = $this->em->getUserTokenRepo();
         
-        /** @var \Framework\Database\Entity\User\User|null $user */
+        /** @var \Saas\Database\Entity\User\User|null $user */
         $user = $userRepo->findOneBy(['email' => $data['email']]);
         
         if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
             $this->response->sendError(['messages' => 'Invalid credentials'], 401);
         }
         
-        /** @var \Framework\Database\Entity\User\Token|null $userToken */
+        /** @var \Saas\Database\Entity\User\Token|null $userToken */
         $userToken = $userTokenRepo->findOneBy(['user' => $user->getId()]);
         
         if (!$userToken) {

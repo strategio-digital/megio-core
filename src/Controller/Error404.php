@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Controller;
+namespace Saas\Controller;
 
 class Error404 extends Controller
 {

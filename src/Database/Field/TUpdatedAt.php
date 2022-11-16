@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Database\Field;
+namespace Saas\Database\Field;
 
 use Doctrine\ORM\Mapping as ORM;
 

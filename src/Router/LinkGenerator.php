@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Router;
+namespace Saas\Router;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Framework\Controller;
+namespace Saas\Controller;
 
-use Framework\Guard\Attribute\ResourceGuard;
-use Framework\Request\User\CreateRequest;
-use Framework\Request\User\EmailLoginRequest;
-use Framework\Request\User\ProfileRequest;
-use Framework\Request\User\UploadAvatarRequest;
-use Framework\Security\Permissions\DefaultResource;
+use Saas\Guard\Attribute\ResourceGuard;
+use Saas\Request\User\CreateRequest;
+use Saas\Request\User\EmailLoginRequest;
+use Saas\Request\User\ProfileRequest;
+use Saas\Request\User\UploadAvatarRequest;
+use Saas\Security\Permissions\DefaultResource;
 
 class UserController extends Controller
 {
