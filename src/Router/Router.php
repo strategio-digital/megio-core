@@ -37,7 +37,7 @@ abstract class Router
     {
         $route = array_merge(['_controller' => $route[0], '_action' => $route[1]], $params);
         $routeName = $name ?: 'auto-generated-' . $this->routerCounter++;
-        $this->routes->add($routeName, new Route($path, $route, [], [], '', [], $method));
+        $this->routes->add($routeName, new Route('/api' . $path, $route, [], [], '', [], $method));
     }
     
     /**
