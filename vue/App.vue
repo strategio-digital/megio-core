@@ -1,44 +1,31 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import { onMounted } from 'vue'
-import api from './plugins/api'
-
-const showLoginForm = () => {
-    api.fetch()
-}
-
-</script>
-
 <template>
-    <div style="display: flex; align-items: center; justify-content: center; height: 100%">
-        <div style="text-align: center">
-            <a href="https://strategio.digital" target="_blank">
-                <img src="./assets/strategio.svg" alt="Strategio SaaS" width="100" height="100" />
-            </a>
-            <HelloWorld msg="Strategio SaaS" />
-            <button class="btn" style="margin-top: 2rem" @click="showLoginForm">
-                Přihlásit se
-            </button>
-        </div>
-    </div>
+    <router-view />
 </template>
 
 <style>
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
 html, body, #app {
     height: 100%;
     width: 100%;
     margin: 0;
 }
+
 body {
-    font-family: "Apple SD Gothic Neo";
     font-size: 16px;
-    background: rgb(19,24,129);
-    background: radial-gradient(circle, rgba(19,24,129,1) 30%, rgba(11,15,87,1) 70%);
+    background: rgb(19, 24, 129);
+    background: radial-gradient(circle, rgba(19, 24, 129, 1) 30%, rgba(11, 15, 87, 1) 70%);
     color: white;
+    font-family: 'Lato', sans-serif;
 }
+
 h1, h2, h3, h4, h5 {
     font-family: 'Montserrat', sans-serif;
 }
+
 .btn {
     padding: 1rem 2rem;
     margin: 0;
@@ -52,6 +39,7 @@ h1, h2, h3, h4, h5 {
     transform: translateY(0);
     transition: 150ms ease all;
 }
+
 .btn:hover {
     background-color: #f68f26;
     border-color: #f68f26;
