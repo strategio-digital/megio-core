@@ -1,18 +1,68 @@
 <script lang="ts" setup>
 import api from '@/plugins/api'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const showLoginForm = () => {
-    api.fetch()
+const router = useRouter()
+const loading = ref(false)
+const valid = ref()
+const alert = ref()
+
+const schema = ref({
+    email: [
+        (v: string) => !! v || 'E-mail je povinný',
+        (v: string) => /.+@.+/.test(v) || 'E-mail není validní '
+    ],
+    password: [
+        (v: string) => !! v || 'Heslo je povinné'
+    ]
+})
+
+const data = ref({
+    email: '',
+    password: ''
+})
+
+const onSubmit = async () => {
+    if (valid.value) {
+        loading.value = true
+        alert.value = ''
+
+        const resp = await api.auth.adminLoginByEmail(data.value.email, data.value.password)
+
+        if (resp.success && resp.data.user_role === 'admin') {
+            await router.push({ name: 'Dashboard' })
+        } else {
+            console.error(resp.errors)
+            alert.value = 'Nesprávné přihlašovácací údaje.'
+        }
+
+        loading.value = false
+    }
 }
 </script>
 
 <template>
-    <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%">
-        <div style="max-width: 450px; width: 100%; background-color: rgba(255, 255, 255, .05); padding: 3rem; border-radius: .3rem">
-            <h1>Přihlášení</h1>
-            <button class="btn" style="margin-top: 2rem" @click="showLoginForm">
-                Přihlásit se
-            </button>
+    <div class="d-flex justify-center align-center w-100 h-100">
+        <div class="w-100 position-relative" style="max-width: 450px">
+            <div class="text-center position-absolute" style="right: 20px; bottom: -30px">
+                <img src="@/assets/strategio.svg" height="100" width="100" alt="Strategio SaaS">
+            </div>
+            <div class="w-100 pa-10" style="border-radius: .3rem; background-color: rgba(255,255,255,0.97)">
+                <v-form validate-on="blur" v-model="valid" ref="form" @submit.prevent="onSubmit">
+                    <h1>Přihlášení</h1>
+                    <v-text-field label="E-mail" v-model="data.email" :rules="schema.email" />
+                    <v-text-field type="password" label="Heslo" v-model="data.password" :rules="schema.password" />
+
+                    <v-alert v-if="alert" color="error" icon="$info" class="mb-5">
+                        {{ alert }}
+                    </v-alert>
+
+                    <v-btn type="submit" size="large" color="warning" :loading="loading" :disabled="loading">
+                        Přihlásit se
+                    </v-btn>
+                </v-form>
+            </div>
         </div>
     </div>
 </template>

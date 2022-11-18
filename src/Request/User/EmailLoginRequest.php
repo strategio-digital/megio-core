@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Saas\Request\User;
 
-use Saas\Database\Entity\Role\Resource;
 use Saas\Database\Entity\User\Token;
 use Saas\Database\EntityManager;
 use Saas\Http\Request\IRequest;

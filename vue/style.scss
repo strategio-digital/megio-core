@@ -1,0 +1,32 @@
+/**
+ * Copyright (c) 2022 Strategio Digital s.r.o.
+ * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
+ */
+
+html, body, #app {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    font-size: 16px;
+    background: rgb(19, 24, 129);
+    background: radial-gradient(circle, rgba(19, 24, 129, 1) 30%, rgba(11, 15, 87, 1) 70%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1rem
+}
+
+.v-messages {
+    &__message {
+        margin-top: .1rem;
+        margin-bottom: 1.2rem;
+        color: #b00021;
+        font-size: .8rem;
+        font-weight: bold;
+    }
+}

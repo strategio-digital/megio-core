@@ -1,19 +1,17 @@
 <template>
-    <div style="display: flex; flex-flow: column; align-items: center; justify-content: space-between; height: 100%; width: 100%; padding: 3rem;">
+    <div class="d-flex flex-column justify-space-between w-100 h-100 pa-10 text-white">
         <div></div>
         <div style="text-align: center">
-            <a href="https://strategio.digital" target="_blank">
-                <img src="@/assets/strategio.svg" alt="Strategio SaaS" width="100" height="100" />
-            </a>
-            <h1 style="margin: 1rem 0">Strategio SaaS</h1>
-            <p>Nejrychlejší způsob pro tvorbu webů a aplikací.</p>
+            <img src="@/assets/strategio.svg" alt="Strategio SaaS" width="100" height="100" />
+            <h1 class="mt-5">Strategio SaaS</h1>
+            <p>Nástroj pro tvorbu byznysových webů a aplikací.</p>
         </div>
-        <div style="display: flex; flex-flow: row; justify-content: space-between;width: 100%; opacity: .3">
+        <div class="d-flex flex-row justify-space-between w-100" style="opacity: .3">
             <div>
-                <a href="//strategio.digital" target="_blank" style="color: white">Strategio Digital s.r.o.</a>
+                <a href="//strategio.digital" target="_blank" class="text-white">Strategio Digital s.r.o.</a>
             </div>
             <div>
-                <router-link :to="{ name: 'Login' }" style="color: white">Přihlásit se</router-link>
+                <router-link :to="{ name: 'Login' }" class="text-white">Přihlásit se</router-link>
             </div>
         </div>
     </div>
