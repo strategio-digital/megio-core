@@ -10,15 +10,38 @@ html, body, #app {
     font-family: 'Roboto', sans-serif;
 }
 
-body {
-    font-size: 16px;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1rem
+}
+
+.bg-gradient-blue {
     background: rgb(19, 24, 129);
     background: radial-gradient(circle, rgba(19, 24, 129, 1) 30%, rgba(11, 15, 87, 1) 70%);
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Montserrat', sans-serif;
-    margin-bottom: 1rem
+.color-blue {
+    &-dark {
+        color: #fff;
+    }
+    &-light {
+        color: #0B0F57
+    }
+}
+
+.bg-overlay {
+    opacity: 1;
+    transition: 150ms ease opacity;
+    background: #fff;
+
+    &.invisible {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &.dark {
+        background: #212121;
+    }
 }
 
 .v-messages {
@@ -29,4 +52,12 @@ h1, h2, h3, h4, h5, h6 {
         font-size: .8rem;
         font-weight: bold;
     }
+}
+
+.v-navigation-drawer {
+    padding: 1rem;
+}
+
+.v-breadcrumbs-item {
+    padding: 0;
 }

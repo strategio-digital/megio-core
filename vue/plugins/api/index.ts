@@ -3,11 +3,13 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import { IResponse } from '@/plugins/api/IResponse'
+import { IResponse } from '@/plugins/api/types/IResponse'
 import adminLoginByEmail from '@/plugins/api/auth/adminLoginByEmail'
 import loginByEmail from '@/plugins/api/auth/loginByEmail'
 import logout from '@/plugins/api/auth/logout'
-import current from '@/plugins/api/user/current'
+import currentUser from '@/plugins/api/auth/currentUser'
+import showAll from '@/plugins/api/collections/showAll'
+import showOne from '@/plugins/api/collections/showOne'
 
 const endpoint = import.meta.env.DEV ? 'http://localhost:8090/api' : '/api'
 
@@ -21,7 +23,7 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
         }
     }
 
-    const user = current()
+    const user = currentUser()
 
     if (user) {
         info.headers = { ...info.headers, 'Authorization': `Bearer ${user.bearer_token}` }
@@ -33,18 +35,20 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
     return {
         success: resp.ok,
         data: json,
-        errors: json.messages ? json.messages : []
+        errors: json.errors ? json.errors : []
     }
 }
 
 export default {
     fetch: fetchApi,
-    user: {
-        current
+    collections: {
+        showAll,
+        showOne
     },
     auth: {
+        currentUser,
         adminLoginByEmail,
         loginByEmail,
-        logout
+        logout,
     }
 }

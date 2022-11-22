@@ -36,13 +36,13 @@ class Auth
     private function invoke(): void
     {
         if (!is_string($this->authHeader)) {
-            $this->response->sendError(['message' => 'Invalid or empty Authorization header'], 401);
+            $this->response->sendError(['Invalid or empty Authorization header'], 401);
         }
         
         $tokenString = trim(str_replace('Bearer', '', $this->authHeader));
         
         if (!$this->jwt->isTrustedToken($tokenString)) {
-            $this->response->sendError(['message' => 'Invalid or expired token'], 401);
+            $this->response->sendError(['Invalid or expired token'], 401);
         }
         
         $token = $this->jwt->parseToken($tokenString);
@@ -51,7 +51,7 @@ class Auth
         $userId = $token->claims()->get('user_id');
         
         if (!$userId) {
-            $this->response->sendError(['message' => 'Missing user_id claims in JWT token'], 401);
+            $this->response->sendError(['Missing user_id claims in JWT token'], 401);
         }
         
         $repo = $this->em->getUserTokenRepo();
@@ -67,17 +67,17 @@ class Auth
             ->getOneOrNullResult();
         
         if (!$userToken) {
-            $this->response->sendError(['message' => 'Unknown JWT token, probably it was revoked'], 401);
+            $this->response->sendError(['Unknown JWT token, probably it was revoked'], 401);
         }
         
         if ($userToken->getToken() !== $tokenString) {
-            $this->response->sendError(['message' => 'Different JWT token, probably you are logged in on another device'], 401);
+            $this->response->sendError(['Different JWT token, probably you are logged in on another device'], 401);
         }
         
         if ($token->isExpired(new \DateTime())) {
             $this->em->remove($userToken);
             $this->em->flush();
-            $this->response->sendError(['message' => 'JWT token expired.'], 401);
+            $this->response->sendError(['JWT token expired.'], 401);
         }
         
         $this->token = $token;

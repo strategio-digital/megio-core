@@ -62,14 +62,16 @@ class Response
     }
     
     /**
-     * @param array<string,mixed> $messages
+     * @param array<string|int,mixed> $messages
      * @param int $code
      * @return never
      */
     public function sendError(array $messages, int $code = 400): never
     {
-        $messages = $this->debugger->formatResponseData($messages);
-        exit((new JsonResponse($messages, $code))->send());
+        $data = ['errors' => $messages];
+        $data = $this->debugger->formatResponseData($data);
+        
+        exit((new JsonResponse($data, $code))->send());
     }
     
     /**

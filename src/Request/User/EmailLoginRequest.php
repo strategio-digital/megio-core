@@ -45,7 +45,7 @@ class EmailLoginRequest implements IRequest
         $user = $userRepo->findOneBy(['email' => $data['email']]);
         
         if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
-            $this->response->sendError(['messages' => 'Invalid credentials'], 401);
+            $this->response->sendError(['Invalid credentials'], 401);
         }
         
         /** @var \Saas\Database\Entity\User\Token|null $userToken */

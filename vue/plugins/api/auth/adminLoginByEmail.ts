@@ -4,11 +4,11 @@
  */
 
 import api from '@/plugins/api'
-import { IResponse } from '@/plugins/api/IResponse'
-import { IUser } from '@/plugins/api/IUser'
+import { IResponse } from '@/plugins/api/types/IResponse'
+import { IAuthUser } from '@/plugins/api/types/IAuthUser'
 
 interface IResp extends IResponse {
-    data: IUser
+    data: IAuthUser
 }
 
 const adminLoginByEmail = async (email: string, password: string): Promise<IResp> => {

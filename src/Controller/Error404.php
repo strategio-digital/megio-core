@@ -11,6 +11,6 @@ class Error404 extends Controller
 {
     public function index(): void
     {
-        $this->getResponse()->sendError(['message' => '404 Not found'], 404);
+        $this->getResponse()->sendError(['404 Not found'], 404);
     }
 }

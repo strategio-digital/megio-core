@@ -37,16 +37,14 @@ class CreateRequest implements IRequest
         $repo = $this->em->getUserRepo();
         
         if ($repo->findOneBy(['email' => $data['email']])) {
-            $this->response->sendError(['messages' => [
-                'email' => "E-mail {$data['email']} already exists"]
-            ]);
+            $this->response->sendError(["E-mail '{$data['email']}' already exists"]);
         }
         
         /** @var Role|null $role */
         $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::Registered->name()]);
         
         if (!$role) {
-            $this->response->sendError(['message' => 'Permissions `user` does not exists.']);
+            $this->response->sendError(["Permission 'user' does not exists"]);
         }
         
         $user = (new User())

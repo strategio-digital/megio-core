@@ -43,6 +43,6 @@ class UploadAvatarRequest implements IRequest
         $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
         $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
         
-        $this->response->send(['message' => "File '{$data['avatar']->getClientOriginalName()}' successfully uploaded to '{$file->getPathname()}'."]);
+        $this->response->send(['message' => "File '{$data['avatar']->getClientOriginalName()}' successfully uploaded to '{$file->getPathname()}'"]);
     }
 }

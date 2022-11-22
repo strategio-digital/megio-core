@@ -105,7 +105,7 @@ class App
                 try {
                     $controller->getRequest()->validate($data, $schema);
                 } catch (ValidationException $exception) {
-                    $controller->getResponse()->sendError(['messages' => $exception->getMessages()]);
+                    $controller->getResponse()->sendError($exception->getMessages());
                 }
             }
             $request->process($data);

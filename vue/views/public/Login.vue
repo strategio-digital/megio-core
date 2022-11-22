@@ -31,7 +31,7 @@ const onSubmit = async () => {
         const resp = await api.auth.adminLoginByEmail(data.value.email, data.value.password)
 
         if (resp.success && resp.data.user_role === 'admin') {
-            await router.push({ name: 'Dashboard' })
+            await router.push({ name: 'Collections' })
         } else {
             console.error(resp.errors)
             alert.value = 'Nesprávné přihlašovácací údaje.'
@@ -43,7 +43,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
-    <div class="d-flex justify-center align-center w-100 h-100">
+    <div class="d-flex justify-center align-center w-100 h-100 bg-gradient-blue">
         <div class="w-100 position-relative" style="max-width: 450px">
             <div class="text-center position-absolute" style="right: 20px; bottom: -30px">
                 <img src="@/assets/strategio.svg" height="100" width="100" alt="Strategio SaaS">

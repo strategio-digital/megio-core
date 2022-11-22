@@ -16,11 +16,17 @@ class RouterFactory extends Router
     public function create(): UrlMatcher
     {
         $this->add('GET', '/', [HomeController::class, 'index'], [], 'home');
+    
+        // User CRUD
+        $this->add('POST', '/user/show-all', [UserController::class, 'showAll'], [], 'user_show_all');
+        $this->add('POST', '/user/show-one', [UserController::class, 'showOne'], [], 'user_show_one');
         $this->add('POST', '/user/create', [UserController::class, 'create'], [], 'user_create');
-        $this->add('POST', '/user/login/email', [UserController::class, 'loginByEmail'], [], 'user_login_email');
-        
-        $this->add('GET', '/user/profile', [UserController::class, 'profile'], [], 'user_profile');
+        $this->add('DELETE', '/user/delete', [UserController::class, 'delete'], [], 'user_delete');
+    
+        // User extended
+        $this->add('POST', '/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
         $this->add('POST', '/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
+        $this->add('POST', '/user/login/email', [UserController::class, 'loginByEmail'], [], 'user_login_email');
     
         return parent::create();
     }
