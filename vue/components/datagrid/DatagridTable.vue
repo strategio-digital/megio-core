@@ -1,43 +1,41 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
-import { IDatagridAction } from '@/types/IDatagridAction'
-import { IDatagridColumn } from '@/types/IDatagridColumn'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { IDatagridAction } from '@/components/datagrid/types/IDatagridAction'
+import { IDatagridColumn } from '@/components/datagrid/types/IDatagridColumn'
+import { useDatagridStore } from '@/composables/useDatagridStore'
 import dateHelper from '@/helpers/dateHelper'
-import { IRow } from '@/plugins/api/types/IRow'
 
 const props = defineProps<{
     columns: IDatagridColumn[]
-    items: IRow[]
-    removeOne: Function
-    removeSelected: Function
-    //selected: boolean
-    //selectedItems: IUser[],
-    selectAll: Function
     batchActions: IDatagridAction[],
     rowActions: IDatagridAction[],
     routeDetailName: string
 }>()
 
 const router = useRouter()
+const store = useDatagridStore()
+const { checkedAll, items, selectedItems } = storeToRefs(store)
 const { toCzDateTime } = dateHelper()
 
-const selectedItems = ref<IRow[]>([])
-const selected = ref(false)
+const itemsHydrated = computed(() => items.value.map(item => {
+    return {
+        ...item,
+        createdAt: toCzDateTime(item.createdAt),
+        updatedAt: toCzDateTime(item.updatedAt)
+    }
+}))
 
-const goToDetail = (id: string) => router.push({ name: props.routeDetailName, params: { id } })
+function checkAll() {
+    selectedItems.value = checkedAll.value ? [] : items.value
+}
 
-const itemsHydrated = computed(() => {
-    return props.items.map(item => {
-        return {
-            ...item,
-            createdAt: toCzDateTime(item.createdAt),
-            updatedAt: toCzDateTime(item.updatedAt),
-        }
-    })
-})
+function goToDetail(id: string) {
+    router.push({ name: props.routeDetailName, params: { id } })
+}
 
-const colData = (colName: string, item: any) => {
+function colData(colName: string, item: any) {
     return item[colName]
 }
 </script>
@@ -48,7 +46,7 @@ const colData = (colName: string, item: any) => {
         <tr>
             <th style="width: 90px">
                 <div class="d-flex align-center">
-                    <v-checkbox @click="selectAll" v-model="selected" color="primary" class="d-flex" />
+                    <v-checkbox @click="checkAll" v-model="checkedAll" color="primary" class="d-flex" />
 
                     <v-btn
                         icon="mdi-dots-vertical"
@@ -65,12 +63,6 @@ const colData = (colName: string, item: any) => {
                                     {{ action.title }} ({{ selectedItems.length }}x)
                                 </v-list-item-title>
                             </v-list-item>
-
-                            <v-list-item value="revoke">
-                                <v-list-item-title @click="removeSelected" class="text-red font-weight-bold">
-                                    Trvale odstranit ({{ selectedItems.length }}x)
-                                </v-list-item-title>
-                            </v-list-item>
                         </v-list>
                     </v-menu>
                 </div>
@@ -85,7 +77,7 @@ const colData = (colName: string, item: any) => {
         <tbody>
         <tr v-for="item in itemsHydrated" :key="item.id" class="text-no-wrap">
             <td>
-                <v-checkbox v-model="selectedItems" :value="item" color="primary" class="d-flex"></v-checkbox>
+                <v-checkbox v-model="selectedItems" :value="item" :value-comparator="(a, b) => a.id === b.id" color="primary" class="d-flex"></v-checkbox>
             </td>
             <td>
                 <v-chip size="small" color="" style="cursor: pointer" @click="goToDetail(item.id)">
@@ -94,8 +86,14 @@ const colData = (colName: string, item: any) => {
             </td>
             <td v-for="col in columns" :key="col.key">
                 <div v-if="colData(col.key, item)">
-                    <a v-if="col.type === 'email'" target="_blank" :href="`mailto:${colData(col.key, item)}`">{{ colData(col.key, item) }}</a>
-                    <a v-else-if="col.type === 'phone'" target="_blank" :href="`tel:${colData(col.key, item)}`">{{ colData(col.key, item) }}</a>
+                    <a v-if="col.type === 'email'" target="_blank" :href="`mailto:${colData(col.key, item)}`">
+                        {{ colData(col.key, item) }}
+                    </a>
+
+                    <a v-else-if="col.type === 'phone'" target="_blank" :href="`tel:${colData(col.key, item)}`">
+                        {{ colData(col.key, item) }}
+                    </a>
+
                     <span v-else>{{ colData(col.key, item) }}</span>
                 </div>
                 <div v-else>-</div>
@@ -112,12 +110,6 @@ const colData = (colName: string, item: any) => {
                         <v-list-item v-for="(action, i) in rowActions" :key="i" :value="i">
                             <v-list-item-title @click="action.handler(item)">
                                 {{ action.title }}
-                            </v-list-item-title>
-                        </v-list-item>
-
-                        <v-list-item value="revoke">
-                            <v-list-item-title @click="removeOne(item)" class="text-red font-weight-bold">
-                                Trvale odstranit
                             </v-list-item-title>
                         </v-list-item>
                     </v-list>

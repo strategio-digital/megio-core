@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import api from '@/plugins/api'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import api from '@/api'
 
 const router = useRouter()
 const loading = ref(false)
@@ -18,12 +18,9 @@ const schema = ref({
     ]
 })
 
-const data = ref({
-    email: '',
-    password: ''
-})
+const data = ref({ email: '', password: '' })
 
-const onSubmit = async () => {
+async function onSubmit() {
     if (valid.value) {
         loading.value = true
         alert.value = ''

@@ -3,10 +3,10 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import { IResponse } from '@/plugins/api/types/IResponse'
-import { IShowAllParams } from '@/plugins/api/types/IShowAllParams'
-import api from '@/plugins/api'
-import { IRow } from '@/plugins/api/types/IRow'
+import api from '@/api'
+import { IResponse } from '@/api/types/IResponse'
+import { IShowAllParams } from '@/api/types/IShowAllParams'
+import { IRow } from '@/api/types/IRow'
 
 interface IResp extends IResponse {
     data: {

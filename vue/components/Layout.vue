@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/plugins/api'
+import api from '@/api'
 
 const props = defineProps<{ loading?: boolean }>()
 
@@ -10,15 +10,14 @@ const router = useRouter()
 const route = useRoute()
 
 const themeStorage = localStorage.getItem('strategio_saas_theme')
-
 const theme = ref(themeStorage || 'dark')
 
-const changeTheme = () => {
+function changeTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     localStorage.setItem('strategio_saas_theme', theme.value)
 }
 
-const logout = () => {
+function logout() {
     api.auth.logout()
     router.push({ name: 'Intro' })
 }

@@ -3,28 +3,27 @@ import Layout from '@/components/Layout.vue'
 import useDatagrid from '@/composables/useDatagrid'
 import DatagridHeader from '@/components/datagrid/DatagridHeader.vue'
 import DatagridTable from '@/components/datagrid/DatagridTable.vue'
-import { IRow } from '@/plugins/api/types/IRow'
+import { IRow } from '@/api/types/IRow'
+import { storeToRefs } from 'pinia'
 
-const {
-    refresh,
-    loading,
-    page,
-    items,
-    selected,
-    selectedItems,
-    selectAll,
-    removeOne,
-    removeSelected
-} = useDatagrid('user')
+const { store, refresh } = useDatagrid('user')
+const { items, page, selectedItems, loading } = storeToRefs(store)
 
-const revokeSelected = () => {
+function revokeSelected() {
     console.log(selectedItems.value)
 }
 
-const revokeOne = (item: IRow) => {
+function revokeOne (item: IRow) {
     console.log(item)
 }
 
+function removeSelected() {
+    console.log(selectedItems.value)
+}
+
+function removeOne(item: IRow) {
+    console.log(item)
+}
 </script>
 
 <template>
@@ -36,14 +35,14 @@ const revokeOne = (item: IRow) => {
                 { name: 'Role', key: 'role', type: 'string'},
                 { name: 'E-mail', key: 'email', type: 'email'}
             ]"
-            :items="items"
-            :remove-one="removeOne"
-            :remove-selected="removeSelected"
-            :selected="selected"
-            :selected-items="selectedItems"
-            :select-all="selectAll"
-            :batchActions="[{ title: 'Odhlásit uživatele', handler: revokeSelected }]"
-            :rowActions="[{ title: 'Odhlásit uživatele', handler: revokeOne }]"
+            :batch-actions="[
+                { title: 'Odhlásit uživatele', handler: revokeSelected },
+                { title: 'Trvale odstranit', handler: removeSelected }
+            ]"
+            :row-actions="[
+                { title: 'Odhlásit uživatele', handler: revokeOne },
+                { title: 'Trvale odstranit', handler: removeOne }
+            ]"
             route-detail-name="UserDetail"
         />
 

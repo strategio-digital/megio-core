@@ -3,13 +3,13 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import { IResponse } from '@/plugins/api/types/IResponse'
-import adminLoginByEmail from '@/plugins/api/auth/adminLoginByEmail'
-import loginByEmail from '@/plugins/api/auth/loginByEmail'
-import logout from '@/plugins/api/auth/logout'
-import currentUser from '@/plugins/api/auth/currentUser'
-import showAll from '@/plugins/api/collections/showAll'
-import showOne from '@/plugins/api/collections/showOne'
+import { IResponse } from '@/api/types/IResponse'
+import adminLoginByEmail from '@/api/auth/adminLoginByEmail'
+import loginByEmail from '@/api/auth/loginByEmail'
+import logout from '@/api/auth/logout'
+import currentUser from '@/api/auth/currentUser'
+import showAll from '@/api/collections/showAll'
+import showOne from '@/api/collections/showOne'
 
 const endpoint = import.meta.env.DEV ? 'http://localhost:8090/api' : '/api'
 

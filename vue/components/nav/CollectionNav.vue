@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-
-</script>
-
 <template>
     <v-list density="comfortable">
         <v-list-item title="Aktuality" value="news" prepend-icon="mdi-folder-open-outline" active />

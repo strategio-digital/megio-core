@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { IUser } from '@/plugins/api/types/IUser'
+import { IUser } from '@/api/types/IUser'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/plugins/api'
+import api from '@/api'
 import Layout from '@/components/Layout.vue'
 
 const router = useRouter()
@@ -10,7 +10,7 @@ const route = useRoute()
 const loading = ref(true)
 const item = ref<IUser>()
 
-const refresh = async () => {
+async function refresh () {
     loading.value = true
     const resp = await api.collections.showOne('user', { id: route.params.id as string })
     item.value = { ...resp.data } as IUser

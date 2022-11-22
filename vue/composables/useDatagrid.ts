@@ -3,34 +3,24 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import { onMounted, ref, watch, watchEffect } from 'vue'
-import api from '@/plugins/api'
-import { IRow } from '@/plugins/api/types/IRow'
+import { onMounted, watch, watchEffect } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useDatagridStore } from '@/composables/useDatagridStore'
+import api from '@/api'
 
 const useDatagrid = (collectionName: string) => {
-    const loading = ref(true)
-    const page = ref({ currentPage: 1, lastPage: 1 })
-    const items = ref<IRow[]>([])
+    const store = useDatagridStore()
+    const { checkedAll, loading, selectedItems, items, page } = storeToRefs(store)
 
-    const selectedItems = ref<IRow[]>([])
-    const selected = ref(false)
-
-    const selectAll = () => selectedItems.value = selected.value ? [] : items.value
-
-    const removeSelected = () => {
-        console.log(selectedItems.value)
-    }
-
-    const removeOne = (item: IRow) => {
-        console.log(item)
-    }
-
-    const refresh = async (): Promise<any> => {
+    async function refresh(): Promise<any> {
         loading.value = true
         items.value = []
         selectedItems.value = []
 
-        let resp = await api.collections.showAll(collectionName, { currentPage: page.value.currentPage, itemsPerPage: 15 })
+        const resp = await api.collections.showAll(collectionName, {
+            currentPage: page.value.currentPage,
+            itemsPerPage: 15
+        })
 
         page.value = { currentPage: resp.data.currentPage, lastPage: resp.data.lastPage }
 
@@ -47,23 +37,13 @@ const useDatagrid = (collectionName: string) => {
 
     watchEffect(() => {
         if (items.value.length !== 0) {
-            selected.value = selectedItems.value.length === items.value.length
+            checkedAll.value = selectedItems.value.length === items.value.length
         }
     })
 
     onMounted(() => refresh())
 
-    return {
-        refresh,
-        selectAll,
-        removeOne,
-        removeSelected,
-        page,
-        selectedItems,
-        items,
-        loading,
-        selected
-    }
+    return { store, refresh }
 }
 
 export default useDatagrid
