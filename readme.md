@@ -19,7 +19,7 @@ The Tool for developing Webs & APIs by simple clicks.
 - 🟢&nbsp; One click deployment with Dockerfile and [easypanel.io](https://easypanel.io/)
 
 ## Backlog
-- User datagrid + CRUD with bulk inserts / deletes / updates /
+- User datagrid + CRUD with bulk inserts / updates
 - Admin datagrid + CRUD
 - Latte template rendering + Nginx Routing \/_\/\* \/api\/*, /\*
 - Role access table (routes or resources)
@@ -38,31 +38,17 @@ The Tool for developing Webs & APIs by simple clicks.
 - Make some docs on [docusaurus.io](https://docusaurus.io/)
 
 ## Tutorials
+**TODO Beginner:**
 
-### 1. How to setup new project
-Todo video..
+1. How to start new project and create first collections.
+2. How to handle requests and send e-mails.
+3. How to make CRUD operations with Doctrine ORM.
+4. How to upload files with S3 storage adapter.
+5. How to deploy your application with easypanel.io.
+ 
+### How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YKCGNpF).
 
-### 2.  How to handle requests
-Todo video...
-
-### 3.  How to use Doctrine ORM
-Todo video...
-
-### 4.  How to upload files with S3 storage adapter
-Todo video...
-
-### 5.  How to send e-mails & use console commands
-Todo video...
-
-### 6.  How to protect data by resource-guards or custom guards
-Todo video...
-
-### 7.  How to deploy application with easypanel.io
-Todo video...
-
-### 8. How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YKCGNpF)
 If you want to use Postman to debug API, just add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
-
 ```JS
 pm.test("set html", function() {
     var regex = /\"(.*)(\_tracy\_bar)/gm
