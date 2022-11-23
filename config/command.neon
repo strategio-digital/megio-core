@@ -1,4 +1,4 @@
 services:
     - Saas\Console\App
-    - Saas\Console\Command\InstallCommand
+    - Saas\Console\Command\PermissionsUpdateCommand
     - Saas\Console\Command\UserCreateAdminCommand

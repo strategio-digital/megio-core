@@ -9,7 +9,7 @@ Project backend build on top of [Strategio SaaS](https://github.com/strategio-di
 4. `./project.sh app`
 5. `composer i`
 6. `bin/console migrate`
-7. `bin/console install:permissions`
+7. `bin/console permissions:update`
 8. `bin/console user:create-admin <email> <password>`
 9. Visit: [http://localhost:8090](http://localhost:8090)
 
