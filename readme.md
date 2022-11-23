@@ -27,7 +27,7 @@ The Tool for developing Webs & APIs by simple clicks.
 - File uploader
 - Storage settings
 - E-mail settings
-- Collection Editor & Doctrine entity generator
+- Collection Editor (Doctrine entity builder, migrations, route generator, API permissions)
 - Request-validation by entity (by default)
 - Enhanced API CRUD filters, joins, orders
 - Admin navigation configurator
@@ -35,10 +35,7 @@ The Tool for developing Webs & APIs by simple clicks.
 - Application events & resolvers
 - Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log)
 - Extensions (Cart + GoPay)
-
-### Other
 - Make some docs on [docusaurus.io](https://docusaurus.io/)
-- Create admin dashboard like [pocketbase.io](https://pocketbase.io/) in Vue 3 (Doctrine entity builder, migrations, CRUD, API)
 
 ## Tutorials
 
