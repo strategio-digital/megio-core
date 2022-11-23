@@ -3,7 +3,7 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-export interface IShowAllParams {
+export interface IShowParams {
     currentPage: number
     itemsPerPage: number
 }

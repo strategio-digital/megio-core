@@ -12,7 +12,7 @@ interface IResp extends IResponse {
 }
 
 const adminLoginByEmail = async (email: string, password: string): Promise<IResp> => {
-    const resp = await api.fetch('/user/login/email', {
+    const resp = await api.fetch('/auth/email', {
         method: 'POST',
         body: JSON.stringify({ email, password })
     })

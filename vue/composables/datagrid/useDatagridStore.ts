@@ -11,8 +11,9 @@ export const useDatagridStore = defineStore('datagrid', () => {
     const loading = ref(true)
     const page = ref({ currentPage: 1, lastPage: 1 })
 
-    const items = ref<IRow[]>([])
-    const selectedItems = ref<IRow[]>([])
+    const items = ref<IRow[]|any[]>([])
+    const selectedItems = ref<IRow[]|any[]>([])
+    const selectedItem = ref<IRow|any>()
     const checkedAll = ref(false)
 
     return {
@@ -20,6 +21,7 @@ export const useDatagridStore = defineStore('datagrid', () => {
         page,
         items,
         selectedItems,
+        selectedItem,
         checkedAll
     }
 })

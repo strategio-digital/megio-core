@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { IDatagridAction } from '@/components/datagrid/types/IDatagridAction'
 import { IDatagridColumn } from '@/components/datagrid/types/IDatagridColumn'
-import { useDatagridStore } from '@/composables/useDatagridStore'
+import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
 import dateHelper from '@/helpers/dateHelper'
 
 const props = defineProps<{
@@ -16,16 +15,8 @@ const props = defineProps<{
 
 const router = useRouter()
 const store = useDatagridStore()
-const { checkedAll, items, selectedItems } = storeToRefs(store)
+const { checkedAll, items, selectedItems, selectedItem } = storeToRefs(store)
 const { toCzDateTime } = dateHelper()
-
-const itemsHydrated = computed(() => items.value.map(item => {
-    return {
-        ...item,
-        createdAt: toCzDateTime(item.createdAt),
-        updatedAt: toCzDateTime(item.updatedAt)
-    }
-}))
 
 function checkAll() {
     selectedItems.value = checkedAll.value ? [] : items.value
@@ -34,16 +25,12 @@ function checkAll() {
 function goToDetail(id: string) {
     router.push({ name: props.routeDetailName, params: { id } })
 }
-
-function colData(colName: string, item: any) {
-    return item[colName]
-}
 </script>
 
 <template>
     <v-table v-if="items.length" density="default" hover class="mt-5">
         <thead>
-        <tr>
+        <tr class="text-no-wrap">
             <th style="width: 90px">
                 <div class="d-flex align-center">
                     <v-checkbox @click="checkAll" v-model="checkedAll" color="primary" class="d-flex" />
@@ -58,8 +45,8 @@ function colData(colName: string, item: any) {
 
                     <v-menu activator="#menu-activator">
                         <v-list>
-                            <v-list-item v-for="(action, i) in batchActions" :key="i" :value="i">
-                                <v-list-item-title @click="action.handler">
+                            <v-list-item v-for="(action, i) in batchActions" :key="i" :value="i" @click="action.handler">
+                                <v-list-item-title>
                                     {{ action.title }} ({{ selectedItems.length }}x)
                                 </v-list-item-title>
                             </v-list-item>
@@ -69,13 +56,11 @@ function colData(colName: string, item: any) {
             </th>
             <th>ID</th>
             <th v-for="col in columns" :key="col.key" class="text-left">{{ col.name }}</th>
-            <th class="text-right">Vytvořeno</th>
-            <th class="text-right">Upraveno</th>
             <th class="text-right"></th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in itemsHydrated" :key="item.id" class="text-no-wrap">
+        <tr v-for="item in items" :key="item.id" class="text-no-wrap">
             <td>
                 <v-checkbox v-model="selectedItems" :value="item" :value-comparator="(a, b) => a.id === b.id" color="primary" class="d-flex"></v-checkbox>
             </td>
@@ -85,21 +70,21 @@ function colData(colName: string, item: any) {
                 </v-chip>
             </td>
             <td v-for="col in columns" :key="col.key">
-                <div v-if="colData(col.key, item)">
-                    <a v-if="col.type === 'email'" target="_blank" :href="`mailto:${colData(col.key, item)}`">
-                        {{ colData(col.key, item) }}
+                <div v-if="item[col.key]">
+                    <a v-if="col.type === 'email'" target="_blank" :href="`mailto:${item[col.key]}`">
+                        {{ item[col.key] }}
                     </a>
 
-                    <a v-else-if="col.type === 'phone'" target="_blank" :href="`tel:${colData(col.key, item)}`">
-                        {{ colData(col.key, item) }}
+                    <a v-else-if="col.type === 'phone'" target="_blank" :href="`tel:${item[col.key]}`">
+                        {{ item[col.key] }}
                     </a>
 
-                    <span v-else>{{ colData(col.key, item) }}</span>
+                    <span v-else-if="col.type === 'datetime'">{{ toCzDateTime(item[col.key]) }}</span>
+
+                    <span v-else>{{ item[col.key] }}</span>
                 </div>
                 <div v-else>-</div>
             </td>
-            <td class="text-right">{{ item.updatedAt }}</td>
-            <td class="text-right">{{ item.updatedAt }}</td>
             <td class="text-right">
                 <v-menu>
                     <template v-slot:activator="{ props }">
@@ -107,8 +92,8 @@ function colData(colName: string, item: any) {
                     </template>
 
                     <v-list>
-                        <v-list-item v-for="(action, i) in rowActions" :key="i" :value="i">
-                            <v-list-item-title @click="action.handler(item)">
+                        <v-list-item v-for="(action, i) in rowActions" :key="i" :value="i" @click="(selectedItem = item) && action.handler()">
+                            <v-list-item-title>
                                 {{ action.title }}
                             </v-list-item-title>
                         </v-list-item>

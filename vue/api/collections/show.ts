@@ -5,7 +5,7 @@
 
 import api from '@/api'
 import { IResponse } from '@/api/types/IResponse'
-import { IShowAllParams } from '@/api/types/IShowAllParams'
+import { IShowParams } from '@/api/types/IShowParams'
 import { IRow } from '@/api/types/IRow'
 
 interface IResp extends IResponse {
@@ -14,12 +14,12 @@ interface IResp extends IResponse {
         itemsCountAll: number
         itemsPerPage: number
         lastPage: number
-        items: IRow[]
+        items: IRow[]|any[]
     }
 }
 
-const showAll = async (collection: string, params: IShowAllParams): Promise<IResp> => {
-    const resp = await api.fetch(`/${collection}/show-all`, {
+const show = async (collection: string, params: IShowParams): Promise<IResp> => {
+    const resp = await api.fetch(`/${collection}/show`, {
         method: 'POST',
         body: JSON.stringify({
             currentPage: params.currentPage,
@@ -30,4 +30,4 @@ const showAll = async (collection: string, params: IShowAllParams): Promise<IRes
     return { ...resp, data: resp.data }
 }
 
-export default showAll
+export default show

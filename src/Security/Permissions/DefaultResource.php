@@ -4,23 +4,26 @@ namespace Saas\Security\Permissions;
 
 enum DefaultResource implements IResource
 {
-    case UserProfileAction;
-    case UserUploadAvatarAction;
-    
-    case UserShowAll;
+    case UserShow;
     case UserShowOne;
     case UserCreate;
     case UserDelete;
     
+    case UserRevoke;
+    case UserProfileAction;
+    case UserUploadAvatarAction;
+    
     public function name(): string
     {
         return match ($this) {
-            self::UserProfileAction => 'user-profile-action',
-            self::UserUploadAvatarAction => 'user-upload-avatar-action',
-            self::UserShowAll => 'user-show-all-action',
-            self::UserShowOne => 'user-show-one-action',
-            self::UserCreate => 'user-create-action',
-            self::UserDelete => 'user-delete-action',
+            self::UserShow => 'user-show',
+            self::UserShowOne => 'user-show-one',
+            self::UserCreate => 'user-create',
+            self::UserDelete => 'user-delete',
+            self::UserRevoke => 'user-revoke',
+            
+            self::UserProfileAction => 'user-profile',
+            self::UserUploadAvatarAction => 'user-upload-avatar',
         };
     }
 }

@@ -15,7 +15,13 @@ class DefaultAccess
     public static function accesses(): array
     {
         return [
-            DefaultRole::Admin->name() => [],
+            DefaultRole::Admin->name() => [
+                DefaultResource::UserShow->name(),
+                DefaultResource::UserShowOne->name(),
+                DefaultResource::UserCreate->name(),
+                DefaultResource::UserDelete->name(),
+                DefaultResource::UserRevoke->name(),
+            ],
             DefaultRole::Guest->name() => [],
             DefaultRole::Registered->name() => [
                 DefaultResource::UserProfileAction->name(),

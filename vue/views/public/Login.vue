@@ -27,8 +27,12 @@ async function onSubmit() {
 
         const resp = await api.auth.adminLoginByEmail(data.value.email, data.value.password)
 
-        if (resp.success && resp.data.user_role === 'admin') {
-            await router.push({ name: 'Collections' })
+        if (resp.success) {
+            if (resp.data.user_role !== 'admin') {
+                alert.value = 'Nedostatečné oprávnění.'
+            } else {
+                await router.push({ name: 'Collections' })
+            }
         } else {
             console.error(resp.errors)
             alert.value = 'Nesprávné přihlašovácací údaje.'

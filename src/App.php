@@ -98,12 +98,13 @@ class App
             $controller->$actionName(...$actionModels);
             
             $data = $controller->getRequest()->getRequestData();
-            $schema = $request->schema();
             $data = array_merge($actionParams, $data);
             
+            $schema = $request->schema();
             if (count($schema) !== 0) {
                 try {
-                    $controller->getRequest()->validate($data, $schema);
+                    $schemaData = $controller->getRequest()->validate($data, $schema);
+                    $data = array_merge($data, $schemaData ?: []);
                 } catch (ValidationException $exception) {
                     $controller->getResponse()->sendError($exception->getMessages());
                 }

@@ -9,7 +9,7 @@ import { IShowOneParams } from '@/api/types/IShowOneParams'
 import { IRow } from '@/api/types/IRow'
 
 interface IResp extends IResponse {
-    data: IRow
+    data: IRow|any
 }
 
 const showOne = async (collection: string, params: IShowOneParams): Promise<IResp> => {

@@ -18,7 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:install:permissions', description: 'Create default roles an permissions in database', aliases: ['install:permissions'])]
+#[AsCommand(name: 'app:update:permissions', description: 'Create default roles an permissions in database', aliases: ['install:permissions'])]
 class InstallCommand extends Command
 {
     public function __construct(private readonly EntityManager $em)
@@ -75,7 +75,7 @@ class InstallCommand extends Command
         
         $this->em->flush();
         
-        $output->writeln('<info>Installation successfully completed.</info>');
+        $output->writeln('<info>Roles & Resources successfully updated.</info>');
         return Command::SUCCESS;
     }
 }

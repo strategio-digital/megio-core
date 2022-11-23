@@ -5,7 +5,7 @@
 
 import { onMounted, watch, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useDatagridStore } from '@/composables/useDatagridStore'
+import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
 import api from '@/api'
 
 const useDatagrid = (collectionName: string) => {
@@ -17,16 +17,15 @@ const useDatagrid = (collectionName: string) => {
         items.value = []
         selectedItems.value = []
 
-        const resp = await api.collections.showAll(collectionName, {
+        const resp = await api.collections.show(collectionName, {
             currentPage: page.value.currentPage,
             itemsPerPage: 15
         })
 
         page.value = { currentPage: resp.data.currentPage, lastPage: resp.data.lastPage }
 
-        if (resp.data.lastPage < page.value.currentPage) {
+        if (resp.data.lastPage < page.value.currentPage && page.value.currentPage > 1) {
             page.value.currentPage = resp.data.lastPage
-            return await refresh()
         }
 
         items.value = resp.data.items

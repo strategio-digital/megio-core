@@ -8,8 +8,10 @@ import adminLoginByEmail from '@/api/auth/adminLoginByEmail'
 import loginByEmail from '@/api/auth/loginByEmail'
 import logout from '@/api/auth/logout'
 import currentUser from '@/api/auth/currentUser'
-import showAll from '@/api/collections/showAll'
+import show from '@/api/collections/show'
 import showOne from '@/api/collections/showOne'
+import remove from '@/api/collections/remove'
+import revoke from '@/api/collections/user/revoke'
 
 const endpoint = import.meta.env.DEV ? 'http://localhost:8090/api' : '/api'
 
@@ -32,6 +34,11 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
     const resp = await fetch(url, info)
     const json = await resp.json()
 
+    if(user && resp.status === 401) {
+        logout()
+        window.location.href = '/'
+    }
+
     return {
         success: resp.ok,
         data: json,
@@ -42,8 +49,12 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
 export default {
     fetch: fetchApi,
     collections: {
-        showAll,
-        showOne
+        show,
+        showOne,
+        remove,
+        user: {
+            revoke
+        }
     },
     auth: {
         currentUser,

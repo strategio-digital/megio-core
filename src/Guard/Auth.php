@@ -71,7 +71,7 @@ class Auth
         }
         
         if ($userToken->getToken() !== $tokenString) {
-            $this->response->sendError(['Different JWT token, probably you are logged in on another device'], 401);
+            $this->response->sendError(['Different JWT token, probably you are logged-in on another device'], 401);
         }
         
         if ($token->isExpired(new \DateTime())) {

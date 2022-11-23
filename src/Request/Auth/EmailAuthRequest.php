@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Request\User;
+namespace Saas\Request\Auth;
 
 use Saas\Database\Entity\User\Token;
 use Saas\Database\EntityManager;
@@ -17,7 +17,7 @@ use Saas\Security\Permissions\DefaultRole;
 use Nette\Schema\Expect;
 use Nette\Security\Passwords;
 
-class EmailLoginRequest implements IRequest
+class EmailAuthRequest implements IRequest
 {
     public function __construct(
         private readonly EntityManager $em,

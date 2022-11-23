@@ -13,7 +13,7 @@ use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
 use Saas\Security\Permissions\DefaultRole;
 
-class DeleteRequest implements IRequest
+class RevokeRequest implements IRequest
 {
     public function __construct(
         private readonly EntityManager $em,
@@ -31,26 +31,29 @@ class DeleteRequest implements IRequest
     
     public function process(array $data): void
     {
-        $repo = $this->em->getUserRepo();
-        
-        $users = $repo->createQueryBuilder('U')
+        $users = $this->em->getUserRepo()
+            ->createQueryBuilder('U')
             ->select('U.id')
             ->leftJoin('U.role', 'R')
             ->andWhere('U.id IN (:ids)')
             ->andWhere('R.name != :admin_role')
             ->setParameter('admin_role', DefaultRole::Admin->name())
             ->setParameter('ids', $data['ids'])
-            ->getQuery()->getResult();
+            ->getQuery()
+            ->getResult();
         
         $ids = array_map(fn($user) => $user['id'], $users);
         
-        $qb = $repo->createQueryBuilder('U')
-            ->delete()
-            ->andWhere('U.id IN (:ids)')
-            ->setParameter('ids', $ids);
+        $this->em->getUserTokenRepo()
+            ->createQueryBuilder('UT')
+            ->update()
+            ->set('UT.expiration', ':expiration')
+            ->where('UT.user IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->setParameter('expiration', (new \DateTime())->modify('-1 minute'))
+            ->getQuery()
+            ->execute();
         
-        $qb->getQuery()->execute();
-        
-        $this->response->send(['message' => "Users successfully deleted"]);
+        $this->response->send(['message' => "Users successfully revoked"]);
     }
 }
