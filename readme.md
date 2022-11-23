@@ -1,11 +1,12 @@
 # Strategio SaaS
-Saas framework for building APIs in PHP 8.1
+The Tool for developing Webs & APIs by simple clicks.
 
-## Installation guide 
+## Installation guide
 1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
 2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
 
 ## Features
+- 🟠&nbsp; Vue 3 administration (collections, users, admins, app settings)
 - 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)
 - 🟢&nbsp; Roles, resources and resource-guards in controllers
 - 🟢&nbsp; Schema validation for requests and controllers
@@ -18,10 +19,24 @@ Saas framework for building APIs in PHP 8.1
 - 🟢&nbsp; One click deployment with Dockerfile and [easypanel.io](https://easypanel.io/)
 
 ## Backlog
+- User datagrid + CRUD with bulk inserts / deletes / updates /
+- Admin datagrid + CRUD
+- Latte template rendering + Nginx Routing \/_\/\* \/api\/*, /\*
+- Role access table (routes or resources)
+- App settings
+- File uploader
+- Storage settings
+- E-mail settings
+- Collection Editor & Doctrine entity generator
+- Request-validation by entity (by default)
+- Enhanced API CRUD filters, joins, orders
+- Admin navigation configurator
 - App.php refactoring
+- Application events & resolvers
 - Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log)
-- Vue 3 frontend (admin-login, user datagrid + revoke, admin datagrid, role access table, edit-profile + file uploader)
-- Visitor_id for each visitor
+- Extensions (Cart + GoPay)
+
+### Other
 - Make some docs on [docusaurus.io](https://docusaurus.io/)
 - Create admin dashboard like [pocketbase.io](https://pocketbase.io/) in Vue 3 (Doctrine entity builder, migrations, CRUD, API)
 
