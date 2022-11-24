@@ -32,6 +32,9 @@ class User
     #[ORM\Column(nullable: false)]
     private string $password;
     
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $lastLogin = null;
+    
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     private Role $role;
     
@@ -78,6 +81,23 @@ class User
         }
         
         $this->password = (new Passwords(PASSWORD_ARGON2ID))->hash($password);
+        return $this;
+    }
+    
+    /**
+     * @return \DateTime|null
+     */
+    public function getLastLogin(): ?\DateTime
+    {
+        return $this->lastLogin;
+    }
+    
+    /**
+     * @return User
+     */
+    public function setLastLogin(): User
+    {
+        $this->lastLogin = new \DateTime();
         return $this;
     }
     

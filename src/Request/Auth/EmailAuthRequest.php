@@ -75,7 +75,10 @@ class EmailAuthRequest implements IRequest
             ->setExpiration($expiration)
             ->setToken($token);
         
+        $user->setLastLogin();
+    
         $this->em->flush($userToken);
+        $this->em->flush($user);
         
         $this->response->send(['bearer_token' => $userToken->getToken(), ...$claims]);
     }

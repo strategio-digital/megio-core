@@ -62,7 +62,7 @@ class ShowRequest implements IRequest
             ->getArrayCopy();
         
         $qb2 = $this->em->getUserTokenRepo()->createQueryBuilder('UT')
-            ->select('U.id as id, UT.expiration as loginExpiration, UT.updatedAt as lastLogin')
+            ->select('U.id as id, U.lastLogin as lastLogin, UT.expiration as loginExpiration')
             ->leftJoin('UT.user', 'U')
             ->where('UT.user IN (:ids)')
             ->setParameter('ids', array_map(fn($user) => $user['id'], $users));

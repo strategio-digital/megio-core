@@ -32,7 +32,7 @@ class ProfileRequest implements IRequest
     {
         $user = $this->em->getUserRepo()
             ->createQueryBuilder('User')
-            ->select('User.id, User.email, Role.name as role')
+            ->select('User.id, User.email, Role.name as role, User.lastLogin, User.createdAt')
             ->innerJoin('User.role', 'Role')
             ->where('User.id = :id')
             ->setParameter('id', $this->auth->getUser()->getId())

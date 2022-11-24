@@ -35,7 +35,7 @@ class ShowOneRequest implements IRequest
         $repo = $this->em->getUserRepo();
         
         $qb = $repo->createQueryBuilder('U')
-            ->select('U.id, R.name as role, U.email, U.createdAt, U.updatedAt')
+            ->select('U.id, R.name as role, U.email, U.createdAt, U.updatedAt, U.lastLogin')
             ->leftJoin('U.role', 'R')
             ->where('U.id = :id')
             ->andWhere('R.name != :admin_role')
