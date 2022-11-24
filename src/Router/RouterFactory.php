@@ -19,6 +19,7 @@ class RouterFactory extends Router
         // App & Auth
         $this->add('GET', '/', [HomeController::class, 'index'], [], 'app');
         $this->add('POST', '/auth/email', [AuthController::class, 'email'], [], 'auth_email');
+        $this->add('POST', '/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
     
         // User CRUD
         $this->add('POST', '/user/show', [UserController::class, 'show'], [], 'user_show_all');
@@ -27,7 +28,6 @@ class RouterFactory extends Router
         $this->add('DELETE', '/user/delete', [UserController::class, 'delete'], [], 'user_delete');
         
         // User extra
-        $this->add('POST', '/user/revoke', [UserController::class, 'revoke'], [], 'user_revoke');
         $this->add('POST', '/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
         $this->add('POST', '/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
     

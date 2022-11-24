@@ -22,12 +22,12 @@ The Tool for developing Webs & APIs by simple clicks.
 - User datagrid + CRUD with bulk inserts / updates
 - Admin datagrid + CRUD
 - Latte template rendering + Nginx Routing \/_\/\* \/api\/*, /\*
+- **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
 - Role access table (routes or resources)
 - App settings
 - File uploader
 - Storage settings
 - E-mail settings
-- Collection Editor (Doctrine entity builder, migrations, route generator, API permissions)
 - Request-validation by entity (by default)
 - Enhanced API CRUD filters, joins, orders
 - Admin navigation configurator

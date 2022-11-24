@@ -11,7 +11,7 @@ import currentUser from '@/api/auth/currentUser'
 import show from '@/api/collections/show'
 import showOne from '@/api/collections/showOne'
 import remove from '@/api/collections/remove'
-import revoke from '@/api/collections/user/revoke'
+import revokeToken from '@/api/auth/revokeToken'
 
 const endpoint = import.meta.env.DEV ? 'http://localhost:8090/api' : '/api'
 
@@ -51,15 +51,13 @@ export default {
     collections: {
         show,
         showOne,
-        remove,
-        user: {
-            revoke
-        }
+        remove
     },
     auth: {
         currentUser,
         adminLoginByEmail,
         loginByEmail,
         logout,
+        revokeToken
     }
 }

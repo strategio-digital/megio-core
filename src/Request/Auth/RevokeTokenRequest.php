@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Request\User;
+namespace Saas\Request\Auth;
 
 use Saas\Database\EntityManager;
 use Saas\Http\Request\IRequest;
@@ -13,7 +13,7 @@ use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
 use Saas\Security\Permissions\DefaultRole;
 
-class RevokeRequest implements IRequest
+class RevokeTokenRequest implements IRequest
 {
     public function __construct(
         private readonly EntityManager $em,
@@ -25,7 +25,7 @@ class RevokeRequest implements IRequest
     public function schema(): array
     {
         return [
-            'ids' => Expect::arrayOf('string')->required(),
+            'user_ids' => Expect::arrayOf('string')->required(),
         ];
     }
     
@@ -38,7 +38,7 @@ class RevokeRequest implements IRequest
             ->andWhere('U.id IN (:ids)')
             ->andWhere('R.name != :admin_role')
             ->setParameter('admin_role', DefaultRole::Admin->name())
-            ->setParameter('ids', $data['ids'])
+            ->setParameter('ids', $data['user_ids'])
             ->getQuery()
             ->getResult();
         
@@ -46,11 +46,9 @@ class RevokeRequest implements IRequest
         
         $this->em->getUserTokenRepo()
             ->createQueryBuilder('UT')
-            ->update()
-            ->set('UT.expiration', ':expiration')
+            ->delete()
             ->where('UT.user IN (:ids)')
             ->setParameter('ids', $ids)
-            ->setParameter('expiration', (new \DateTime())->modify('-1 minute'))
             ->getQuery()
             ->execute();
         

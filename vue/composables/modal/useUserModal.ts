@@ -13,14 +13,14 @@ const useUserModal = (refresh: Function, selectedItem: Ref, selectedItems: Ref<a
 
     async function revoke() {
         mdlRevoke.toggleLoading('show')
-        await api.collections.user.revoke([selectedItem.value.id])
+        await api.auth.revokeToken([selectedItem.value.id])
         mdlRevoke.toggleOpen('hide')
         await refresh()
     }
 
     async function bulkRevoke() {
         mdlBulkRevoke.toggleLoading('show')
-        await api.collections.user.revoke(selectedItems.value.map((item) => item.id))
+        await api.auth.revokeToken(selectedItems.value.map((item) => item.id))
         mdlBulkRevoke.toggleOpen('hide')
         await refresh()
     }

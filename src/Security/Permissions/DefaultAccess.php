@@ -16,11 +16,11 @@ class DefaultAccess
     {
         return [
             DefaultRole::Admin->name() => [
+                DefaultResource::AuthRevokeToken->name(),
                 DefaultResource::UserShow->name(),
                 DefaultResource::UserShowOne->name(),
                 DefaultResource::UserCreate->name(),
                 DefaultResource::UserDelete->name(),
-                DefaultResource::UserRevoke->name(),
             ],
             DefaultRole::Guest->name() => [],
             DefaultRole::Registered->name() => [

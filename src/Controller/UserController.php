@@ -11,7 +11,6 @@ use Saas\Guard\Attribute\ResourceGuard;
 use Saas\Request\User\CreateRequest;
 use Saas\Request\User\DeleteRequest;
 use Saas\Request\User\ProfileRequest;
-use Saas\Request\User\RevokeRequest;
 use Saas\Request\User\ShowRequest;
 use Saas\Request\User\ShowOneRequest;
 use Saas\Request\User\UploadAvatarRequest;
@@ -36,11 +35,6 @@ class UserController extends Controller
     
     #[ResourceGuard([DefaultResource::UserDelete])]
     public function delete(DeleteRequest $request): void
-    {
-    }
-    
-    #[ResourceGuard([DefaultResource::UserRevoke])]
-    public function revoke(RevokeRequest $request): void
     {
     }
     

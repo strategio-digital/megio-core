@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Request\User;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Saas\Database\Entity\Role\Role;
 use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
@@ -27,34 +28,43 @@ class CreateRequest implements IRequest
     public function schema(): array
     {
         return [
-            'email' => Expect::email()->max(128)->required(),
-            'password' => Expect::string()->min(6)->max(32)->required()
+            'rows' => Expect::arrayOf(Expect::structure([
+                'email' => Expect::email()->max(128)->required(),
+                'password' => Expect::string()->min(6)->max(32)->required()
+            ]))->min(1)->max(20)->required() // Limit 20 because Argon2 calculating password hash for 1sec
         ];
     }
     
     public function process(array $data): void
     {
-        $repo = $this->em->getUserRepo();
-        
-        if ($repo->findOneBy(['email' => $data['email']])) {
-            $this->response->sendError(["E-mail '{$data['email']}' already exists"]);
-        }
-        
         /** @var Role|null $role */
         $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::Registered->name()]);
-        
+    
         if (!$role) {
             $this->response->sendError(["Permission 'user' does not exists"]);
         }
         
-        $user = (new User())
-            ->setEmail($data['email'])
-            ->setPassword($data['password'])
-            ->setRole($role);
+        foreach ($data['rows'] as $row) {
+            $user = new User();
+            $user->setEmail($row['email']);
+            $user->setPassword($row['password']);
+            $user->setRole($role);
+            $this->em->persist($user);
+        }
         
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->em->beginTransaction();
         
-        $this->response->send(['message' => "User '{$user->getEmail()}' successfully created"]);
+        try {
+            $this->em->flush();
+            $this->em->commit();
+        } catch (UniqueConstraintViolationException $e) {
+            $this->em->rollback();
+            $this->response->sendError([$e->getMessage()]);
+        }  catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+        
+        $this->response->send(['message' => "Users successfully created"]);
     }
 }
