@@ -7,11 +7,11 @@ declare(strict_types=1);
 
 namespace Saas;
 
-use Saas\Controller\Controller;
-use Saas\Guard\ResourceResolver;
-use Saas\Guard\Attribute\ResourceGuard;
+use Saas\Http\Controller\Controller;
+use Saas\Security\Guard\ResourceResolver;
+use Saas\Security\Guard\ResourceGuard;
 use Saas\Http\Request\IRequest;
-use Saas\Router\Router;
+use Saas\Http\Router\Router;
 use Nette\DI\Container;
 use Nette\Schema\ValidationException;
 
@@ -104,7 +104,7 @@ class App
             if (count($schema) !== 0) {
                 try {
                     $schemaData = $controller->getRequest()->validate($data, $schema);
-                    $data = array_merge($data, $schemaData ?: []);
+                    $data = array_merge($schemaData ?: [], $data);
                 } catch (ValidationException $exception) {
                     $controller->getResponse()->sendError($exception->getMessages());
                 }

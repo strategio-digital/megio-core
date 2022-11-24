@@ -1,5 +1,5 @@
 services:
-    routerFactory: Saas\Router\RouterFactory
+    routerFactory: Saas\Http\Router\RouterFactory
     response: Symfony\Component\HttpFoundation\Response
     request:
         factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
@@ -14,8 +14,8 @@ services:
     - Saas\Debugger\Debugger
     - Saas\Http\Request\Request
     - Saas\Http\Response\Response
-    - Saas\Router\LinkGenerator
-    - Saas\Guard\Auth
+    - Saas\Http\Router\LinkGenerator
+    - Saas\Http\Request\Auth
     - Saas\Security\JWT\Jwt
     - Saas\Security\JWT\Claims
     - Saas\Security\Response\Cors

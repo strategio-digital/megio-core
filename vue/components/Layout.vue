@@ -30,7 +30,9 @@ function logout() {
                 :to="{ name: 'Collections' }"
                 class="ps-2 mb-4 mt-3 d-flex text-no-wrap align-center text-decoration-none"
             >
-                <img src="@/assets/strategio.svg" width="38" height="38" alt="Strategio Saas">
+                <div class="rounded-circle" :class="{'bg-grey-lighten-2': theme === 'light'}" :style="{'padding': (theme === 'light' ? '2px' : '0px')}">
+                    <img src="@/assets/strategio.svg" :width="theme === 'light' ? 34 : 38" :height="theme === 'light' ? 34 : 38" alt="Strategio Saas" class="d-block">
+                </div>
                 <h4 class="ms-6 my-0 py-0 font-weight-bold" :class="`color-blue-${theme}`">Strategio SaaS</h4>
             </router-link>
 
