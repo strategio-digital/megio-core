@@ -25,7 +25,7 @@ function close () {
 </script>
 
 <template>
-    <v-dialog :model-value="open.value" :max-width="500" scrollable>
+    <v-dialog v-model="open.value" :max-width="500" @close="close" scrollable>
         <v-card>
             <v-card-title class="text-h5 mt-3 px-5 pt-5 pb-0">{{ title }}</v-card-title>
             <v-card-text class="py-3 px-5" style="max-height: 300px">

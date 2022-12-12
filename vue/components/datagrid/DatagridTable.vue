@@ -1,19 +1,20 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { IDatagridAction } from '@/components/datagrid/types/IDatagridAction'
 import { IDatagridColumn } from '@/components/datagrid/types/IDatagridColumn'
 import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
 import dateHelper from '@/helpers/dateHelper'
 
-const props = defineProps<{
+defineProps<{
     columns: IDatagridColumn[]
     batchActions: IDatagridAction[],
     rowActions: IDatagridAction[],
-    routeDetailName: string
 }>()
 
-const router = useRouter()
+const emit = defineEmits<{
+    (e: 'goToDetail', id: string): void
+}>()
+
 const store = useDatagridStore()
 const { checkedAll, items, selectedItems, selectedItem } = storeToRefs(store)
 const { toCzDateTime } = dateHelper()
@@ -23,7 +24,7 @@ function checkAll() {
 }
 
 function goToDetail(id: string) {
-    router.push({ name: props.routeDetailName, params: { id } })
+    emit('goToDetail', id)
 }
 </script>
 

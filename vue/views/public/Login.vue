@@ -47,7 +47,7 @@ async function onSubmit() {
     <div class="d-flex justify-center align-center w-100 h-100 bg-gradient-blue">
         <div class="w-100 position-relative" style="max-width: 450px">
             <div class="text-center position-absolute" style="right: 20px; bottom: -30px">
-                <img src="@/assets/strategio.svg" height="100" width="100" alt="Strategio SaaS">
+                <img src="@/assets/img/strategio.svg" height="100" width="100" alt="Strategio SaaS">
             </div>
             <div class="w-100 pa-10" style="border-radius: .3rem; background-color: rgba(255,255,255,0.97)">
                 <v-form validate-on="blur" v-model="valid" ref="form" @submit.prevent="onSubmit">

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { IUser } from '@/api/types/IUser'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/api'
+import { IUser } from '@/api/types/IUser'
 import Layout from '@/components/Layout.vue'
+import api from '@/api'
 
 const router = useRouter()
 const route = useRoute()
 const loading = ref(true)
 const item = ref<IUser>()
 
-async function refresh () {
+async function refresh() {
     loading.value = true
     const resp = await api.collections.showOne('user', { id: route.params.id as string })
     item.value = { ...resp.data } as IUser
@@ -22,24 +22,18 @@ onMounted(() => refresh())
 
 <template>
     <Layout :loading="loading">
-        <div v-if="item" class="d-flex justify-space-between align-center">
-            <v-breadcrumbs
-                :items="[{ title: 'Uživatelé', to: { name: 'Users'  } }, item.email]"
-                class="pa-0"
-                style="font-size: 1.4rem"
-            />
+        <div class="pa-7">
+            <div v-if="item" class="d-flex justify-space-between align-center">
+                <v-breadcrumbs
+                    :items="[{ title: 'Uživatelé', to: { name: 'Users' } }, item.email]"
+                    class="pa-0"
+                    style="font-size: 1.4rem"
+                />
+            </div>
 
-            <div class="d-flex ms-3">
-                <v-btn variant="tonal" prepend-icon="mdi-content-save-outline" class="ms-3">
-                    Uložit
-                </v-btn>
+            <div class="mt-5">
+                <pre>{{ item }}</pre>
             </div>
         </div>
-
-<!--        <v-form validate-on="blur" v-model="valid" ref="form" @submit.prevent="onSubmit">-->
-<!--            <h1>Přihlášení</h1>-->
-<!--            <v-text-field label="E-mail" v-model="data.email" :rules="schema.email" />-->
-<!--        </v-form>-->
-
     </Layout>
 </template>

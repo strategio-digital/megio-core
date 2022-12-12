@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia'
 import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
 import api from '@/api'
 
-const useDatagrid = (collectionName: string) => {
+const useDatagrid = (collectionName: string, itemsPerPage: number) => {
     const store = useDatagridStore()
     const { checkedAll, loading, selectedItems, items, page } = storeToRefs(store)
 
@@ -19,7 +19,7 @@ const useDatagrid = (collectionName: string) => {
 
         const resp = await api.collections.show(collectionName, {
             currentPage: page.value.currentPage,
-            itemsPerPage: 15
+            itemsPerPage
         })
 
         page.value = { currentPage: resp.data.currentPage, lastPage: resp.data.lastPage }

@@ -6,12 +6,14 @@ import CollectionNav from '@/components/nav/CollectionNav.vue'
 <template>
     <Layout>
         <template v-slot:default>
-            <v-breadcrumbs :items="['Kolekce', 'Aktuality']" class="pa-0" style="font-size: 1.4rem"></v-breadcrumbs>
-            <p class="mt-5">Todo: ...</p>
+            <div class="pa-7">
+                <v-breadcrumbs :items="['Kolekce', 'Aktuality']" class="pa-0" style="font-size: 1.4rem"/>
+                <p class="mt-5">Todo: ...</p>
+            </div>
         </template>
 
         <template v-slot:navigation>
-            <CollectionNav/>
+            <CollectionNav />
             <v-btn variant="tonal" class="w-100">
                 Přidat kolekci
             </v-btn>

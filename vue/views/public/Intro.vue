@@ -2,7 +2,7 @@
     <div class="d-flex flex-column justify-space-between w-100 h-100 pa-10 text-white bg-gradient-blue">
         <div></div>
         <div style="text-align: center">
-            <img src="@/assets/strategio.svg" alt="Strategio SaaS" width="100" height="100" />
+            <img src="@/assets/img/strategio.svg" alt="Strategio SaaS" width="100" height="100" />
             <h1 class="mt-5">Strategio SaaS</h1>
             <p>Nástroj pro tvorbu byznysových webů a aplikací.</p>
         </div>
