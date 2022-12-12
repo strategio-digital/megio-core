@@ -18,24 +18,31 @@ The Tool for developing Webs & APIs by simple clicks.
 - 🟢&nbsp; PHP-Stan static analysis on level 8
 - 🟢&nbsp; One click deployment with Dockerfile and [easypanel.io](https://easypanel.io/)
 
-## Backlog
+## Working on
 - User datagrid + CRUD with bulk inserts / updates
-- Admin datagrid + CRUD
 - Latte template rendering + Nginx Routing \/_\/\* \/api\/*, /\*
+- App.php refactoring
+- Collection datagrid + CRUD
+- Admin datagrid + CRUD
+
+## Backlog
 - **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
 - Role access table (routes or resources)
-- App settings
+- Request-validation by entity (by default)
 - File uploader
+- Admin navigation configurator
+- App settings
 - Storage settings
 - E-mail settings
-- Request-validation by entity (by default)
+- Extending vue-app & vue-router in own project
 - Enhanced API CRUD filters, joins, orders
-- Admin navigation configurator
-- App.php refactoring
-- Application events & resolvers
-- Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log)
-- Extensions (Cart + GoPay)
-- Make some docs on [docusaurus.io](https://docusaurus.io/)
+- Application event hooks
+- Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+- Extension (Simple cart + GoPay)
+- Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
+- Make intro videos (for developers & for administrators)
+- Console cron jobs & progress dashboard
+- Access log & error log dashboard with Tracy/BlueScreens
 
 ## Tutorials
 **TODO Beginner:**
