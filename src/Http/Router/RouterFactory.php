@@ -17,19 +17,19 @@ class RouterFactory extends Router
     public function create(): UrlMatcher
     {
         // App & Auth
-        $this->add('GET', '', [HomeController::class, 'index'], [], 'app');
-        $this->add('POST', '/auth/email', [AuthController::class, 'email'], [], 'auth_email');
-        $this->add('POST', '/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
+        $this->add('GET', '/api', [HomeController::class, 'index'], [], 'app');
+        $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth_email');
+        $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
     
         // User CRUD
-        $this->add('POST', '/user/show', [UserController::class, 'show'], [], 'user_show_all');
-        $this->add('POST', '/user/show-one', [UserController::class, 'showOne'], [], 'user_show_one');
-        $this->add('POST', '/user/create', [UserController::class, 'create'], [], 'user_create');
-        $this->add('DELETE', '/user/delete', [UserController::class, 'delete'], [], 'user_delete');
+        $this->add('POST', '/api/user/show', [UserController::class, 'show'], [], 'user_show_all');
+        $this->add('POST', '/api/user/show-one', [UserController::class, 'showOne'], [], 'user_show_one');
+        $this->add('POST', '/api/user/create', [UserController::class, 'create'], [], 'user_create');
+        $this->add('DELETE', '/api/user/delete', [UserController::class, 'delete'], [], 'user_delete');
         
         // User extra
-        $this->add('POST', '/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
-        $this->add('POST', '/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
+        $this->add('POST', '/api/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
+        $this->add('POST', '/api/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
     
         return parent::create();
     }
