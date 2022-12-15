@@ -19,5 +19,5 @@ console.log(message)
 
 // Vue Js
 import { createApp } from 'vue'
-import App from './vue/App.vue'
+import App from '@/assets//vue/App.vue'
 createApp(App).mount('#vue-app')
