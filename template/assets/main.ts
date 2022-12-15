@@ -5,6 +5,8 @@
 
 // Static files
 import '@/assets/img/strategio.svg'
+import '@/assets/img/favicon.svg'
+import '@/assets/img/favicon.png'
 
 // Stylesheets
 import '@/assets/scss/layout.scss'
