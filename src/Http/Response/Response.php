@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Http\Response;
 
+use Latte\Engine;
 use Saas\Debugger\Debugger;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -19,7 +20,8 @@ class Response
     public function __construct(
         private readonly Debugger $debugger,
         protected SymfonyResponse $response,
-        protected UrlGenerator    $urlGenerator
+        protected UrlGenerator    $urlGenerator,
+        protected Engine          $latte
     )
     {
     }
@@ -97,6 +99,19 @@ class Response
         );
         
         $this->response->headers->set('Content-Disposition', $disposition);
+        $this->sendRawResponse();
+    }
+    
+    /**
+     * @param string $path
+     * @param array<string, mixed> $params
+     * @return never
+     */
+    public function render(string $path, array $params = []): never
+    {
+        $html = $this->latte->renderToString($path, $params);
+        $this->getHttpResponse()->headers->set('Content-Type', 'text/html');
+        $this->getHttpResponse()->setContent($html);
         $this->sendRawResponse();
     }
 }

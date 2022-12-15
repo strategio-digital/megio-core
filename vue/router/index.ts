@@ -54,7 +54,6 @@ const routes: Array<RouteRecordRaw> = [
     }
 ]
 
-console.log(import.meta.env)
 const router = createRouter({
     history: createWebHistory(import.meta.env.MODE === 'production' ? '/admin' : '/'),
     routes

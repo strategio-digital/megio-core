@@ -15,14 +15,31 @@ COPY ./docker/php/8.1/fpm/php.ini /etc/php/8.1/fpm/php.ini
 COPY ./docker/php/8.1/fpm/php.ini /etc/php/8.1/fpm/php-fpm.conf
 COPY ./docker/php/8.1/fpm/pool.d/www.conf /etc/php/8.1/fpm/pool.d/www.conf
 
+# Apt packages update
+RUN apt-get update && apt-get install -y \
+    zip git \
+    libicu-dev \
+    curl \
+    gnupg
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs && npm i npm -g
+
+# Yarn
+RUN corepack enable
+
 # Permissions
 RUN chmod -R ugo+w ./temp
 RUN chmod -R ugo+w ./log
+RUN mkdir -p ./public && chmod -R ugo+r ./public
 
 # Install and build dependencies
 RUN composer install --no-cache --prefer-dist --no-scripts && rm -rf /root/.composer
+RUN yarn
+RUN yarn build
 
-# Remove docker folder
+# Remove node_modules & docker folder
+RUN rm -rf ./node_modules
 RUN rm -rf ./docker
 
 ADD docker-entrypoint.sh /docker-entrypoint.sh

@@ -19,10 +19,6 @@ abstract class Controller implements IController
     {
     }
     
-    public function startup(): void
-    {
-    }
-    
     /**
      * @return \Saas\Http\Response\Response
      */

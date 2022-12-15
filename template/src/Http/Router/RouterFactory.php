@@ -7,13 +7,15 @@ declare(strict_types=1);
 
 namespace App\Http\Router;
 
+use App\Http\Controller\HomeController;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
 class RouterFactory extends \Saas\Http\Router\RouterFactory
 {
     public function create(): UrlMatcher
     {
-        //$this->add('GET', '/invoice/download', [InvoiceController::class, 'download']);
+        // Homepage
+        $this->add('GET', '/', [HomeController::class, 'index'], [], 'home');
         
         return parent::create();
     }

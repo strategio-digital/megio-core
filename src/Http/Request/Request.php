@@ -40,7 +40,7 @@ class Request
     public function getRequestData(): array
     {
         $raw = $this->request->getContent();
-        $json = is_string($raw) ? json_decode($raw, true) : [];
+        $json = is_string($raw) ? json_decode($raw, true) : []; //@phpstan-ignore-line
         return array_merge($json ?: [], $this->request->files->all());
     }
 }

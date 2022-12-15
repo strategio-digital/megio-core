@@ -34,7 +34,6 @@ class App
         $reflection = new \ReflectionClass($controller);
         
         $this->invokeResourceGuards($reflection, $container, $actionName);
-        $controller->startup();
         $this->invokeActions($reflection, $container, $controller, $actionName, $actionParams);
         
         // Send response if still not sent

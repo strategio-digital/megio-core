@@ -9,6 +9,9 @@ services:
             - fromRequest(@request)
     - Symfony\Component\Routing\Generator\UrlGenerator(@routerFactory::getRouteCollection(), @requestContext)
 
+    - Latte\Engine
+    - Saas\Extension\Vite\Vite
+
     - Saas\App
     - Saas\Bootstrap
     - Saas\Debugger\Debugger

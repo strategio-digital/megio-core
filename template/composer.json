@@ -21,10 +21,12 @@
     },
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse -l 8 src/ www/ bin/console  --memory-limit 1G",
-        "neon": "vendor/bin/neon-lint config/",
+        "neon": "vendor/bin/neon-lint config",
+        "latte": "vendor/bin/latte-lint view",
         "analyse": [
             "@phpstan",
-            "@neon"
+            "@neon",
+            "@latte"
         ]
     }
 }

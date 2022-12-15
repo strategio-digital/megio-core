@@ -7,14 +7,19 @@ declare(strict_types=1);
 
 namespace Saas;
 
+use Latte\Bridges\Tracy\LattePanel;
+use Latte\Engine;
 use Saas\Debugger\Logger;
+use Saas\Extension\Vite\Vite;
 use Saas\Helper\Path;
+use Saas\Http\Router\LinkGenerator;
 use Saas\Security\Response\Cors;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Tracy\Debugger;
 
 class Bootstrap
@@ -62,8 +67,22 @@ class Bootstrap
         $container = new $class;
         $container->parameters['startedAt'] = $startedAt;
         
-        // Register DI panel
+        /** @var Engine $latte */
+        $latte = $container->getByType(Engine::class);
+        $latte->setAutoRefresh($_ENV['APP_ENV_MODE'] === 'develop');
+        $latte->setTempDirectory(Path::tempDir() . '/latte');
+        
+        /** @var Vite $vite */
+        $vite = $container->getByType(Vite::class);
+        $latte->addFunction('vite', fn(string $source, bool $isEntryPoint = false) => $isEntryPoint ? $vite->resolveEntrypoint($source) : $vite->resolveSource($source));
+        
+        /** @var LinkGenerator $linkGenerator */
+        $linkGenerator = $container->getByType(LinkGenerator::class);
+        $latte->addFunction('route', fn (string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkGenerator->link($name, $params, $path));
+        
+        // Register DI panels
         Debugger::getBar()->addPanel(new ContainerPanel($container));
+        Debugger::getBar()->addPanel(new LattePanel($latte));
         
         /** @var Response $response */
         $response = $container->getByType(Response::class);

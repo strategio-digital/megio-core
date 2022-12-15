@@ -10,7 +10,7 @@ namespace Saas\Http\Controller;
 use Saas\Storage\Storage;
 use Nette\DI\Container;
 
-class HomeController extends Controller
+class AppController extends Controller
 {
     public function index(Storage $storage, Container $container): void
     {

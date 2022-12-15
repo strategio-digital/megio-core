@@ -11,7 +11,8 @@ Project backend build on top of [Strategio SaaS](https://github.com/strategio-di
 6. `bin/console migrate`
 7. `bin/console permissions:update`
 8. `bin/console user:create-admin <email> <password>`
-9. Visit: [http://localhost:8090](http://localhost:8090)
+9. `yarn && yarn build`
+10. Visit: [http://localhost:8090](http://localhost:8090)
 
 ## Video tutorials
 Learn Strategio SaaS by video tutorials on [this page](https://github.com/strategio-digital/saas#tutorials).

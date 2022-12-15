@@ -12,8 +12,6 @@ use Saas\Http\Response\Response;
 
 interface IController
 {
-    public function startup(): void;
-    
     public function getRequest(): Request;
     
     public function getResponse(): Response;

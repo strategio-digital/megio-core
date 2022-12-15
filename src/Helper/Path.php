@@ -31,6 +31,11 @@ class Path
         return self::$projectPath . '/www';
     }
     
+    public static function publicDir(): string
+    {
+        return self::$projectPath . '/public';
+    }
+    
     public static function srcDir(): string
     {
         return self::$projectPath . '/src';
@@ -39,6 +44,11 @@ class Path
     public static function configDir(): string
     {
         return self::$projectPath . '/config';
+    }
+    
+    public static function viewDir(): string
+    {
+        return self::$projectPath . '/view';
     }
     
     public static function saasSrcDir(): string

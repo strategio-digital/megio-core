@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Saas\Http\Router;
 
 use Saas\Http\Controller\AuthController;
-use Saas\Http\Controller\HomeController;
+use Saas\Http\Controller\AppController;
 use Saas\Http\Controller\UserController;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
@@ -17,7 +17,7 @@ class RouterFactory extends Router
     public function create(): UrlMatcher
     {
         // App & Auth
-        $this->add('GET', '/api', [HomeController::class, 'index'], [], 'app');
+        $this->add('GET', '/api', [AppController::class, 'index'], [], 'app');
         $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth_email');
         $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
     
