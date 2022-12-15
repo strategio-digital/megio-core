@@ -20,10 +20,9 @@ The Tool for developing Webs & APIs by simple clicks.
 
 ## Working on
 - User datagrid + CRUD with bulk inserts / updates
-- Latte template rendering + Nginx Routing \/_\/\* \/api\/*, /\*
-- App.php refactoring
 - Collection datagrid + CRUD
 - Admin datagrid + CRUD
+- App.php & Bootstrap.php refactoring
 
 ## Backlog
 - **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
