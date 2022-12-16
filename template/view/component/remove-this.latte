@@ -5,6 +5,7 @@
 
 {varType string $title}
 {varType string $description}
+{varType string $tech}
 
 <div class="container">
     <div>
@@ -12,9 +13,11 @@
         <div class="text">
             <h1>{$title}</h1>
             <p>{$description}</p>
-            <a href="{route('app')}" target="_blank">Go to API</a> |
-            <a href="/admin" target="_blank">Admin login</a>
+            <a href="https://github.com/strategio-digital/saas" target="_blank">Github</a> |
+            <a href="{route('app')}" target="_blank">API overview</a> |
+            <a href="/admin/login" target="_blank">Admin login</a>
         </div>
+        <p class="tech">{$tech}</p>
         <div id="vue-app" style="min-height: 104px"></div>
     </div>
 </div>

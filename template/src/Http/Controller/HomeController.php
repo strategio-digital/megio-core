@@ -16,7 +16,8 @@ class HomeController extends Controller
     {
         $this->getResponse()->render(Path::viewDir() . '/controller/home.latte', [
             'title' => 'Strategio SaaS',
-            'description' => 'Doctrine ORM + Symfony Router + Latte + Vue'
+            'description' => 'The Tool for developing webs & APIs by simple clicks.',
+            'tech' => 'Doctrine ORM + Symfony Router + Latte + Vue + Vite'
         ]);
     }
 }
