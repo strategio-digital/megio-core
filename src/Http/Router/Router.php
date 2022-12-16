@@ -36,7 +36,7 @@ abstract class Router
     public function add(string $method, string $path, array $route, array $params = [], string $name = null): void
     {
         $route = array_merge(['_controller' => $route[0], '_action' => $route[1]], $params);
-        $routeName = $name ?: 'auto-generated-' . $this->routerCounter++;
+        $routeName = $name ?: 'auto-generated-name-' . $this->routerCounter++;
         $this->routes->add($routeName, new Route($path, $route, [], [], '', [], $method));
     }
     
