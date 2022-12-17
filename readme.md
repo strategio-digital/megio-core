@@ -40,7 +40,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - App settings
 - Storage settings
 - E-mail settings
-- Extending vue-app & vue-router in own project
 - Enhanced API CRUD filters, joins, orders
 - Application event hooks
 - Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
@@ -54,8 +53,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 **TODO Beginner:**
 
 1. How to start new project and create first collections.
-2. How to handle request and render Latte template.
-3. How to handle requests and send e-mails.
+2. How to handle request and render collection data in Latte template.
+3. How to handle API requests and send example e-mail.
 4. How to make CRUD operations with Doctrine ORM.
 5. How to upload files with S3 storage adapter.
 6. How to deploy your application with easypanel.io.
