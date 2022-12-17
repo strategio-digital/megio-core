@@ -17,7 +17,7 @@ class AppController extends Controller
 {
     public function admin(string|int|float $uri = null): void
     {
-        $this->getResponse()->render(Path::saasSrcDir() . '/../view/controller/admin.latte');
+        $this->getResponse()->render(Path::saasVendorDir() . '/view/controller/admin.latte');
     }
     
     public function api(Storage $storage, Container $container): void

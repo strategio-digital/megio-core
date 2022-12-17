@@ -51,17 +51,7 @@ class Path
         return self::$projectPath . '/view';
     }
     
-    public static function saasSrcDir(): string
-    {
-        return self::saasDir() . '/src';
-    }
-    
-    public static function frameWorkConfigDir(): string
-    {
-        return self::saasDir() . '/config';
-    }
-    
-    private static function saasDir(): string
+    public static function saasVendorDir(): string
     {
         return __DIR__ . '/../../';
     }

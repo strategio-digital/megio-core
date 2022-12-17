@@ -29,7 +29,7 @@ class Doctrine
     public function __construct()
     {
         $srcEntityPath = Path::srcDir() . '/Database/Entity';
-        $entityPaths = array_merge([Path::saasSrcDir() . '/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
+        $entityPaths = array_merge([Path::saasVendorDir() . '/src/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             $entityPaths,
