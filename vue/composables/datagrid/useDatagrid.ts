@@ -5,8 +5,8 @@
 
 import { onMounted, watch, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
-import api from '@/api'
+import { useDatagridStore } from '@/saas/composables/datagrid/useDatagridStore'
+import api from '@/saas/api'
 
 const useDatagrid = (collectionName: string, itemsPerPage: number) => {
     const store = useDatagridStore()

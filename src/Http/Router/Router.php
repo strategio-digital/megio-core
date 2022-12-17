@@ -31,13 +31,14 @@ abstract class Router
      * @param array<int, string> $route
      * @param array<string, string> $params
      * @param string|null $name
+     * @param array<string, string> $requirements
      * @return void
      */
-    public function add(string $method, string $path, array $route, array $params = [], string $name = null): void
+    public function add(string $method, string $path, array $route, array $params = [], string $name = null, array $requirements = []): void
     {
         $route = array_merge(['_controller' => $route[0], '_action' => $route[1]], $params);
         $routeName = $name ?: 'auto-generated-name-' . $this->routerCounter++;
-        $this->routes->add($routeName, new Route($path, $route, [], [], '', [], $method));
+        $this->routes->add($routeName, new Route($path, $route, $requirements, [], '', [], $method));
     }
     
     /**

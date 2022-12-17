@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Layout from '@/components/Layout.vue'
-import SettingNav from '@/components/nav/SettingNav.vue'
+import Layout from '@/saas/components/Layout.vue'
+import SettingNav from '@/saas/components/nav/SettingNav.vue'
 </script>
 
 <template>

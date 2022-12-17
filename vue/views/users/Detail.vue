@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { IUser } from '@/api/types/IUser'
-import Layout from '@/components/Layout.vue'
-import api from '@/api'
+import { IUser } from '@/saas/api/types/IUser'
+import Layout from '@/saas/components/Layout.vue'
+import api from '@/saas/api'
 
 const router = useRouter()
 const route = useRoute()

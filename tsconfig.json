@@ -9,16 +9,28 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "vue/*"
+      "@/saas/*": [
+        "./vue/*"
       ]
     }
   },
-  "include": ["vue/**/*.ts", "vue/**/*.d.ts", "vue/**/*.tsx", "vue/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": [
+    "vue/**/*.ts",
+    "vue/**/*.d.ts",
+    "vue/**/*.tsx",
+    "vue/**/*.vue"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

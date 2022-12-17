@@ -4,8 +4,8 @@
  */
 
 import { Ref } from 'vue'
-import useModal from '@/composables/modal/useModal'
-import api from '@/api'
+import useModal from '@/saas/composables/modal/useModal'
+import api from '@/saas/api'
 
 const useDatagridModal = (collectionName: string, refresh: Function, selectedItem: Ref, selectedItems: Ref<any[]>) => {
     const mdlRemove = useModal()

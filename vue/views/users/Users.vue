@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import Layout from '@/components/Layout.vue'
-import useDatagrid from '@/composables/datagrid/useDatagrid'
-import DatagridHeader from '@/components/datagrid/DatagridHeader.vue'
-import DatagridTable from '@/components/datagrid/DatagridTable.vue'
-import Modal from '@/components/modal/Modal.vue'
-import useDatagridModal from '@/composables/datagrid/useDatagridModal'
-import useUserModal from '@/composables/modal/useUserModal'
-import SideModal from '@/components/modal/SideModal.vue'
-import CollectionForm from '@/components/form/CollectionForm.vue'
+import Layout from '@/saas/components/Layout.vue'
+import useDatagrid from '@/saas/composables/datagrid/useDatagrid'
+import DatagridHeader from '@/saas/components/datagrid/DatagridHeader.vue'
+import DatagridTable from '@/saas/components/datagrid/DatagridTable.vue'
+import Modal from '@/saas/components/modal/Modal.vue'
+import useDatagridModal from '@/saas/composables/datagrid/useDatagridModal'
+import useUserModal from '@/saas/composables/modal/useUserModal'
+import SideModal from '@/saas/components/modal/SideModal.vue'
+import CollectionForm from '@/saas/components/form/CollectionForm.vue'
 
 const { store, refresh } = useDatagrid('user', 10)
 const { items, page, selectedItems, selectedItem, loading } = storeToRefs(store)

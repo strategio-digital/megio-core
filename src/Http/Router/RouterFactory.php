@@ -17,7 +17,9 @@ class RouterFactory extends Router
     public function create(): UrlMatcher
     {
         // App & Auth
-        $this->add('GET', '/api', [AppController::class, 'index'], [], 'app');
+        $this->add('GET', '/api', [AppController::class, 'api'], [], 'api');
+        $this->add('GET', '/admin{uri}', [AppController::class, 'admin'], [], 'admin', ['uri' => '.*']);
+        
         $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth_email');
         $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
     

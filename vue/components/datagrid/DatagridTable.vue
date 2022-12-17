@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
-import { IDatagridAction } from '@/components/datagrid/types/IDatagridAction'
-import { IDatagridColumn } from '@/components/datagrid/types/IDatagridColumn'
-import { useDatagridStore } from '@/composables/datagrid/useDatagridStore'
-import dateHelper from '@/helpers/dateHelper'
+import { IDatagridAction } from '@/saas/components/datagrid/types/IDatagridAction'
+import { IDatagridColumn } from '@/saas/components/datagrid/types/IDatagridColumn'
+import { useDatagridStore } from '@/saas/composables/datagrid/useDatagridStore'
+import dateHelper from '@/saas/helpers/dateHelper'
 
 defineProps<{
     columns: IDatagridColumn[]

@@ -11,13 +11,11 @@ import '@/assets/img/favicon.png'
 // Stylesheets
 import '@/assets/scss/layout.scss'
 
-// Typescript
+// Typescript example
 import removeThis from '@/assets/ts/removeThis'
+console.log(removeThis().data())
 
-const message = removeThis().data()
-console.log(message)
-
-// Vue Js
+// VueJS example
 import { createApp } from 'vue'
-import App from '@/assets//vue/App.vue'
+import App from '@/assets/vue/App.vue'
 createApp(App).mount('#vue-app')

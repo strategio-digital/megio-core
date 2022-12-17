@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { UnwrapRef } from 'vue'
-import IFormField from '@/composables/form/IFormField'
+import IFormField from '@/saas/composables/form/IFormField'
 
 defineProps<{ fields: UnwrapRef<IFormField[]> }>()
 </script>

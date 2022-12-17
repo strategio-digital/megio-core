@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import api from '@/api'
-import { IUser } from '@/api/types/IUser'
-import useFormBuilder from '@/composables/form/useFormBuilder'
-import FormFields from '@/components/form/FormFields.vue'
+import api from '@/saas/api'
+import { IUser } from '@/saas/api/types/IUser'
+import useFormBuilder from '@/saas/composables/form/useFormBuilder'
+import FormFields from '@/saas/components/form/FormFields.vue'
 
 const props = defineProps<{
     id: string,

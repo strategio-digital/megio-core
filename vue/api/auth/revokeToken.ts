@@ -3,8 +3,8 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import api from '@/api'
-import { IResponse } from '@/api/types/IResponse'
+import api from '@/saas/api'
+import { IResponse } from '@/saas/api/types/IResponse'
 
 interface IResp extends IResponse {
     data: {

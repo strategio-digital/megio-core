@@ -8,13 +8,19 @@ declare(strict_types=1);
 namespace Saas\Http\Controller;
 
 use Nette\Utils\Strings;
+use Saas\Helper\Path;
 use Saas\Http\Router\RouterFactory;
 use Saas\Storage\Storage;
 use Nette\DI\Container;
 
 class AppController extends Controller
 {
-    public function index(Storage $storage, Container $container): void
+    public function admin(string|int|float $uri = null): void
+    {
+        $this->getResponse()->render(Path::saasSrcDir() . '/../view/controller/admin.latte');
+    }
+    
+    public function api(Storage $storage, Container $container): void
     {
         /** @var RouterFactory $routeFactory */
         $routeFactory = $container->getByName('routerFactory');

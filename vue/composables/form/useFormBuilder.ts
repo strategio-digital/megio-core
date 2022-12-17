@@ -3,8 +3,8 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 import { ref } from 'vue'
-import IFormField from '@/composables/form/IFormField'
-import dateHelper from '@/helpers/dateHelper'
+import IFormField from '@/saas/composables/form/IFormField'
+import dateHelper from '@/saas/helpers/dateHelper'
 
 const useFormBuilder = () => {
     const formFields = ref<IFormField[]>([])

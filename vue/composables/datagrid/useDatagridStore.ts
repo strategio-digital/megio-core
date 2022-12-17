@@ -5,7 +5,7 @@
 
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { IRow } from '@/api/types/IRow'
+import { IRow } from '@/saas/api/types/IRow'
 
 export const useDatagridStore = defineStore('datagrid', () => {
     const loading = ref(true)

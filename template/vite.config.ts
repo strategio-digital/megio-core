@@ -5,7 +5,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
     resolve: {
         alias: {
-            '@/assets': '/assets'
+            '@/assets': '/assets',
+            '@/saas': '/vendor/strategio/saas/vue',
+            './vue': '/vendor/strategio/saas/vue',
         }
     },
     build: {
@@ -17,7 +19,7 @@ export default defineConfig({
         laravel({
             hotFile: 'temp/vite.hot',
             buildDirectory: 'public',
-            input: ['assets/main.ts'],
+            input: ['assets/app.ts', 'assets/saas.ts'],
             refresh: ['assets/**', 'view/**']
         }),
     ]

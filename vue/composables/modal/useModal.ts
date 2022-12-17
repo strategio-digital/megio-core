@@ -3,7 +3,7 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 import { ref } from 'vue'
-import { IModal } from '@/composables/modal/types/IModal'
+import { IModal } from '@/saas/composables/modal/types/IModal'
 
 type TToggle = 'show' | 'hide'
 

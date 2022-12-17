@@ -3,17 +3,17 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import { IResponse } from '@/api/types/IResponse'
-import adminLoginByEmail from '@/api/auth/adminLoginByEmail'
-import loginByEmail from '@/api/auth/loginByEmail'
-import logout from '@/api/auth/logout'
-import currentUser from '@/api/auth/currentUser'
-import show from '@/api/collections/show'
-import showOne from '@/api/collections/showOne'
-import remove from '@/api/collections/remove'
-import revokeToken from '@/api/auth/revokeToken'
+import { IResponse } from '@/saas/api/types/IResponse'
+import adminLoginByEmail from '@/saas/api/auth/adminLoginByEmail'
+import loginByEmail from '@/saas/api/auth/loginByEmail'
+import logout from '@/saas/api/auth/logout'
+import currentUser from '@/saas/api/auth/currentUser'
+import show from '@/saas/api/collections/show'
+import showOne from '@/saas/api/collections/showOne'
+import remove from '@/saas/api/collections/remove'
+import revokeToken from '@/saas/api/auth/revokeToken'
 
-const endpoint = import.meta.env.DEV ? 'http://localhost:8090/api' : '/api'
+const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/api' : '/api'
 
 const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> => {
     const url = endpoint + uri
@@ -36,7 +36,7 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
 
     if(user && resp.status === 401) {
         logout()
-        window.location.href = import.meta.env.MODE === 'production' ? '/admin' : '/'
+        window.location.href = '/admin'
     }
 
     return {

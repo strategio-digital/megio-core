@@ -23,7 +23,7 @@ class Vite
         }
         
         $entry = $this->getManifest()[$source];
-        return 'public/' . $entry['file'];
+        return '/public/' . $entry['file'];
     }
     
     public function resolveEntrypoint(string $entryPoint): string
@@ -36,9 +36,9 @@ class Vite
         $entry = $this->getManifest()[$entryPoint];
         
         $result = array_merge(
-            [$this->sourceToHtmlTag('public/' . $entry['file'])],
-            array_key_exists('css', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('public/' . $source), $entry['css']) : [],
-            array_key_exists('js', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('public/' . $source), $entry['js']) : []
+            [$this->sourceToHtmlTag('/public/' . $entry['file'])],
+            array_key_exists('css', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/public/' . $source), $entry['css']) : [],
+            array_key_exists('js', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/public/' . $source), $entry['js']) : []
         );
         
         return implode(PHP_EOL, $result);

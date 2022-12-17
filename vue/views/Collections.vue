@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Layout from '@/components/Layout.vue'
-import CollectionNav from '@/components/nav/CollectionNav.vue'
+import Layout from '@/saas/components/Layout.vue'
+import CollectionNav from '@/saas/components/nav/CollectionNav.vue'
 </script>
 
 <template>

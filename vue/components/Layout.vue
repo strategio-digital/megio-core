@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/api'
+import api from '@/saas/api'
 
 const props = defineProps<{ loading?: boolean }>()
 
@@ -36,7 +36,7 @@ function logout() {
                     :style="{'padding': (theme === 'light' ? '2px' : '0px')}"
                 >
                     <img
-                        src="@/assets/img/strategio.svg"
+                        src="@/saas/assets/img/strategio.svg"
                         :width="theme === 'light' ? 34 : 38"
                         :height="theme === 'light' ? 34 : 38"
                         alt="Strategio Saas"
