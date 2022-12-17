@@ -1,22 +1,29 @@
 # Strategio SaaS
 The Tool for developing Webs & APIs by simple clicks.
 
+Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
+
 ## Installation guide
 1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
 2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
 
-## Features
-- 🟠&nbsp; Vue 3 administration (collections, users, admins, app settings)
-- 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles)
-- 🟢&nbsp; Roles, resources and resource-guards in controllers
-- 🟢&nbsp; Schema validation for requests and controllers
-- 🟢&nbsp; Doctrine database entities with PHP attributes and migrations
-- 🟢&nbsp; File storage with AWS S3 adapter
-- 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter
-- 🟢&nbsp; Sending emails by custom SMTP servers
-- 🟢&nbsp; Symfony console commands
-- 🟢&nbsp; PHP-Stan static analysis on level 8
-- 🟢&nbsp; One click deployment with Dockerfile and [easypanel.io](https://easypanel.io/)
+## Admin features
+- 🟠&nbsp; Fully extendable Vue 3 Admin panel.
+- 🟠&nbsp; Admin panel with DB / collection editor, users, roles and custom datagrid tables.
+- 🟢&nbsp; Custom website frontend handled by simple routing and Latte templates.
+- 🟢&nbsp; Custom Assets (scss, ts, vue, etc.) handled by Vite.
+- 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
+
+## Backend features
+- 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles).
+- 🟢&nbsp; Roles, resources and resource-guards in controllers.
+- 🟢&nbsp; Schema validation for requests and controllers.
+- 🟢&nbsp; Doctrine database entities with PHP attributes and migrations.
+- 🟢&nbsp; File storage with AWS S3 adapter.
+- 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter.
+- 🟢&nbsp; Sending emails by custom SMTP servers.
+- 🟢&nbsp; Symfony console commands.
+- 🟢&nbsp; PHP-Stan static analysis on level 8.
 
 ## Working on
 - User datagrid + CRUD with bulk inserts / updates
@@ -47,12 +54,13 @@ The Tool for developing Webs & APIs by simple clicks.
 **TODO Beginner:**
 
 1. How to start new project and create first collections.
-2. How to handle requests and send e-mails.
-3. How to make CRUD operations with Doctrine ORM.
-4. How to upload files with S3 storage adapter.
-5. How to deploy your application with easypanel.io.
- 
-### How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YKCGNpF).
+2. How to handle request and render Latte template.
+3. How to handle requests and send e-mails.
+4. How to make CRUD operations with Doctrine ORM.
+5. How to upload files with S3 storage adapter.
+6. How to deploy your application with easypanel.io.
+
+### How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YsqUZuv).
 
 If you want to use Postman to debug API, just add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
 ```JS
