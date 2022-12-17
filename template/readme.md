@@ -9,9 +9,9 @@ Application built on [Strategio SaaS](https://github.com/strategio-digital/saas)
 4. `./project.sh app`
 5. `composer i`
 6. `bin/console migrate`
-7. `bin/console user:create-admin <email> <password>`
-8. `bin/console permissions:update && exit`
-9. `yarn && yarn build`
+7. `bin/console permissions:update`
+8. `bin/console user:create-admin <email> <password>`
+9. Exit container by `exit` and then run `yarn && yarn dev`
 10. Visit: [http://localhost:8090](http://localhost:8090)
 
 ## Video tutorials
