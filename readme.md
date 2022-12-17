@@ -5,13 +5,13 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Installation guide
 1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
-2. Finish installation by steps in your project-folder [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
+2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
 
-## Admin features
-- 🟠&nbsp; Fully extendable Vue 3 Admin panel.
-- 🟠&nbsp; Admin panel with DB / collection editor, users, roles and custom datagrid tables.
-- 🟢&nbsp; Custom website frontend handled by simple routing and Latte templates.
-- 🟢&nbsp; Custom Assets (scss, ts, vue, etc.) handled by Vite.
+## Core features
+- 🟢&nbsp; Website frontend handling by simple routes and Latte templates.
+- 🟢&nbsp; Fast asset building (scss, ts, vue, etc.) with Vite.
+- 🟠&nbsp; Admin panel with DB / collection editor, users & roles editor and custom datagrids.
+- 🟠&nbsp; Fully configurable & extendable Vue 3 Admin panel.
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
 
 ## Backend features
