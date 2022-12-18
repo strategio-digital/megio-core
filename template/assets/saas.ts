@@ -7,11 +7,12 @@
 import { createApp } from 'vue'
 import App from '@/saas/App.vue'
 import { createSaas } from '@/saas/createSaas'
-// import routes from '@/saas/router/routes'
-//
+import navbar from '@/saas/globals/navbar'
+import routes from '@/saas/globals/routes'
+
+// Custom routes
 // const exclude = ['Users']
 // const customRoutes = routes.filter(route => !exclude.includes(route.name as string))
-//
 // customRoutes.push(
 //     {
 //         path: '/users',
@@ -25,5 +26,10 @@ import { createSaas } from '@/saas/createSaas'
 //     }
 // )
 
-const saas = createSaas({ /*routes: customRoutes*/ })
+// Custom navbar
+// navbar.items.push(
+//     { title: 'Uživatelé', routeName: 'Users', activePrefix: '/users', icon: 'mdi-account-multiple' }
+// )
+
+const saas = createSaas({ routes, navbar })
 createApp(App).use(saas).mount('#app-saas')

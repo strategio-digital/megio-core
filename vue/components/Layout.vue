@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { ref, useSlots } from 'vue'
+import { inject, ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/saas/api'
 
 const props = defineProps<{ loading?: boolean }>()
 
+const navbar = inject('navbar')
 const slots = useSlots()
 const router = useRouter()
 const route = useRoute()
@@ -27,7 +28,7 @@ function logout() {
     <v-app :theme="theme">
         <v-navigation-drawer permanent rail rail-width="86">
             <router-link
-                :to="{ name: 'Collections' }"
+                :to="{ name: navbar.brand.routeName }"
                 class="ps-2 mb-4 mt-3 d-flex text-no-wrap align-center text-decoration-none"
             >
                 <div
@@ -36,10 +37,10 @@ function logout() {
                     :style="{'padding': (theme === 'light' ? '2px' : '0px')}"
                 >
                     <img
-                        src="@/saas/assets/img/strategio.svg"
+                        :src="navbar.brand.logo"
                         :width="theme === 'light' ? 34 : 38"
                         :height="theme === 'light' ? 34 : 38"
-                        alt="Strategio Saas"
+                        :alt="navbar.brand.title"
                         class="d-block"
                     >
                 </div>
@@ -47,41 +48,15 @@ function logout() {
             </router-link>
 
             <v-list density="comfortable">
-                <v-tooltip location="end" text="Kolekce" offset="-5">
+                <v-tooltip v-for="nav in navbar.items" :key="nav.routeName" location="end" :text="nav.title" offset="-5">
                     <template v-slot:activator="{ props }">
                         <v-list-item
                             v-bind="props"
-                            :active="route.path.startsWith('/collections')"
-                            :to="{ name: 'Collections'}"
-                            prepend-icon="mdi-database"
-                            value="collections"
-                            title="Kolekce"
-                        />
-                    </template>
-                </v-tooltip>
-
-                <v-tooltip location="end" text="Uživatelé" offset="-5">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            :active="route.path.startsWith('/users')"
-                            :to="{ name: 'Users' }"
-                            prepend-icon="mdi-account-multiple"
-                            value="users"
-                            title="Uživatelé"
-                        />
-                    </template>
-                </v-tooltip>
-
-                <v-tooltip location="end" text="Nastavení" offset="-5">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            :active="route.path.startsWith('/settings')"
-                            :to="{ name: 'Application' }"
-                            prepend-icon="mdi-hammer-screwdriver"
-                            value="settings"
-                            title="Nastavení"
+                            :active="route.path.startsWith(nav.activePrefix)"
+                            :to="{ name: nav.routeName}"
+                            :prepend-icon="nav.icon"
+                            :value="nav.routeName"
+                            :title="nav.title"
                         />
                     </template>
                 </v-tooltip>
@@ -129,7 +104,7 @@ function logout() {
                     style="z-index: 10"
                     class="position-absolute w-100 h-100 d-flex justify-center align-center bg-overlay"
                 >
-                    <v-progress-circular indeterminate :size="50" :width="5"/>
+                    <v-progress-circular indeterminate :size="50" :width="5" />
                 </div>
                 <slot><h1>...</h1></slot>
             </div>
