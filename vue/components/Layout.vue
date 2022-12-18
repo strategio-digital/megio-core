@@ -2,10 +2,11 @@
 import { inject, ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/saas/api'
+import INavbar from '@/saas/components/navbar/types/INavbar'
 
 const props = defineProps<{ loading?: boolean }>()
 
-const navbar = inject('navbar')
+const navbar: INavbar | undefined = inject('navbar')
 const slots = useSlots()
 const router = useRouter()
 const route = useRoute()
