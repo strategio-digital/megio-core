@@ -2,10 +2,11 @@
 import { inject, ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/saas/api'
+import INavbar from '@/saas/components/navbar/types/INavbar'
 
 const props = defineProps<{ loading?: boolean }>()
 
-const navbar = inject('navbar')
+const navbar = inject('navbar') as INavbar
 const slots = useSlots()
 const router = useRouter()
 const route = useRoute()
@@ -48,7 +49,13 @@ function logout() {
             </router-link>
 
             <v-list density="comfortable">
-                <v-tooltip v-for="nav in navbar.items" :key="nav.routeName" location="end" :text="nav.title" offset="-5">
+                <v-tooltip
+                    v-for="nav in navbar.items"
+                    :key="nav.routeName"
+                    location="end"
+                    :text="nav.title"
+                    offset="-5"
+                >
                     <template v-slot:activator="{ props }">
                         <v-list-item
                             v-bind="props"
