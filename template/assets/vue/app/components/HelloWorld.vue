@@ -6,10 +6,10 @@ import vue from '@/assets/img/vue.svg'
 const props = defineProps<{ msg: string }>()
 const images = ref([
     { src: vite, href: 'https://vitejs.dev', alt: props.msg },
-    { src: vue, href: 'https://vuejs.org', alt: props.msg  }
+    { src: vue, href: 'https://vuejs.org', alt: props.msg }
 ])
 
-function openLink (href: string) {
+function openLink(href: string) {
     window.open(href, '_blank')
 }
 </script>

@@ -3,17 +3,27 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-// SaaS Admin
+// Extended SaaS Admin panel
 import { createApp } from 'vue'
 import App from '@/saas/App.vue'
 import { createSaas } from '@/saas/createSaas'
-//import routes from '@/saas/router/routes'
+// import routes from '@/saas/router/routes'
+//
+// const exclude = ['Users']
+// const customRoutes = routes.filter(route => !exclude.includes(route.name as string))
+//
+// customRoutes.push(
+//     {
+//         path: '/users',
+//         name: 'Users',
+//         component: () => import(/* webpackChunkName: "users" */ '@/assets/vue/saas/views/users/Users.vue')
+//     },
+//     {
+//         path: '/users/:id',
+//         name: 'UserDetail',
+//         component: () => import(/* webpackChunkName: "users" */ '@/assets/vue/saas/views/users/Detail.vue')
+//     }
+// )
 
-// routes.push( {
-//     path: '/users/:id',
-//     name: 'UserDetail',
-//     component: () => import(/* webpackChunkName: "users" */ '@/saas/views/users/Detail.vue')
-// })
-
-const saas = createSaas({ /*routes*/ });
+const saas = createSaas({ /*routes: customRoutes*/ })
 createApp(App).use(saas).mount('#app-saas')

@@ -17,5 +17,5 @@ console.log(removeThis().data())
 
 // VueJS example
 import { createApp } from 'vue'
-import App from '@/assets/vue/App.vue'
+import App from '@/assets/vue/app/App.vue'
 createApp(App).mount('#vue-app')
