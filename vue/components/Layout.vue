@@ -2,11 +2,10 @@
 import { inject, ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/saas/api'
-import INavbar from '@/saas/components/navbar/types/INavbar'
 
 const props = defineProps<{ loading?: boolean }>()
 
-const navbar = inject('navbar') as INavbar
+const navbar = inject('navbar')
 const slots = useSlots()
 const router = useRouter()
 const route = useRoute()
@@ -27,7 +26,7 @@ function logout() {
 
 <template>
     <v-app :theme="theme">
-        <v-navigation-drawer permanent rail rail-width="86">
+        <v-navigation-drawer v-if="navbar" permanent rail rail-width="86">
             <router-link
                 :to="{ name: navbar.brand.routeName }"
                 class="ps-2 mb-4 mt-3 d-flex text-no-wrap align-center text-decoration-none"
