@@ -16,6 +16,8 @@ class Vite
      */
     protected array|null $manifest = null;
     
+    protected bool $isFirstEntry = false;
+    
     public function resolveSource(string $source): string
     {
         if (file_exists(Path::tempDir() . '/vite.hot')) {
@@ -29,8 +31,18 @@ class Vite
     public function resolveEntrypoint(string $entryPoint): string
     {
         if (file_exists(Path::tempDir() . '/vite.hot')) {
-            $source = file_get_contents(Path::tempDir() . '/vite.hot') . '/' . $entryPoint;
-            return $this->sourceToHtmlTag($source);
+            $domain = file_get_contents(Path::tempDir() . '/vite.hot') . '/';
+            
+            $html = [];
+            
+            if (!$this->isFirstEntry) {
+                $html[] = $this->sourceToHtmlTag($domain . '@vite/client');
+                $this->isFirstEntry = true;
+            }
+            
+            $html[] = $this->sourceToHtmlTag($domain . $entryPoint);
+            
+            return implode('', $html);
         }
         
         $entry = $this->getManifest()[$entryPoint];
@@ -54,7 +66,7 @@ class Vite
             if (!file_exists(Path::publicDir() . '/manifest.json')) {
                 throw new \Exception("Vite manifest file not found, please execute 'yarn build' or 'yarn dev' command.");
             }
-
+            
             $content = file_get_contents(Path::publicDir() . '/manifest.json');
             
             if (!$content) {
@@ -75,10 +87,6 @@ class Vite
             return '<link rel="stylesheet" href="' . $source . '">';
         }
         
-        if ($extension === 'js' || $extension === 'ts') {
-            return '<script type="module" src="' . $source . '"></script>';
-        }
-        
-        throw new \Exception("Unknown asset file extension '{$extension}'.");
+        return '<script type="module" src="' . $source . '"></script>';
     }
 }
