@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Doctrine;
 
+use Nette\Utils\FileSystem;
 use Saas\Helper\Path;
 use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
@@ -42,14 +43,25 @@ class Doctrine
         $this->configuration->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
         
         $this->connectionConfig = [
-            'driver' => 'pdo_pgsql',
+            'driver' => $_ENV['DB_DRIVER'],
             'charset' => 'UTF8',
             'host' => $_ENV['DB_HOST'],
             'port' => $_ENV['DB_PORT'],
             'user' => $_ENV['DB_USERNAME'],
             'password' => $_ENV['DB_PASSWORD'],
-            'dbname' => $_ENV['DB_DATABASE'] // TODO: get by subdomain or by .env
+            'dbname' => $_ENV['DB_DATABASE']
         ];
+        
+        if ($_ENV['DB_DRIVER'] === 'pdo_sqlite' || $_ENV['DB_DRIVER'] === 'sqlite3') {
+            $this->connectionConfig['path'] = $_ENV['DB_SQLITE_FILE'];
+            if (!file_exists($_ENV['DB_SQLITE_FILE'])) {
+                FileSystem::write($_ENV['DB_SQLITE_FILE'], '');
+            }
+        }
+    
+        if (!file_exists(Path::srcDir() . '/../migrations')) {
+            FileSystem::createDir(Path::srcDir() . '/../migrations');
+        }
         
         $this->entityManager = EntityManager::create($this->connectionConfig, $this->configuration);
     }
@@ -66,7 +78,7 @@ class Doctrine
             ],
             
             'migrations_paths' => [
-                'App\\Migrations' => Path::tempDir() . '/../migrations',
+                'App\\Migrations' => Path::srcDir() . '/../migrations',
             ],
             
             'all_or_nothing' => true,

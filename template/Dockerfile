@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
     zip git \
     libicu-dev \
     curl \
-    gnupg
+    gnupg \
+    php8.1-sqlite3
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs && npm i npm -g
