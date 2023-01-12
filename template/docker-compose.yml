@@ -22,7 +22,7 @@ services:
       - $PWD:/usr/share/nginx/html:cached
 
   postgres:
-    image: postgres:15
+    image: postgres:14
     #restart: on-failure because postgres shutdown on first creation (permissions problem)
     restart: "on-failure"
     environment:

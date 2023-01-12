@@ -5,6 +5,7 @@ EXPOSE 80
 
 # Set timezone
 ENV TZ="Europe/Prague"
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 
 # Copy project files, Nginx configs & PHP configs
 RUN rm -rf ./*
