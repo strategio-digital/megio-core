@@ -3,6 +3,8 @@ The Tool for developing Webs & APIs by simple clicks.
 
 Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
+<img src="https://jzapletal.s3.eu-west-1.amazonaws.com/strategio-saas-edit-data.png" width="100%" alt="Strategio SaaS">
+
 ## Installation guide
 1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
 2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
