@@ -19,7 +19,7 @@ elif test "$1" = "serve"; then
   if test "$2" = "--stop-others"; then
     docker stop $(docker ps -a -q)
   fi
-  docker-compose -f docker-compose.yml up -d --build
+  docker-compose -f docker-compose.yml up -d
 elif test "$1" = "mvc"; then
   cd vendor/strategio/saas
   git init
