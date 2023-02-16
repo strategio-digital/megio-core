@@ -17,6 +17,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "php": "^8.2",
         "strategio/saas": "dev-master"
     },
     "scripts": {

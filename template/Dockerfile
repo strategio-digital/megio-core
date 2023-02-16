@@ -1,54 +1,66 @@
-FROM wyveo/nginx-php-fpm:php81
+FROM php:8.2-fpm-alpine as build-stage-php
+WORKDIR /build
 
-WORKDIR /usr/share/nginx/html
-EXPOSE 80
+RUN apk add curl
+
+COPY ./composer.json ./composer.json
+COPY ./composer.lock ./composer.lock
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-cache --prefer-dist --no-scripts
+
+FROM node:18-alpine as build-stage-node
+WORKDIR /build
+
+COPY ./assets ./assets
+COPY ./package.json ./package.json
+COPY ./yarn.lock ./yarn.lock
+COPY ./vite.config.ts ./vite.config.ts
+COPY ./tsconfig.node.json ./tsconfig.node.json
+COPY ./tsconfig.json ./tsconfig.json
+COPY --from=build-stage-php /build/vendor /build/vendor
+
+RUN yarn && yarn build
+
+FROM php:8.2-fpm-alpine
+WORKDIR /var/www/html
 
 # Set timezone
 ENV TZ="Europe/Prague"
-ENV NODE_OPTIONS="--max-old-space-size=1024"
 
-# Copy project files, Nginx configs & PHP configs
-RUN rm -rf ./*
-COPY . /usr/share/nginx/html
-COPY ./docker/nginx /etc/nginx
-COPY ./docker/php/8.1/cli/php.ini /etc/php/8.1/cli/php.ini
-COPY ./docker/php/8.1/fpm/php.ini /etc/php/8.1/fpm/php.ini
-COPY ./docker/php/8.1/fpm/php.ini /etc/php/8.1/fpm/php-fpm.conf
-COPY ./docker/php/8.1/fpm/pool.d/www.conf /etc/php/8.1/fpm/pool.d/www.conf
+# Install linux dependencies
+RUN apk add openssl curl ca-certificates
+RUN apk add bash nano
+RUN apk add nginx
+RUN apk add libpq-dev
 
-# Apt packages update
-RUN apt-get update && apt-get install -y \
-    zip git \
-    libicu-dev \
-    curl \
-    gnupg \
-    php8.1-sqlite3
+# Nginx & PHP configs
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./docker/nginx/http.d/default.conf /etc/nginx/http.d/default.conf
+COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
+#COPY ./docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs && npm i npm -g
+# PHP extensions https://github.com/mlocati/docker-php-extension-installer#supported-php-extensions
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-install pdo pdo_pgsql
+RUN docker-php-ext-install opcache
 
-# Yarn
-RUN corepack enable
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Permissions
-RUN chmod -R ugo+w ./temp
-RUN chmod -R ugo+w ./log
-RUN mkdir -p ./public && chmod -R ugo+r ./public
-
-# Install and build dependencies
-RUN composer install --no-cache --prefer-dist --no-scripts && rm -rf /root/.composer
-RUN yarn
-RUN yarn build
-
-# Remove node_modules & docker folder
-RUN rm -rf ./node_modules
-RUN rm -rf ./docker
-
-ADD docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+# Copy source code & set permissions
+COPY . ./
+COPY --from=build-stage-php /build/vendor ./vendor
+COPY --from=build-stage-node /build/public ./public
 
 # Resolve permissions
-RUN chown -R www-data:www-data /usr/share/nginx/html
+RUN chmod -R ugo+w ./temp
+RUN chmod -R ugo+w ./log
+RUN chmod -R ugo+r ./public
+RUN chown -R www-data:www-data /var/www/html
 
-# Set entrypoint file
+# Add entrypoint
+ADD ./docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
