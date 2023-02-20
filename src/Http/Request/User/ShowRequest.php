@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Saas\Http\Request\User;
 
-use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Saas\Database\EntityManager;
@@ -57,9 +56,8 @@ class ShowRequest implements IRequest
             $qb->addOrderBy("U.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $users = (new Paginator($qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY), false))
-            ->getIterator()
-            ->getArrayCopy();
+        $users = (new Paginator($qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY), false))->getIterator();
+        $users = $users instanceof \ArrayIterator ? $users->getArrayCopy() : iterator_to_array($users);
         
         $qb2 = $this->em->getUserTokenRepo()->createQueryBuilder('UT')
             ->select('U.id as id, U.lastLogin as lastLogin, UT.expiration as loginExpiration')
