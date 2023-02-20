@@ -45,12 +45,15 @@ class Doctrine
         $this->connectionConfig = [
             'driver' => $_ENV['DB_DRIVER'],
             'charset' => 'UTF8',
-            'host' => $_ENV['DB_HOST'],
-            'port' => $_ENV['DB_PORT'],
-            'user' => $_ENV['DB_USERNAME'],
-            'password' => $_ENV['DB_PASSWORD'],
-            'dbname' => $_ENV['DB_DATABASE']
         ];
+        
+        if ($_ENV['DB_DRIVER'] === 'pdo_pgsql' || $_ENV['DB_DRIVER'] === 'pdo_mysql') {
+            $this->connectionConfig['host'] = $_ENV['DB_HOST'];
+            $this->connectionConfig['port'] = $_ENV['DB_PORT'];
+            $this->connectionConfig['dbname'] = $_ENV['DB_DATABASE'];
+            $this->connectionConfig['user'] = $_ENV['DB_USERNAME'];
+            $this->connectionConfig['password'] = $_ENV['DB_PASSWORD'];
+        }
         
         if ($_ENV['DB_DRIVER'] === 'pdo_sqlite' || $_ENV['DB_DRIVER'] === 'sqlite3') {
             $this->connectionConfig['path'] = $_ENV['DB_SQLITE_FILE'];
