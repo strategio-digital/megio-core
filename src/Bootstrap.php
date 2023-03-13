@@ -12,6 +12,7 @@ use Latte\Engine;
 use Saas\Debugger\Logger;
 use Saas\Extension\Vite\Vite;
 use Saas\Helper\Path;
+use Saas\Helper\Thumbnail;
 use Saas\Http\Router\LinkGenerator;
 use Saas\Security\Response\Cors;
 use Nette\Bridges\DITracy\ContainerPanel;
@@ -78,7 +79,10 @@ class Bootstrap
         
         /** @var LinkGenerator $linkGenerator */
         $linkGenerator = $container->getByType(LinkGenerator::class);
-        $latte->addFunction('route', fn (string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkGenerator->link($name, $params, $path));
+        $latte->addFunction('route', fn(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkGenerator->link($name, $params, $path));
+        
+        // Thumbnail generator
+        $latte->addFunction('thumbnail', fn(string $path, ?int $width, ?int $height, string $method = 'EXACT', int $quality = 80) => new Thumbnail($path, $width, $height, $method, $quality));
         
         // Register DI panels
         Debugger::getBar()->addPanel(new ContainerPanel($container));
