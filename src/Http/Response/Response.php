@@ -114,4 +114,22 @@ class Response
         $this->getHttpResponse()->setContent($html);
         $this->sendRawResponse();
     }
+    
+    /**
+     * @param string $route
+     * @param array<string,string|int> $params
+     * @return never
+     */
+    public function redirect(string $route, array $params = []): never
+    {
+        $url = $this->urlGenerator->generate($route, $params);
+        $this->response->headers->set('Location', $url);
+        $this->sendRawHeaders();
+    }
+    
+    public function redirectUrl(string $url): never
+    {
+        $this->response->headers->set('Location', $url);
+        $this->sendRawHeaders();
+    }
 }

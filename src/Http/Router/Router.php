@@ -29,7 +29,7 @@ abstract class Router
      * @param string $method
      * @param string $path
      * @param array<int, string> $route
-     * @param array<string, string> $params
+     * @param array<string, string|int> $params
      * @param string|null $name
      * @param array<string, string> $requirements
      * @return void
