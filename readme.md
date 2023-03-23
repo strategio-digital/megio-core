@@ -1,5 +1,5 @@
 # Strategio SaaS
-The Tool for developing Webs & APIs by simple clicks.
+Tools for developing Webs & APIs by simple clicks.
 
 Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
