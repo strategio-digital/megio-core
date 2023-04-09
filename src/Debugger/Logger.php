@@ -81,7 +81,7 @@ class Logger extends TracyLogger
             $bsFileName = "{$bsFilePrefix}--{$date}--{$time}.html";
             $bsFilePath = $this->directory . '/' . $bsFileName;
             
-            if (count(Finder::findFiles("{$hash}--{$type}*.html")->in($this->directory . '/')) === 0) {
+            if (iterator_count(Finder::findFiles("{$hash}--{$type}*.html")->in($this->directory . '/')->getIterator()) === 0) {
                 $bs = new BlueScreen();
                 $bs->renderToFile($message, $bsFilePath);
             }
