@@ -21,7 +21,7 @@ function changeTheme() {
 
 function logout() {
     api.auth.logout()
-    router.push({ name: 'Intro' })
+    router.push({ name: 'Login' })
 }
 </script>
 

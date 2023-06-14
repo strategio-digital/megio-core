@@ -7,13 +7,13 @@ import { RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'Intro',
-        component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Intro.vue')
-    },
-    {
-        path: '/login',
         name: 'Login',
         component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Login.vue')
+    },
+    {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/saas/views/Dashboard.vue')
     },
     {
         path: '/collections',

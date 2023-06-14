@@ -4,7 +4,6 @@
  */
 
 import { IResponse } from '@/saas/api/types/IResponse'
-import adminLoginByEmail from '@/saas/api/auth/adminLoginByEmail'
 import loginByEmail from '@/saas/api/auth/loginByEmail'
 import logout from '@/saas/api/auth/logout'
 import currentUser from '@/saas/api/auth/currentUser'
@@ -55,7 +54,6 @@ export default {
     },
     auth: {
         currentUser,
-        adminLoginByEmail,
         loginByEmail,
         logout,
         revokeToken

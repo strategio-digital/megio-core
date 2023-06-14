@@ -11,12 +11,12 @@ const createRouter = (routes: RouteRecordRaw[], routeRoot: string) => {
     router.beforeEach((to, from, next) => {
         const user = api.auth.currentUser()
 
-        if (! user && to.name === 'Intro') {
-            next()
-        } else if (! user && to.name !== 'Login') {
+        if (! user && to.name !== 'Login') {
             next({ name: 'Login' })
-        } else if (user && (to.name === 'Login' || to.name === 'Intro')) {
-            next({ name: 'Collections' })
+        } else if (user && to.name === 'Login') {
+            next({ name: 'Dashboard' })
+        } else if (! to.name) {
+            next({ name: 'Dashboard' })
         } else {
             next()
         }
