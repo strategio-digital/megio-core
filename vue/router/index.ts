@@ -1,10 +1,10 @@
 import { createRouter as create, createWebHistory, RouteRecordRaw } from 'vue-router'
 import api from '@/saas/api'
 
-const createRouter = (routes: RouteRecordRaw[]) => {
+const createRouter = (routes: RouteRecordRaw[], routeRoot: string) => {
 
     const router = create({
-        history: createWebHistory('/admin'),
+        history: createWebHistory(routeRoot),
         routes
     })
 

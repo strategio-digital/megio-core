@@ -18,13 +18,14 @@ import '@/saas/style.scss'
 
 type SaasOptions = {
     routes?: RouteRecordRaw[]
-    navbar?: INavbar
+    navbar?: INavbar,
+    routeRoot: string
 }
 
 export const createSaas = (options: SaasOptions) => {
     const pinia = createPinia()
     const vuetify = createVuetify(vuetifyOptions)
-    const router = createRouter(options.routes || routes)
+    const router = createRouter(options.routes || routes, options.routeRoot)
 
     return {
         install: (app: App) => {

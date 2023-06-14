@@ -29,7 +29,7 @@ class Doctrine
     
     public function __construct()
     {
-        $srcEntityPath = Path::srcDir() . '/Database/Entity';
+        $srcEntityPath = Path::appDir() . '/Database/Entity';
         $entityPaths = array_merge([Path::saasVendorDir() . '/src/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
@@ -62,8 +62,8 @@ class Doctrine
             }
         }
     
-        if (!file_exists(Path::srcDir() . '/../migrations')) {
-            FileSystem::createDir(Path::srcDir() . '/../migrations');
+        if (!file_exists(Path::appDir() . '/../migrations')) {
+            FileSystem::createDir(Path::appDir() . '/../migrations');
         }
         
         $this->entityManager = EntityManager::create($this->connectionConfig, $this->configuration);
@@ -81,7 +81,7 @@ class Doctrine
             ],
             
             'migrations_paths' => [
-                'App\\Migrations' => Path::srcDir() . '/../migrations',
+                'App\\Migrations' => Path::appDir() . '/../migrations',
             ],
             
             'all_or_nothing' => true,

@@ -12,7 +12,7 @@ const router = useRouter()
 const route = useRoute()
 
 const themeStorage = localStorage.getItem('strategio_saas_theme')
-const theme = ref(themeStorage || 'dark')
+const theme = ref(themeStorage || 'light')
 
 function changeTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'

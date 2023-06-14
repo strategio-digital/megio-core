@@ -31,5 +31,10 @@ import routes from '@/saas/globals/routes'
 //     { title: 'Uživatelé', routeName: 'Users', activePrefix: '/users', icon: 'mdi-account-multiple' }
 // )
 
-const saas = createSaas({ routes, navbar })
-createApp(App).use(saas).mount('#app-saas')
+const app: HTMLElement | null = document.getElementById('app-saas')
+
+if (app) {
+    const appPath = app.dataset.appPath as string
+    const saas = createSaas({ routes, navbar, routeRoot: appPath })
+    createApp(App).use(saas).mount(app)
+}

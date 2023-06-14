@@ -16,6 +16,11 @@ class Path
         self::$projectPath = $projectPath;
     }
     
+    public static function appDir(): string
+    {
+        return self::$projectPath . '/app';
+    }
+    
     public static function logDir(): string
     {
         return self::$projectPath . '/log';
@@ -34,11 +39,6 @@ class Path
     public static function publicDir(): string
     {
         return self::$projectPath . '/public';
-    }
-    
-    public static function srcDir(): string
-    {
-        return self::$projectPath . '/src';
     }
     
     public static function configDir(): string

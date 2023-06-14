@@ -16,9 +16,13 @@ use Symfony\Component\Routing\RouteCollection;
 
 abstract class Router
 {
+    const API = 'api';
+    
+    const APP = 'app';
+    
     private RouteCollection $routes;
     
-    private int $routerCounter = 0;
+    private int $routeCounter = 0;
     
     public function __construct(protected Request $request, protected RequestContext $requestContext)
     {
@@ -37,7 +41,7 @@ abstract class Router
     public function add(string $method, string $path, array $route, array $params = [], string $name = null, array $requirements = []): void
     {
         $route = array_merge(['_controller' => $route[0], '_action' => $route[1]], $params);
-        $routeName = $name ?: 'auto-generated-name-' . $this->routerCounter++;
+        $routeName = $name ?: 'auto-generated-name-' . $this->routeCounter++;
         $this->routes->add($routeName, new Route($path, $route, $requirements, [], '', [], $method));
     }
     

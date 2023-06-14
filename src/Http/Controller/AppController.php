@@ -9,15 +9,23 @@ namespace Saas\Http\Controller;
 
 use Nette\Utils\Strings;
 use Saas\Helper\Path;
+use Saas\Http\Router\Router;
 use Saas\Http\Router\RouterFactory;
 use Saas\Storage\Storage;
 use Nette\DI\Container;
 
 class AppController extends Controller
 {
-    public function admin(string|int|float $uri = null): void
+    public function app(Container $container, string|int|float $uri = null): void
     {
-        $this->getResponse()->render(Path::saasVendorDir() . '/view/controller/admin.latte');
+        /** @var RouterFactory $routeFactory */
+        $routeFactory = $container->getByName('routerFactory');
+        
+        $appPath = $routeFactory->getRouteCollection()->get(Router::APP)->compile()->getStaticPrefix();
+        
+        $this->getResponse()->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
+            'appPath' => $appPath,
+        ]);
     }
     
     public function api(Storage $storage, Container $container): void
@@ -25,9 +33,11 @@ class AppController extends Controller
         /** @var RouterFactory $routeFactory */
         $routeFactory = $container->getByName('routerFactory');
         
+        $apiPath = $routeFactory->getRouteCollection()->get(Router::API)->compile()->getStaticPrefix();
+        
         $routes = [];
         foreach ($routeFactory->getRouteCollection()->all() as $key => $route) {
-            $routes[Strings::startsWith($route->getPath(), '/api') ? 'api' : 'app'][] = [
+            $routes[Strings::startsWith($route->getPath(), $apiPath) ? Router::API : Router::APP][] = [
                 'name' => $key,
                 'method' => $route->getMethods()[0],
                 'path' => $route->getPath()

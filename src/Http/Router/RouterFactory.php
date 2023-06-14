@@ -17,12 +17,12 @@ class RouterFactory extends Router
     public function create(): UrlMatcher
     {
         // App & Auth
-        $this->add('GET', '/api', [AppController::class, 'api'], [], 'api');
-        $this->add('GET', '/admin{uri}', [AppController::class, 'admin'], [], 'admin', ['uri' => '.*']);
+        $this->add('GET', '/admin{uri}', [AppController::class, 'app'], [], self::APP, ['uri' => '.*']);
+        $this->add('GET', '/api', [AppController::class, 'api'], [], self::API);
         
         $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth_email');
         $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
-    
+        
         // User CRUD
         $this->add('POST', '/api/user/show', [UserController::class, 'show'], [], 'user_show_all');
         $this->add('POST', '/api/user/show-one', [UserController::class, 'showOne'], [], 'user_show_one');
@@ -32,7 +32,7 @@ class RouterFactory extends Router
         // User extra
         $this->add('POST', '/api/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
         $this->add('POST', '/api/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
-    
+        
         return parent::create();
     }
 }

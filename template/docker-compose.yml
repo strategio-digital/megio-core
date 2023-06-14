@@ -33,11 +33,3 @@ services:
 #      - "${DB_PORT}:5432"
 #    volumes:
 #      - ./docker/temp/postgres:/var/lib/postgresql/data:cached
-#
-#  adminer:
-#    image: dockette/adminer:dg
-#    restart: "no"
-#    ports:
-#      - "9100:80"
-#    networks:
-#      - strategio-network

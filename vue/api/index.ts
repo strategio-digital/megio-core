@@ -36,7 +36,7 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
 
     if(user && resp.status === 401) {
         logout()
-        window.location.href = '/admin'
+        window.location.href = '/'
     }
 
     return {

@@ -14,8 +14,8 @@
             <h1>{$title}</h1>
             <p>{$description}</p>
             <a href="https://github.com/strategio-digital/saas" target="_blank">Github</a> |
-            <a href="{route('api')}" target="_blank">API overview</a> |
-            <a href="{route('admin', ['uri' => '/login'])}" target="_blank">Admin login</a>
+            <a href="{route(\Saas\Http\Router\Router::API)}" target="_blank">API overview</a> |
+            <a href="{route(\Saas\Http\Router\Router::APP, ['uri' => '/login'])}" target="_blank">Admin login</a>
         </div>
         <p class="tech">{$tech}</p>
         <div id="vue-app" style="min-height: 104px"></div>

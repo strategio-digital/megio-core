@@ -2,6 +2,7 @@
  * Copyright (c) 2022 Strategio Digital s.r.o.
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  *}
+{varType string $appPath}
 
 <!DOCTYPE html>
 <html lang="cs">
@@ -19,6 +20,6 @@
     {vite('assets/saas.ts', true)|noescape}
 </head>
 <body>
-<div id="app-saas"></div>
+<div id="app-saas" data-app-path="{$appPath}"></div>
 </body>
 </html>
