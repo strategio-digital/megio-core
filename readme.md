@@ -1,5 +1,5 @@
 # Strategio SaaS
-Tools for developing Webs & APIs by simple clicks.
+Most powerful tool for developing apps by simple clicks.
 
 Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
@@ -28,27 +28,31 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; PHP-Stan static analysis on level 8.
 
 ## Working on
-- User datagrid + CRUD with bulk inserts / updates
-- Collection datagrid + CRUD
-- Admin datagrid + CRUD
-- App.php & Bootstrap.php refactoring
+- 🟡 Upgrade to symfony router 6.3
+- 🟠 App.php & Bootstrap.php refactoring (make it extendable)
+- 🟠 Create interface for UserEntity
+- 🟠 Role access table (routes or resources)
+- 🟠 Navbar resources access (vue composable)
+- 🟠 **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
+- 🟠 User datagrid + CRUD with bulk inserts / updates
+- 🟠 Collection datagrid + CRUD
+- 🟠 Admin datagrid + CRUD
 
 ## Backlog
-- **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
-- Role access table (routes or resources)
-- Request-validation by entity (by default)
-- File uploader
-- App settings
-- Storage settings
-- E-mail settings
-- Enhanced API CRUD filters, joins, orders
-- Application event hooks
-- Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
-- Extension (Simple cart + GoPay)
-- Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
-- Make intro videos (for developers & for administrators)
-- Console cron jobs & progress dashboard
-- Access log & error log dashboard with Tracy/BlueScreens
+- 🟠 Request-validation by entity (by default)
+- 🟠 MultiFile uploader
+- 🟠 App settings (edit envs - dev only)
+- 🟠 Storage settings (edit envs - dev only)
+- 🟠 E-mail settings (edit envs - dev only)
+- 🟠 Enhanced API CRUD filters, joins, orders
+- 🟠 Application event hooks / events
+- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
+- 🟠 Make intro videos (for developers & for administrators)
+- 🟠 Console cron jobs & progress dashboard
+- 🟠 Console redis jobs % progress dashboard
+- 🟠 Access log & error log dashboard with Tracy/BlueScreens
+- 🟠 Extension (Simple cart + GoPay)
 
 ## Tutorials
 **TODO Beginner:**
