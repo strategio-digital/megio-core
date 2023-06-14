@@ -21,7 +21,9 @@ class AppController extends Controller
         /** @var RouterFactory $routeFactory */
         $routeFactory = $container->getByName('routerFactory');
         
-        $appPath = $routeFactory->getRouteCollection()->get(Router::APP)->compile()->getStaticPrefix();
+        /** @var \Symfony\Component\Routing\Route $route */
+        $route = $routeFactory->getRouteCollection()->get(Router::APP);
+        $appPath = $route->compile()->getStaticPrefix();
         
         $this->getResponse()->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
             'appPath' => $appPath,
@@ -33,7 +35,9 @@ class AppController extends Controller
         /** @var RouterFactory $routeFactory */
         $routeFactory = $container->getByName('routerFactory');
         
-        $apiPath = $routeFactory->getRouteCollection()->get(Router::API)->compile()->getStaticPrefix();
+        /** @var \Symfony\Component\Routing\Route $route */
+        $route = $routeFactory->getRouteCollection()->get(Router::API);
+        $apiPath = $route->compile()->getStaticPrefix();
         
         $routes = [];
         foreach ($routeFactory->getRouteCollection()->all() as $key => $route) {

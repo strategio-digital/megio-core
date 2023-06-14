@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b68f7077fd9be5453e3eb621e5f8d13",
+    "content-hash": "cd3d5981ef4be1cbf1483e19a25f4f48",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2999,6 +2999,69 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
+            "name": "strategio/saas",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/strategio-digital/saas.git",
+                "reference": "c52401ef9d13816d20b663207d3a8ae74cb78922"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/strategio-digital/saas/zipball/c52401ef9d13816d20b663207d3a8ae74cb78922",
+                "reference": "c52401ef9d13816d20b663207d3a8ae74cb78922",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.240",
+                "doctrine/annotations": "^1.13.3",
+                "doctrine/dbal": "^3.4.5",
+                "doctrine/migrations": "^3.5",
+                "doctrine/orm": "^2.13.3",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "latte/latte": "^3.0",
+                "lcobucci/jwt": "^4.2",
+                "nette/di": "^3.0",
+                "nette/mail": "^3.1",
+                "nette/schema": "^1.2",
+                "nette/security": "^3.1",
+                "nette/utils": "^3.2",
+                "php": "^8.2",
+                "phpstan/phpstan": "^1.8",
+                "symfony/cache": "^6.1",
+                "symfony/console": "^6.1",
+                "symfony/dotenv": "^6.1",
+                "symfony/http-foundation": "^6.1",
+                "symfony/routing": "^6.1",
+                "symfony/uid": "^6.1",
+                "tracy/tracy": "^2.9"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saas\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jiří Zapletal",
+                    "email": "jz@strategio.digital"
+                }
+            ],
+            "description": "Saas",
+            "support": {
+                "issues": "https://github.com/strategio-digital/saas/issues",
+                "source": "https://github.com/strategio-digital/saas/tree/master"
+            },
+            "time": "2023-06-14T20:21:05+00:00"
+        },
+        {
             "name": "symfony/cache",
             "version": "v6.3.0",
             "source": {
@@ -4664,13 +4727,13 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "strategio/saas": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2",
-        "ext-json": "*",
-        "ext-openssl": "*"
+        "php": "^8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

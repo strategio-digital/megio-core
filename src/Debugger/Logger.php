@@ -26,7 +26,13 @@ class Logger extends TracyLogger
         $this->storage = new S3Storage();
     }
     
-    public function log($message, $level = self::INFO): string
+    /**
+     * @param mixed $message
+     * @param string $level
+     * @return string
+     * @throws \Exception
+     */
+    public function log($message, string $level = self::INFO): string
     {
         $dateTime = new \DateTime();
         $date = $dateTime->format('Y-m-d');
