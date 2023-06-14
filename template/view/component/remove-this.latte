@@ -5,7 +5,6 @@
 
 {varType string $title}
 {varType string $description}
-{varType string $tech}
 
 <div class="container">
     <div>
@@ -17,7 +16,6 @@
             <a href="{route(\Saas\Http\Router\Router::API)}" target="_blank">API overview</a> |
             <a href="{route(\Saas\Http\Router\Router::APP, ['uri' => '/login'])}" target="_blank">Admin login</a>
         </div>
-        <p class="tech">{$tech}</p>
-        <div id="vue-app" style="min-height: 104px"></div>
+        <div id="vue-app" style="height: 1rem"></div>
     </div>
 </div>
