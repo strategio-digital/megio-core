@@ -27,19 +27,26 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Symfony console commands.
 - 🟢&nbsp; PHP-Stan static analysis on level 8.
 
+## Done (Jun 2023)
+- 🟢 Basis CRUD endpoints & entity props visibility
+
 ## Working on
+- 🟡 Collection datagrid + CRUD (leads, newsletter, article, reference)
 - 🟡 Upgrade to symfony router 6.3
-- 🟠 App.php & Bootstrap.php refactoring (make it extendable)
-- 🟠 Create interface for UserEntity
+- 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
+- 🟡 Request-validation by entity props
+- 🟡 App.php & Bootstrap.php refactoring (make it extendable)
+- 🟡 Make UserEntity commutable
+- 🟡 Split UserEntity into User & Admin entity
 - 🟠 Role access table (routes or resources)
-- 🟠 Navbar resources access (vue composable)
 - 🟠 **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
-- 🟠 User datagrid + CRUD with bulk inserts / updates
-- 🟠 Collection datagrid + CRUD
 - 🟠 Admin datagrid + CRUD
+- 🟠 Navbar resources access (vue composable)
+- 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
 
 ## Backlog
-- 🟠 Request-validation by entity (by default)
+- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
+- 🟠 Make intro videos (for developers & for administrators)
 - 🟠 MultiFile uploader
 - 🟠 App settings (edit envs - dev only)
 - 🟠 Storage settings (edit envs - dev only)
@@ -47,8 +54,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Enhanced API CRUD filters, joins, orders
 - 🟠 Application event hooks / events
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
-- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
-- 🟠 Make intro videos (for developers & for administrators)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs % progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
