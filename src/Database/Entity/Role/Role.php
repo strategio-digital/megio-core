@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: '`fw_role`')]
+#[ORM\Table(name: '`role`')]
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Role

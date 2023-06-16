@@ -43,7 +43,7 @@ class ShowRequest implements IRequest
         $qb = $repo->createQueryBuilder('U')
             ->select('U.id, R.name as role, U.email, U.createdAt, U.updatedAt')
             ->leftJoin('U.role', 'R')
-            ->andWhere('R.name != :admin_role')
+            ->where('R.name != :admin_role OR U.role IS NULL')
             ->setParameter('admin_role', DefaultRole::Admin->name());
         
         $count = (clone $qb)->select('count(U.id)')->getQuery()->getSingleScalarResult();

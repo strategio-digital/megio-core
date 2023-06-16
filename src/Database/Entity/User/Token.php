@@ -14,7 +14,7 @@ use Saas\Database\Repository\UserTokenRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: '`fw_user_token`')]
+#[ORM\Table(name: '`user_token`')]
 #[ORM\Entity(repositoryClass: UserTokenRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Token

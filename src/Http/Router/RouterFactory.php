@@ -9,6 +9,7 @@ namespace Saas\Http\Router;
 
 use Saas\Http\Controller\AuthController;
 use Saas\Http\Controller\AppController;
+use Saas\Http\Controller\CrudController;
 use Saas\Http\Controller\UserController;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
@@ -32,6 +33,13 @@ class RouterFactory extends Router
         // User extra
         $this->add('POST', '/api/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
         $this->add('POST', '/api/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
+        
+        // Abstract CRUD
+        $this->add('POST', '/api/crud/show', [CrudController::class, 'show'], [], 'crud_show');
+        $this->add('POST', '/api/crud/show-one', [CrudController::class, 'showOne'], [], 'crud_show_one');
+        $this->add('POST', '/api/crud/create', [CrudController::class, 'create'], [], 'crud_create');
+        $this->add('DELETE', '/api/crud/delete', [CrudController::class, 'delete'], [], 'crud_delete');
+        $this->add('PATCH', '/api/crud/update', [CrudController::class, 'update'], [], 'crud_update');
         
         return parent::create();
     }

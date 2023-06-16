@@ -38,7 +38,7 @@ class CreateRequest implements IRequest
     public function process(array $data): void
     {
         /** @var Role|null $role */
-        $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::Registered->name()]);
+        $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::User->name()]);
     
         if (!$role) {
             $this->response->sendError(["Permission 'user' does not exists"]);

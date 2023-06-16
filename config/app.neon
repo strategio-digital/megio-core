@@ -23,6 +23,7 @@ services:
     - Saas\Security\JWT\Claims
     - Saas\Security\Response\Cors
     - Saas\Storage\Storage
+    - Saas\Database\CrudHelper\CrudHelper
 
 includes:
    - command.neon

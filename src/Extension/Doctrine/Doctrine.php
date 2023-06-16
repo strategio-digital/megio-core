@@ -73,7 +73,7 @@ class Doctrine
     {
         $conf = new ConfigurationArray([
             'table_storage' => [
-                'table_name' => 'fw_migrations',
+                'table_name' => 'migration_versions',
                 'version_column_name' => 'version',
                 'version_column_length' => 1024,
                 'executed_at_column_name' => 'executed_at',

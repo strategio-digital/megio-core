@@ -31,24 +31,11 @@ class RevokeTokenRequest implements IRequest
     
     public function process(array $data): void
     {
-        $users = $this->em->getUserRepo()
-            ->createQueryBuilder('U')
-            ->select('U.id')
-            ->leftJoin('U.role', 'R')
-            ->andWhere('U.id IN (:ids)')
-            ->andWhere('R.name != :admin_role')
-            ->setParameter('admin_role', DefaultRole::Admin->name())
-            ->setParameter('ids', $data['user_ids'])
-            ->getQuery()
-            ->getResult();
-        
-        $ids = array_map(fn($user) => $user['id'], $users);
-        
         $this->em->getUserTokenRepo()
             ->createQueryBuilder('UT')
             ->delete()
             ->where('UT.user IN (:ids)')
-            ->setParameter('ids', $ids)
+            ->setParameter('ids', $data['user_ids'])
             ->getQuery()
             ->execute();
         

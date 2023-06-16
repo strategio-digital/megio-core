@@ -21,9 +21,17 @@ class DefaultAccess
                 DefaultResource::UserShowOne->name(),
                 DefaultResource::UserCreate->name(),
                 DefaultResource::UserDelete->name(),
+                DefaultResource::CrudShow->name(),
+                DefaultResource::CrudShowOne->name(),
+                DefaultResource::CrudCrete->name(),
+                DefaultResource::CrudUpdate->name(),
+                DefaultResource::CrudDelete->name(),
             ],
-            DefaultRole::Guest->name() => [],
-            DefaultRole::Registered->name() => [
+            DefaultRole::Editor->name() => [
+                DefaultResource::UserProfileAction->name(),
+                DefaultResource::UserUploadAvatarAction->name(),
+            ],
+            DefaultRole::User->name() => [
                 DefaultResource::UserProfileAction->name(),
                 DefaultResource::UserUploadAvatarAction->name(),
             ]

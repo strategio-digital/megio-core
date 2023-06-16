@@ -11,20 +11,24 @@ use Saas\Database\Entity\Role\Role;
 use Saas\Database\Field\TCreatedAt;
 use Saas\Database\Field\TUlid;
 use Saas\Database\Field\TUpdatedAt;
+use Saas\Database\Interface\CrudEntity;
 use Saas\Database\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\InvalidArgumentException;
 use Nette\Security\Passwords;
 use Nette\Utils\Validators;
 
-#[ORM\Table(name: '`fw_user`')]
+#[ORM\Table(name: '`user`')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class User
+class User implements CrudEntity
 {
     use TUlid;
     use TCreatedAt;
     use TUpdatedAt;
+    
+    /** @var string[] */
+    public array $visibleFields = ['id', 'createdAt', 'updatedAt', 'email', 'lastLogin'];
     
     #[ORM\Column(length: 64, unique: true, nullable: false)]
     private string $email;
@@ -36,7 +40,8 @@ class User
     private ?\DateTime $lastLogin = null;
     
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
-    private Role $role;
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Role $role = null;
     
     /**
      * @return string
@@ -102,9 +107,9 @@ class User
     }
     
     /**
-     * @return Role
+     * @return ?Role
      */
-    public function getRole(): Role
+    public function getRole(): ?Role
     {
         return $this->role;
     }

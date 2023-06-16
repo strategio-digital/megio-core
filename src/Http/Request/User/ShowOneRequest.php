@@ -38,7 +38,7 @@ class ShowOneRequest implements IRequest
             ->select('U.id, R.name as role, U.email, U.createdAt, U.updatedAt, U.lastLogin')
             ->leftJoin('U.role', 'R')
             ->where('U.id = :id')
-            ->andWhere('R.name != :admin_role')
+            ->andWhere('R.name != :admin_role OR U.role IS NULL')
             ->setParameter('admin_role', DefaultRole::Admin->name())
             ->setParameter('id', $data['id']);
         

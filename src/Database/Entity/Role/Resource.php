@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: '`fw_role_resource`')]
+#[ORM\Table(name: '`role_resource`')]
 #[ORM\Entity(repositoryClass: RoleResourceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Resource
@@ -27,7 +27,7 @@ class Resource
     
     /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'resources')]
-    #[ORM\JoinTable(name: 'fw_role_resource_access')]
+    #[ORM\JoinTable(name: 'role_resource_access')]
     private Collection $roles;
     
     public function __construct()

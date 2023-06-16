@@ -24,7 +24,7 @@ class Claims
         return [
             'user_id' => $user->getId(),
             'user_email' => $user->getEmail(),
-            'user_role' => $user->getRole()->getName(),
+            'user_role' => $user->getRole()?->getName(),
             'allowed_resources' => $resourceNames
         ];
     }

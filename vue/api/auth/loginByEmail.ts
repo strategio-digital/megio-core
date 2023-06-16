@@ -17,7 +17,7 @@ const loginByEmail = async (email: string, password: string): Promise<IResp> => 
         body: JSON.stringify({ email, password })
     })
 
-    if (resp.success) {
+    if (resp.success && resp.data.user_role) {
         localStorage.setItem('strategio_saas_user', JSON.stringify(resp.data))
     }
 

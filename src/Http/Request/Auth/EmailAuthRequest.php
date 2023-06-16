@@ -63,9 +63,9 @@ class EmailAuthRequest implements IRequest
             ->addSelect('Resource')
             ->leftJoin('Resource.roles', 'Permissions');
         
-        if ($user->getRole()->getName() !== DefaultRole::Admin->name()) {
+        if ($user->getRole()?->getName() !== DefaultRole::Admin->name()) {
             $qb->where('Permissions.name = :name')
-                ->setParameter('name', $userToken->getUser()->getRole()->getName());
+                ->setParameter('name', $userToken->getUser()->getRole()?->getName());
         }
         
         $claims = $this->claims->format($user, $qb->getQuery()->execute());

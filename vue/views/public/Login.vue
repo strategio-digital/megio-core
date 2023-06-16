@@ -28,7 +28,7 @@ async function onSubmit() {
         const resp = await api.auth.loginByEmail(data.value.email, data.value.password)
 
         if (resp.success) {
-            if (!['admin', 'backend-user'].includes(resp.data.user_role)) {
+            if (!resp.data.user_role) {
                 alert.value = 'Nedostatečné oprávnění.'
             } else {
                 router.push({ name: 'Dashboard' })

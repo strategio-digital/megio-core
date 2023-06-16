@@ -37,7 +37,7 @@ class DeleteRequest implements IRequest
             ->select('U.id')
             ->leftJoin('U.role', 'R')
             ->andWhere('U.id IN (:ids)')
-            ->andWhere('R.name != :admin_role')
+            ->andWhere('R.name != :admin_role OR U.role IS NULL')
             ->setParameter('admin_role', DefaultRole::Admin->name())
             ->setParameter('ids', $data['ids'])
             ->getQuery()->getResult();

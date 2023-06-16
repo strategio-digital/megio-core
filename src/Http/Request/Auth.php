@@ -109,12 +109,12 @@ class Auth
         return $this->user;
     }
     
-    public function getRoleName(): string
+    public function getRoleName(): ?string
     {
         if ($this->authHeader) {
             $this->invoke();
         }
         
-        return $this->user ? $this->getUser()->getRole()->getName() : DefaultRole::Guest->name();
+        return $this->user ? $this->getUser()->getRole()?->getName() : null;
     }
 }

@@ -15,6 +15,7 @@ use Saas\Security\Permissions\DefaultResource;
 use Saas\Security\Permissions\DefaultRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,10 +27,23 @@ class PermissionsUpdateCommand extends Command
         parent::__construct();
     }
     
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function configure(): void
     {
+        $this->addOption('force', 'f', InputArgument::REQUIRED, 'Remove all roles, resources and user permissions');
+    }
+    
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $force = $input->getOption('force');
+        
         $roleRepo = $this->em->getRoleRepo();
         $resourceRepo = $this->em->getRoleResourceRepo();
+        
+        if ($force) {
+            $resourceRepo->createQueryBuilder('R')->delete()->getQuery()->execute();
+            $roleRepo->createQueryBuilder('R')->delete()->getQuery()->execute();
+        }
+        
         
         /** @var Role[] $roles */
         $roles = $roleRepo->findAll();
