@@ -20,7 +20,7 @@ const useDatagridModal = (collectionName: string, refresh: Function, selectedIte
 
     async function bulkRemove() {
         mdlBulkRemove.toggleLoading('show')
-        await api.collections.remove('user', selectedItems.value.map((item) => item.id))
+        await api.collections.remove(collectionName, selectedItems.value.map((item) => item.id))
         mdlBulkRemove.toggleOpen('hide')
         await refresh()
     }

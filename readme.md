@@ -17,7 +17,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
 
 ## Backend features
-- 🟢&nbsp; JWT Auth (user, admin, guest, +custom roles).
+- 🟢&nbsp; JWT Auth (admin, editor, user, +custom roles).
 - 🟢&nbsp; Roles, resources and resource-guards in controllers.
 - 🟢&nbsp; Schema validation for requests and controllers.
 - 🟢&nbsp; Doctrine database entities with PHP attributes and migrations.
@@ -32,32 +32,33 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Working on
 - 🟡 Collection datagrid + CRUD (leads, newsletter, article, reference)
+- 🟡 Request-validation by entity props
 - 🟡 Upgrade to symfony router 6.3
 - 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
-- 🟡 Request-validation by entity props
 - 🟡 App.php & Bootstrap.php refactoring (make it extendable)
 - 🟡 Make UserEntity commutable
 - 🟡 Split UserEntity into User & Admin entity
 - 🟠 Role access table (routes or resources)
-- 🟠 **Collection Editor** (Doctrine entity builder, migrations, route generator, API permissions)
+- 🟠 **Collection Editor** (Doctrine entity builder, migrations, API permissions)
 - 🟠 Admin datagrid + CRUD
 - 🟠 Navbar resources access (vue composable)
 - 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
 
 ## Backlog
 - 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
-- 🟠 Make intro videos (for developers & for administrators)
 - 🟠 MultiFile uploader
 - 🟠 App settings (edit envs - dev only)
 - 🟠 Storage settings (edit envs - dev only)
 - 🟠 E-mail settings (edit envs - dev only)
-- 🟠 Enhanced API CRUD filters, joins, orders
 - 🟠 Application event hooks / events
+- 🟠 AI Text helper (Chat GPT + PHP Storm style)
+- 🟠 Button for fake-data bulk insert into collection. 
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs % progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
 - 🟠 Extension (Simple cart + GoPay)
+- 🟠 Make intro videos (for developers & for administrators)
 
 ## Tutorials
 **TODO Beginner:**

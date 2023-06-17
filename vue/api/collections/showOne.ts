@@ -12,10 +12,11 @@ interface IResp extends IResponse {
     data: IRow|any
 }
 
-const showOne = async (collection: string, params: IShowOneParams): Promise<IResp> => {
-    const resp = await api.fetch(`/${collection}/show-one`, {
+const showOne = async (tableName: string, params: IShowOneParams): Promise<IResp> => {
+    const resp = await api.fetch(`/crud/show-one`, {
         method: 'POST',
         body: JSON.stringify({
+            table: tableName,
             id: params.id
         })
     })

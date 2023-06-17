@@ -11,7 +11,7 @@ import useUserModal from '@/saas/composables/modal/useUserModal'
 import SideModal from '@/saas/components/modal/SideModal.vue'
 import CollectionForm from '@/saas/components/form/CollectionForm.vue'
 
-const { store, refresh } = useDatagrid('user', 10)
+const { store, refresh } = useDatagrid('user', 15)
 const { items, page, selectedItems, selectedItem, loading } = storeToRefs(store)
 const { mdlRemove, mdlBulkRemove, remove, bulkRemove } = useDatagridModal('user', refresh, selectedItem, selectedItems)
 const { mdlRevoke, mdlBulkRevoke, revoke, bulkRevoke } = useUserModal(refresh, selectedItem, selectedItems)

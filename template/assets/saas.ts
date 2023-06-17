@@ -28,7 +28,7 @@ import routes from '@/saas/globals/routes'
 
 // Custom navbar
 // navbar.items.push(
-//     { title: 'Uživatelé', routeName: 'Users', activePrefix: '/users', icon: 'mdi-account-multiple' }
+//     { title: 'Uživatelé', activePrefix: '/users', icon: 'mdi-account-multiple', route: { name:  'Users' } }
 // )
 
 const app: HTMLElement | null = document.getElementById('app-saas')

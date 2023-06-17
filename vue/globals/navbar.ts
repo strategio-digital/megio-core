@@ -5,6 +5,7 @@
 
 import INavbar from '@/saas/components/navbar/types/INavbar'
 import logo from '@/saas/assets/img/strategio.svg'
+import { COLLECTION_EMPTY_ROUTE } from '@/saas/components/navbar/types/Constants'
 
 const navbar: INavbar = {
     brand: {
@@ -13,10 +14,41 @@ const navbar: INavbar = {
         logo
     },
     items: [
-        { title: 'Přehled', routeName: 'Dashboard', activePrefix: '/dashboard', icon: 'mdi-view-dashboard' },
-        { title: 'Kolekce', routeName: 'Collections', activePrefix: '/collections', icon: 'mdi-database' },
-        { title: 'Uživatelé', routeName: 'Users', activePrefix: '/users', icon: 'mdi-account-multiple' },
-        { title: 'Nastavení', routeName: 'Application', activePrefix: '/settings', icon: 'mdi-hammer-screwdriver' }
+        {
+            title: 'Přehled',
+            activePrefix: '/dashboard',
+            icon: 'mdi-view-dashboard',
+            route: {
+                name: 'Dashboard'
+            }
+        },
+        {
+            title: 'Kolekce',
+            activePrefix: '/collections',
+            icon: 'mdi-database',
+            route: {
+                name: 'Collections',
+                params: {
+                    name: COLLECTION_EMPTY_ROUTE
+                }
+            }
+        },
+        {
+            title: 'Uživatelé',
+            activePrefix: '/users',
+            icon: 'mdi-account-multiple',
+            route: {
+                name: 'Users'
+            }
+        },
+        {
+            title: 'Nastavení',
+            activePrefix: '/settings',
+            icon: 'mdi-hammer-screwdriver',
+            route: {
+                name: 'Application'
+            }
+        }
     ]
 }
 

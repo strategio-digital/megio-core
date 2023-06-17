@@ -5,7 +5,10 @@
 
 export default interface INavbarItem {
     title: string,
-    routeName: string,
     activePrefix: string,
-    icon: string
+    icon: string,
+    route: {
+        name: string,
+        params?: any,
+    }
 }

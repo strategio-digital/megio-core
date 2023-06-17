@@ -18,10 +18,11 @@ interface IResp extends IResponse {
     }
 }
 
-const show = async (collection: string, params: IShowParams): Promise<IResp> => {
-    const resp = await api.fetch(`/${collection}/show`, {
+const show = async (tableName: string, params: IShowParams): Promise<IResp> => {
+    const resp = await api.fetch(`/crud/show`, {
         method: 'POST',
         body: JSON.stringify({
+            table: tableName,
             currentPage: params.currentPage,
             itemsPerPage: params.itemsPerPage
         })

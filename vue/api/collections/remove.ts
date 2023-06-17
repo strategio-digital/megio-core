@@ -12,10 +12,13 @@ interface IResp extends IResponse {
     }
 }
 
-const remove = async (collection: string, ids: string[]): Promise<IResp> => {
-    const resp = await api.fetch(`/${collection}/delete`, {
+const remove = async (tableName: string, ids: string[]): Promise<IResp> => {
+    const resp = await api.fetch(`/crud/delete`, {
         method: 'DELETE',
-        body: JSON.stringify({ ids })
+        body: JSON.stringify({
+            table: tableName,
+            ids
+        })
     })
 
     return { ...resp, data: resp.data }

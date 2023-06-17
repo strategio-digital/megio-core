@@ -51,7 +51,7 @@ function logout() {
             <v-list density="comfortable">
                 <v-tooltip
                     v-for="nav in navbar.items"
-                    :key="nav.routeName"
+                    :key="nav.route.name"
                     location="end"
                     :text="nav.title"
                     offset="-5"
@@ -60,9 +60,9 @@ function logout() {
                         <v-list-item
                             v-bind="props"
                             :active="route.path.startsWith(nav.activePrefix)"
-                            :to="{ name: nav.routeName}"
+                            :to="nav.route"
                             :prepend-icon="nav.icon"
-                            :value="nav.routeName"
+                            :value="nav.route.name"
                             :title="nav.title"
                         />
                     </template>
