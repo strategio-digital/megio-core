@@ -9,11 +9,23 @@ namespace Saas\Database\CrudHelper;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Table;
+use Saas\Database\Entity\Role\Resource;
+use Saas\Database\Entity\Role\Role;
+use Saas\Database\Entity\User\Token;
+use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
 use Saas\Database\Interface\CrudEntity;
 
 class CrudHelper
 {
+    /** @var class-string[] */
+    protected array $excludedEntities = [
+        Token::class,
+        Role::class,
+        User::class,
+        Resource::class
+    ];
+    
     protected ?string $error = null;
     
     public function __construct(protected EntityManager $em)
@@ -32,10 +44,12 @@ class CrudHelper
     {
         $metadata = $this->em->getMetadataFactory()->getAllMetadata();
         
-        return array_map(function (ClassMetadata $metadata) {
+        $entities = array_map(function (ClassMetadata $metadata) {
             $attr = $metadata->getReflectionClass()->getAttributes(Table::class)[0]->newInstance();
             return ['table' => str_replace('`', '', $attr->name ?? ''), 'value' => $metadata->name];
         }, $metadata);
+        
+        return array_filter($entities, fn($entity) => !in_array($entity['value'], $this->excludedEntities));
     }
     
     /**

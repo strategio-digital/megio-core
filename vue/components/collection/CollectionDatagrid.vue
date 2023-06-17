@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import DatagridTable from '@/saas/components/datagrid/DatagridTable.vue'
 import DatagridHeader from '@/saas/components/datagrid/DatagridHeader.vue'
@@ -7,6 +8,7 @@ import useDatagridModal from '@/saas/composables/datagrid/useDatagridModal'
 import Modal from '@/saas/components/modal/Modal.vue'
 
 const props = defineProps<{ tableName: string }>()
+const emits = defineEmits<{ (e: 'onLoadingChange', status: boolean): void }>()
 
 const { store, refresh } = useDatagrid(props.tableName, 15)
 const { items, page, selectedItems, selectedItem, loading } = storeToRefs(store)
@@ -17,45 +19,52 @@ const {
     bulkRemove
 } = useDatagridModal(props.tableName, refresh, selectedItem, selectedItems)
 
+watch(() => loading.value, () => {
+    emits('onLoadingChange', loading.value)
+})
+
 function handleShowEditMdl() {
     console.log('show')
 }
+
 </script>
 
 <template>
-    <Modal v-bind="mdlRemove" @accept="remove" title="Odstranit záznam">
-        Opravdu si přejete trvale odstranit tento záznam?
-        <span class="font-weight-bold">{{ selectedItem.id }}</span>?
-    </Modal>
+    <div v-if="!loading">
+        <Modal v-bind="mdlRemove" @accept="remove" title="Odstranit záznam">
+            Opravdu si přejete trvale odstranit tento záznam?
+            <span class="font-weight-bold">{{ selectedItem.id }}</span>?
+        </Modal>
 
-    <Modal v-bind="mdlBulkRemove" @accept="bulkRemove" :title="`Odstranit záznam (${selectedItems.length}x)`">
-        <div class="mb-5">Opravdu si přejete trvale odstranit tyto záznamy?</div>
-        <v-chip class="me-2 mb-2" size="small" v-for="email in selectedItems.map(item => item.id)">
-            {{ email }}
-        </v-chip>
-    </Modal>
+        <Modal v-bind="mdlBulkRemove" @accept="bulkRemove" :title="`Odstranit záznam (${selectedItems.length}x)`">
+            <div class="mb-5">Opravdu si přejete trvale odstranit tyto záznamy?</div>
+            <v-chip class="me-2 mb-2" size="small" v-for="email in selectedItems.map(item => item.id)">
+                {{ email }}
+            </v-chip>
+        </Modal>
 
-    <DatagridHeader :breadcrumb-items="['Název...']" :refresh="refresh" />
-    <DatagridTable
-        :columns="[
+        <DatagridHeader :breadcrumb-items="['Kolekce', tableName]" :refresh="refresh" />
+        <DatagridTable
+            :columns="[
             { name: 'Upraveno', key: 'updatedAt', type: 'datetime'},
             { name: 'Vytvořeno', key: 'createdAt', type: 'datetime'},
             { name: 'Obsah', key: 'content', type: 'string'},
             //{ name: 'E-mail', key: 'email', type: 'email'},
         ]"
-        :batch-actions="[
+            :batch-actions="[
             { title: 'Trvale odstranit', handler: () => mdlBulkRemove.toggleOpen('show') }
         ]"
-        :row-actions="[
+            :row-actions="[
             { title: 'Trvale odstranit', handler: () => mdlRemove.toggleOpen('show') }
         ]"
-        @goToDetail="handleShowEditMdl"
-    />
-    <v-pagination
-        v-if="items.length"
-        v-model="page.currentPage"
-        :length="page.lastPage"
-        :total-visible="5"
-        class="mt-5"
-    />
+            @goToDetail="handleShowEditMdl"
+        />
+        <v-pagination
+            v-if="items.length"
+            v-model="page.currentPage"
+            :length="page.lastPage"
+            :total-visible="5"
+            class="mt-5"
+        />
+    </div>
 </template>

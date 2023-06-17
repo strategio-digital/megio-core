@@ -34,14 +34,6 @@ const navbar: INavbar = {
             }
         },
         {
-            title: 'Uživatelé',
-            activePrefix: '/users',
-            icon: 'mdi-account-multiple',
-            route: {
-                name: 'Users'
-            }
-        },
-        {
             title: 'Nastavení',
             activePrefix: '/settings',
             icon: 'mdi-hammer-screwdriver',

@@ -19,7 +19,7 @@ interface IResp extends IResponse {
 }
 
 const show = async (tableName: string, params: IShowParams): Promise<IResp> => {
-    const resp = await api.fetch(`/crud/show`, {
+    const resp = await api.fetch(`/saas/crud/show`, {
         method: 'POST',
         body: JSON.stringify({
             table: tableName,

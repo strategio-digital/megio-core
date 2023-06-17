@@ -5,23 +5,23 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
-import { IShowOneParams } from '@/saas/api/types/IShowOneParams'
-import { IRow } from '@/saas/api/types/IRow'
 
 interface IResp extends IResponse {
-    data: IRow|any
+    data: {
+        message: string
+    }
 }
 
-const showOne = async (tableName: string, params: IShowOneParams): Promise<IResp> => {
-    const resp = await api.fetch(`/crud/show-one`, {
-        method: 'POST',
+const remove = async (tableName: string, ids: string[]): Promise<IResp> => {
+    const resp = await api.fetch(`/saas/crud/delete`, {
+        method: 'DELETE',
         body: JSON.stringify({
             table: tableName,
-            id: params.id
+            ids
         })
     })
 
     return { ...resp, data: resp.data }
 }
 
-export default showOne
+export default remove

@@ -3,4 +3,4 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-export const COLLECTION_EMPTY_ROUTE = 'add'
+export const COLLECTION_EMPTY_ROUTE = '@'

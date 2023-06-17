@@ -17,7 +17,7 @@ const useDatagrid = (tableName: string, itemsPerPage: number) => {
         items.value = []
         selectedItems.value = []
 
-        const resp = await api.collections.show(tableName, {
+        const resp = await api.collections.crud.show(tableName, {
             currentPage: page.value.currentPage,
             itemsPerPage
         })

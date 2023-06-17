@@ -12,11 +12,12 @@ enum DefaultResource implements IResource
     case UserDelete;
     case UserProfileAction;
     case UserUploadAvatarAction;
-    case CrudShow;
-    case CrudShowOne;
-    case CrudCrete;
-    case CrudUpdate;
-    case CrudDelete;
+    case SaasCrudShow;
+    case SaasCrudShowOne;
+    case SaasCrudCrete;
+    case SaasCrudUpdate;
+    case SaasCrudDelete;
+    case SaasCollectionMetaNavbar;
     
     public function name(): string
     {
@@ -28,11 +29,12 @@ enum DefaultResource implements IResource
             self::UserDelete => 'user.delete',
             self::UserProfileAction => 'user.profile',
             self::UserUploadAvatarAction => 'user.upload-avatar',
-            self::CrudShow => 'crud.show',
-            self::CrudShowOne => 'crud.show-one',
-            self::CrudCrete => 'crud.create',
-            self::CrudUpdate => 'crud.update',
-            self::CrudDelete => 'crud.delete',
+            self::SaasCrudShow => 'saas.crud.show',
+            self::SaasCrudShowOne => 'saas.crud.show-one',
+            self::SaasCrudCrete => 'saas.crud.create',
+            self::SaasCrudUpdate => 'saas.crud.update',
+            self::SaasCrudDelete => 'saas.crud.delete',
+            self::SaasCollectionMetaNavbar => 'saas.collection.meta.navbar',
         };
     }
 }

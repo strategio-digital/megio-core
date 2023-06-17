@@ -54,7 +54,7 @@ class ResourceResolver
         
         foreach ($resources as $resource) {
             if (!in_array($resource->name(), $rowResourceNames)) {
-                $this->response->sendError(["Your role '{$roleName}' does not have permissions for '{$resource->name()}' resource."], 401);
+                $this->response->sendError(["Your role '". ($roleName ?? 'null') ."' does not have permissions for '{$resource->name()}' resource."], 401);
             }
         }
     }

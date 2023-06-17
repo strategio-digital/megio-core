@@ -12,7 +12,7 @@ const item = ref<IUser>()
 
 async function refresh() {
     loading.value = true
-    const resp = await api.collections.showOne('user', { id: route.params.id as string })
+    const resp = await api.collections.crud.showOne('user', { id: route.params.id as string })
     item.value = { ...resp.data } as IUser
     loading.value = false
 }

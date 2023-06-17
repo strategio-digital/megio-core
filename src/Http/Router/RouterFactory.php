@@ -9,7 +9,8 @@ namespace Saas\Http\Router;
 
 use Saas\Http\Controller\AuthController;
 use Saas\Http\Controller\AppController;
-use Saas\Http\Controller\CrudController;
+use Saas\Http\Controller\SaasController;
+use Saas\Http\Controller\SaasCrudController;
 use Saas\Http\Controller\UserController;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
@@ -21,25 +22,22 @@ class RouterFactory extends Router
         $this->add('GET', '/admin{uri}', [AppController::class, 'app'], [], self::APP, ['uri' => '.*']);
         $this->add('GET', '/api', [AppController::class, 'api'], [], self::API);
         
-        $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth_email');
-        $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth_revoke_token');
-        
-        // User CRUD
-        $this->add('POST', '/api/user/show', [UserController::class, 'show'], [], 'user_show_all');
-        $this->add('POST', '/api/user/show-one', [UserController::class, 'showOne'], [], 'user_show_one');
-        $this->add('POST', '/api/user/create', [UserController::class, 'create'], [], 'user_create');
-        $this->add('DELETE', '/api/user/delete', [UserController::class, 'delete'], [], 'user_delete');
+        $this->add('POST', '/api/auth/email', [AuthController::class, 'email'], [], 'auth.email');
+        $this->add('POST', '/api/auth/revoke-token', [AuthController::class, 'revokeToken'], [], 'auth.revoke-token');
         
         // User extra
-        $this->add('POST', '/api/user/show-profile', [UserController::class, 'profile'], [], 'user_profile');
-        $this->add('POST', '/api/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user_upload_avatar');
+        $this->add('POST', '/api/user/show-profile', [UserController::class, 'profile'], [], 'user.profile');
+        $this->add('POST', '/api/user/upload-avatar', [UserController::class, 'uploadAvatar'], [], 'user.upload-avatar');
         
-        // Abstract CRUD
-        $this->add('POST', '/api/crud/show', [CrudController::class, 'show'], [], 'crud_show');
-        $this->add('POST', '/api/crud/show-one', [CrudController::class, 'showOne'], [], 'crud_show_one');
-        $this->add('POST', '/api/crud/create', [CrudController::class, 'create'], [], 'crud_create');
-        $this->add('DELETE', '/api/crud/delete', [CrudController::class, 'delete'], [], 'crud_delete');
-        $this->add('PATCH', '/api/crud/update', [CrudController::class, 'update'], [], 'crud_update');
+        // Saas collections CRUD
+        $this->add('POST', '/api/saas/crud/show', [SaasCrudController::class, 'show'], [], 'saas.crud.show');
+        $this->add('POST', '/api/saas/crud/show-one', [SaasCrudController::class, 'showOne'], [], 'saas.crud.show-one');
+        $this->add('POST', '/api/saas/crud/create', [SaasCrudController::class, 'create'], [], 'saas.crud.create');
+        $this->add('DELETE', '/api/saas/crud/delete', [SaasCrudController::class, 'delete'], [], 'saas.crud.delete');
+        $this->add('PATCH', '/api/saas/crud/update', [SaasCrudController::class, 'update'], [], 'saas.crud.update');
+        
+        // Saas collections meta
+        $this->add('POST', '/api/saas/meta/navbar', [SaasController::class, 'navbar'], [], 'saas.meta.navbar');
         
         return parent::create();
     }

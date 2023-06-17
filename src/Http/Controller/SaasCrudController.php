@@ -7,37 +7,37 @@ declare(strict_types=1);
 
 namespace Saas\Http\Controller;
 
-use Saas\Http\Request\Crud\CreateRequest;
-use Saas\Http\Request\Crud\DeleteRequest;
-use Saas\Http\Request\Crud\ShowOneRequest;
-use Saas\Http\Request\Crud\ShowRequest;
-use Saas\Http\Request\Crud\UpdateRequest;
+use Saas\Http\Request\Collection\Crud\CreateRequest;
+use Saas\Http\Request\Collection\Crud\DeleteRequest;
+use Saas\Http\Request\Collection\Crud\ShowOneRequest;
+use Saas\Http\Request\Collection\Crud\ShowRequest;
+use Saas\Http\Request\Collection\Crud\UpdateRequest;
 use Saas\Security\Guard\ResourceGuard;
 use Saas\Security\Permissions\DefaultResource;
 
-class CrudController extends Controller
+class SaasCrudController extends Controller
 {
-    #[ResourceGuard([DefaultResource::CrudCrete])]
+    #[ResourceGuard([DefaultResource::SaasCrudCrete])]
     public function create(CreateRequest $request): void
     {
     }
     
-    #[ResourceGuard([DefaultResource::CrudShowOne])]
+    #[ResourceGuard([DefaultResource::SaasCrudShowOne])]
     public function showOne(ShowOneRequest $request): void
     {
     }
     
-    #[ResourceGuard([DefaultResource::CrudShow])]
+    #[ResourceGuard([DefaultResource::SaasCrudShow])]
     public function show(ShowRequest $request): void
     {
     }
     
-    #[ResourceGuard([DefaultResource::CrudUpdate])]
+    #[ResourceGuard([DefaultResource::SaasCrudUpdate])]
     public function update(UpdateRequest $request): void
     {
     }
     
-    #[ResourceGuard([DefaultResource::CrudDelete])]
+    #[ResourceGuard([DefaultResource::SaasCrudDelete])]
     public function delete(DeleteRequest $request): void
     {
     }

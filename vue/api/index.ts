@@ -7,10 +7,11 @@ import { IResponse } from '@/saas/api/types/IResponse'
 import loginByEmail from '@/saas/api/auth/loginByEmail'
 import logout from '@/saas/api/auth/logout'
 import currentUser from '@/saas/api/auth/currentUser'
-import show from '@/saas/api/collections/show'
-import showOne from '@/saas/api/collections/showOne'
-import remove from '@/saas/api/collections/remove'
+import show from '@/saas/api/collections/crud/show'
+import showOne from '@/saas/api/collections/crud/showOne'
+import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
+import navbar from '@/saas/api/collections/meta/navbar'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/api' : '/api'
 
@@ -48,14 +49,19 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
 export default {
     fetch: fetchApi,
     collections: {
-        show,
-        showOne,
-        remove
+        crud: {
+            show,
+            showOne,
+            remove
+        },
+        meta: {
+            navbar
+        }
     },
     auth: {
         currentUser,
         loginByEmail,
         logout,
         revokeToken
-    }
+    },
 }

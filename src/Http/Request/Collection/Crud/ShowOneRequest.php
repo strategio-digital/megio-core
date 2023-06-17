@@ -5,14 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Crud;
+namespace Saas\Http\Request\Collection\Crud;
 
+use Doctrine\ORM\AbstractQuery;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Http\Response\Response;
 
-class DeleteRequest extends BaseCrudRequest
+class ShowOneRequest extends BaseCrudRequest
 {
     public function __construct(
         protected readonly EntityManager $em,
@@ -28,7 +29,7 @@ class DeleteRequest extends BaseCrudRequest
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
-            'ids' => Expect::arrayOf('string')->required(),
+            'id' => Expect::string()->required(),
         ];
     }
     
@@ -38,16 +39,17 @@ class DeleteRequest extends BaseCrudRequest
         
         $repo = $this->em->getRepository($meta->className);
         
-        $repo->createQueryBuilder('E')
-            ->delete()
-            ->where('E.id IN (:ids)')
-            ->setParameter('ids', $data['ids'])
-            ->getQuery()
-            ->execute();
+        $qb = $repo->createQueryBuilder('E')
+            ->select($meta->getQuerySelect('E'))
+            ->where('E.id = :id')
+            ->setParameter('id', $data['id']);
         
-        $this->response->send([
-            'ids' => $data['ids'],
-            'message' => "Items successfully deleted"
-        ]);
+        $data = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+        
+        if (!$data) {
+            $this->response->sendError(['Item not found'], 404);
+        }
+        
+        $this->response->send(['item' => $data]);
     }
 }
