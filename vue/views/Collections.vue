@@ -37,7 +37,7 @@ onMounted(async () => {
     const items = navbar.data.items
 
     collections.value = items
-    navbarLoading.value = false;
+    navbarLoading.value = false
 
     if (items.length === 0) {
         loading.value = false
@@ -56,10 +56,13 @@ onMounted(async () => {
 <template>
     <Layout :loading="loading">
         <template v-slot:default>
-            <div class="pa-7">
-                <div v-if="collections.length !== 0">
-                    <CollectionDatagrid :key="tableName" :table-name="tableName" @onLoadingChange="handleLoading" />
-                </div>
+            <div class="pa-7 h-100">
+                <CollectionDatagrid
+                    v-if="collections.length !== 0"
+                    :key="tableName"
+                    :table-name="tableName"
+                    @onLoadingChange="handleLoading"
+                />
                 <div v-if="!loading && collections.length === 0">
                     <v-breadcrumbs :items="['Kolekce']" class="pa-0" style="font-size: 1.4rem" />
                     <p class="mt-3">Zatím nebyla vytvořena žádná kolekce.</p>
@@ -83,9 +86,10 @@ onMounted(async () => {
                 Přidat kolekci
             </v-btn>
 
-            <div class="d-flex justify-center align-center"
-                 style="height: calc(100% - 2rem)"
-                 v-if="navbarLoading"
+            <div
+                class="d-flex justify-center align-center"
+                style="height: calc(100% - 2rem)"
+                v-if="navbarLoading"
             >
                 <v-progress-circular indeterminate :size="30" :width="3" />
             </div>

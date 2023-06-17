@@ -30,7 +30,7 @@ function handleShowEditMdl() {
 </script>
 
 <template>
-    <div v-if="!loading">
+    <div v-if="!loading" class="h-100">
         <Modal v-bind="mdlRemove" @accept="remove" title="Odstranit záznam">
             Opravdu si přejete trvale odstranit tento záznam?
             <span class="font-weight-bold">{{ selectedItem.id }}</span>?
@@ -66,5 +66,10 @@ function handleShowEditMdl() {
             :total-visible="5"
             class="mt-5"
         />
+        <div v-if="!items.length" class="d-flex justify-center align-center">
+            <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
+                Tato kolekce je prázná.
+            </div>
+        </div>
     </div>
 </template>
