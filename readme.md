@@ -31,28 +31,30 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Basis CRUD endpoints & entity props visibility
 
 ## Working on
-- 🟡 Collection datagrid + CRUD (leads, newsletter, article, reference)
+- 🟡 Collection datagrid + CRUD
 - 🟡 Request-validation by entity props
 - 🟡 Upgrade to symfony router 6.3
 - 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
-- 🟡 App.php & Bootstrap.php refactoring (make it extendable)
-- 🟡 Make UserEntity commutable
-- 🟡 Split UserEntity into User & Admin entity
-- 🟠 Role access table (routes or resources)
-- 🟠 **Collection Editor** (Doctrine entity builder, migrations, API permissions)
+- 🟡 App.php & Bootstrap.php refactoring (make it extendable e.g. override array key)
+- 🟡 Split User entity into User & Admin entity
+- 🟡 Make User entity commutable and test it in real project
+- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
 - 🟠 Admin datagrid + CRUD
-- 🟠 Navbar resources access (vue composable)
+- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
+- 🟠 Role access table (Routes & Collections CRUD)
+- 🟠 **Collection Editor** (Doctrine entity builder, migrations, API permissions)
 - 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
 
 ## Backlog
-- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
 - 🟠 MultiFile uploader
-- 🟠 App settings (edit envs - dev only)
-- 🟠 Storage settings (edit envs - dev only)
-- 🟠 E-mail settings (edit envs - dev only)
+- 🟠 App settings (edit envFile - dev only)
+- 🟠 Storage settings (edit envFile - dev only)
+- 🟠 E-mail settings (edit envFile - dev only)
 - 🟠 Application event hooks / events
+- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
-- 🟠 Button for fake-data bulk insert into collection. 
+- 🟠 Navbar resources access (vue composable)
+- 🟠 Scheduled database backups to S3 & log dashboard
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs % progress dashboard
