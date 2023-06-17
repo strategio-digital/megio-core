@@ -68,7 +68,7 @@ function handleShowEditMdl() {
         />
         <div v-if="!items.length" class="d-flex justify-center align-center">
             <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
-                Tato kolekce je prázná.
+                Tato kolekce je prázdná.
             </div>
         </div>
     </div>
