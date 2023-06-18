@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:permissions:update', description: 'Create default roles an permissions in database', aliases: ['permissions:update'])]
+#[AsCommand(name: 'app:permissions:update', description: 'Create default roles an permissions in database', aliases: ['permissions'])]
 class PermissionsUpdateCommand extends Command
 {
     public function __construct(private readonly EntityManager $em)

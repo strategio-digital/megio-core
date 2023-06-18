@@ -11,10 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait TUpdatedAt
 {
-    #[ORM\Column]
-    private ?\DateTime $updatedAt = null;
+    #[ORM\Column(nullable: false)]
+    private \DateTime $updatedAt;
     
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }

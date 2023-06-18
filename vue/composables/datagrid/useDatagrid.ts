@@ -17,15 +17,17 @@ const useDatagrid = (tableName: string, itemsPerPage: number) => {
         items.value = []
         selectedItems.value = []
 
-        const resp = await api.collections.crud.show(tableName, {
+        const resp = await api.collections.crud.show({
+            table: tableName,
+            schema: true,
             currentPage: page.value.currentPage,
             itemsPerPage
         })
 
-        page.value = { currentPage: resp.data.currentPage, lastPage: resp.data.lastPage }
+        page.value = { currentPage: resp.data.pagination.currentPage, lastPage: resp.data.pagination.lastPage }
 
-        if (resp.data.lastPage < page.value.currentPage && page.value.currentPage > 1) {
-            page.value.currentPage = resp.data.lastPage
+        if (resp.data.pagination.lastPage < page.value.currentPage && page.value.currentPage > 1) {
+            page.value.currentPage = resp.data.pagination.lastPage
         }
 
         items.value = resp.data.items

@@ -5,20 +5,18 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
+import { IRemoveParams } from '@/saas/api/types/IRemoveParams'
 
-interface IResp extends IResponse {
+export interface IResp extends IResponse {
     data: {
         message: string
     }
 }
 
-const remove = async (tableName: string, ids: string[]): Promise<IResp> => {
+const remove = async (params: IRemoveParams): Promise<IResp> => {
     const resp = await api.fetch(`/saas/crud/delete`, {
         method: 'DELETE',
-        body: JSON.stringify({
-            table: tableName,
-            ids
-        })
+        body: JSON.stringify(params)
     })
 
     return { ...resp, data: resp.data }

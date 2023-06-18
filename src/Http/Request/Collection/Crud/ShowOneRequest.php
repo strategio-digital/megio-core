@@ -29,13 +29,14 @@ class ShowOneRequest extends BaseCrudRequest
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
+            'schema' => Expect::bool(false),
             'id' => Expect::string()->required(),
         ];
     }
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table']);
+        $meta = $this->setUpMetadata($data['table'],  $data['schema']);
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -44,12 +45,18 @@ class ShowOneRequest extends BaseCrudRequest
             ->where('E.id = :id')
             ->setParameter('id', $data['id']);
         
-        $data = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+        $item = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
-        if (!$data) {
+        $response = ['item' => $item];
+        
+        if (!$item) {
             $this->response->sendError(['Item not found'], 404);
         }
         
-        $this->response->send(['item' => $data]);
+        if ($data['schema']) {
+            $response['schema'] = $meta->schema;
+        }
+        
+        $this->response->send($response);
     }
 }

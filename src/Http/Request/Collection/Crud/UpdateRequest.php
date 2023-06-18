@@ -28,7 +28,7 @@ class UpdateRequest extends BaseCrudRequest
     {
         $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
         
-        // TODO: get field types trough reflection and validate them
+        // TODO: get rows types trough reflection and validate them
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
@@ -37,13 +37,13 @@ class UpdateRequest extends BaseCrudRequest
                     'id' => Expect::string()->required(),
                     'data' => Expect::array()->min(1)->required()
                 ])
-            )->min(1)->max(1000)->required()
+            )->min(1)->required()
         ];
     }
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table']);
+        $meta = $this->setUpMetadata($data['table'], false);
         $ids = array_map(fn($row) => $row['id'], $data['rows']);
         
         $qb = $this->em->getRepository($meta->className)

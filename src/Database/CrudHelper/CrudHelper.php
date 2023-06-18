@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Saas\Database\CrudHelper;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
 use Saas\Database\Entity\Role\Resource;
 use Saas\Database\Entity\Role\Role;
@@ -19,12 +20,7 @@ use Saas\Database\Interface\CrudEntity;
 class CrudHelper
 {
     /** @var class-string[] */
-    protected array $excludedEntities = [
-        Token::class,
-        Role::class,
-        User::class,
-        Resource::class
-    ];
+    protected array $excludedEntities = [Token::class, Role::class, User::class, Resource::class];
     
     protected ?string $error = null;
     
@@ -71,17 +67,42 @@ class CrudHelper
     {
         try {
             $ref = new \ReflectionClass($entityClassName);
-            return $ref->getProperty('visibleFields')->getDefaultValue();
+            return array_merge(['id'], $ref->getProperty('visibleFields')->getDefaultValue());
         } catch (\ReflectionException) {
             return [];
         }
     }
     
     /**
+     * @param class-string $entityClassName
+     * @return array<int, mixed>
+     */
+    public function getEntitySchema(string $entityClassName): array
+    {
+        $props = [];
+        try {
+            $ref = new \ReflectionClass($entityClassName);
+            foreach ($ref->getProperties() as $prop) {
+                $attrs = array_map(fn($attr) => $attr->newInstance(), $prop->getAttributes());
+                
+                /** @var Column[] $columnAttrs */
+                $columnAttrs = array_filter($attrs, fn($attr) => $attr instanceof Column);
+                if (count($columnAttrs) !== 0) {
+                    $attr = array_values($columnAttrs)[0];
+                    $props[] = $this->getEntityColumnProps($attr, $prop);
+                }
+            }
+        } catch (\ReflectionException) {}
+        
+        return $props;
+    }
+    
+    /**
      * @param string $tableName
+     * @param bool $schema
      * @return \Saas\Database\CrudHelper\EntityMetadata|null
      */
-    public function getEntityMetadata(string $tableName): ?EntityMetadata
+    public function getEntityMetadata(string $tableName, bool $schema = false): ?EntityMetadata
     {
         $this->error = null;
         
@@ -94,17 +115,23 @@ class CrudHelper
         
         $visibleFields = $this->getVisibleFields($className);
         
-        if (count($visibleFields) === 0) {
+        if (count($visibleFields) === 1) { // 'id' included
             $this->error = "Collection '{$tableName}' has no visible fields";
             return null;
         }
         
-        return new EntityMetadata($className, $visibleFields);
+        $fieldsSchema = [];
+        
+        if ($schema) {
+            $fieldsSchema = $this->getEntitySchema($className);
+        }
+        
+        return new EntityMetadata($className, $visibleFields, $fieldsSchema);
     }
     
     /**
      * @param \Saas\Database\Interface\CrudEntity $entity
-     * @param array<string, mixed>$props
+     * @param array<string, mixed> $props
      * @return \Saas\Database\Interface\CrudEntity
      * @throws \Saas\Database\CrudHelper\CrudException
      */
@@ -129,5 +156,37 @@ class CrudHelper
         }
         
         return $entity;
+    }
+    
+    /**
+     * @param \Doctrine\ORM\Mapping\Column $attr
+     * @param \ReflectionProperty $prop
+     * @return array<string, mixed>
+     */
+    public function getEntityColumnProps(Column $attr, \ReflectionProperty $prop): array
+    {
+        $propType = $prop->getType();
+        
+        $nullable = $attr->nullable;
+        if (!$nullable) {
+            $nullable = $propType?->allowsNull() ?? false;
+        }
+        
+        $type = $attr->type;
+        if (!$type) {
+            $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? 'unknown';
+        }
+        
+        $maxLength = $attr->length;
+        if (!$maxLength && $type === 'string') {
+            $maxLength = 255;
+        }
+        
+        return [
+            'name' => $prop->getName(),
+            'type' => $type,
+            'nullable' => $nullable,
+            'maxLength' => $maxLength
+        ];
     }
 }

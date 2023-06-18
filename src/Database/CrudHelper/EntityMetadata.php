@@ -12,8 +12,9 @@ class EntityMetadata
     /**
      * @param class-string $className
      * @param array<int, string> $visibleFields
+     * @param array<int, mixed> $schema
      */
-    public function __construct(public string $className, public array $visibleFields)
+    public function __construct(public string $className, public array $visibleFields, public array $schema = [])
     {
     }
     

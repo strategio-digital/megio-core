@@ -27,7 +27,7 @@ class Resource
     
     /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'resources')]
-    #[ORM\JoinTable(name: 'role_resource_access')]
+    #[ORM\JoinTable(name: '`role_resource_access`')]
     private Collection $roles;
     
     public function __construct()

@@ -44,21 +44,23 @@ function handleShowEditMdl() {
         </Modal>
 
         <DatagridHeader :breadcrumb-items="['Kolekce', tableName]" :refresh="refresh" />
+
         <DatagridTable
             :columns="[
-            { name: 'Upraveno', key: 'updatedAt', type: 'datetime'},
-            { name: 'Vytvořeno', key: 'createdAt', type: 'datetime'},
-            { name: 'Obsah', key: 'content', type: 'string'},
-            //{ name: 'E-mail', key: 'email', type: 'email'},
-        ]"
+                { name: 'Upraveno', key: 'updatedAt', type: 'datetime'},
+                { name: 'Vytvořeno', key: 'createdAt', type: 'datetime'},
+                { name: 'Obsah', key: 'content', type: 'string'},
+                //{ name: 'E-mail', key: 'email', type: 'email'},
+            ]"
             :batch-actions="[
-            { title: 'Trvale odstranit', handler: () => mdlBulkRemove.toggleOpen('show') }
-        ]"
-            :row-actions="[
-            { title: 'Trvale odstranit', handler: () => mdlRemove.toggleOpen('show') }
-        ]"
+                { title: 'Trvale odstranit', handler: () => mdlBulkRemove.toggleOpen('show') }
+            ]"
+                :row-actions="[
+                { title: 'Trvale odstranit', handler: () => mdlRemove.toggleOpen('show') }
+            ]"
             @goToDetail="handleShowEditMdl"
         />
+
         <v-pagination
             v-if="items.length"
             v-model="page.currentPage"
@@ -66,6 +68,7 @@ function handleShowEditMdl() {
             :total-visible="5"
             class="mt-5"
         />
+
         <div v-if="!items.length" class="d-flex justify-center align-center">
             <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
                 Tato kolekce je prázdná.

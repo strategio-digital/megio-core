@@ -28,13 +28,13 @@ class DeleteRequest extends BaseCrudRequest
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
-            'ids' => Expect::arrayOf('string')->required(),
+            'ids' => Expect::arrayOf('string')->min(1)->required(),
         ];
     }
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table']);
+        $meta = $this->setUpMetadata($data['table'], false);
         
         $repo = $this->em->getRepository($meta->className);
         

@@ -3,7 +3,9 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-export interface IRow {
-    id: string,
-    [key: string]: any
+export interface IPagination {
+    currentPage: number
+    lastPage: number
+    itemsPerPage: number
+    itemsCountAll: number
 }

@@ -28,7 +28,7 @@ class CreateRequest extends BaseCrudRequest
     {
         $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
         
-        // TODO: get field types trough reflection and validate them
+        // TODO: get rows types trough reflection and validate them
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
@@ -38,7 +38,7 @@ class CreateRequest extends BaseCrudRequest
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table']);
+        $meta = $this->setUpMetadata($data['table'], false);
         $ids = [];
         
         foreach ($data['rows'] as $row) {

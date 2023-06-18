@@ -28,6 +28,7 @@ class ShowRequest extends BaseCrudRequest
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),
+            'schema' => Expect::bool(false),
             'currentPage' => Expect::int(1)->min(1)->required(),
             'itemsPerPage' => Expect::int(10)->max(1000)->required(),
             'orderBy' => Expect::arrayOf(Expect::structure([
@@ -39,7 +40,7 @@ class ShowRequest extends BaseCrudRequest
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table']);
+        $meta = $this->setUpMetadata($data['table'], $data['schema']);
         $repo = $this->em->getRepository($meta->className);
         
         $qb = $repo->createQueryBuilder('E')
@@ -54,14 +55,20 @@ class ShowRequest extends BaseCrudRequest
             $qb->addOrderBy("E.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $items = $qb->getQuery()->getArrayResult();
+        $response = [
+            'pagination' => [
+                'currentPage' => $data['currentPage'],
+                'lastPage' => (int)ceil($count / $data['itemsPerPage']),
+                'itemsPerPage' => $data['itemsPerPage'],
+                'itemsCountAll' => $count,
+            ],
+            'items' => $qb->getQuery()->getArrayResult()
+        ];
         
-        $this->response->send([
-            'currentPage' => $data['currentPage'],
-            'lastPage' => (int)ceil($count / $data['itemsPerPage']),
-            'itemsPerPage' => $data['itemsPerPage'],
-            'itemsCountAll' => $count,
-            'items' => $items
-        ]);
+        if ($data['schema']) {
+            $response['schema'] = $meta->schema;
+        }
+        
+        $this->response->send($response);
     }
 }

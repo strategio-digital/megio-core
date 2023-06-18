@@ -23,7 +23,11 @@ const item = ref<IUser>()
 async function refresh() {
     loading.value = true
 
-    const resp = await api.collections.crud.showOne(props.collection, { id: props.id })
+    const resp = await api.collections.crud.showOne({
+        table: props.collection,
+        id: props.id,
+        schema: true
+    })
 
     // TODO: create by PHP-Entity
     createFormFields([

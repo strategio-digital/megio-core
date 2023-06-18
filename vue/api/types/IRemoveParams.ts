@@ -3,7 +3,7 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-export interface IRow {
-    id: string,
-    [key: string]: any
+export interface IRemoveParams {
+    table: string
+    ids: string[]
 }

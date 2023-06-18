@@ -7,18 +7,17 @@ import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
 import { IShowOneParams } from '@/saas/api/types/IShowOneParams'
 import { IRow } from '@/saas/api/types/IRow'
+import { ISchemaRow } from '@/saas/api/types/ISchemaRow'
 
-interface IResp extends IResponse {
-    data: IRow|any
+export interface IResp extends IResponse {
+    data: IRow | any,
+    schema?: ISchemaRow[]
 }
 
-const showOne = async (tableName: string, params: IShowOneParams): Promise<IResp> => {
+const showOne = async (params: IShowOneParams): Promise<IResp> => {
     const resp = await api.fetch(`/saas/crud/show-one`, {
         method: 'POST',
-        body: JSON.stringify({
-            table: tableName,
-            id: params.id
-        })
+        body: JSON.stringify(params)
     })
 
     return { ...resp, data: resp.data }

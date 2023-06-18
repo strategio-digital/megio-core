@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:user:create-admin', description: 'Create a new administrator account', aliases: ['user:create-admin'])]
+#[AsCommand(name: 'app:user:create-admin', description: 'Create a new administrator account', aliases: ['admin'])]
 class UserCreateAdminCommand extends Command
 {
     public function __construct(private readonly EntityManager $em)
