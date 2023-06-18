@@ -126,7 +126,7 @@ class CrudHelper
             $fieldsSchema = $this->getEntitySchema($className);
         }
         
-        return new EntityMetadata($className, $visibleFields, $fieldsSchema);
+        return new EntityMetadata($className, $tableName, $visibleFields, $fieldsSchema);
     }
     
     /**

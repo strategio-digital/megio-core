@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
-import { ISchemaRow } from '@/saas/api/types/ISchemaRow'
 import { IDgAction } from '@/saas/components/datagrid-v2/types/IDgAction'
+import { IPagination } from '@/saas/api/types/IPagination'
+import { ISchema } from '@/saas/api/types/ISchema'
 import RowAction from '@/saas/components/datagrid-v2/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid-v2/action/BulkAction.vue'
-import { IPagination } from '@/saas/api/types/IPagination'
+import { modals } from '@/saas/globals/datagrid/modals'
 
 const props = defineProps<{
     items: IRow[],
     pagination: IPagination,
-    schema: ISchemaRow[],
+    schema: ISchema,
     rowActions: IDgAction[],
     bulkActions: IDgAction[]
 }>()
@@ -20,17 +21,36 @@ const emits = defineEmits<{
     (e: 'onRowAction', row: IRow, type: string): void
     (e: 'onBulkAction', rows: IRow[], type: string): void
     (e: 'onPaginationChange', pagination: IPagination): void
+    (e: 'onAcceptModalSucceeded'): void
 }>()
 
+const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
 const multiselectChecked = ref<boolean>(false)
 
-function handleRowAction(row: IRow, type: string) {
+function onRowAction(row: IRow, type: string) {
+    modal.value = type
+    selected.value = [row]
     emits('onRowAction', row, type)
 }
 
-function handleBulkAction(type: string) {
+function onBulkAction(type: string) {
+    modal.value = type
     emits('onBulkAction', selected.value, type)
+}
+
+function onRowClick(row: IRow) {
+    emits('onRowClick', row)
+}
+
+function onAcceptModalSucceeded() {
+    modal.value = null
+    selected.value = []
+    emits('onAcceptModalSucceeded')
+}
+
+function onModalCancel() {
+    modal.value = null
 }
 
 watch(() => props.pagination.currentPage, () => {
@@ -56,6 +76,17 @@ watch(() => multiselectChecked.value, () => {
 
 <template>
     <div>
+        <!-- dynamic rendered modals -->
+        <component
+            v-for="m in modals" :key="m.actionEvent"
+            :is="m.component"
+            :collection="schema.meta.table"
+            :open="modal === m.actionEvent"
+            :rows="selected"
+            @onCancel="onModalCancel"
+            @onAccept="onAcceptModalSucceeded"
+        />
+
         <v-table density="default" hover>
             <thead>
             <tr class="text-no-wrap">
@@ -81,14 +112,14 @@ watch(() => multiselectChecked.value, () => {
                                 :v-key="action.type"
                                 :bulkAction="action"
                                 :count="selected.length"
-                                @onBulkAction="handleBulkAction"
+                                @onBulkAction="onBulkAction"
                             />
                         </v-list>
                     </v-menu>
                 </th>
 
                 <!-- dynamic column names -->
-                <th :key="col.name" v-for="col in schema">{{ col.name.toUpperCase() }}</th>
+                <th :key="col.name" v-for="col in schema.props">{{ col.name.toUpperCase() }}</th>
 
                 <!-- datagrid settings -->
                 <th class="text-right">
@@ -138,9 +169,9 @@ watch(() => multiselectChecked.value, () => {
                 <!-- dynamic column values -->
                 <td
                     class="text-no-wrap"
-                    v-for="col in schema"
+                    v-for="col in schema.props"
                     :key="col.name + '_' + item.id"
-                    @click="emits('onRowClick', item)"
+                    @click="onRowClick(item)"
                 >
                     <div v-if="item[col.name]">{{ item[col.name] }}</div>
                     <div v-else>-</div>
@@ -158,11 +189,11 @@ watch(() => multiselectChecked.value, () => {
                                 :v-key="action.type"
                                 :row="item"
                                 :rowAction="action"
-                                @onRowAction="handleRowAction"
+                                @onRowAction="onRowAction"
                             />
                         </v-list>
                     </v-menu>
-                    <v-btn icon="mdi-arrow-right" variant="plain" size="small" @click="emits('onRowClick', item)" />
+                    <v-btn icon="mdi-arrow-right" variant="plain" size="small" @click="onRowClick(item)" />
                 </td>
             </tr>
             </tbody>

@@ -7,11 +7,11 @@ import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
 import { IShowOneParams } from '@/saas/api/types/IShowOneParams'
 import { IRow } from '@/saas/api/types/IRow'
-import { ISchemaRow } from '@/saas/api/types/ISchemaRow'
+import { ISchema } from '@/saas/api/types/ISchema'
 
 export interface IResp extends IResponse {
     data: IRow | any,
-    schema?: ISchemaRow[]
+    schema?: ISchema
 }
 
 const showOne = async (params: IShowOneParams): Promise<IResp> => {

@@ -66,7 +66,12 @@ class ShowRequest extends BaseCrudRequest
         ];
         
         if ($data['schema']) {
-            $response['schema'] = $meta->schema;
+            $response['schema'] = [
+                'meta' => [
+                    'table' => $meta->tableName,
+                ],
+                'props' => $meta->propsSchema
+            ];
         }
         
         $this->response->send($response);

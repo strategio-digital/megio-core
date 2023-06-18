@@ -1,25 +1,28 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import api from '@/saas/api'
+import { IResp } from '@/saas/api/collections/crud/show'
+import { IPagination } from '@/saas/api/types/IPagination'
 import Layout from '@/saas/components/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
-import { IResp } from '@/saas/api/collections/crud/show'
-import { useDatagrid } from '@/saas/components/datagrid-v2/composable/useDatagrid'
+import { actions } from '@/saas/globals/datagrid/actions'
+
+const collection = 'admin';
 
 const loading = ref<boolean>(true)
 const data = ref<IResp['data']>()
-const dg = useDatagrid(refresh)
+const pagination = ref({ currentPage: 1, itemsPerPage: 15 })
 
 async function refresh() {
     loading.value = true
 
     const resp = await api.collections.crud.show({
-        table: 'admin',
+        table: collection,
         schema: true,
-        currentPage: dg.pagination.value?.currentPage || 1,
-        itemsPerPage: dg.pagination.value?.itemsPerPage || 15
+        currentPage: pagination.value.currentPage,
+        itemsPerPage: pagination.value.itemsPerPage
     })
 
     if (resp.success) {
@@ -29,6 +32,14 @@ async function refresh() {
     loading.value = false
 }
 
+function handlePaginationChange(newPagination: IPagination) {
+    pagination.value = {
+        currentPage: newPagination.currentPage,
+        itemsPerPage: newPagination.itemsPerPage
+    }
+    refresh()
+}
+
 onMounted(() => refresh())
 </script>
 
@@ -36,21 +47,19 @@ onMounted(() => refresh())
     <Layout :loading="loading">
         <template v-slot:default>
             <div class="pa-7">
-                <PageHeading :breadcrumb="['Nastavení', 'Administrátoři']" @onRefresh="refresh"/>
+                <PageHeading :breadcrumb="['Nastavení', 'Administrátoři']" @onRefresh="refresh" />
 
                 <Datagrid
                     class="mt-5"
                     v-if="data && data.schema"
-                    key="admin-datagrid"
+                    :key="collection"
                     :schema="data.schema"
                     :items="data.items"
                     :pagination="data.pagination"
-                    :rowActions="[{ type: 'remove', label: 'Odstranit' }, { type: 'revoke', label: 'Odhlásit' }]"
-                    :bulkActions="[{ type: 'remove', label: 'Odstranit' }, { type: 'revoke', label: 'Odhlásit' }]"
-                    @onRowClick="dg.rowClick"
-                    @onRowAction="dg.rowAction"
-                    @onBulkAction="dg.bulkAction"
-                    @onPaginationChange="dg.paginationChange"
+                    :rowActions="actions.row"
+                    :bulkActions="actions.bulk"
+                    @onPaginationChange="handlePaginationChange"
+                    @onAcceptModalSucceeded="refresh"
                 />
 
                 <div v-else class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
