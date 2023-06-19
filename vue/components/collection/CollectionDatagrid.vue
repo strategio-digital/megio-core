@@ -2,15 +2,19 @@
 import { ref, inject } from 'vue'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import api from '@/saas/api'
+import { IRow } from '@/saas/api/types/IRow'
+import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
+import ICollectionSummary from '@/saas/components/collection/types/ICollectionSummary'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
 import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
-import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
+import api from '@/saas/api'
 
 const props = defineProps<{ tableName: string }>()
 const emits = defineEmits<{ (e: 'onLoadingChange', status: boolean): void }>()
 
-const actions: IDgActions | undefined = inject('actions')
+const actions: IDatagridSettings['actions'] | undefined = inject('datagrid-actions')
+const summaries: ICollectionSummary[] | undefined = inject('collection-summaries')
+
 const loading = ref<boolean>(true)
 const datagrid = ref()
 
@@ -35,8 +39,13 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
     return resp
 }
 
-function handleShowEditMdl() {
-    console.log('show')
+function handleFirstColumnClick(row: IRow) {
+    const custom = summaries?.filter(sum => sum.collectionName === props.tableName).shift()
+    if (custom) {
+        custom.onFirstColumnClick(props.tableName, row)
+    } else {
+        console.log('open sideModal by default')
+    }
 }
 
 </script>
@@ -54,6 +63,7 @@ function handleShowEditMdl() {
             :bulkActions="actions.bulk"
             :defaultItemsPerPage="15"
             emptyDataMessage="Tato kolekce je prázdná."
+            @onFirstColumnClick="handleFirstColumnClick"
         />
     </div>
 </template>

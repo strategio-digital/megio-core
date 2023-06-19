@@ -3,30 +3,30 @@ import { ref, onUpdated, onMounted, inject } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import IDgModal from '@/saas/components/datagrid-v2/types/IDgModal'
-import IDgAction from '@/saas/components/datagrid-v2/types/IDgAction'
+import IDatagridAction from '@/saas/components/datagrid-v2/types/IDatagridAction'
+import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid-v2/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid-v2/action/BulkAction.vue'
 
 defineExpose({ refresh })
 
 const props = defineProps<{
-    rowActions: IDgAction[]
-    bulkActions: IDgAction[]
+    rowActions: IDatagridAction[]
+    bulkActions: IDatagridAction[]
     defaultItemsPerPage: number
     emptyDataMessage: string
     loadFunction: (pagination: IPagination) => Promise<IResp>
 }>()
 
 const emits = defineEmits<{
-    (e: 'onRowClick', row: IRow): void
     (e: 'onRowAction', row: IRow, type: string): void
     (e: 'onBulkAction', rows: IRow[], type: string): void
+    (e: 'onFirstColumnClick', row: IRow): void
     (e: 'onPaginationChange', pagination: IPagination): void
     (e: 'onAcceptModalSucceeded'): void
 }>()
 
-const modals: IDgModal[] | undefined = inject('modals')
+const modals: IDatagridSettings['modals'] | undefined = inject('datagrid-modals')
 const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
 const multiselectChecked = ref<boolean>(false)
@@ -41,7 +41,6 @@ const data = ref<IResp['data']>({
 })
 
 async function refresh(newPagination: IPagination | null = null) {
-
     if (! newPagination) {
         selected.value = []
     }
@@ -93,7 +92,7 @@ function onBulkAction(type: string) {
 }
 
 function onRowClick(row: IRow) {
-    emits('onRowClick', row)
+    emits('onFirstColumnClick', row)
 }
 
 function onModalCancel() {
@@ -244,12 +243,13 @@ onUpdated(() => resolveMultiselect())
                 <!-- dynamic column values -->
                 <td
                     class="text-no-wrap"
-                    v-for="col in data.schema.props"
+                    v-for="(col, i) in data.schema.props"
                     :key="col.name + '_' + item.id"
-                    @click="onRowClick(item)"
                 >
-                    <div v-if="item[col.name]">{{ item[col.name] }}</div>
-                    <div v-else>-</div>
+                    <a href="#" v-if="i === 0" @click.prevent="onRowClick(item)">
+                        <div>{{ item[col.name] }}</div>
+                    </a>
+                    <div v-else>{{ item[col.name] }}</div>
                 </td>
 
                 <!-- row actions -->

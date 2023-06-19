@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import IDgAction from '@/saas/components/datagrid-v2/types/IDgAction'
+import IDatagridAction from '@/saas/components/datagrid-v2/types/IDatagridAction'
 import { IRow } from '@/saas/api/types/IRow'
 
-defineProps<{ row: IRow, rowAction: IDgAction }>()
+defineProps<{ row: IRow, rowAction: IDatagridAction }>()
 
 const emits = defineEmits<{
     (e: 'onRowAction', row: IRow, type: string): void

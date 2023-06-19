@@ -4,9 +4,9 @@
  */
 
 import RemoveModal from '@/saas/components/datagrid-v2/modal/RemoveModal.vue'
-import IDgModal from '@/saas/components/datagrid-v2/types/IDgModal'
+import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
 
-const modals: IDgModal[] = [
+const modals: IDatagridSettings['modals'] = [
     {
         actionEvent: 'remove',
         component: RemoveModal

@@ -3,9 +3,9 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
+import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
 
-const actions: IDgActions = {
+const actions: IDatagridSettings['actions'] = {
     bulk: [
         {
             type: 'remove',

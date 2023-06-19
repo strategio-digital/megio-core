@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import IDgAction from '@/saas/components/datagrid-v2/types/IDgAction'
+import IDatagridAction from '@/saas/components/datagrid-v2/types/IDatagridAction'
 
-defineProps<{ bulkAction: IDgAction, count: number }>()
+defineProps<{ bulkAction: IDatagridAction, count: number }>()
 
 const emits = defineEmits<{
     (e: 'onBulkAction', type: string): void

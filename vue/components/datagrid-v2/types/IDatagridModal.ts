@@ -3,7 +3,9 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-export default interface IDgAction {
-    type: string;
-    label: string;
+import { Component } from 'vue';
+
+export default interface IDatagridModal {
+    actionEvent: string
+    component: Component
 }

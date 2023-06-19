@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import { ref, inject } from 'vue'
 import { IResp } from '@/saas/api/collections/crud/show'
+import { IRow } from '@/saas/api/types/IRow'
 import { IPagination } from '@/saas/api/types/IPagination'
-import api from '@/saas/api'
 import Layout from '@/saas/components/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
-import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
+import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
+import api from '@/saas/api'
 
 const collection = 'admin'
-const actions: IDgActions | undefined = inject('actions')
+const actions: IDatagridSettings['actions'] | undefined = inject('datagrid-actions')
 const loading = ref<boolean>(true)
 const datagrid = ref()
 
@@ -32,6 +33,10 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
 
     return resp
 }
+
+function handleFirstColumnClick(row: IRow) {
+    console.log('go to detail on admin', row.id)
+}
 </script>
 
 <template>
@@ -49,6 +54,7 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
                     :bulkActions="actions.bulk"
                     :defaultItemsPerPage="15"
                     emptyDataMessage="Zatím nebyl přidán žádný administrátor"
+                    @onFirstColumnClick="handleFirstColumnClick"
                 />
             </div>
         </template>
