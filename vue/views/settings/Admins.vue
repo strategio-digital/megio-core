@@ -9,7 +9,7 @@ import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
 import { actions } from '@/saas/globals/datagrid/actions'
 
-const collection = 'lead'
+const collection = 'admin'
 const loading = ref<boolean>(true)
 const datagrid = ref()
 
@@ -46,6 +46,7 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
                     :rowActions="actions.row"
                     :bulkActions="actions.bulk"
                     :defaultItemsPerPage="15"
+                    emptyDataMessage="Zatím nebyl přidán žádný administrátor"
                 />
             </div>
         </template>

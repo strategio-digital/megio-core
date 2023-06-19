@@ -1,27 +1,38 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import { storeToRefs } from 'pinia'
-import DatagridTable from '@/saas/components/datagrid/DatagridTable.vue'
-import DatagridHeader from '@/saas/components/datagrid/DatagridHeader.vue'
-import useDatagrid from '@/saas/composables/datagrid/useDatagrid'
-import useDatagridModal from '@/saas/composables/datagrid/useDatagridModal'
-import Modal from '@/saas/components/modal/Modal.vue'
+import { ref } from 'vue'
+import { IPagination } from '@/saas/api/types/IPagination'
+import { IResp } from '@/saas/api/collections/crud/show'
+import { actions } from '@/saas/globals/datagrid/actions'
+import api from '@/saas/api'
+import PageHeading from '@/saas/components/layout/PageHeading.vue'
+import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
 
 const props = defineProps<{ tableName: string }>()
 const emits = defineEmits<{ (e: 'onLoadingChange', status: boolean): void }>()
 
-const { store, refresh } = useDatagrid(props.tableName, 15)
-const { items, page, selectedItems, selectedItem, loading } = storeToRefs(store)
-const {
-    mdlRemove,
-    mdlBulkRemove,
-    remove,
-    bulkRemove
-} = useDatagridModal(props.tableName, refresh, selectedItem, selectedItems)
+const loading = ref<boolean>(true)
+const datagrid = ref()
 
-watch(() => loading.value, () => {
+async function loadFunction(newPagination: IPagination): Promise<IResp> {
+    loading.value = true
     emits('onLoadingChange', loading.value)
-})
+
+    const resp = await api.collections.crud.show({
+        table: props.tableName,
+        schema: true,
+        currentPage: newPagination.currentPage,
+        itemsPerPage: newPagination.itemsPerPage,
+        orderBy: [
+            { col: 'createdAt', desc: true },
+            { col: 'id', desc: true }
+        ]
+    })
+
+    loading.value = false
+    emits('onLoadingChange', loading.value)
+
+    return resp
+}
 
 function handleShowEditMdl() {
     console.log('show')
@@ -30,49 +41,17 @@ function handleShowEditMdl() {
 </script>
 
 <template>
-    <div v-if="!loading" class="h-100">
-        <Modal v-bind="mdlRemove" @accept="remove" title="Odstranit záznam">
-            Opravdu si přejete trvale odstranit tento záznam?
-            <span class="font-weight-bold">{{ selectedItem.id }}</span>?
-        </Modal>
-
-        <Modal v-bind="mdlBulkRemove" @accept="bulkRemove" :title="`Odstranit záznam (${selectedItems.length}x)`">
-            <div class="mb-5">Opravdu si přejete trvale odstranit tyto záznamy?</div>
-            <v-chip class="me-2 mb-2" size="small" v-for="email in selectedItems.map(item => item.id)">
-                {{ email }}
-            </v-chip>
-        </Modal>
-
-        <DatagridHeader :breadcrumb-items="['Kolekce', tableName]" :refresh="refresh" />
-
-        <DatagridTable
-            :columns="[
-                { name: 'Upraveno', key: 'updatedAt', type: 'datetime'},
-                { name: 'Vytvořeno', key: 'createdAt', type: 'datetime'},
-                { name: 'Obsah', key: 'content', type: 'string'},
-                //{ name: 'E-mail', key: 'email', type: 'email'},
-            ]"
-            :batch-actions="[
-                { title: 'Trvale odstranit', handler: () => mdlBulkRemove.toggleOpen('show') }
-            ]"
-                :row-actions="[
-                { title: 'Trvale odstranit', handler: () => mdlRemove.toggleOpen('show') }
-            ]"
-            @goToDetail="handleShowEditMdl"
-        />
-
-        <v-pagination
-            v-if="items.length"
-            v-model="page.currentPage"
-            :length="page.lastPage"
-            :total-visible="5"
+    <div class="h-100" v-show="!loading">
+        <PageHeading :breadcrumb="['Nastavení', tableName]" @onRefresh="() => datagrid.refresh()" />
+        <Datagrid
+            ref="datagrid"
             class="mt-5"
+            :key="tableName"
+            :loadFunction="loadFunction"
+            :rowActions="actions.row"
+            :bulkActions="actions.bulk"
+            :defaultItemsPerPage="15"
+            emptyDataMessage="Tato kolekce je prázdná."
         />
-
-        <div v-if="!items.length" class="d-flex justify-center align-center">
-            <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
-                Tato kolekce je prázdná.
-            </div>
-        </div>
     </div>
 </template>

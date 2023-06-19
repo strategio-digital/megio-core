@@ -14,6 +14,7 @@ const props = defineProps<{
     rowActions: IDgAction[]
     bulkActions: IDgAction[]
     defaultItemsPerPage: number
+    emptyDataMessage: string
     loadFunction: (pagination: IPagination) => Promise<IResp>
 }>()
 
@@ -271,6 +272,12 @@ onUpdated(() => resolveMultiselect())
             </tr>
             </tbody>
         </v-table>
+
+        <div v-if="!data.items.length" class="d-flex justify-center align-center">
+            <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
+                {{ emptyDataMessage }}
+            </div>
+        </div>
 
         <!-- pagination -->
         <v-pagination
