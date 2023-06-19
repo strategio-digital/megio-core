@@ -7,8 +7,11 @@
 import { createApp } from 'vue'
 import App from '@/saas/App.vue'
 import { createSaas } from '@/saas/createSaas'
+
 import navbar from '@/saas/globals/navbar'
 import routes from '@/saas/globals/routes'
+import actions from '@/saas/globals/datagrid/actions'
+import modals from '@/saas/globals/datagrid/modals'
 
 // Custom routes
 // const exclude = ['Users']
@@ -35,6 +38,14 @@ const app: HTMLElement | null = document.getElementById('app-saas')
 
 if (app) {
     const appPath = app.dataset.appPath as string
-    const saas = createSaas({ routes, navbar, routeRoot: appPath })
+
+    const saas = createSaas({
+        routeRoot: appPath,
+        routes,
+        navbar,
+        actions,
+        modals
+    })
+
     createApp(App).use(saas).mount(app)
 }
