@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, onUpdated, onMounted } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
 import { IDgAction } from '@/saas/components/datagrid-v2/types/IDgAction'
 import { IPagination } from '@/saas/api/types/IPagination'
-import { ISchema } from '@/saas/api/types/ISchema'
 import RowAction from '@/saas/components/datagrid-v2/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid-v2/action/BulkAction.vue'
 import { modals } from '@/saas/globals/datagrid/modals'
+import { IResp } from '@/saas/api/collections/crud/show'
+
+defineExpose({ refresh })
 
 const props = defineProps<{
-    items: IRow[],
-    pagination: IPagination,
-    schema: ISchema,
-    rowActions: IDgAction[],
+    rowActions: IDgAction[]
     bulkActions: IDgAction[]
+    defaultItemsPerPage: number
+    loadFunction: (pagination: IPagination) => Promise<IResp>
 }>()
 
 const emits = defineEmits<{
@@ -27,6 +28,56 @@ const emits = defineEmits<{
 const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
 const multiselectChecked = ref<boolean>(false)
+const data = ref<IResp['data']>({
+    items: [],
+    pagination: {
+        currentPage: 1,
+        itemsPerPage: props.defaultItemsPerPage,
+        lastPage: 0,
+        itemsCountAll: 0
+    }
+})
+
+async function refresh(newPagination: IPagination | null = null) {
+
+    if (! newPagination) {
+        selected.value = []
+    }
+
+    newPagination = newPagination || data.value.pagination
+    const resp = await props.loadFunction(newPagination)
+    if (resp.success) {
+        data.value = resp.data
+    }
+}
+
+async function onPaginationChange(newPage: number) {
+    await refresh({ ...data.value.pagination, currentPage: newPage })
+    emits('onPaginationChange', data.value.pagination)
+}
+
+async function onItemsPerPageChange(newItems: number) {
+    await refresh({
+        ...data.value.pagination,
+        currentPage: 1,
+        itemsPerPage: newItems
+    })
+}
+
+async function onAcceptModalSucceeded() {
+    modal.value = null
+    selected.value = []
+    multiselectChecked.value = false
+
+    const prevData = data.value
+    await refresh(data.value.pagination)
+
+    if (prevData.pagination.currentPage > data.value.pagination.lastPage && prevData.pagination.currentPage !== 1) {
+        await onPaginationChange(data.value.pagination.lastPage)
+    }
+
+    emits('onAcceptModalSucceeded')
+}
 
 function onRowAction(row: IRow, type: string) {
     modal.value = type
@@ -43,57 +94,61 @@ function onRowClick(row: IRow) {
     emits('onRowClick', row)
 }
 
-function onAcceptModalSucceeded() {
-    modal.value = null
-    selected.value = []
-    emits('onAcceptModalSucceeded')
-}
-
 function onModalCancel() {
     modal.value = null
 }
 
-watch(() => props.pagination.currentPage, () => {
-    emits('onPaginationChange', props.pagination)
-})
+function onUnselectAll() {
+    selected.value = []
+}
 
-watch(() => props.pagination.itemsPerPage, () => {
-    if (props.pagination.currentPage === 1) {
-        emits('onPaginationChange', props.pagination)
-    } else {
-        props.pagination.currentPage = 1
+function onSelectAll() {
+    // Add items
+    if (multiselectChecked.value === false) {
+        const newItems = data.value.items.filter(item => ! selected.value.includes(item))
+        selected.value.push(...newItems)
     }
-})
 
-watch(() => multiselectChecked.value, () => {
-    if (multiselectChecked.value && selected.value.length < props.items.length) {
-        selected.value = props.items
-    } else {
-        selected.value = []
+    // Remove items
+    if (multiselectChecked.value === true) {
+        const ids = data.value.items.map(item => item.id)
+        selected.value = selected.value.filter(sel => ! ids.includes(sel.id))
     }
-})
+}
+
+function resolveMultiselect() {
+    const ids = data.value.items.map(item => item.id)
+    const items = selected.value.filter(item => ids.includes(item.id))
+    multiselectChecked.value = ids.length === items.length && items.length !== 0
+}
+
+onMounted(() => refresh(data.value.pagination))
+
+onUpdated(() => resolveMultiselect())
 </script>
 
 <template>
     <div>
         <!-- dynamic rendered modals -->
         <component
+            v-if="data.schema"
             v-for="m in modals" :key="m.actionEvent"
             :is="m.component"
-            :collection="schema.meta.table"
+            :collection="data.schema.meta.table"
             :open="modal === m.actionEvent"
             :rows="selected"
             @onCancel="onModalCancel"
             @onAccept="onAcceptModalSucceeded"
         />
 
-        <v-table density="default" hover>
+        <!-- table -->
+        <v-table density="default" hover v-if="data.items.length && data.schema">
             <thead>
             <tr class="text-no-wrap">
                 <!-- bulk actions -->
-                <th style="width: 100px" class="d-flex align-center">
+                <th class="d-flex align-center justify-between">
                     <!-- select all -->
-                    <v-checkbox v-model="multiselectChecked" color="primary" class="d-flex" />
+                    <v-checkbox v-model="multiselectChecked" @click="onSelectAll" color="primary" class="d-flex" />
 
                     <!-- bulk actions -->
                     <v-menu>
@@ -114,12 +169,21 @@ watch(() => multiselectChecked.value, () => {
                                 :count="selected.length"
                                 @onBulkAction="onBulkAction"
                             />
+                            <BulkAction
+                                :bulk-action="{label: 'Zrušit označení', type: ''}"
+                                :count="selected.length"
+                                @onBulkAction="onUnselectAll"
+                            />
                         </v-list>
                     </v-menu>
+
+                    <div class="ms-2" style="color: #aaaaaa" :style="{ opacity: selected.length ? '1' : '0'}">
+                        {{ selected.length }}
+                    </div>
                 </th>
 
                 <!-- dynamic column names -->
-                <th :key="col.name" v-for="col in schema.props">{{ col.name.toUpperCase() }}</th>
+                <th :key="col.name" v-for="col in data.schema.props">{{ col.name.toUpperCase() }}</th>
 
                 <!-- datagrid settings -->
                 <th class="text-right">
@@ -140,8 +204,9 @@ watch(() => multiselectChecked.value, () => {
                                     <v-select
                                         class="my-2"
                                         hide-details
-                                        v-model="pagination.itemsPerPage"
-                                        :items="[10, 15, 25, 50, 100, 250, 500, 1000]"
+                                        @update:model-value="onItemsPerPageChange"
+                                        :model-value="data.pagination.itemsPerPage"
+                                        :items="[10, 15, 25, 50, 100, 250, 500]"
                                         variant="outlined"
                                         density="compact"
                                         label="Počet položek na stránku"
@@ -154,7 +219,7 @@ watch(() => multiselectChecked.value, () => {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in items">
+            <tr v-for="item in data.items">
                 <!-- checkbox for bulk actions -->
                 <td>
                     <v-checkbox
@@ -169,7 +234,7 @@ watch(() => multiselectChecked.value, () => {
                 <!-- dynamic column values -->
                 <td
                     class="text-no-wrap"
-                    v-for="col in schema.props"
+                    v-for="col in data.schema.props"
                     :key="col.name + '_' + item.id"
                     @click="onRowClick(item)"
                 >
@@ -199,10 +264,12 @@ watch(() => multiselectChecked.value, () => {
             </tbody>
         </v-table>
 
+        <!-- pagination -->
         <v-pagination
-            v-model="pagination.currentPage"
-            :length="pagination.lastPage"
-            :total-visible="5"
+            @update:model-value="onPaginationChange"
+            v-if="data.items.length"
+            :length="data.pagination.lastPage"
+            :total-visible="6"
             class="mt-5"
         />
     </div>
