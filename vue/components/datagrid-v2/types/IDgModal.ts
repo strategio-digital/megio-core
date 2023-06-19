@@ -5,7 +5,7 @@
 
 import { Component } from 'vue';
 
-export interface IDgModal {
+export default interface IDgModal {
     actionEvent: string
     component: Component
 }

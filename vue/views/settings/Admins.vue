@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { IResp } from '@/saas/api/collections/crud/show'
 import { IPagination } from '@/saas/api/types/IPagination'
 import api from '@/saas/api'
@@ -7,9 +7,10 @@ import Layout from '@/saas/components/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
-import { actions } from '@/saas/globals/datagrid/actions'
+import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
 
 const collection = 'admin'
+const actions: IDgActions | undefined = inject('actions')
 const loading = ref<boolean>(true)
 const datagrid = ref()
 
@@ -39,6 +40,7 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
             <div class="pa-7">
                 <PageHeading :breadcrumb="['Nastavení', 'Administrátoři']" @onRefresh="() => datagrid.refresh()" />
                 <Datagrid
+                    v-if="actions"
                     ref="datagrid"
                     class="mt-5"
                     :key="collection"

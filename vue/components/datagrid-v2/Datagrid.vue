@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onUpdated, onMounted } from 'vue'
+import { ref, onUpdated, onMounted, inject } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
-import { IDgAction } from '@/saas/components/datagrid-v2/types/IDgAction'
 import { IPagination } from '@/saas/api/types/IPagination'
+import { IResp } from '@/saas/api/collections/crud/show'
+import IDgModal from '@/saas/components/datagrid-v2/types/IDgModal'
+import IDgAction from '@/saas/components/datagrid-v2/types/IDgAction'
 import RowAction from '@/saas/components/datagrid-v2/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid-v2/action/BulkAction.vue'
-import { modals } from '@/saas/globals/datagrid/modals'
-import { IResp } from '@/saas/api/collections/crud/show'
 
 defineExpose({ refresh })
 
@@ -26,6 +26,7 @@ const emits = defineEmits<{
     (e: 'onAcceptModalSucceeded'): void
 }>()
 
+const modals: IDgModal[] | undefined = inject('modals')
 const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
 const multiselectChecked = ref<boolean>(false)
@@ -132,7 +133,7 @@ onUpdated(() => resolveMultiselect())
     <div>
         <!-- dynamic rendered modals -->
         <component
-            v-if="data.schema"
+            v-if="data.schema && modals"
             v-for="m in modals" :key="m.actionEvent"
             :is="m.component"
             :collection="data.schema.meta.table"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import IDgAction from '@/saas/components/datagrid-v2/types/IDgAction'
 import { IRow } from '@/saas/api/types/IRow'
-import { IDgAction } from '@/saas/components/datagrid-v2/types/IDgAction'
 
 defineProps<{ row: IRow, rowAction: IDgAction }>()
 

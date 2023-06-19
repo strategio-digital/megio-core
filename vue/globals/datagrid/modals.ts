@@ -3,13 +3,14 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-// TODO: move into providers
 import RemoveModal from '@/saas/components/datagrid-v2/modal/RemoveModal.vue'
-import { IDgModal } from '@/saas/components/datagrid-v2/types/IDgModal'
+import IDgModal from '@/saas/components/datagrid-v2/types/IDgModal'
 
-export const modals: IDgModal[] = [
+const modals: IDgModal[] = [
     {
         actionEvent: 'remove',
         component: RemoveModal
     }
 ]
+
+export default modals

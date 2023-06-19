@@ -9,27 +9,31 @@ import { RouteRecordRaw } from 'vue-router'
 import { vuetifyOptions } from '@/saas/plugins/vuetify'
 import createRouter from '@/saas/router'
 import INavbar from '@/saas/components/navbar/types/INavbar'
-import routes from '@/saas/globals/routes'
-import navbar from '@/saas/globals/navbar'
+import IDgModal from '@/saas/components/datagrid-v2/types/IDgModal'
+import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
 
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import '@/saas/style.scss'
 
 type SaasOptions = {
-    routes?: RouteRecordRaw[]
-    navbar?: INavbar,
     routeRoot: string
+    routes: RouteRecordRaw[]
+    navbar: INavbar,
+    actions: IDgActions
+    modals: IDgModal[]
 }
 
 export const createSaas = (options: SaasOptions) => {
     const pinia = createPinia()
     const vuetify = createVuetify(vuetifyOptions)
-    const router = createRouter(options.routes || routes, options.routeRoot)
+    const router = createRouter(options.routes, options.routeRoot)
 
     return {
         install: (app: App) => {
-            app.provide('navbar', options.navbar || navbar)
+            app.provide('navbar', options.navbar)
+            app.provide('actions', options.actions)
+            app.provide('modals', options.modals)
             app.use(vuetify)
             app.use(pinia)
             app.use(router)

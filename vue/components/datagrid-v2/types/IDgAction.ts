@@ -3,7 +3,7 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-export interface IDgAction {
+export default interface IDgAction {
     type: string;
     label: string;
 }

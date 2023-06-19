@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import { actions } from '@/saas/globals/datagrid/actions'
 import api from '@/saas/api'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
 import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
+import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
 
 const props = defineProps<{ tableName: string }>()
 const emits = defineEmits<{ (e: 'onLoadingChange', status: boolean): void }>()
 
+const actions: IDgActions | undefined = inject('actions')
 const loading = ref<boolean>(true)
 const datagrid = ref()
 
@@ -44,6 +45,7 @@ function handleShowEditMdl() {
     <div class="h-100" v-show="!loading">
         <PageHeading :breadcrumb="['Nastavení', tableName]" @onRefresh="() => datagrid.refresh()" />
         <Datagrid
+            v-if="actions"
             ref="datagrid"
             class="mt-5"
             :key="tableName"

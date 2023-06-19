@@ -3,16 +3,29 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-// TODO: move into providers
-import { IDgAction } from '@/saas/components/datagrid-v2/types/IDgAction'
+import IDgActions from '@/saas/components/datagrid-v2/types/IDgActions'
 
-export const actions: { bulk: IDgAction[], row: IDgAction[] } = {
+const actions: IDgActions = {
     bulk: [
-        { type: 'remove', label: 'Odstranit' },
-        //{ type: 'revoke', label: 'Odhlásit' }
+        {
+            type: 'remove',
+            label: 'Odstranit'
+        },
+        // {
+        //     type: 'revoke',
+        //     label: 'Odhlásit'
+        // }
     ],
     row: [
-        { type: 'remove', label: 'Odstranit' },
-        //{ type: 'revoke', label: 'Odhlásit' }
+        {
+            type: 'remove',
+            label: 'Odstranit'
+        },
+        // {
+        //     type: 'revoke',
+        //     label: 'Odhlásit'
+        // }
     ]
 }
+
+export default actions
