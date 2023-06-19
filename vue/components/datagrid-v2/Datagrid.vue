@@ -146,20 +146,30 @@ onUpdated(() => resolveMultiselect())
             <thead>
             <tr class="text-no-wrap">
                 <!-- bulk actions -->
-                <th class="d-flex align-center justify-between">
+                <th class="d-flex align-center">
                     <!-- select all -->
-                    <v-checkbox v-model="multiselectChecked" @click="onSelectAll" color="primary" class="d-flex" />
+                    <div class="me-2">
+                        <v-checkbox
+                            v-model="multiselectChecked"
+                            @click="onSelectAll"
+                            color="primary"
+                            class="d-flex"
+                        />
+                    </div>
 
                     <!-- bulk actions -->
                     <v-menu>
                         <template v-slot:activator="{ props }">
                             <v-btn
-                                icon="mdi-dots-vertical"
                                 v-bind="props"
+                                rounded="xl"
                                 size="small"
-                                variant="plain"
+                                :variant="selected.length ? 'tonal' : 'plain'"
                                 :disabled="!selected.length"
-                            ></v-btn>
+                            >
+                                <v-icon icon="mdi-chevron-down"/>
+                                <span>{{ selected.length }}</span>
+                            </v-btn>
                         </template>
                         <v-list>
                             <BulkAction
@@ -176,14 +186,12 @@ onUpdated(() => resolveMultiselect())
                             />
                         </v-list>
                     </v-menu>
-
-                    <div class="ms-2" style="color: #aaaaaa" :style="{ opacity: selected.length ? '1' : '0'}">
-                        {{ selected.length }}
-                    </div>
                 </th>
 
                 <!-- dynamic column names -->
-                <th :key="col.name" v-for="col in data.schema.props">{{ col.name.toUpperCase() }}</th>
+                <th :key="col.name" v-for="col in data.schema.props" class="text-start">
+                    {{ col.name.toUpperCase() }}
+                </th>
 
                 <!-- datagrid settings -->
                 <th class="text-right">
@@ -246,7 +254,7 @@ onUpdated(() => resolveMultiselect())
                 <td class="text-right text-no-wrap">
                     <v-menu>
                         <template v-slot:activator="{ props }">
-                            <v-btn icon="mdi-dots-vertical" v-bind="props" size="small" variant="plain"></v-btn>
+                            <v-btn icon="mdi-chevron-down" v-bind="props" size="small" variant="plain"></v-btn>
                         </template>
                         <v-list>
                             <RowAction
