@@ -13,9 +13,9 @@ const props = defineProps<{
     row: IRow
 }>()
 
-function getResult(): string {
-    if (!props.value) {
-        return ''
+function getResult() {
+    if (props.value === null) {
+        return null
     }
 
     const dateTime: IDateTime = {
@@ -28,8 +28,10 @@ function getResult(): string {
     return DateHelper().toCzDateTime(dateTime)
 }
 
+const result = getResult()
 </script>
 
 <template>
-    {{ getResult() }}
+    <span v-if="result">{{ result }}</span>
+    <v-icon v-else icon="mdi-minus" color="grey" size="sm"/>
 </template>

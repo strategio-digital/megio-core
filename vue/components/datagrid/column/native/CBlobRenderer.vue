@@ -19,8 +19,10 @@ function getResult() {
     return text
 }
 
+const result = getResult()
+
 </script>
 
 <template>
-    {{ getResult() }}
+    {{ result }}
 </template>
