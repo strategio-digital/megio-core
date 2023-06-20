@@ -11,8 +11,9 @@ import { createSaas } from '@/saas/createSaas'
 // Customizable globals
 import navbar from '@/saas/globals/navbar'
 import routes from '@/saas/globals/routes'
-import actions from '@/saas/globals/datagrid/actions'
 import modals from '@/saas/globals/datagrid/modals'
+import columns from '@/saas/globals/datagrid/columns'
+import actions from '@/saas/globals/datagrid/actions'
 import summaries from '@/saas/globals/collection/summaries'
 
 // Custom routes
@@ -47,7 +48,8 @@ if (app) {
         navbar,
         datagrid: {
             modals,
-            actions
+            columns,
+            actions,
         },
         collection: {
             summaries

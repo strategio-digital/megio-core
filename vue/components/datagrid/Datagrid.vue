@@ -8,7 +8,6 @@ import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
-import actions from '@/saas/globals/datagrid/actions'
 
 defineExpose({ refresh })
 
@@ -47,9 +46,8 @@ const data = ref<IResp['data']>({
     }
 })
 
-const allowedBulkActions = computed(() => filterAllowedActions('bulk'))
-
-const allowedRowActions = computed(() => filterAllowedActions('row'))
+const allowedBulkActions = computed(() => filterAllowedActions(props.bulkActions))
+const allowedRowActions = computed(() => filterAllowedActions(props.rowActions))
 
 async function refresh(newPagination: IPagination | null = null) {
     if (! newPagination) {
@@ -134,14 +132,14 @@ function resolveMultiselect() {
     multiselectChecked.value = ids.length === items.length && items.length !== 0
 }
 
-function filterAllowedActions(type: 'row' | 'bulk') : IDatagridAction[] {
+function filterAllowedActions(actions: IDatagridAction[]) : IDatagridAction[] {
     if (!props.allowActionsFiltering) {
-        return actions[type]
+        return actions
     }
 
     const currentPath = router.currentRoute.value.fullPath
 
-    return actions[type].map(action => {
+    return actions.map(action => {
         return {
             ...action,
             show: action.showOn.filter(show => currentPath.startsWith(show)).length !== 0
