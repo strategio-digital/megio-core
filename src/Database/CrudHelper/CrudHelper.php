@@ -166,19 +166,15 @@ class CrudHelper
     public function getEntityColumnProps(Column $attr, \ReflectionProperty $prop): array
     {
         $propType = $prop->getType();
-        
         $nullable = $attr->nullable;
-        if (!$nullable) {
-            $nullable = $propType?->allowsNull() ?? false;
-        }
         
         $type = $attr->type;
-        if (!$type) {
-            $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? 'unknown';
+        if ($type === null) {
+            $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? '@unknown';
         }
         
         $maxLength = $attr->length;
-        if (!$maxLength && $type === 'string') {
+        if ($maxLength === null && $type === 'string') {
             $maxLength = 255;
         }
         
