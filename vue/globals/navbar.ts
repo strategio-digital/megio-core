@@ -3,11 +3,11 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-import INavbar from '@/saas/components/navbar/types/INavbar'
+import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
 import logo from '@/saas/assets/img/strategio.svg'
 import { COLLECTION_EMPTY_ROUTE } from '@/saas/components/navbar/types/Constants'
 
-const navbar: INavbar = {
+const navbar: INavbarSettings = {
     brand: {
         title: 'Strategio SaaS',
         routeName: 'Dashboard',

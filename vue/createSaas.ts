@@ -7,7 +7,7 @@ import { createPinia } from 'pinia'
 import { createVuetify } from 'vuetify'
 import { RouteRecordRaw } from 'vue-router'
 import { vuetifyOptions } from '@/saas/plugins/vuetify'
-import INavbar from '@/saas/components/navbar/types/INavbar'
+import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
 import ICollectionSettings from '@/saas/components/collection/types/ICollectionSettings'
 import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
 import createRouter from '@/saas/router'
@@ -18,7 +18,7 @@ import '@/saas/style.scss'
 export type SaasOptions = {
     root: string
     routes: RouteRecordRaw[]
-    navbar: INavbar,
+    navbar: INavbarSettings,
     datagrid: IDatagridSettings
     collection: ICollectionSettings
 }

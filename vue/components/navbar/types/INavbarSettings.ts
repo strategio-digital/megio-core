@@ -4,7 +4,7 @@
  */
 import INavbarItem from '@/saas/components/navbar/types/INavbarItem'
 
-export default interface INavbar {
+export default interface INavbarSettings {
     brand: {
         title: string
         routeName: string
