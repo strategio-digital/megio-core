@@ -3,15 +3,17 @@
  * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
  */
 
-// Extended SaaS Admin panel
+// Core app
 import { createApp } from 'vue'
 import App from '@/saas/App.vue'
 import { createSaas } from '@/saas/createSaas'
 
+// Customizable globals
 import navbar from '@/saas/globals/navbar'
 import routes from '@/saas/globals/routes'
 import actions from '@/saas/globals/datagrid/actions'
 import modals from '@/saas/globals/datagrid/modals'
+import summaries from '@/saas/globals/collection/summaries'
 
 // Custom routes
 // const exclude = ['Users']
@@ -40,11 +42,16 @@ if (app) {
     const appPath = app.dataset.appPath as string
 
     const saas = createSaas({
-        routeRoot: appPath,
+        root: appPath,
         routes,
         navbar,
-        actions,
-        modals
+        datagrid: {
+            modals,
+            actions
+        },
+        collection: {
+            summaries
+        }
     })
 
     createApp(App).use(saas).mount(app)
