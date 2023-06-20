@@ -17,11 +17,15 @@ const columns: IDatagridSettings['columns'] = [
         component: UnknownRenderer
     },
     {
-        types: ['boolean'],
+        types: ['boolean', 'bool'],
         component: BooleanRenderer
     },
     {
-        types: ['guid', 'string', 'text', 'json', 'decimal', 'bigint'],
+        types: ['integer', 'smallint', 'float', 'decimal', 'bigint'],
+        component: NumberRenderer
+    },
+    {
+        types: ['guid', 'string', 'text'],
         component: StringRenderer
     },
     {
@@ -29,13 +33,9 @@ const columns: IDatagridSettings['columns'] = [
         component: DateTimeRenderer
     },
     {
-        types: ['object', 'array', 'simple_array', 'json_array'],
+        types: ['object', 'array', 'simple_array', 'json_array', 'json'],
         component: CBlobRenderer
     },
-    {
-        types: ['integer', 'smallint', 'float'],
-        component: NumberRenderer
-    }
 ]
 
 export default columns

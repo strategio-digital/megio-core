@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Component as VueComponent } from 'vue'
 import { ref, onUpdated, onMounted, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { IRow } from '@/saas/api/types/IRow'
@@ -8,14 +9,16 @@ import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
+import StringRenderer from '@/saas/components/datagrid/column/native/StringRenderer.vue'
+import UnknownRenderer from '@/saas/components/datagrid/column/native/UnknownRenderer.vue'
 
 defineExpose({ refresh })
 
 const props = defineProps<{
-    rowActions: IDatagridAction[]
-    bulkActions: IDatagridAction[]
     defaultItemsPerPage: number
     emptyDataMessage: string
+    bulkActions: IDatagridAction[]
+    rowActions: IDatagridAction[]
     loadFunction: (pagination: IPagination) => Promise<IResp>
     allowActionsFiltering?: boolean
 }>()
@@ -132,8 +135,8 @@ function resolveMultiselect() {
     multiselectChecked.value = ids.length === items.length && items.length !== 0
 }
 
-function filterAllowedActions(actions: IDatagridAction[]) : IDatagridAction[] {
-    if (!props.allowActionsFiltering) {
+function filterAllowedActions(actions: IDatagridAction[]): IDatagridAction[] {
+    if (! props.allowActionsFiltering) {
         return actions
     }
 
@@ -145,6 +148,16 @@ function filterAllowedActions(actions: IDatagridAction[]) : IDatagridAction[] {
             show: action.showOn.filter(show => currentPath.startsWith(show)).length !== 0
         }
     }).filter(action => action.show)
+}
+
+function columnRenderer(columnType: string): VueComponent {
+    const column = columns?.filter(col => col.types.includes(columnType)).shift()
+
+    if (column) {
+        return column.component
+    }
+
+    return UnknownRenderer
 }
 
 onMounted(() => refresh(data.value.pagination))
@@ -214,7 +227,11 @@ onUpdated(() => resolveMultiselect())
                 </th>
 
                 <!-- dynamic column names -->
-                <th :key="col.name" v-for="col in data.schema.props" class="text-start">
+                <th
+                    :key="col.name"
+                    v-for="col in data.schema.props"
+                    :class="[['bool', 'boolean'].includes(col.type) ? 'text-center' : 'text-start']"
+                >
                     {{ col.name.toUpperCase() }}
                 </th>
 
@@ -266,19 +283,30 @@ onUpdated(() => resolveMultiselect())
 
                 <!-- dynamic column values -->
                 <td
-                    class="text-no-wrap"
                     v-for="(col, colIdx) in data.schema.props"
                     :key="col.name + '_' + item.id"
+                    class="text-no-wrap"
+                    :class="{'text-indigo-accent-4 text-decoration-underline' : colIdx === 0}"
+                    :style="{cursor: colIdx === 0 ? 'pointer' : undefined}"
+                    @click.prevent="colIdx === 0 && onRowClick(item)"
                 >
-                    <!--- TODO: COLUMN RENDERER -->
-                    <a href="#" v-if="colIdx === 0" @click.prevent="onRowClick(item)">
-                        <div>{{ item[col.name] }}</div>
-                    </a>
-                    <div v-else>{{ item[col.name] }}</div>
+                    <component
+                        v-if="item[col.name] !== undefined"
+                        :is="columnRenderer(col.type)"
+                        :value="item[col.name]"
+                        :columnIndex="colIdx"
+                        :columnSchema="col"
+                        :tableSchema="data.schema"
+                        :row="item"
+                    />
+                    <div v-else><v-icon icon="mdi-minus" color="grey" size="sm"/></div>
                 </td>
 
                 <!-- row actions -->
-                <td class="text-right text-no-wrap">
+                <td
+                    class=" text-right text-no-wrap
+                    "
+                >
                     <v-menu>
                         <template v-slot:activator="{ props }">
                             <v-btn icon="mdi-chevron-down" v-bind="props" size="small" variant="plain"></v-btn>

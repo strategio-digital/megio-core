@@ -30,6 +30,7 @@ export interface ISchemaProp {
         'array' | //  Type that maps a SQL CLOB to a PHP array using serialize() and unserialize()
         'simple_array' | //  Type that maps a SQL CLOB to a PHP array using implode() and explode(), with a comma as delimiter. IMPORTANT Only use this type if you are sure that your values cannot contain a ",".
         'json_array' | //  Type that maps a SQL CLOB to a PHP array using json_encode() and json_decode()
+        'json' |
 
         'blob' | //  Type that maps a SQL BLOB to a PHP resource stream
         '@unknown' // Not recognized by our CrudHelper class
