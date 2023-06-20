@@ -2,9 +2,9 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { COLLECTION_EMPTY_ROUTE } from '@/saas/components/navbar/types/Constants'
-import api from '@/saas/api'
-import Layout from '@/saas/components/Layout.vue'
+import Layout from '@/saas/components/layout/Layout.vue'
 import CollectionDatagrid from '@/saas/components/collection/CollectionDatagrid.vue'
+import api from '@/saas/api'
 
 const route = useRoute()
 const router = useRouter()
