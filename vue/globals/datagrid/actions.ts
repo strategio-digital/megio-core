@@ -9,22 +9,30 @@ const actions: IDatagridSettings['actions'] = {
     bulk: [
         {
             type: 'remove',
-            label: 'Odstranit'
+            label: 'Odstranit',
+            showOn: ['/collections', '/settings/admins'],
         },
-        // {
-        //     type: 'revoke',
-        //     label: 'Odhlásit'
-        // }
+        {
+            type: 'revoke',
+            label: 'Odhlásit',
+            showOn: [
+                '/settings/admins'
+            ]
+        }
     ],
     row: [
         {
             type: 'remove',
-            label: 'Odstranit'
+            label: 'Odstranit',
+            showOn: ['/collections', '/settings/admins']
         },
-        // {
-        //     type: 'revoke',
-        //     label: 'Odhlásit'
-        // }
+        {
+            type: 'revoke',
+            label: 'Odhlásit',
+            showOn: [
+                '/settings/admins'
+            ]
+        }
     ]
 }
 

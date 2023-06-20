@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onUpdated, onMounted, inject } from 'vue'
+import { ref, onUpdated, onMounted, inject, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { IRow } from '@/saas/api/types/IRow'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
@@ -7,6 +8,7 @@ import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
+import actions from '@/saas/globals/datagrid/actions'
 
 defineExpose({ refresh })
 
@@ -16,6 +18,7 @@ const props = defineProps<{
     defaultItemsPerPage: number
     emptyDataMessage: string
     loadFunction: (pagination: IPagination) => Promise<IResp>
+    allowActionsFiltering?: boolean
 }>()
 
 const emits = defineEmits<{
@@ -26,6 +29,8 @@ const emits = defineEmits<{
     (e: 'onAcceptModalSucceeded'): void
 }>()
 
+
+const router = useRouter()
 const modals: IDatagridSettings['modals'] | undefined = inject('datagrid-modals')
 const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
@@ -39,6 +44,10 @@ const data = ref<IResp['data']>({
         itemsCountAll: 0
     }
 })
+
+const allowedBulkActions = computed(() => filterAllowedActions('bulk'))
+
+const allowedRowActions = computed(() => filterAllowedActions('row'))
 
 async function refresh(newPagination: IPagination | null = null) {
     if (! newPagination) {
@@ -123,6 +132,21 @@ function resolveMultiselect() {
     multiselectChecked.value = ids.length === items.length && items.length !== 0
 }
 
+function filterAllowedActions(type: 'row' | 'bulk') : IDatagridAction[] {
+    if (!props.allowActionsFiltering) {
+        return actions[type]
+    }
+
+    const currentPath = router.currentRoute.value.fullPath
+
+    return actions[type].map(action => {
+        return {
+            ...action,
+            show: action.showOn.filter(show => currentPath.startsWith(show)).length !== 0
+        }
+    }).filter(action => action.show)
+}
+
 onMounted(() => refresh(data.value.pagination))
 
 onUpdated(() => resolveMultiselect())
@@ -168,20 +192,20 @@ onUpdated(() => resolveMultiselect())
                                 :variant="selected.length ? 'tonal' : 'plain'"
                                 :disabled="!selected.length"
                             >
-                                <v-icon icon="mdi-chevron-down"/>
+                                <v-icon icon="mdi-chevron-down" />
                                 <span>{{ selected.length }}</span>
                             </v-btn>
                         </template>
                         <v-list>
                             <BulkAction
-                                v-for="action in bulkActions"
+                                v-for="action in allowedBulkActions"
                                 :v-key="action.type"
                                 :bulkAction="action"
                                 :count="selected.length"
                                 @onBulkAction="onBulkAction"
                             />
                             <BulkAction
-                                :bulk-action="{label: 'Zrušit označení', type: ''}"
+                                :bulk-action="{ label: 'Zrušit označení', type: '', showOn:[] }"
                                 :count="selected.length"
                                 @onBulkAction="onUnselectAll"
                             />
@@ -260,7 +284,7 @@ onUpdated(() => resolveMultiselect())
                         </template>
                         <v-list>
                             <RowAction
-                                v-for="action in rowActions"
+                                v-for="action in allowedRowActions"
                                 :v-key="action.type"
                                 :row="item"
                                 :rowAction="action"

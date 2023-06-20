@@ -61,6 +61,7 @@ function handleFirstColumnClick(row: IRow) {
             :loadFunction="loadFunction"
             :rowActions="actions.row"
             :bulkActions="actions.bulk"
+            :allowActionsFiltering="true"
             :defaultItemsPerPage="15"
             emptyDataMessage="Tato kolekce je prázdná."
             @onFirstColumnClick="handleFirstColumnClick"

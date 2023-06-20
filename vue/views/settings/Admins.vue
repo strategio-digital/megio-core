@@ -52,6 +52,7 @@ function handleFirstColumnClick(row: IRow) {
                     :loadFunction="loadFunction"
                     :rowActions="actions.row"
                     :bulkActions="actions.bulk"
+                    :allowActionsFiltering="true"
                     :defaultItemsPerPage="15"
                     emptyDataMessage="Zatím nebyl přidán žádný administrátor"
                     @onFirstColumnClick="handleFirstColumnClick"

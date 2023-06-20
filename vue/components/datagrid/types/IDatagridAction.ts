@@ -6,4 +6,5 @@
 export default interface IDatagridAction {
     type: string;
     label: string;
+    showOn: string[]
 }
