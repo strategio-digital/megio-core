@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\Passwords;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
 use Saas\Database\Interface\CrudEntity;
 use Saas\Database\Repository\AdminRepository;
@@ -21,7 +21,7 @@ use Saas\Database\Repository\AdminRepository;
 #[ORM\HasLifecycleCallbacks]
 class Admin implements CrudEntity
 {
-    use TUlid;
+    use TId;
     use TCreatedAt;
     use TUpdatedAt;
     

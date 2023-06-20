@@ -6,6 +6,6 @@
 import { Component } from 'vue';
 
 export default interface IDatagridModal {
-    actionEvent: string
+    onAction: string
     component: Component
 }

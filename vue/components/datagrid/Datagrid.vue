@@ -32,6 +32,8 @@ const emits = defineEmits<{
 
 const router = useRouter()
 const modals: IDatagridSettings['modals'] | undefined = inject('datagrid-modals')
+const columns: IDatagridSettings['columns'] | undefined = inject('datagrid-columns')
+
 const modal = ref<string | null>(null)
 const selected = ref<IRow[]>([])
 const multiselectChecked = ref<boolean>(false)
@@ -157,10 +159,10 @@ onUpdated(() => resolveMultiselect())
         <!-- dynamic rendered modals -->
         <component
             v-if="data.schema && modals"
-            v-for="m in modals" :key="m.actionEvent"
+            v-for="m in modals" :key="m.onAction"
             :is="m.component"
             :collection="data.schema.meta.table"
-            :open="modal === m.actionEvent"
+            :open="modal === m.onAction"
             :rows="selected"
             @onCancel="onModalCancel"
             @onAccept="onAcceptModalSucceeded"
@@ -199,13 +201,13 @@ onUpdated(() => resolveMultiselect())
                         <v-list>
                             <BulkAction
                                 v-for="action in allowedBulkActions"
-                                :v-key="action.type"
+                                :v-key="action.name"
                                 :bulkAction="action"
                                 :count="selected.length"
                                 @onBulkAction="onBulkAction"
                             />
                             <BulkAction
-                                :bulk-action="{ label: 'Zrušit označení', type: '', showOn:[] }"
+                                :bulk-action="{ label: 'Zrušit označení', name: '', showOn:[] }"
                                 :count="selected.length"
                                 @onBulkAction="onUnselectAll"
                             />
@@ -267,10 +269,11 @@ onUpdated(() => resolveMultiselect())
                 <!-- dynamic column values -->
                 <td
                     class="text-no-wrap"
-                    v-for="(col, i) in data.schema.props"
+                    v-for="(col, colIdx) in data.schema.props"
                     :key="col.name + '_' + item.id"
                 >
-                    <a href="#" v-if="i === 0" @click.prevent="onRowClick(item)">
+                    <!--- TODO: COLUMN RENDERER -->
+                    <a href="#" v-if="colIdx === 0" @click.prevent="onRowClick(item)">
                         <div>{{ item[col.name] }}</div>
                     </a>
                     <div v-else>{{ item[col.name] }}</div>
@@ -285,7 +288,7 @@ onUpdated(() => resolveMultiselect())
                         <v-list>
                             <RowAction
                                 v-for="action in allowedRowActions"
-                                :v-key="action.type"
+                                :v-key="action.name"
                                 :row="item"
                                 :rowAction="action"
                                 @onRowAction="onRowAction"

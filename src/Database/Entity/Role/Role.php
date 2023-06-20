@@ -9,7 +9,7 @@ namespace Saas\Database\Entity\Role;
 
 use Saas\Database\Entity\User\User;
 use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TId;
 use Saas\Database\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Role
 {
-    use TUlid;
+    use TId;
     use TCreatedAt;
     
     #[ORM\Column(length: 32, unique: true)]

@@ -9,7 +9,7 @@ namespace Saas\Database\Entity\User;
 
 use Saas\Database\Entity\Role\Role;
 use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
 use Saas\Database\Interface\CrudEntity;
 use Saas\Database\Repository\UserRepository;
@@ -23,7 +23,7 @@ use Nette\Utils\Validators;
 #[ORM\HasLifecycleCallbacks]
 class User implements CrudEntity
 {
-    use TUlid;
+    use TId;
     use TCreatedAt;
     use TUpdatedAt;
     

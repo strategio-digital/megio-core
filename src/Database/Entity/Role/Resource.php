@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Saas\Database\Entity\Role;
 
 use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TId;
 use Saas\Database\Repository\RoleResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Resource
 {
-    use TUlid;
+    use TId;
     use TCreatedAt;
     
     #[ORM\Column(unique: true, nullable: false)]

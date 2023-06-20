@@ -11,7 +11,7 @@ const emits = defineEmits<{
 </script>
 
 <template>
-    <v-list-item @click="emits('onRowAction', row, rowAction.type)">
+    <v-list-item @click="emits('onRowAction', row, rowAction.name)">
         <v-list-item-title>{{ rowAction.label }}</v-list-item-title>
     </v-list-item>
 </template>

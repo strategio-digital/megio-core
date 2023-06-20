@@ -8,7 +8,7 @@ import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSetting
 
 const modals: IDatagridSettings['modals'] = [
     {
-        actionEvent: 'remove',
+        onAction: 'remove',
         component: RemoveModal
     }
 ]

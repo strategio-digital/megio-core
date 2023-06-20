@@ -33,6 +33,7 @@ export const createSaas = (options: SaasOptions) => {
             app.provide('navbar', options.navbar)
             app.provide('datagrid-actions', options.datagrid.actions)
             app.provide('datagrid-modals', options.datagrid.modals)
+            app.provide('datagrid-columns', options.datagrid.columns)
             app.provide('collection-summaries', options.collection.summaries(router))
             app.use(vuetify)
             app.use(pinia)

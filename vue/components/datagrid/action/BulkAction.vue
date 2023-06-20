@@ -9,7 +9,7 @@ const emits = defineEmits<{
 </script>
 
 <template>
-    <v-list-item :key="bulkAction.type" @click="emits('onBulkAction', bulkAction.type)">
+    <v-list-item :key="bulkAction.name" @click="emits('onBulkAction', bulkAction.name)">
         <v-list-item-title>
             {{ bulkAction.label }} ({{ count }}x)
         </v-list-item-title>

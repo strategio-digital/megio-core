@@ -3,8 +3,9 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-export default interface IDatagridAction {
-    name: string;
-    label: string;
-    showOn: string[]
+import { Component } from 'vue';
+
+export default interface IDatagridColumn {
+    types: string[]
+    component: Component
 }

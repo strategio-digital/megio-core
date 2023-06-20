@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Saas\Database\Entity\User;
 
 use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TUlid;
+use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
 use Saas\Database\Repository\UserTokenRepository;
 use Doctrine\DBAL\Types\Types;
@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\HasLifecycleCallbacks]
 class Token
 {
-    use TUlid;
+    use TId;
     use TCreatedAt;
     use TUpdatedAt;
     

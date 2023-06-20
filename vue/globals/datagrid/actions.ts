@@ -8,12 +8,12 @@ import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSetting
 const actions: IDatagridSettings['actions'] = {
     bulk: [
         {
-            type: 'remove',
+            name: 'remove',
             label: 'Odstranit',
             showOn: ['/collections', '/settings/admins'],
         },
         {
-            type: 'revoke',
+            name: 'revoke',
             label: 'Odhlásit',
             showOn: [
                 '/settings/admins'
@@ -22,12 +22,12 @@ const actions: IDatagridSettings['actions'] = {
     ],
     row: [
         {
-            type: 'remove',
+            name: 'remove',
             label: 'Odstranit',
             showOn: ['/collections', '/settings/admins']
         },
         {
-            type: 'revoke',
+            name: 'revoke',
             label: 'Odhlásit',
             showOn: [
                 '/settings/admins'

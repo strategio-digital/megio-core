@@ -180,7 +180,7 @@ class CrudHelper
         
         return [
             'name' => $prop->getName(),
-            'type' => $type,
+            'type' => mb_strtolower($type),
             'nullable' => $nullable,
             'maxLength' => $maxLength
         ];
