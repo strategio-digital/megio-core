@@ -3,7 +3,7 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
+import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 
 const actions: IDatagridSettings['actions'] = {
     bulk: [

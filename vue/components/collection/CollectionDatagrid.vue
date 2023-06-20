@@ -3,10 +3,10 @@ import { ref, inject } from 'vue'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
 import { IRow } from '@/saas/api/types/IRow'
-import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
+import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import ICollectionSummary from '@/saas/components/collection/types/ICollectionSummary'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'
-import Datagrid from '@/saas/components/datagrid-v2/Datagrid.vue'
+import Datagrid from '@/saas/components/datagrid/Datagrid.vue'
 import api from '@/saas/api'
 
 const props = defineProps<{ tableName: string }>()

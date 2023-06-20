@@ -3,10 +3,10 @@ import { ref, onUpdated, onMounted, inject } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
 import { IPagination } from '@/saas/api/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import IDatagridAction from '@/saas/components/datagrid-v2/types/IDatagridAction'
-import IDatagridSettings from '@/saas/components/datagrid-v2/types/IDatagridSettings'
-import RowAction from '@/saas/components/datagrid-v2/action/RowAction.vue'
-import BulkAction from '@/saas/components/datagrid-v2/action/BulkAction.vue'
+import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
+import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
+import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
+import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
 
 defineExpose({ refresh })
 

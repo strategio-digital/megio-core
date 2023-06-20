@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IDatagridAction from '@/saas/components/datagrid-v2/types/IDatagridAction'
+import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 
 defineProps<{ bulkAction: IDatagridAction, count: number }>()
 
