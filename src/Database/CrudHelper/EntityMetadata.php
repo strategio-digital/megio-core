@@ -12,13 +12,13 @@ class EntityMetadata
     /**
      * @param class-string $className
      * @param string $tableName
-     * @param array<int, string> $visibleFields
+     * @param array<int, string> $visibleProps
      * @param array<int, mixed> $propsSchema
      */
     public function __construct(
         public string $className,
         public string $tableName,
-        public array  $visibleFields,
+        public array  $visibleProps,
         public array  $propsSchema = []
     )
     {
@@ -26,6 +26,6 @@ class EntityMetadata
     
     public function getQuerySelect(string $alias): string
     {
-        return implode(', ', array_map(fn($field) => $alias . '.' . $field, $this->visibleFields));
+        return implode(', ', array_map(fn($prop) => $alias . '.' . $prop, $this->visibleProps));
     }
 }

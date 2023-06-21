@@ -63,7 +63,7 @@ class CrudHelper
      * @param class-string $entityClassName
      * @return array<int, string>
      */
-    public function getVisibleFields(string $entityClassName): array
+    public function getVisibleProps(string $entityClassName): array
     {
         try {
             $ref = new \ReflectionClass($entityClassName);
@@ -94,7 +94,9 @@ class CrudHelper
             }
         } catch (\ReflectionException) {}
         
-        return $props;
+        // move array item with name "id" to first position
+        $idProp = array_filter($props, fn($prop) => $prop['name'] !== 'id');
+        return array_merge(array_values(array_filter($props, fn($prop) => $prop['name'] === 'id')), $idProp);
     }
     
     /**
@@ -113,9 +115,9 @@ class CrudHelper
             return null;
         }
         
-        $visibleFields = $this->getVisibleFields($className);
+        $visibleProps = $this->getVisibleProps($className);
         
-        if (count($visibleFields) === 1) { // 'id' included
+        if (count($visibleProps) === 1) { // 'id' included
             $this->error = "Collection '{$tableName}' has no visible fields";
             return null;
         }
@@ -126,7 +128,7 @@ class CrudHelper
             $fieldsSchema = $this->getEntitySchema($className);
         }
         
-        return new EntityMetadata($className, $tableName, $visibleFields, $fieldsSchema);
+        return new EntityMetadata($className, $tableName, $visibleProps, $fieldsSchema);
     }
     
     /**
