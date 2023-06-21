@@ -78,7 +78,7 @@ onMounted(async () => {
                     :value="name"
                     :to="{ name: 'Collections', params: { name: name }}"
                     :active="isActive(name)"
-                    prepend-icon="mdi-folder-outline"
+                    :prepend-icon="isActive(name) ? 'mdi-folder-open-outline' : 'mdi-folder-outline'"
                 />
             </v-list>
 

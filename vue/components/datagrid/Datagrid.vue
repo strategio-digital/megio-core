@@ -9,7 +9,6 @@ import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
-import StringRenderer from '@/saas/components/datagrid/column/native/StringRenderer.vue'
 import UnknownRenderer from '@/saas/components/datagrid/column/native/UnknownRenderer.vue'
 
 defineExpose({ refresh })
@@ -286,7 +285,7 @@ onUpdated(() => resolveMultiselect())
                     v-for="(col, colIdx) in data.schema.props"
                     :key="col.name + '_' + item.id"
                     class="text-no-wrap"
-                    :class="{'text-indigo-accent-4 text-decoration-underline' : colIdx === 0}"
+                    :class="{'text-indigo-accent-2 text-decoration-underline' : colIdx === 0}"
                     :style="{cursor: colIdx === 0 ? 'pointer' : undefined}"
                     @click.prevent="colIdx === 0 && onRowClick(item)"
                 >
@@ -299,14 +298,13 @@ onUpdated(() => resolveMultiselect())
                         :tableSchema="data.schema"
                         :row="item"
                     />
-                    <div v-else><v-icon icon="mdi-minus" color="grey" size="sm"/></div>
+                    <div v-else>
+                        <v-icon icon="mdi-minus" color="grey" size="sm" />
+                    </div>
                 </td>
 
                 <!-- row actions -->
-                <td
-                    class=" text-right text-no-wrap
-                    "
-                >
+                <td class=" text-right text-no-wrap">
                     <v-menu>
                         <template v-slot:activator="{ props }">
                             <v-btn icon="mdi-chevron-down" v-bind="props" size="small" variant="plain"></v-btn>
