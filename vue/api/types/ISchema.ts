@@ -6,7 +6,8 @@ import { ISchemaProp } from '@/saas/api/types/ISchemaProp'
 
 export interface ISchema {
     meta: {
-        table: string
+        table: string,
+        invisible: string[]
     }
     props: ISchemaProp[]
 }

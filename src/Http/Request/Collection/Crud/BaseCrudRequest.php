@@ -17,9 +17,11 @@ abstract class BaseCrudRequest implements IRequest
     protected readonly CrudHelper $helper; // @phpstan-ignore-line (injected in child class)
     protected readonly Response $response; // @phpstan-ignore-line (injected in child class)
     
-    public function setUpMetadata(string $tableName, bool $schema): EntityMetadata
+    public function setUpMetadata(string $tableName, bool $schema, string $visiblePropsProperty = null,): EntityMetadata
     {
-        $meta = $this->helper->getEntityMetadata($tableName, $schema);
+        $visiblePropsProperty = $visiblePropsProperty ?? CrudHelper::PROPERTY_SHOW_ALL;
+        
+        $meta = $this->helper->getEntityMetadata($tableName, $visiblePropsProperty, $schema);
         
         if (!$meta) {
             $this->response->sendError([$this->helper->getError()]);

@@ -25,6 +25,11 @@ class CrudHelper
     /** @var class-string[] */
     const EXCLUDED_IN_COLLECTIONS = [Admin::class];
     
+    const
+        PROPERTY_SHOW_ALL = 'showAllFields',
+        PROPERTY_SHOW_ONE = 'showOneField',
+        PROPERTY_INVISIBLE = 'invisibleFields';
+    
     protected ?string $error = null;
     
     public function __construct(protected EntityManager $em)
@@ -64,16 +69,16 @@ class CrudHelper
     
     /**
      * @param class-string $entityClassName
+     * @param string $propertyName
      * @return array<int, string>
      */
-    public function getVisibleProps(string $entityClassName): array
+    public function getPropertyDefaults(string $entityClassName, string $propertyName): array
     {
         try {
             $ref = new \ReflectionClass($entityClassName);
-            $refProps = $ref->getProperty('visibleFields')->getDefaultValue();
-            return array_merge(['id'], array_filter($refProps, fn($prop) => $prop !== 'id'));
+            return $ref->getProperty($propertyName)->getDefaultValue();
         } catch (\ReflectionException) {
-            return ['id'];
+            return [];
         }
     }
     
@@ -106,10 +111,11 @@ class CrudHelper
     
     /**
      * @param string $tableName
+     * @param string $visiblePropsProperty
      * @param bool $schema
      * @return \Saas\Database\CrudHelper\EntityMetadata|null
      */
-    public function getEntityMetadata(string $tableName, bool $schema = false): ?EntityMetadata
+    public function getEntityMetadata(string $tableName, string $visiblePropsProperty, bool $schema = false): ?EntityMetadata
     {
         $this->error = null;
         
@@ -120,9 +126,8 @@ class CrudHelper
             return null;
         }
         
-        $visibleProps = $this->getVisibleProps($className);
-        
-        //dumpe($visibleProps);
+        $visibleProps = $this->getPropertyDefaults($className, $visiblePropsProperty);
+        $visibleProps = array_merge(['id'], array_filter($visibleProps, fn($prop) => $prop !== 'id'));
         
         if (count($visibleProps) === 1) { // 'id' is automatically included
             $this->error = "Collection '{$tableName}' has no visible fields";
@@ -130,12 +135,16 @@ class CrudHelper
         }
         
         $fieldsSchema = [];
+        $invisibleFields = [];
         
         if ($schema) {
-            $fieldsSchema = $this->getEntitySchema($className);
+            $schemaProps = $this->getEntitySchema($className);
+            $fieldsSchema = array_values(array_filter($schemaProps, fn($prop) => in_array($prop['name'], $visibleProps)));
+            $invisibleFields = $this->getPropertyDefaults($className, self::PROPERTY_INVISIBLE);
         }
         
-        return new EntityMetadata($className, $tableName, $visibleProps, $fieldsSchema);
+        
+        return new EntityMetadata($className, $tableName, $visibleProps, $fieldsSchema, $invisibleFields);
     }
     
     /**

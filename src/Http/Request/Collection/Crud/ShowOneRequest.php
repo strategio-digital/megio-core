@@ -36,7 +36,7 @@ class ShowOneRequest extends BaseCrudRequest
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table'],  $data['schema']);
+        $meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ONE);
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -54,12 +54,7 @@ class ShowOneRequest extends BaseCrudRequest
         }
         
         if ($data['schema']) {
-            $response['schema'] = [
-                'meta' => [
-                    'table' => $meta->tableName,
-                ],
-                'props' => $meta->propsSchema
-            ];
+            $response['schema'] = $meta->getSchema();
         }
         
         $this->response->send($response);

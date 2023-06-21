@@ -27,7 +27,14 @@ class User implements CrudEntity
     use TCreatedAt;
     use TUpdatedAt;
     
-    protected array $visibleFields = ['email', 'lastLogin', 'createdAt'];
+    /** @var string[] */
+    public array $invisibleFields = ['id', 'updatedAt'];
+    
+    /** @var string[] */
+    public array $showAllFields = ['email', 'lastLogin', 'createdAt'];
+    
+    /** @var string[] */
+    public array $showOneFields = ['title', 'content', 'visible', 'createdAt', 'updatedAt'];
     
     #[ORM\Column(length: 64, unique: true, nullable: false)]
     private string $email;

@@ -40,7 +40,7 @@ class ShowRequest extends BaseCrudRequest
     
     public function process(array $data): void
     {
-        $meta = $this->setUpMetadata($data['table'], $data['schema']);
+        $meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ALL);
         $repo = $this->em->getRepository($meta->className);
         
         $qb = $repo->createQueryBuilder('E')
@@ -66,12 +66,7 @@ class ShowRequest extends BaseCrudRequest
         ];
         
         if ($data['schema']) {
-            $response['schema'] = [
-                'meta' => [
-                    'table' => $meta->tableName,
-                ],
-                'props' => $meta->propsSchema
-            ];
+            $response['schema'] = $meta->getSchema();
         }
         
         $this->response->send($response);
