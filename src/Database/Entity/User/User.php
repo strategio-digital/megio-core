@@ -31,10 +31,10 @@ class User implements CrudEntity
     public array $invisibleFields = ['id', 'updatedAt'];
     
     /** @var string[] */
-    public array $showAllFields = ['email', 'lastLogin', 'createdAt'];
+    public array $showAllFields = ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     
     /** @var string[] */
-    public array $showOneFields = ['title', 'content', 'visible', 'createdAt', 'updatedAt'];
+    public array $showOneFields = ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     
     #[ORM\Column(length: 64, unique: true, nullable: false)]
     private string $email;

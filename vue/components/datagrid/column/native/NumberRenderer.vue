@@ -14,5 +14,6 @@ const props = defineProps<{
 </script>
 
 <template>
-    <span>{{ value }}</span>
+    <span v-if="value">{{ value }}</span>
+    <v-icon v-else icon="mdi-minus" color="grey" size="sm"/>
 </template>

@@ -14,7 +14,10 @@ defineProps<{
 
 <template>
     <div class="text-center">
-        <v-icon icon="mdi-check-circle-outline" color="green" v-if="value === true"/>
-        <v-icon icon="mdi-close-circle-outline" color="red" v-if="value === false"/>
+        <div v-if="value === true || value === false">
+            <v-icon icon="mdi-check-circle-outline" color="green" v-if="value === true"/>
+            <v-icon icon="mdi-close-circle-outline" color="red" v-if="value === false"/>
+        </div>
+        <v-icon v-else icon="mdi-minus" color="grey" size="sm"/>
     </div>
 </template>

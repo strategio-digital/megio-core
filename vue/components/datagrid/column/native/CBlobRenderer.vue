@@ -24,5 +24,6 @@ const result = getResult()
 </script>
 
 <template>
-    {{ result }}
+    <span v-if="result">{{ result }}</span>
+    <v-icon v-else icon="mdi-minus" color="grey" size="sm"/>
 </template>
