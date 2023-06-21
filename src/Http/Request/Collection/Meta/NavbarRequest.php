@@ -27,7 +27,10 @@ class NavbarRequest implements IRequest
     
     public function process(array $data): void
     {
-        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
+        $classes = $this->helper->getAllEntityClassNames();
+        $classes = array_filter($classes, fn($class) => !in_array($class['value'], CrudHelper::EXCLUDED_IN_COLLECTIONS));
+        $tables = array_map(fn($class) => $class['table'],  $classes);
+        
         sort($tables);
         $this->response->send(['items' => $tables]);
     }

@@ -10,17 +10,20 @@ namespace Saas\Database\CrudHelper;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
+use Saas\Database\Entity\Admin\Admin;
 use Saas\Database\Entity\Role\Resource;
 use Saas\Database\Entity\Role\Role;
 use Saas\Database\Entity\User\Token;
-use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
 use Saas\Database\Interface\CrudEntity;
 
 class CrudHelper
 {
     /** @var class-string[] */
-    protected array $excludedEntities = [Token::class, Role::class, User::class, Resource::class];
+    const EXCLUDED_IN_CRUD = [Role::class, Resource::class, Token::class];
+    
+    /** @var class-string[] */
+    const EXCLUDED_IN_COLLECTIONS = [Admin::class];
     
     protected ?string $error = null;
     
@@ -45,7 +48,7 @@ class CrudHelper
             return ['table' => str_replace('`', '', $attr->name ?? ''), 'value' => $metadata->name];
         }, $metadata);
         
-        return array_filter($entities, fn($entity) => !in_array($entity['value'], $this->excludedEntities));
+        return array_filter($entities, fn($entity) => !in_array($entity['value'], self::EXCLUDED_IN_CRUD));
     }
     
     /**
@@ -67,9 +70,10 @@ class CrudHelper
     {
         try {
             $ref = new \ReflectionClass($entityClassName);
-            return array_merge(['id'], $ref->getProperty('visibleFields')->getDefaultValue());
+            $refProps = $ref->getProperty('visibleFields')->getDefaultValue();
+            return array_merge(['id'], array_filter($refProps, fn($prop) => $prop !== 'id'));
         } catch (\ReflectionException) {
-            return [];
+            return ['id'];
         }
     }
     
@@ -92,7 +96,8 @@ class CrudHelper
                     $props[] = $this->getEntityColumnProps($attr, $prop);
                 }
             }
-        } catch (\ReflectionException) {}
+        } catch (\ReflectionException) {
+        }
         
         // move array item with name "id" to first position
         $idProp = array_filter($props, fn($prop) => $prop['name'] !== 'id');
@@ -117,7 +122,9 @@ class CrudHelper
         
         $visibleProps = $this->getVisibleProps($className);
         
-        if (count($visibleProps) === 1) { // 'id' included
+        //dumpe($visibleProps);
+        
+        if (count($visibleProps) === 1) { // 'id' is automatically included
             $this->error = "Collection '{$tableName}' has no visible fields";
             return null;
         }

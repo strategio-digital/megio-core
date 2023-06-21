@@ -10,4 +10,8 @@ namespace Saas\Database\Interface;
 interface CrudEntity
 {
     public function getId(): string;
+    
+    public function getCreatedAt(): \DateTime;
+    
+    public function getUpdatedAt(): \DateTime;
 }

@@ -26,7 +26,7 @@ class Admin implements CrudEntity
     use TUpdatedAt;
     
     /** @var string[] */
-    public array $visibleFields = ['id', 'createdAt', 'updatedAt', 'email', 'lastLogin'];
+    protected array $visibleFields = ['email', 'lastLogin', 'createdAt'];
     
     #[ORM\Column(length: 64, unique: true, nullable: false)]
     protected string $email;

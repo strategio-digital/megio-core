@@ -22,7 +22,7 @@ abstract class BaseCrudRequest implements IRequest
         $meta = $this->helper->getEntityMetadata($tableName, $schema);
         
         if (!$meta) {
-            $this->response->sendError([$this->helper->getError()], 404);
+            $this->response->sendError([$this->helper->getError()]);
         }
         
         return $meta;
