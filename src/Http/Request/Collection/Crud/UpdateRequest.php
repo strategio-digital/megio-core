@@ -10,6 +10,7 @@ namespace Saas\Http\Request\Collection\Crud;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Nette\Schema\Expect;
 use Saas\Database\CrudHelper\CrudException;
+use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Http\Response\Response;
@@ -62,13 +63,13 @@ class UpdateRequest extends BaseCrudRequest
             }
             try {
                 $this->helper->setUpEntityProps($dbRow, $row['data']);
-            } catch (CrudException $e) {
+            } catch (CrudException|EntityException $e) {
                 $this->response->sendError([$e->getMessage()], 406);
             }
         }
         
         $this->em->beginTransaction();
-
+        
         try {
             $this->em->flush();
             $this->em->commit();
