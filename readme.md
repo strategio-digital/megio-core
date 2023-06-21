@@ -28,10 +28,11 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; PHP-Stan static analysis on level 8.
 
 ## Done (Jun 2023)
-- 🟢 Basis CRUD endpoints & entity props visibility
+- 🟢 API end-point for CRUD actions trough Doctrine Entities
+- 🟢 Extendable (collections) datagrid with global configs
 
 ## Working on
-- 🟡 Collection datagrid + CRUD
+- 🟡 Collections edit/update form
 - 🟡 Request-validation by entity props
 - 🟡 Upgrade to symfony router 6.3
 - 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
