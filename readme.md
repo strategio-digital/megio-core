@@ -12,7 +12,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Core features
 - 🟢&nbsp; Website frontend builder (simple router & Latte templates)
-- 🟢&nbsp; Vite assets builder for fast compiling scss, ts, vue, etc.
+- 🟢&nbsp; Vite assets bundler for fast compiling scss, ts, vue, etc.
 - 🟠&nbsp; Admin panel with UI Doctrine ORM entity builder.
 - 🟠&nbsp; Admin panel with UI datagrid editor based on Doctrine entities.
 - 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
