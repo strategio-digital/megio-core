@@ -8,15 +8,16 @@ declare(strict_types=1);
 namespace App\Http\Controller;
 
 use Saas\Helper\Path;
-use Saas\Http\Controller\Controller;
+use Saas\Http\Controller\Base\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends Controller
 {
-    public function index(): void
+    public function index(): Response
     {
-        $this->getResponse()->render(Path::viewDir() . '/controller/home.latte', [
+        return $this->render(Path::viewDir() . '/controller/home.latte', [
             'title' => 'Strategio SaaS',
-            'description' => 'Most powerful tool for developing apps by simple clicks.'
+            'description' => 'Most powerful tool for creating webs, apps & APIs.'
         ]);
     }
 }

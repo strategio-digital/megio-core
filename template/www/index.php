@@ -11,6 +11,6 @@ $container = (new \Saas\Bootstrap())
     ->projectRootPath(__DIR__ . '/../')
     ->configure([\Saas\Helper\Path::configDir() . '/app.neon'], $startedAt);
 
-/** @var \Saas\App $app */
-$app = $container->getByType(\Saas\App::class);
+/** @var \Saas\Http\Kernel\App $app */
+$app = $container->getByType(\Saas\Http\Kernel\App::class);
 $app->run($container);
