@@ -17,7 +17,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         parent::__construct();
     }
     
-    public function instantiateController(string $class): IController
+    public function instantiateController(string $class): object
     {
         /** @var \Saas\Http\Controller\Base\IController $instance */
         $instance = $this->container->createInstance($class);
