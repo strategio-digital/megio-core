@@ -11,13 +11,14 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
 
 ## Core features
-- 🟢&nbsp; Website frontend builder (simple router & Latte templates)
-- 🟢&nbsp; Vite assets bundler for fast compiling scss, ts, vue, etc.
+- 🟢&nbsp; Web-ready dev-stack (simple router & Latte templates)
+- 🟢&nbsp; API-ready dev-stack (simple router & UI permissions editor)
+- 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
 - 🟠&nbsp; Admin panel with UI Doctrine ORM entity builder.
 - 🟠&nbsp; Admin panel with UI datagrid editor based on Doctrine entities.
-- 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
+- 🟢&nbsp; Vite assets bundler for fast compiling scss, ts, vue, etc.
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
-- 🟢&nbsp; Stateless and scalable architecture for your PHP applications.
+- 🟢&nbsp; Stateless and scalable architecture for PHP applications.
 - 🟢&nbsp; Optimized image for maximum memory savings (about 20Mb costs)
 
 ## Backend features
