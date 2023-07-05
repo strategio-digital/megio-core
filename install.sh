@@ -22,7 +22,7 @@ if test "$1" = "create"; then
   mkdir $2
   curl -L0 https://github.com/strategio-digital/saas/archive/refs/heads/${VERSION}.zip --output "./$2/project.zip"
   unzip -q "./$2/project.zip" -d "./$2/"
-  cp -r "./$2/saas-${VERSION}/template/" "./$2/"
+  cp -r "./$2/saas-${VERSION}/sandbox/" "./$2/"
   rm -rf "./$2/saas-${VERSION}" "./$2/project.zip"
 
   echo -e ""
@@ -36,15 +36,15 @@ elif test "$1" = "update"; then
   curl -L0 https://github.com/strategio-digital/saas/archive/refs/heads/${VERSION}.zip --output "./project.zip"
   unzip -q "./project.zip" -d "./.strategio-saas/"
 
-  cp -r "./.strategio-saas/saas-${VERSION}/template/bin/console" "./bin/console"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/docker/" "./docker/"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/www/index.php" "./www/index.php"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/.env.example" "./.env.example"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/.gitignore" "./.gitignore"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/docker-compose.yml" "./docker-compose.yml"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/docker-entrypoint.sh" "./docker-entrypoint.sh"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/Dockerfile" "./Dockerfile"
-  cp -r "./.strategio-saas/saas-${VERSION}/template/project.sh" "./project.sh"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/bin/console" "./bin/console"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/docker/" "./docker/"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/www/index.php" "./www/index.php"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/.env.example" "./.env.example"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/.gitignore" "./.gitignore"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/docker-compose.yml" "./docker-compose.yml"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/docker-entrypoint.sh" "./docker-entrypoint.sh"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/Dockerfile" "./Dockerfile"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/project.sh" "./project.sh"
 
   rm -rf "./project.zip" "./.strategio-saas" "./temp/*"
   echo -e ""
