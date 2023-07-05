@@ -14,7 +14,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Website frontend builder (simple router & Latte templates)
 - 🟢&nbsp; Vite assets builder for fast compiling scss, ts, vue, etc.
 - 🟠&nbsp; Admin panel with UI Doctrine ORM entity builder.
-- 🟠&nbsp; Admin panel with UI data editor based on Doctrine entities.
+- 🟠&nbsp; Admin panel with UI datagrid editor based on Doctrine entities.
 - 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
 - 🟢&nbsp; Stateless and scalable architecture for your PHP applications.
