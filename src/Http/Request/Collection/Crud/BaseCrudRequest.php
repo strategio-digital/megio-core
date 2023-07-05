@@ -9,24 +9,15 @@ namespace Saas\Http\Request\Collection\Crud;
 
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\CrudHelper\EntityMetadata;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
+use Saas\Http\Request\Request;
 
-abstract class BaseCrudRequest implements IRequest
+abstract class BaseCrudRequest extends Request
 {
     protected readonly CrudHelper $helper; // @phpstan-ignore-line (injected in child class)
-    protected readonly Response $response; // @phpstan-ignore-line (injected in child class)
     
-    public function setUpMetadata(string $tableName, bool $schema, string $visiblePropsProperty = null,): EntityMetadata
+    public function setUpMetadata(string $tableName, bool $schema, string $visiblePropsProperty = null,): ?EntityMetadata
     {
         $visiblePropsProperty = $visiblePropsProperty ?? CrudHelper::PROPERTY_SHOW_ALL;
-        
-        $meta = $this->helper->getEntityMetadata($tableName, $visiblePropsProperty, $schema);
-        
-        if (!$meta) {
-            $this->response->sendError([$this->helper->getError()]);
-        }
-        
-        return $meta;
+        return $this->helper->getEntityMetadata($tableName, $visiblePropsProperty, $schema);
     }
 }

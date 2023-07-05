@@ -13,7 +13,7 @@ use Saas\Debugger\Logger;
 use Saas\Extension\Vite\Vite;
 use Saas\Helper\Path;
 use Saas\Helper\Thumbnail;
-use Saas\Http\Router\LinkGenerator;
+use Saas\Http\Resolver\LinkResolver;
 use Saas\Security\Response\Cors;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
@@ -77,11 +77,9 @@ class Bootstrap
         $vite = $container->getByType(Vite::class);
         $latte->addFunction('vite', fn(string $source, bool $isEntryPoint = false) => $isEntryPoint ? $vite->resolveEntrypoint($source) : $vite->resolveSource($source));
         
-        /** @var LinkGenerator $linkGenerator */
-        $linkGenerator = $container->getByType(LinkGenerator::class);
-        $latte->addFunction('route', fn(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkGenerator->link($name, $params, $path));
-        
-        // Thumbnail generator
+        /** @var LinkResolver $linkResolver */
+        $linkResolver = $container->getByType(LinkResolver::class);
+        $latte->addFunction('route', fn(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkResolver->link($name, $params, $path));
         $latte->addFunction('thumbnail', fn(string $path, ?int $width, ?int $height, string $method = 'EXACT', int $quality = 80) => new Thumbnail($path, $width, $height, $method, $quality));
         
         // Register DI panels

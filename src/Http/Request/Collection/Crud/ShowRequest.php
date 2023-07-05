@@ -9,16 +9,12 @@ namespace Saas\Http\Request\Collection\Crud;
 
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\EntityManager;
-use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShowRequest extends BaseCrudRequest
 {
-    public function __construct(
-        protected readonly EntityManager $em,
-        protected readonly CrudHelper    $helper,
-        protected readonly Response      $response,
-    )
+    public function __construct(protected readonly EntityManager $em, protected readonly CrudHelper $helper)
     {
     }
     
@@ -38,9 +34,12 @@ class ShowRequest extends BaseCrudRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
-        $meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ALL);
+        if (!$meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ALL)) {
+            return $this->error([$this->helper->getError()]);
+        }
+        
         $repo = $this->em->getRepository($meta->className);
         
         $qb = $repo->createQueryBuilder('E')
@@ -69,6 +68,6 @@ class ShowRequest extends BaseCrudRequest
             $response['schema'] = $meta->getSchema();
         }
         
-        $this->response->send($response);
+        return $this->json($response);
     }
 }

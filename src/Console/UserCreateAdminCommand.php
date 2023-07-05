@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Console\Command;
+namespace Saas\Console;
 
 use Saas\Database\Entity\Role\Role;
 use Saas\Database\Entity\User\User;

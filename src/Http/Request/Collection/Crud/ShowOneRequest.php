@@ -11,15 +11,11 @@ use Doctrine\ORM\AbstractQuery;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Http\Response\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShowOneRequest extends BaseCrudRequest
 {
-    public function __construct(
-        protected readonly EntityManager $em,
-        protected readonly CrudHelper    $helper,
-        protected readonly Response      $response
-    )
+    public function __construct(protected readonly EntityManager $em, protected readonly CrudHelper $helper)
     {
     }
     
@@ -34,9 +30,11 @@ class ShowOneRequest extends BaseCrudRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
-        $meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ONE);
+        if (!$meta = $this->setUpMetadata($data['table'], $data['schema'], CrudHelper::PROPERTY_SHOW_ONE)) {
+            return $this->error([$this->helper->getError()]);
+        }
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -50,13 +48,13 @@ class ShowOneRequest extends BaseCrudRequest
         $response = ['item' => $item];
         
         if (!$item) {
-            $this->response->sendError(['Item not found'], 404);
+            return $this->error(['Item not found'], 404);
         }
         
         if ($data['schema']) {
             $response['schema'] = $meta->getSchema();
         }
         
-        $this->response->send($response);
+        return $this->json($response);
     }
 }

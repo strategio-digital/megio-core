@@ -8,41 +8,39 @@ declare(strict_types=1);
 namespace Saas\Http\Request\User;
 
 use Saas\Http\Request\Auth;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
+use Saas\Http\Request\Request;
 use Saas\Storage\Storage;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Response;
 
-class UploadAvatarRequest implements IRequest
+class UploadAvatarRequest extends Request
 {
-    public function __construct(
-        private readonly Response $response,
-        private readonly Auth     $auth,
-        private readonly Storage  $storage
-    )
+    public function __construct(private readonly Auth $auth, private readonly Storage $storage)
     {
     }
     
     public function schema(): array
     {
-        return [
-            'avatar' => Expect::type(UploadedFile::class)->required()
-        ];
+        return ['avatar' => Expect::type(UploadedFile::class)->required()];
     }
     
     /**
      * @param array{avatar: UploadedFile} $data
-     * @return void
+     * @return Response
      * @throws \Exception
      */
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $user = $this->auth->getUser();
         
         $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
         $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
         
-        $this->response->send(['message' => "File '{$data['avatar']->getClientOriginalName()}' successfully uploaded to '{$file->getPathname()}'"]);
+        return $this->json([
+            'message' => "File successfully uploaded.'",
+            'name' => $file->getFilename(),
+            'destination' => $file->getPathname()
+        ]);
     }
 }

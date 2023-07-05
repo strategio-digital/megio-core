@@ -8,28 +8,22 @@ declare(strict_types=1);
 namespace Saas\Http\Request\Auth;
 
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
-use Saas\Security\Permissions\DefaultRole;
+use Saas\Http\Request\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class RevokeTokenRequest implements IRequest
+class RevokeTokenRequest extends Request
 {
-    public function __construct(
-        private readonly EntityManager $em,
-        private readonly Response      $response,
-    )
+    public function __construct(private readonly EntityManager $em)
     {
     }
     
     public function schema(): array
     {
-        return [
-            'user_ids' => Expect::arrayOf('string')->required(),
-        ];
+        return ['user_ids' => Expect::arrayOf('string')->required()];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $this->em->getUserTokenRepo()
             ->createQueryBuilder('UT')
@@ -39,6 +33,6 @@ class RevokeTokenRequest implements IRequest
             ->getQuery()
             ->execute();
         
-        $this->response->send(['message' => "Users successfully revoked"]);
+        return $this->json(['message' => "Users successfully revoked"]);
     }
 }

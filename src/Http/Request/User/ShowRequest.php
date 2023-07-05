@@ -10,17 +10,14 @@ namespace Saas\Http\Request\User;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
+use Saas\Http\Request\Request;
 use Saas\Security\Permissions\DefaultRole;
+use Symfony\Component\HttpFoundation\Response;
 
-class ShowRequest implements IRequest
+class ShowRequest extends Request
 {
-    public function __construct(
-        private readonly EntityManager $em,
-        private readonly Response      $response,
-    )
+    public function __construct(private readonly EntityManager $em)
     {
     }
     
@@ -36,7 +33,7 @@ class ShowRequest implements IRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $repo = $this->em->getUserRepo();
         
@@ -72,7 +69,7 @@ class ShowRequest implements IRequest
             $users[$key] = $token ? array_merge($user, $token) : array_merge($user, ['loginExpiration' => null, 'lastLogin' => null]);
         }
         
-        $this->response->send([
+        return $this->json([
             'currentPage' => $data['currentPage'],
             'lastPage' => (int)ceil($count / $data['itemsPerPage']),
             'itemsPerPage' => $data['itemsPerPage'],

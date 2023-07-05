@@ -9,9 +9,7 @@ namespace Saas\Http\Request;
 
 use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
-use Saas\Http\Response\Response;
 use Saas\Security\JWT\Jwt;
-use Saas\Security\Permissions\DefaultRole;
 use Lcobucci\JWT\Token;
 
 class Auth
@@ -25,8 +23,7 @@ class Auth
     public function __construct(
         private readonly Jwt           $jwt,
         private readonly EntityManager $em,
-        private readonly Request       $request,
-        private readonly Response      $response
+        private readonly Request       $request
     )
     {
         $this->authHeader = $this->request->getHttpRequest()->headers->get('Authorization');

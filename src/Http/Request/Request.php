@@ -9,18 +9,14 @@ namespace Saas\Http\Request;
 
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
+use Saas\Http\Controller\Base\Controller;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response;
 
-class Request
+abstract class Request extends Controller implements IRequest
 {
-    public function __construct(protected SymfonyRequest $request)
-    {
-    }
-    
-    public function getHttpRequest(): SymfonyRequest
-    {
-        return $this->request;
-    }
+    private SymfonyRequest $request;
     
     /**
      * @param array<string, mixed>|null $data
@@ -42,5 +38,26 @@ class Request
         $raw = $this->request->getContent();
         $json = is_string($raw) ? json_decode($raw, true) : []; //@phpstan-ignore-line
         return array_merge($json ?: [], $this->request->files->all());
+    }
+    
+    public function __invoke(SymfonyRequest $request): Response
+    {
+        $this->request = $request;
+        
+        $data = $this->getRequestData();
+        $schema = $this->schema();
+        
+        if (count($schema) === 0) {
+            return $this->process($data);
+        }
+        
+        try {
+            $vData = $this->validate($data, $schema);
+            $data = $vData === false ? [] : $vData;
+        } catch (ValidationException $exception) {
+            return $this->error($exception->getMessages());
+        }
+        
+        return $this->process($data);
     }
 }

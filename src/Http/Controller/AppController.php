@@ -7,50 +7,44 @@ declare(strict_types=1);
 
 namespace Saas\Http\Controller;
 
-use Nette\Utils\Strings;
-use Saas\Helper\Path;
-use Saas\Http\Router\Router;
-use Saas\Http\Router\RouterFactory;
-use Saas\Storage\Storage;
 use Nette\DI\Container;
+use Saas\Helper\Path;
+use Saas\Helper\Router;
+use Saas\Http\Controller\Base\Controller;
+use Saas\Storage\Storage;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
 
 class AppController extends Controller
 {
-    public function app(Container $container, string|int|float $uri = null): void
+    public function app(Container $container, string|int|float $uri = null): Response
     {
-        /** @var RouterFactory $routeFactory */
-        $routeFactory = $container->getByName('routerFactory');
+        /** @var \Symfony\Component\Routing\RouteCollection $routes */
+        $routes = $container->getByName('routes');
         
         /** @var \Symfony\Component\Routing\Route $route */
-        $route = $routeFactory->getRouteCollection()->get(Router::APP);
+        $route = $routes->get(Router::ROUTE_ADMIN);
         $appPath = $route->compile()->getStaticPrefix();
         
-        $this->getResponse()->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
+        return $this->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
             'appPath' => $appPath,
         ]);
     }
     
-    public function api(Storage $storage, Container $container): void
+    public function api(Storage $storage, Container $container): Response
     {
-        /** @var RouterFactory $routeFactory */
-        $routeFactory = $container->getByName('routerFactory');
+        /** @var \Symfony\Component\Routing\RouteCollection $routes */
+        $routes = $container->getByName('routes');
         
-        /** @var \Symfony\Component\Routing\Route $route */
-        $route = $routeFactory->getRouteCollection()->get(Router::API);
-        $apiPath = $route->compile()->getStaticPrefix();
-        
-        $routes = [];
-        foreach ($routeFactory->getRouteCollection()->all() as $key => $route) {
-            $routes[Strings::startsWith($route->getPath(), $apiPath) ? Router::API : Router::APP][] = [
-                'name' => $key,
-                'method' => $route->getMethods()[0],
-                'path' => $route->getPath()
-            ];
-        }
+        $prettyRoutes = array_map(fn(Route $route) => [
+            'path' => $route->getPath(),
+            'methods' => $route->getMethods(),
+            'rules' => $route->getRequirements(),
+        ], $routes->all());
         
         $dt = new \DateTime();
         
-        $this->getResponse()->send([
+        return $this->json([
             'name' => $_ENV['APP_NAME'],
             'mode' => $_ENV['APP_ENV_MODE'],
             'storage_adapter' => $storage->getAdapterName(),
@@ -60,8 +54,8 @@ class AppController extends Controller
                 'time_zone' => $dt->getTimezone()->getName()
             ],
             'endpoints' => [
-                'count' => array_reduce($routes, fn($acc, $r) => $acc + count($r), 0),
-                ...$routes
+                'count' => count($prettyRoutes),
+                ...$prettyRoutes
             ]
         ]);
     }

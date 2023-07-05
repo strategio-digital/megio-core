@@ -8,28 +8,23 @@ declare(strict_types=1);
 namespace Saas\Http\Request\User;
 
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
+use Saas\Http\Request\Request;
 use Saas\Security\Permissions\DefaultRole;
+use Symfony\Component\HttpFoundation\Response;
 
-class DeleteRequest implements IRequest
+class DeleteRequest extends Request
 {
-    public function __construct(
-        private readonly EntityManager $em,
-        private readonly Response      $response,
-    )
+    public function __construct(private readonly EntityManager $em)
     {
     }
     
     public function schema(): array
     {
-        return [
-            'ids' => Expect::arrayOf('string')->required(),
-        ];
+        return ['ids' => Expect::arrayOf('string')->required()];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $repo = $this->em->getUserRepo();
         
@@ -51,6 +46,6 @@ class DeleteRequest implements IRequest
         
         $qb->getQuery()->execute();
         
-        $this->response->send(['message' => "Users successfully deleted"]);
+        return $this->json(['message' => "Users successfully deleted"]);
     }
 }

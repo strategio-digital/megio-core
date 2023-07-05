@@ -1,3 +1,4 @@
+
 # Strategio SaaS
 Most powerful tool for developing apps by simple clicks.
 
@@ -18,27 +19,28 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Backend features
 - 🟢&nbsp; JWT Auth (admin, editor, user, +custom roles).
-- 🟢&nbsp; Roles, resources and resource-guards in controllers.
-- 🟢&nbsp; Schema validation for requests and controllers.
+- 🟢&nbsp; Schema validation for Requests.
+- 🟠&nbsp; Editable roles & route permissions in admin panel.
 - 🟢&nbsp; Doctrine database entities with PHP attributes and migrations.
 - 🟢&nbsp; File storage with AWS S3 adapter.
 - 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter.
-- 🟢&nbsp; Sending emails by custom SMTP servers.
 - 🟢&nbsp; Symfony console commands.
 - 🟢&nbsp; PHP-Stan static analysis on level 8.
 
-## Done (Jun 2023)
-- 🟢 API end-point for CRUD actions trough Doctrine Entities
-- 🟢 Extendable (collections) datagrid with global configs
-
-## Working on
-- 🟡 Collections edit/update form
-- 🟡 Request-validation by entity props
+## Working on (07/2023)
 - 🟡 Upgrade to symfony router 6.3
 - 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
 - 🟡 App.php & Bootstrap.php refactoring (make it extendable e.g. override array key)
 - 🟡 Split User entity into User & Admin entity
 - 🟡 Make User entity commutable and test it in real project
+
+## Done (06/2023)
+- 🟢 API end-point for CRUD actions trough Doctrine Entities
+- 🟢 Extendable (collections) datagrid with global configs
+
+## Priority
+- 🟡 Collections edit/update form
+- 🟡 CRUD request-validation by entity props
 - 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
 - 🟠 Admin datagrid + CRUD
 - 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)

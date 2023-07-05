@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Router;
+namespace Saas\Http\Resolver;
 
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class LinkGenerator
+class LinkResolver
 {
     public function __construct(protected UrlGenerator $urlGenerator)
     {

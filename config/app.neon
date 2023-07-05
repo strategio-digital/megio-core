@@ -1,29 +1,35 @@
 services:
-    routerFactory: Saas\Http\Router\RouterFactory
-    response: Symfony\Component\HttpFoundation\Response
-    request:
+    routes: Symfony\Component\Routing\RouteCollection
+    event.dispatcher: Symfony\Component\EventDispatcher\EventDispatcher
+
+    controller.resolver: Saas\Http\Resolver\ControllerResolver
+    controller.linkResolver: Saas\Http\Resolver\LinkResolver
+    controller.linkGenerator: Symfony\Component\Routing\Generator\UrlGenerator(@routes, @http.request.context)
+
+    http.response: Symfony\Component\HttpFoundation\Response
+    http.request:
         factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
-    requestContext:
+    http.request.context:
         factory: Symfony\Component\Routing\RequestContext
         setup:
-            - fromRequest(@request)
-    - Symfony\Component\Routing\Generator\UrlGenerator(@routerFactory::getRouteCollection(), @requestContext)
+            - fromRequest(@http.request)
 
+    # Extensions
     - Latte\Engine
     - Saas\Extension\Vite\Vite
 
-    - Saas\App
-    - Saas\Bootstrap
+    # Core
     - Saas\Debugger\Debugger
-    - Saas\Http\Request\Request
-    - Saas\Http\Response\Response
-    - Saas\Http\Router\LinkGenerator
-    - Saas\Http\Request\Auth
-    - Saas\Security\JWT\Jwt
-    - Saas\Security\JWT\Claims
+    - Saas\Bootstrap
+    - Saas\Http\Kernel\App
     - Saas\Security\Response\Cors
     - Saas\Storage\Storage
     - Saas\Database\CrudHelper\CrudHelper
+
+    # Auth
+    #- Saas\Http\Request\Auth
+    - Saas\Security\JWT\Jwt
+    - Saas\Security\JWT\Claims
 
 includes:
    - command.neon

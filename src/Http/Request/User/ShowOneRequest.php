@@ -9,28 +9,23 @@ namespace Saas\Http\Request\User;
 
 use Doctrine\ORM\AbstractQuery;
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
 use Nette\Schema\Expect;
+use Saas\Http\Request\Request;
 use Saas\Security\Permissions\DefaultRole;
+use Symfony\Component\HttpFoundation\Response;
 
-class ShowOneRequest implements IRequest
+class ShowOneRequest extends Request
 {
-    public function __construct(
-        private readonly EntityManager $em,
-        private readonly Response      $response,
-    )
+    public function __construct(private readonly EntityManager $em)
     {
     }
     
     public function schema(): array
     {
-        return [
-            'id' => Expect::string()->required(),
-        ];
+        return ['id' => Expect::string()->required()];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $repo = $this->em->getUserRepo();
         
@@ -42,12 +37,12 @@ class ShowOneRequest implements IRequest
             ->setParameter('admin_role', DefaultRole::Admin->name())
             ->setParameter('id', $data['id']);
         
-        $res = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+        $result = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
-        if (!$res) {
-            $this->response->sendError(["User id '{$data['id']}' not found"], 404);
+        if (!$result) {
+            return $this->error(["User id '{$data['id']}' not found"], 404);
         }
         
-        $this->response->send($res);
+        return $this->json($result);
     }
 }

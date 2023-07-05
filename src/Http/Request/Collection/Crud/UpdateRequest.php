@@ -13,15 +13,11 @@ use Saas\Database\CrudHelper\CrudException;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Http\Response\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpdateRequest extends BaseCrudRequest
 {
-    public function __construct(
-        protected readonly EntityManager $em,
-        protected readonly CrudHelper    $helper,
-        protected readonly Response      $response
-    )
+    public function __construct(protected readonly EntityManager $em, protected readonly CrudHelper $helper)
     {
     }
     
@@ -42,9 +38,12 @@ class UpdateRequest extends BaseCrudRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
-        $meta = $this->setUpMetadata($data['table'], false);
+        if (!$meta = $this->setUpMetadata($data['table'], false)) {
+            return $this->error([$this->helper->getError()]);
+        }
+        
         $ids = array_map(fn($row) => $row['id'], $data['rows']);
         
         $qb = $this->em->getRepository($meta->className)
@@ -59,12 +58,12 @@ class UpdateRequest extends BaseCrudRequest
         foreach ($data['rows'] as $row) {
             $dbRow = current(array_filter($rows, fn($db) => $db->getId() === $row['id']));
             if (!$dbRow) {
-                $this->response->sendError(["Item '{$row['id']}' not found"], 404);
+                return $this->error(["Item '{$row['id']}' not found"], 404);
             }
             try {
                 $this->helper->setUpEntityProps($dbRow, $row['data']);
             } catch (CrudException|EntityException $e) {
-                $this->response->sendError([$e->getMessage()], 406);
+                return $this->error([$e->getMessage()], 406);
             }
         }
         
@@ -75,13 +74,13 @@ class UpdateRequest extends BaseCrudRequest
             $this->em->commit();
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
-            $this->response->sendError([$e->getMessage()]);
+            return $this->error([$e->getMessage()]);
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
         }
         
-        $this->response->send([
+        return $this->json([
             'ids' => $ids,
             'message' => "Items successfully updated"
         ]);

@@ -9,17 +9,13 @@ namespace Saas\Http\Request\User;
 
 use Saas\Database\EntityManager;
 use Saas\Http\Request\Auth;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
 use Doctrine\ORM\AbstractQuery;
+use Saas\Http\Request\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class ProfileRequest implements IRequest
+class ProfileRequest extends Request
 {
-    public function __construct(
-        private readonly Response      $response,
-        private readonly EntityManager $em,
-        private readonly Auth          $auth,
-    )
+    public function __construct(private readonly EntityManager $em, private readonly Auth $auth)
     {
     }
     
@@ -28,7 +24,7 @@ class ProfileRequest implements IRequest
         return [];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $user = $this->em->getUserRepo()
             ->createQueryBuilder('User')
@@ -39,6 +35,6 @@ class ProfileRequest implements IRequest
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
-        $this->response->send($user);
+        return $this->json($user);
     }
 }

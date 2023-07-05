@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Saas\Http\Request;
 
+use Symfony\Component\HttpFoundation\Response;
+
 interface IRequest
 {
     /**
@@ -16,7 +18,7 @@ interface IRequest
     
     /**
      * @param array<string|int, mixed> $data
-     * @return void
+     * @return Response
      */
-    public function process(array $data): void;
+    public function process(array $data): Response;
 }

@@ -51,6 +51,11 @@ class Path
         return self::$projectPath . '/view';
     }
     
+    public static function routerDir(): string
+    {
+        return self::$projectPath . '/router';
+    }
+    
     public static function saasVendorDir(): string
     {
         return __DIR__ . '/../../';

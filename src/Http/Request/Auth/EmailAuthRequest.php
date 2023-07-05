@@ -9,19 +9,18 @@ namespace Saas\Http\Request\Auth;
 
 use Saas\Database\Entity\User\Token;
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
+use Saas\Http\Request\Request;
 use Saas\Security\JWT\Claims;
 use Saas\Security\JWT\Jwt;
 use Saas\Security\Permissions\DefaultRole;
 use Nette\Schema\Expect;
 use Nette\Security\Passwords;
+use Symfony\Component\HttpFoundation\Response;
 
-class EmailAuthRequest implements IRequest
+class EmailAuthRequest extends Request
 {
     public function __construct(
         private readonly EntityManager $em,
-        private readonly Response      $response,
         private readonly Jwt           $jwt,
         private readonly Claims        $claims
     )
@@ -36,7 +35,7 @@ class EmailAuthRequest implements IRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $userRepo = $this->em->getUserRepo();
         $userTokenRepo = $this->em->getUserTokenRepo();
@@ -45,7 +44,7 @@ class EmailAuthRequest implements IRequest
         $user = $userRepo->findOneBy(['email' => $data['email']]);
         
         if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
-            $this->response->sendError(['Invalid credentials'], 401);
+            return $this->error(['Invalid credentials'], 401);
         }
         
         /** @var \Saas\Database\Entity\User\Token|null $userToken */
@@ -76,10 +75,10 @@ class EmailAuthRequest implements IRequest
             ->setToken($token);
         
         $user->setLastLogin();
-    
+        
         $this->em->flush($userToken);
         $this->em->flush($user);
         
-        $this->response->send(['bearer_token' => $userToken->getToken(), ...$claims]);
+        return $this->json(['bearer_token' => $userToken->getToken(), ...$claims]);
     }
 }

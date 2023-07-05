@@ -8,15 +8,12 @@ declare(strict_types=1);
 namespace Saas\Http\Request\Collection\Meta;
 
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
+use Saas\Http\Request\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class NavbarRequest implements IRequest
+class NavbarRequest extends Request
 {
-    public function __construct(
-        protected readonly CrudHelper $helper,
-        protected readonly Response   $response
-    )
+    public function __construct(protected readonly CrudHelper $helper)
     {
     }
     
@@ -25,13 +22,14 @@ class NavbarRequest implements IRequest
         return [];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         $classes = $this->helper->getAllEntityClassNames();
         $classes = array_filter($classes, fn($class) => !in_array($class['value'], CrudHelper::EXCLUDED_IN_COLLECTIONS));
-        $tables = array_map(fn($class) => $class['table'],  $classes);
+        $tables = array_map(fn($class) => $class['table'], $classes);
         
         sort($tables);
-        $this->response->send(['items' => $tables]);
+        
+        return $this->json(['items' => $tables]);
     }
 }

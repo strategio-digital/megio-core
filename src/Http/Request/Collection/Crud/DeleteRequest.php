@@ -10,15 +10,11 @@ namespace Saas\Http\Request\Collection\Crud;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Http\Response\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class DeleteRequest extends BaseCrudRequest
 {
-    public function __construct(
-        protected readonly EntityManager $em,
-        protected readonly CrudHelper    $helper,
-        protected readonly Response      $response
-    )
+    public function __construct(protected readonly EntityManager $em, protected readonly CrudHelper $helper)
     {
     }
     
@@ -32,9 +28,11 @@ class DeleteRequest extends BaseCrudRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
-        $meta = $this->setUpMetadata($data['table'], false);
+        if (!$meta = $this->setUpMetadata($data['table'], false)) {
+            return $this->error([$this->helper->getError()]);
+        }
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -45,7 +43,7 @@ class DeleteRequest extends BaseCrudRequest
             ->getQuery()
             ->execute();
         
-        $this->response->send([
+        return $this->json([
             'ids' => $data['ids'],
             'message' => "Items successfully deleted"
         ]);

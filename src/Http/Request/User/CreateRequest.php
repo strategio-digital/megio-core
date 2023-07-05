@@ -11,17 +11,14 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Saas\Database\Entity\Role\Role;
 use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
-use Saas\Http\Request\IRequest;
-use Saas\Http\Response\Response;
+use Saas\Http\Request\Request;
 use Saas\Security\Permissions\DefaultRole;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Response;
 
-class CreateRequest implements IRequest
+class CreateRequest extends Request
 {
-    public function __construct(
-        private readonly EntityManager $em,
-        private readonly Response      $response,
-    )
+    public function __construct(private readonly EntityManager $em)
     {
     }
     
@@ -35,13 +32,13 @@ class CreateRequest implements IRequest
         ];
     }
     
-    public function process(array $data): void
+    public function process(array $data): Response
     {
         /** @var Role|null $role */
         $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::User->name()]);
-    
+        
         if (!$role) {
-            $this->response->sendError(["Permission 'user' does not exists"]);
+            return $this->error(["Permission 'user' does not exists"]);
         }
         
         foreach ($data['rows'] as $row) {
@@ -59,12 +56,12 @@ class CreateRequest implements IRequest
             $this->em->commit();
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
-            $this->response->sendError([$e->getMessage()]);
-        }  catch (\Exception $e) {
+            return $this->error([$e->getMessage()]);
+        } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
         }
         
-        $this->response->send(['message' => "Users successfully created"]);
+        return $this->json(['message' => "Users successfully created"]);
     }
 }
