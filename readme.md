@@ -28,11 +28,15 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; PHP-Stan static analysis on level 8.
 
 ## Working on (07/2023)
-- 🟡 Upgrade to symfony router 6.3
-- 🟡 Add Symfony/Kernel and controller argument resolver with autowiring
-- 🟡 App.php & Bootstrap.php refactoring (make it extendable e.g. override array key)
+- 🟢 App.php refactoring
+- 🟢 Upgrade to symfony router 6.3
+- 🟢 Add Symfony/Kernel and controller argument resolver with autowiring
 - 🟡 Split User entity into User & Admin entity
-- 🟡 Make User entity commutable and test it in real project
+- 🟡 Admin & User login mechanism refactoring
+- 🟡 Add new Admin & User permissions handler
+- 🟡 Add middlewares (JWT, CSP, CORS)
+- 🟡 Make User entity commutable and test it in sandbox project
+- 🟡 Bootstrap.php refactoring (make it extendable in neon)
 
 ## Done (06/2023)
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
