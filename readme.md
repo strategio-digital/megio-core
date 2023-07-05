@@ -17,12 +17,13 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠&nbsp; Admin panel with UI data editor based on Doctrine entities.
 - 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
+- 🟢&nbsp; Stateless and scalable architecture for your PHP applications.
 
 ## Backend features
 - 🟢&nbsp; JWT Auth (admin, editor, user, +custom roles).
-- 🟢&nbsp; Schema validation for Requests.
 - 🟠&nbsp; Editable roles & route permissions in admin panel.
-- 🟢&nbsp; Doctrine database entities with PHP attributes and migrations.
+- 🟢&nbsp; Schema validation for Requests.
+- 🟢&nbsp; Fully integrated Doctrine ORM.
 - 🟢&nbsp; File storage with AWS S3 adapter.
 - 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter.
 - 🟢&nbsp; Symfony console commands.
