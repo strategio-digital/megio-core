@@ -33,8 +33,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add Symfony/Kernel and controller argument resolver with autowiring
 - 🟡 Split User entity into User & Admin entity
 - 🟡 Admin & User login mechanism refactoring
-- 🟡 Add new Admin & User permissions handler
-- 🟡 Add middlewares (JWT, CSP, CORS)
+- 🟡 Add new Admin & User permissions middleware (JWT)
+- 🟡 Add other middlewares (CSP, CORS)
 - 🟡 Make User entity commutable and test it in sandbox project
 - 🟡 Bootstrap.php refactoring (make it extendable in neon)
 
@@ -47,13 +47,13 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟡 CRUD request-validation by entity props
 - 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
 - 🟠 Admin datagrid + CRUD
-- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
 - 🟠 Role access table (Routes & Collections CRUD)
 - 🟠 **Collection Editor** (Doctrine entity builder, migrations, API permissions)
 - 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
+- 🟠 MultiFile uploader
+- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
 
 ## Backlog
-- 🟠 MultiFile uploader
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
