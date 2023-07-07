@@ -70,9 +70,10 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Scheduled database backups to S3 & log dashboard
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
-- 🟠 Console redis jobs % progress dashboard
+- 🟠 Console redis jobs & progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
 - 🟠 Print composer.json & package.json version in admin panel
+- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
 - 🟠 GitHub actions (phpstan, tester, vulnerability audits, cmd tests)
 - 🟠 Extension (Simple cart + GoPay)
 - 🟠 Make intro videos (for developers & for administrators)

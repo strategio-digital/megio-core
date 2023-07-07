@@ -10,14 +10,12 @@ const actions: IDatagridSettings['actions'] = {
         {
             name: 'remove',
             label: 'Odstranit',
-            showOn: ['/collections', '/settings/admins'],
+            showOn: ['/collections', '/settings/admins']
         },
         {
             name: 'revoke',
             label: 'Odhlásit',
-            showOn: [
-                '/settings/admins'
-            ]
+            showOn: ['/settings/admins']
         }
     ],
     row: [
@@ -29,9 +27,7 @@ const actions: IDatagridSettings['actions'] = {
         {
             name: 'revoke',
             label: 'Odhlásit',
-            showOn: [
-                '/settings/admins'
-            ]
+            showOn: ['/settings/admins']
         }
     ]
 }
