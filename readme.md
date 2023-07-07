@@ -22,14 +22,16 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Optimized image for maximum memory savings (about 20Mb costs)
 
 ## Backend features
-- 🟢&nbsp; JWT Auth (admin, editor, user, +custom roles).
-- 🟠&nbsp; Editable roles & route permissions in admin panel.
-- 🟢&nbsp; Nette/Schema validation for Requests.
+- 🟢&nbsp; JWT Auth (admin, user, +custom roles).
+- 🟢&nbsp; Requests validation by Nette/Schema.
+- 🟢&nbsp; Symfony events & event subscribers for a lot of stuff.
 - 🟢&nbsp; Fully integrated Doctrine ORM.
+- 🟢&nbsp; Symfony Http\Kernel for handling requests.
 - 🟢&nbsp; File storage with AWS S3 adapter.
 - 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter.
-- 🟢&nbsp; Symfony console commands.
-- 🟢&nbsp; PHP-Stan static analysis on level 8.
+- 🟢&nbsp; Custom extensions with Nette/DI/Extensions.
+- 🟢&nbsp; Custom Symfony console commands.
+- 🟢&nbsp; PHPStan static analysis on level 8.
 
 ## Working on (07/2023)
 - 🟢 App.php refactoring
@@ -70,6 +72,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs % progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
+- 🟠 Print composer.json & package.json version in admin panel
+- 🟠 GitHub actions (phpstan, tester, vulnerability audits, cmd tests)
 - 🟠 Extension (Simple cart + GoPay)
 - 🟠 Make intro videos (for developers & for administrators)
 
