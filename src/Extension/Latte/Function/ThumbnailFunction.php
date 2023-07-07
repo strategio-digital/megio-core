@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Latte\Function;
 
-use Saas\Extension\Helper\Thumbnail;
+use Saas\Extension\Latte\Helper\Thumbnail;
 
 class ThumbnailFunction
 {

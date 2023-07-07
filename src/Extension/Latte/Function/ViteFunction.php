@@ -7,7 +7,8 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Latte\Function;
 
-use Saas\Extension\Helper\Vite;
+
+use Saas\Extension\Latte\Helper\Vite;
 
 class ViteFunction
 {
