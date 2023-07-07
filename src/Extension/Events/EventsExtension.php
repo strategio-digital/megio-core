@@ -24,12 +24,11 @@ class EventsExtension extends CompilerExtension
         $serviceNames = $this->config;
         $builder = $this->getContainerBuilder();
         
+        $this->initialization->addBody('$dispatcher = $this->getByType(?);', [EventDispatcher::class]);
+        
         foreach ($serviceNames as $key => $serviceName) {
             $builder->addDefinition($this->prefix("event_$key"))->setType($serviceName);
-            $this->initialization->addBody('$this->getByType(?)->addSubscriber($this->getByType(?));', [
-                EventDispatcher::class,
-                $serviceName
-            ]);
+            $this->initialization->addBody('$dispatcher->addSubscriber($this->createServiceEvents__event_?());', [$key]);
             
         }
     }
