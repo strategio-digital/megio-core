@@ -1,30 +1,9 @@
 services:
-    routes: Symfony\Component\Routing\RouteCollection
-    eventDispatcher: Symfony\Component\EventDispatcher\EventDispatcher
-    - Symfony\Component\Routing\Matcher\UrlMatcher(@routes, @requestContext)
-    - Symfony\Component\Routing\Generator\UrlGenerator(@routes, @requestContext)
-
-    - Saas\Http\Resolver\LinkResolver
-    - Saas\Http\Resolver\ControllerResolver
-
-    request:
-        factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
-    requestContext:
-        factory: Symfony\Component\Routing\RequestContext
-        setup:
-            - fromRequest(@request)
-
-    # Extensions
-    - Latte\Engine
-    - Saas\Extension\Vite\Vite
-
-    # Core
-    - Saas\Bootstrap
-    - Saas\Http\Kernel\App
-    - Saas\Debugger\Debugger
-    - Saas\Storage\Storage
-    - Saas\Database\CrudHelper\CrudHelper
+    #yourService: App\Http\Xyz
 
 includes:
-   - command.neon
-   - doctrine.neon
+    - ./../vendor/strategio/saas/config/app.neon
+    - ./../vendor/strategio/saas/config/events.neon
+
+extensions:
+    events: Saas\Extension\Events\EventsExtension
