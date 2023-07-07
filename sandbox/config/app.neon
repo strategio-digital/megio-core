@@ -1,5 +1,6 @@
 services:
-    #yourService: App\Http\Xyz
+    entityManager: App\Database\EntityManager
+    #- Your\Custom\DI\Service
 
 includes:
     - ./../vendor/strategio/saas/config/app.neon

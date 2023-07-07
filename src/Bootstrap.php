@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Saas;
 
-use Latte\Bridges\Tracy\LattePanel;
-use Latte\Engine;
 use Nette\DI\Compiler;
 use Nette\Neon\Neon;
 use Saas\Debugger\Logger;
@@ -62,20 +60,13 @@ class Bootstrap
         $container = $this->createContainer($configPath);
         $container->parameters['startedAt'] = $startedAt;
         
+        // Register DI panel
+        Debugger::getBar()->addPanel(new ContainerPanel($container));
+        
         // Initialize extensions
         if (method_exists($container, 'initialize')) {
             $container->initialize();
         }
-        
-        /** @var Engine $latte */
-        $latte = $container->getByType(Engine::class);
-        $latte->setAutoRefresh($_ENV['APP_ENV_MODE'] === 'develop');
-        $latte->setTempDirectory(Path::tempDir() . '/latte');
-        
-        // Register DI panels
-        Debugger::getBar()
-            ->addPanel(new ContainerPanel($container))
-            ->addPanel(new LattePanel($latte));
         
         return $container;
     }
