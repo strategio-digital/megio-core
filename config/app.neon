@@ -26,6 +26,5 @@ services:
     - Saas\Database\CrudHelper\CrudHelper
 
 includes:
-   - events.neon
    - command.neon
    - doctrine.neon
