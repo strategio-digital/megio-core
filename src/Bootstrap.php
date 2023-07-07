@@ -13,15 +13,11 @@ use Nette\DI\Compiler;
 use Nette\Neon\Neon;
 use Saas\Debugger\Logger;
 use Saas\Extension\Extension;
-use Saas\Extension\Vite\Vite;
 use Saas\Helper\Path;
-use Saas\Helper\Thumbnail;
-use Saas\Http\Resolver\LinkResolver;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Tracy\Debugger;
 
 class Bootstrap
@@ -35,11 +31,11 @@ class Bootstrap
     }
     
     /**
-     * @param string[] $configPaths
+     * @param string $configPath
      * @param float $startedAt
      * @return Container
      */
-    public function configure(array $configPaths, float $startedAt): Container
+    public function configure(string $configPath, float $startedAt): Container
     {
         // Load .env
         $_ENV = array_merge(getenv(), $_ENV);
@@ -57,8 +53,13 @@ class Bootstrap
         Debugger::enable($_ENV['APP_ENV_MODE'] === 'develop' ? Debugger::DEVELOPMENT : Debugger::PRODUCTION, Path::logDir());
         Debugger::$strictMode = E_ALL;
         
+        if (array_key_exists('TRACY_EDITOR', $_ENV) && array_key_exists('TRACY_EDITOR_MAPPING', $_ENV)) {
+            Debugger::$editor = $_ENV['TRACY_EDITOR'];
+            Debugger::$editorMapping = ['/var/www/html' => $_ENV['TRACY_EDITOR_MAPPING']];
+        }
+        
         // Create DI container
-        $container = $this->createContainer($configPaths);
+        $container = $this->createContainer($configPath);
         $container->parameters['startedAt'] = $startedAt;
         
         // Initialize extensions
@@ -71,50 +72,37 @@ class Bootstrap
         $latte->setAutoRefresh($_ENV['APP_ENV_MODE'] === 'develop');
         $latte->setTempDirectory(Path::tempDir() . '/latte');
         
-        /** @var Vite $vite */
-        $vite = $container->getByType(Vite::class);
-        
-        /** @var LinkResolver $linkResolver */
-        $linkResolver = $container->getByType(LinkResolver::class);
-        
-        $latte->addFunction('vite', fn(string $source, bool $isEntryPoint = false) => $isEntryPoint ? $vite->resolveEntrypoint($source) : $vite->resolveSource($source));
-        $latte->addFunction('route', fn(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH) => $linkResolver->link($name, $params, $path));
-        $latte->addFunction('thumbnail', fn(string $path, ?int $width, ?int $height, string $method = 'EXACT', int $quality = 80) => new Thumbnail($path, $width, $height, $method, $quality));
-        
         // Register DI panels
-        Debugger::getBar()->addPanel(new ContainerPanel($container));
-        Debugger::getBar()->addPanel(new LattePanel($latte));
+        Debugger::getBar()
+            ->addPanel(new ContainerPanel($container))
+            ->addPanel(new LattePanel($latte));
         
         return $container;
     }
     
     /**
-     * @param string[] $configPaths
+     * @param string $configPath
      * @return \Nette\DI\Container
      */
-    protected function createContainer(array $configPaths): Container
+    protected function createContainer(string $configPath): Container
     {
         $loader = new ContainerLoader(Path::tempDir() . '/di', $_ENV['APP_ENV_MODE'] === 'develop');
         
         /** @var Container $class */
-        $class = $loader->load(function (Compiler $compiler) use ($configPaths) {
-            // Load & merge configs
-            foreach ($configPaths as $configPath) {
-                $compiler->loadConfig($configPath);
-            }
+        $class = $loader->load(function (Compiler $compiler) use ($configPath) {
+            // Load entry-point config
+            $compiler->loadConfig($configPath);
             
             // Add "extensions" extension
             $compiler->addExtension('extensions', new Extension());
             
             // Register custom extensions
-            if (array_key_exists(0, $configPaths)) {
-                $neon = Neon::decodeFile($configPaths[0]);
-                if (array_key_exists('extensions', $neon) && $neon['extensions']) {
-                    foreach ($neon['extensions'] as $name => $extension) {
-                        /** @var \Nette\DI\CompilerExtension $instance */
-                        $instance = new $extension();
-                        $compiler->addExtension($name, $instance);
-                    }
+            $neon = Neon::decodeFile($configPath);
+            if (array_key_exists('extensions', $neon) && $neon['extensions']) {
+                foreach ($neon['extensions'] as $name => $extension) {
+                    /** @var \Nette\DI\CompilerExtension $instance */
+                    $instance = new $extension();
+                    $compiler->addExtension($name, $instance);
                 }
             }
         });

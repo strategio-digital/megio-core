@@ -14,11 +14,6 @@ services:
         setup:
             - fromRequest(@request)
 
-    # Extensions
-    - Latte\Engine
-    - Saas\Extension\Vite\Vite
-
-    # Core
     - Saas\Bootstrap
     - Saas\Http\Kernel\App
     - Saas\Debugger\Debugger
@@ -28,3 +23,4 @@ services:
 includes:
    - command.neon
    - doctrine.neon
+   - latte.neon

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Vite;
+namespace Saas\Extension\Helper;
 
 use Saas\Helper\Path;
 

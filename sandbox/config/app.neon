@@ -7,3 +7,4 @@ includes:
 
 extensions:
     events: Saas\Extension\Events\EventsExtension
+    latte: Saas\Extension\Latte\LatteExtension

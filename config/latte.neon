@@ -1,0 +1,7 @@
+latte:
+    extensions:
+        - Saas\Extension\Latte\Extension\SaasExtension
+
+services:
+    - Latte\Engine
+    - Saas\Extension\Latte\Function\RouteFunction

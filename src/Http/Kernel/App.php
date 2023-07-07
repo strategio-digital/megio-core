@@ -38,20 +38,20 @@ class App
         protected EventDispatcher    $dispatcher,
         protected RouteCollection    $routes,
         protected UrlMatcher         $router,
-        protected Request            $request
+        protected Request            $request,
+        protected Container          $container
     )
     {
     }
     
     /**
-     * @param \Nette\DI\Container $container
      * @return HttpKernel
      * @throws \Exception
      */
-    public function createKernel(Container $container): HttpKernel
+    public function createKernel(): HttpKernel
     {
         // Controllers & argument resolvers
-        $custom = [new DIValueResolver($container)];
+        $custom = [new DIValueResolver($this->container)];
         $valueResolvers = array_merge(ArgumentResolver::getDefaultArgumentValueResolvers(), $custom); // @phpstan-ignore-line
         $argumentResolver = new ArgumentResolver(null, $valueResolvers);
         $requestStack = new RequestStack();
@@ -69,13 +69,12 @@ class App
     }
     
     /**
-     * @param \Nette\DI\Container $container
      * @return void
      * @throws \Exception
      */
-    public function run(Container $container): void
+    public function run(): void
     {
-        $kernel = self::createKernel($container);
+        $kernel = self::createKernel();
         
         try {
             $response = $kernel->handle($this->request);
@@ -93,23 +92,22 @@ class App
     }
     
     /**
-     * @param \Nette\DI\Container $container
      * @return void
      * @throws \Exception
      */
-    public function cmd(Container $container): void
+    public function cmd(): void
     {
         /** @var Doctrine $doctrine */
-        $doctrine = $container->getByType(Doctrine::class);
+        $doctrine = $this->container->getByType(Doctrine::class);
         $evm = $doctrine->getEntityManager()->getEventManager();
         $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
         
         $app = new \Symfony\Component\Console\Application();
-        $services = $container->findByType(Command::class);
+        $services = $this->container->findByType(Command::class);
         
         foreach ($services as $name) {
             /** @var Command $command */
-            $command = $container->getByName($name);
+            $command = $this->container->getByName($name);
             $app->add($command);
         }
         

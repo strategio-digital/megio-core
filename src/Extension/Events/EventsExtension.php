@@ -7,29 +7,29 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Events;
 
-use Nette;
 use Nette\DI\CompilerExtension;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class EventsExtension extends CompilerExtension
 {
-    public function getConfigSchema(): Nette\Schema\Schema
+    public function getConfigSchema(): Schema
     {
-        return Nette\Schema\Expect::arrayOf('string');
+        return Expect::arrayOf('string');
     }
     
     public function loadConfiguration(): void
     {
-        /** @var string[] $serviceNames */
-        $serviceNames = $this->config;
+        /** @var string[] $classes */
+        $classes = $this->config;
         $builder = $this->getContainerBuilder();
         
         $this->initialization->addBody('$dispatcher = $this->getByType(?);', [EventDispatcher::class]);
         
-        foreach ($serviceNames as $key => $serviceName) {
-            $builder->addDefinition($this->prefix("event_$key"))->setType($serviceName);
-            $this->initialization->addBody('$dispatcher->addSubscriber($this->createServiceEvents__event_?());', [$key]);
-            
+        foreach ($classes as $key => $className) {
+            $d = $builder->addDefinition($this->prefix("event_$key"))->setType($className);
+            $this->initialization->addBody('$dispatcher->addSubscriber($this->getService(?));', [$d->getName()]);
         }
     }
 }

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Helper;
+namespace Saas\Extension\Helper;
 
 class Thumbnail
 {
