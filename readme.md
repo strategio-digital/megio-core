@@ -37,10 +37,10 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add Symfony/Kernel and controller argument resolver with autowiring
 - 🟡 Split User entity into User & Admin entity
 - 🟡 Admin & User login mechanism refactoring
-- 🟡 Add new Admin & User permissions middleware (JWT)
-- 🟡 Add other middlewares (CSP, CORS)
+- 🟡 Add new Admin & User permissions auth mechanism (JWT Kernel event)
+- 🟢 Add other kernel events (CSP, CORS)
 - 🟡 Make User entity commutable and test it in sandbox project
-- 🟡 Bootstrap.php refactoring (make it extendable in neon)
+- 🟢 Bootstrap.php refactoring (make it extendable in neon)
 
 ## Done (06/2023)
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
