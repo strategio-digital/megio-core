@@ -1,36 +1,31 @@
 services:
     routes: Symfony\Component\Routing\RouteCollection
-    event.dispatcher: Symfony\Component\EventDispatcher\EventDispatcher
+    eventDispatcher: Symfony\Component\EventDispatcher\EventDispatcher
+    - Symfony\Component\Routing\Matcher\UrlMatcher(@routes, @requestContext)
+    - Symfony\Component\Routing\Generator\UrlGenerator(@routes, @requestContext)
 
-    controller.resolver: Saas\Http\Resolver\ControllerResolver
-    controller.linkResolver: Saas\Http\Resolver\LinkResolver
-    controller.linkGenerator: Symfony\Component\Routing\Generator\UrlGenerator(@routes, @http.request.context)
+    - Saas\Http\Resolver\LinkResolver
+    - Saas\Http\Resolver\ControllerResolver
 
-    http.response: Symfony\Component\HttpFoundation\Response
-    http.request:
+    request:
         factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
-    http.request.context:
+    requestContext:
         factory: Symfony\Component\Routing\RequestContext
         setup:
-            - fromRequest(@http.request)
+            - fromRequest(@request)
 
     # Extensions
     - Latte\Engine
     - Saas\Extension\Vite\Vite
 
     # Core
-    - Saas\Debugger\Debugger
     - Saas\Bootstrap
     - Saas\Http\Kernel\App
-    - Saas\Security\Response\Cors
+    - Saas\Debugger\Debugger
     - Saas\Storage\Storage
     - Saas\Database\CrudHelper\CrudHelper
 
-    # Auth
-    #- Saas\Http\Request\Auth
-    - Saas\Security\JWT\Jwt
-    - Saas\Security\JWT\Claims
-
 includes:
+   - events.neon
    - command.neon
    - doctrine.neon

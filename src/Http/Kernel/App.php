@@ -32,6 +32,17 @@ use Tracy\Debugger;
 
 class App
 {
+    public function __construct(
+        protected RequestContext     $context,
+        protected ControllerResolver $controllerResolver,
+        protected EventDispatcher    $dispatcher,
+        protected RouteCollection    $routes,
+        protected UrlMatcher         $router,
+        protected Request            $request
+    )
+    {
+    }
+    
     /**
      * @param \Nette\DI\Container $container
      * @return HttpKernel
@@ -39,35 +50,22 @@ class App
      */
     public function createKernel(Container $container): HttpKernel
     {
-        /** @var RequestContext $requestContext */
-        $requestContext = $container->getByName('http.request.context');
-        
-        /** @var ControllerResolver $controllerResolver */
-        $controllerResolver = $container->getByName('controller.resolver');
-        
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher = $container->getByName('event.dispatcher');
-        
-        /** @var RouteCollection $routes */
-        $routes = $container->getByName('routes');
-        
         // Controllers & argument resolvers
         $custom = [new DIValueResolver($container)];
-        $resolvers = array_merge(ArgumentResolver::getDefaultArgumentValueResolvers(), $custom); // @phpstan-ignore-line
-        $argumentResolver = new ArgumentResolver(null, $resolvers);
-        
-        // Router loader & router events
+        $valueResolvers = array_merge(ArgumentResolver::getDefaultArgumentValueResolvers(), $custom); // @phpstan-ignore-line
+        $argumentResolver = new ArgumentResolver(null, $valueResolvers);
         $requestStack = new RequestStack();
-        $loader = new PhpFileLoader(new FileLocator(Path::routerDir()));
-        $matcher = new UrlMatcher($routes, $requestContext);
-        $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
+        
+        // Register subscribers
+        $this->dispatcher->addSubscriber(new RouterListener($this->router, $requestStack));
         
         // Routing configurator
-        $routing = new RoutingConfigurator($routes, $loader, Path::routerDir(), '/app.php');
-        $routing->import(Path::routerDir() . '/app.php');
+        $loader = new PhpFileLoader(new FileLocator(Path::routerDir()));
+        $routing = new RoutingConfigurator($this->routes, $loader, Path::routerDir(), '/app.php');
+        $routing->import(Path::routerDir() . '/app.php')->stateless();
         
         // HttpKernel
-        return new HttpKernel($dispatcher, $controllerResolver, $requestStack, $argumentResolver);
+        return new HttpKernel($this->dispatcher, $this->controllerResolver, $requestStack, $argumentResolver);
     }
     
     /**
@@ -79,21 +77,19 @@ class App
     {
         $kernel = self::createKernel($container);
         
-        /** @var Request $request */
-        $request = $container->getByName('http.request');
-        
         try {
-            $response = $kernel->handle($request);
+            $response = $kernel->handle($this->request);
         } catch (NotFoundHttpException $e) {
             $response = new JsonResponse(['message' => $e->getMessage()], $e->getStatusCode());
         }
         
-        if (!$response instanceof JsonResponse) {
+        // Remember: Tracy overrides Response headers!
+        if ($_ENV['APP_ENV_MODE'] === 'develop' && !$response instanceof JsonResponse) {
             Debugger::renderLoader();
         }
         
         $response->send();
-        $kernel->terminate($request, $response);
+        $kernel->terminate($this->request, $response);
     }
     
     /**
@@ -103,9 +99,6 @@ class App
      */
     public function cmd(Container $container): void
     {
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher = $container->getByName('event.dispatcher');
-        
         /** @var Doctrine $doctrine */
         $doctrine = $container->getByType(Doctrine::class);
         $evm = $doctrine->getEntityManager()->getEventManager();
@@ -120,7 +113,7 @@ class App
             $app->add($command);
         }
         
-        $app->setDispatcher($dispatcher);
+        $app->setDispatcher($this->dispatcher);
         $app->run();
     }
 }

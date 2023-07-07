@@ -3,3 +3,6 @@ services:
 
 includes:
     - ./../vendor/strategio/saas/config/app.neon
+
+extensions:
+    events: Saas\Extension\Events\EventsExtension

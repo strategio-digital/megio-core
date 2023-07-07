@@ -36,11 +36,18 @@ class AppController extends Controller
         /** @var \Symfony\Component\Routing\RouteCollection $routes */
         $routes = $container->getByName('routes');
         
-        $prettyRoutes = array_map(fn(Route $route) => [
-            'path' => $route->getPath(),
-            'methods' => $route->getMethods(),
-            'rules' => $route->getRequirements(),
-        ], $routes->all());
+        $prettyRoutes = array_map(function (Route $route) {
+            $options = array_filter($route->getOptions(), fn($key) => $key !== 'compiler_class', ARRAY_FILTER_USE_KEY);
+            
+            return [
+                'path' => $route->getPath(),
+                'methods' => count($route->getMethods()) ? $route->getMethods() : null,
+                'options' => count($options) ? $options : null,
+                'route_rules' => count($route->getRequirements()) ? $route->getRequirements() : null,
+                'schema_rules' => '@not-implemented-yet'
+            ];
+            
+        }, $routes->all());
         
         $dt = new \DateTime();
         
@@ -54,8 +61,8 @@ class AppController extends Controller
                 'time_zone' => $dt->getTimezone()->getName()
             ],
             'endpoints' => [
-                'count' => count($prettyRoutes),
-                ...$prettyRoutes
+                'count' => $routes->count(),
+                'items' => $prettyRoutes
             ]
         ]);
     }

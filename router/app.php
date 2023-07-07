@@ -4,7 +4,7 @@ use Saas\Helper\Router;
 use Saas\Http\Controller\AppController;
 use Saas\Http\Request\Auth as Auth;
 use Saas\Http\Request\Collection\Crud as Crud;
-use Saas\Http\Request\Collection\Meta\NavbarRequest;
+use Saas\Http\Request\Collection\Meta as Meta;
 use Saas\Http\Request\User as User;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
@@ -39,5 +39,5 @@ return static function (RoutingConfigurator $routes): void {
     
     // Saas collections meta
     $meta = $api->collection('saas.meta.')->prefix('/saas/meta');
-    $meta->add('navbar', '/navbar')->methods(['POST'])->controller(NavbarRequest::class);
+    $meta->add('navbar', '/navbar')->methods(['POST'])->controller(Meta\NavbarRequest::class);
 };
