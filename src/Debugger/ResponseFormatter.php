@@ -9,7 +9,7 @@ namespace Saas\Debugger;
 
 use Nette\DI\Container;
 
-class Debugger
+class ResponseFormatter
 {
     public function __construct(private readonly Container $container)
     {

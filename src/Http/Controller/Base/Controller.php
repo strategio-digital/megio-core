@@ -9,7 +9,7 @@ namespace Saas\Http\Controller\Base;
 
 use Latte\Engine;
 use Nette\DI\Container;
-use Saas\Debugger\Debugger;
+use Saas\Debugger\ResponseFormatter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,13 +19,13 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 
 abstract class Controller implements IController
 {
-    private Debugger $debugger;
+    private ResponseFormatter $formatter;
     private UrlGenerator $urlGenerator;
     private Engine $latte;
     
     public function __inject(Container $container): void
     {
-        $this->debugger = $container->getByType(Debugger::class); //@phpstan-ignore-line
+        $this->formatter = $container->getByType(ResponseFormatter::class); //@phpstan-ignore-line
         $this->urlGenerator = $container->getByType(UrlGenerator::class); //@phpstan-ignore-line
         $this->latte = $container->getByType(Engine::class); //@phpstan-ignore-line
     }
@@ -48,7 +48,7 @@ abstract class Controller implements IController
      */
     public function json(array $data = [], int $code = 200): Response
     {
-        $data = $this->debugger->formatResponseData($data);
+        $data = $this->formatter->formatResponseData($data);
         return new JsonResponse($data, $code);
     }
     
@@ -60,7 +60,7 @@ abstract class Controller implements IController
     public function error(array $messages, int $code = 400): Response
     {
         $data = ['errors' => $messages];
-        $data = $this->debugger->formatResponseData($data);
+        $data = $this->formatter->formatResponseData($data);
         
         return new JsonResponse($data, $code);
     }

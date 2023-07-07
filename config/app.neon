@@ -16,8 +16,8 @@ services:
 
     - Saas\Bootstrap
     - Saas\Http\Kernel\App
-    - Saas\Debugger\Debugger
     - Saas\Storage\Storage
+    - Saas\Debugger\ResponseFormatter
     - Saas\Database\CrudHelper\CrudHelper
 
 includes:
