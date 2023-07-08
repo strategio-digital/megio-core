@@ -12,7 +12,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Core features
 - 🟢&nbsp; Web-ready dev-stack (simple router & Latte templates)
-- 🟢&nbsp; API-ready dev-stack (simple router & UI permissions editor)
+- 🟢&nbsp; API-ready dev-stack (simple router & UI route permissions editor)
 - 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
 - 🟠&nbsp; Admin panel with UI Doctrine ORM entity builder.
 - 🟠&nbsp; Admin panel with UI datagrid editor based on Doctrine entities.
@@ -22,7 +22,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Optimized image for maximum memory savings (about 20Mb costs)
 
 ## Backend features
-- 🟢&nbsp; JWT Auth (admin, user, +custom roles).
+- 🟢&nbsp; JWT Auth with roles & route resources protection.
 - 🟢&nbsp; Requests validation by Nette/Schema.
 - 🟢&nbsp; Symfony events & event subscribers for a lot of stuff.
 - 🟢&nbsp; Fully integrated Doctrine ORM.
