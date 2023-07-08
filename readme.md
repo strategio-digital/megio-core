@@ -22,7 +22,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Optimized image for maximum memory savings (about 20Mb costs)
 
 ## Backend features
-- 🟢&nbsp; JWT Auth with roles & route resources protection.
+- 🟢&nbsp; JWT Auth with route resources protection.
 - 🟢&nbsp; Requests validation by Nette/Schema.
 - 🟢&nbsp; Symfony events & event subscribers for a lot of stuff.
 - 🟢&nbsp; Fully integrated Doctrine ORM.
