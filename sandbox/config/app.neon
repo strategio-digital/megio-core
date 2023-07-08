@@ -7,5 +7,6 @@ includes:
     - ./../vendor/strategio/saas/config/events.neon
 
 extensions:
-    events: Saas\Extension\Events\EventsExtension
     latte: Saas\Extension\Latte\LatteExtension
+    events: Saas\Extension\Events\EventsExtension
+    doctrine: Saas\Extension\Doctrine\DoctrineExtension

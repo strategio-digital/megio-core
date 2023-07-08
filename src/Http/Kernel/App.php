@@ -97,11 +97,6 @@ class App
      */
     public function cmd(): void
     {
-        /** @var Doctrine $doctrine */
-        $doctrine = $this->container->getByType(Doctrine::class);
-        $evm = $doctrine->getEntityManager()->getEventManager();
-        $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
-        
         $app = new \Symfony\Component\Console\Application();
         $services = $this->container->findByType(Command::class);
         

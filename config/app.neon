@@ -22,5 +22,4 @@ services:
 
 includes:
    - command.neon
-   - doctrine.neon
    - latte.neon

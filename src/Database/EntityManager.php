@@ -20,6 +20,9 @@ use Saas\Extension\Doctrine\Doctrine;
 // @phpstan-ignore-next-line
 class EntityManager extends \Doctrine\ORM\EntityManager
 {
+    /**
+     * @throws \Doctrine\ORM\Exception\MissingMappingDriverImplementation
+     */
     public function __construct(Doctrine $doctrine)
     {
         $em = $doctrine->getEntityManager();
