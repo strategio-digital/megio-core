@@ -5,7 +5,7 @@ rm -rf /var/www/html/temp/*
 # migrate databases
 php bin/console migration:migrate --no-interaction
 php bin/console orm:generate-proxies
-php bin/console app:permissions:update
+php bin/console app:auth:resources:update
 
 # override permissions
 chown -R www-data:www-data /var/www/html/temp
