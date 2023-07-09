@@ -75,6 +75,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Print composer.json & package.json version in admin panel
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
 - 🟠 Extension (Simple cart + GoPay)
+- 🟠 Request Nginx rate limiter & IP address proxy resolver
 - 🟠 Make intro videos (for developers & for administrators)
 
 ### Make some tests
