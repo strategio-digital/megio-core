@@ -17,7 +17,7 @@ const loginByEmail = async (email: string, password: string, source: string): Pr
         body: JSON.stringify({ source, email, password })
     })
 
-    if (resp.success && (resp.data.roles.includes('admin') || resp.data.resources?.length !== 0)) {
+    if (resp.success && (resp.data.user.roles.includes('admin') || resp.data.user.resources.length !== 0)) {
         localStorage.setItem('strategio_saas_user', JSON.stringify(resp.data))
     }
 
