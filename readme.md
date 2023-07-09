@@ -74,9 +74,16 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
 - 🟠 Print composer.json & package.json version in admin panel
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 GitHub actions (phpstan, tester, vulnerability audits, cmd tests, API tests)
 - 🟠 Extension (Simple cart + GoPay)
 - 🟠 Make intro videos (for developers & for administrators)
+
+### Make some tests
+- Phpstan
+- Nette tester
+- Vulnerability audits
+- Console commands tests
+- API endpoints tests
+- Doctrine schema-validation
 
 ## Tutorials
 **TODO Beginner:**
