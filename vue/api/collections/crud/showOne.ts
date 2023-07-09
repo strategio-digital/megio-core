@@ -15,7 +15,7 @@ export interface IResp extends IResponse {
 }
 
 const showOne = async (params: IShowOneParams): Promise<IResp> => {
-    const resp = await api.fetch(`/saas/crud/show-one`, {
+    const resp = await api.fetch(`saas/collections/show-one`, {
         method: 'POST',
         body: JSON.stringify(params)
     })

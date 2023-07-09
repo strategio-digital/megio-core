@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Repository;
+namespace Saas\Database\Repository\Auth;
 
 use Doctrine\ORM\EntityRepository;
 
 /**
- * @extends EntityRepository<UserTokenRepository>
+ * @extends EntityRepository<ResourceRepository>
  */
-class UserTokenRepository extends EntityRepository
+class ResourceRepository extends EntityRepository
 {
 }

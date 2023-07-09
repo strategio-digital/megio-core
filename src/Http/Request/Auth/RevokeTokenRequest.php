@@ -7,29 +7,39 @@ declare(strict_types=1);
 
 namespace Saas\Http\Request\Auth;
 
+use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\EntityManager;
 use Nette\Schema\Expect;
+use Saas\Database\Interface\AuthUser;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RevokeTokenRequest extends Request
 {
-    public function __construct(private readonly EntityManager $em)
+    public function __construct(private readonly EntityManager $em, private readonly CrudHelper $crudHelper)
     {
     }
     
     public function schema(): array
     {
-        return ['user_ids' => Expect::arrayOf('string')->required()];
+        $all = $this->crudHelper->getAllEntities();
+        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], AuthUser::class));
+        $tables = array_map(fn($class) => $class['table'], $filtered);
+        
+        return [
+            'source_ids' => Expect::arrayOf('string')->required(),
+            'source' => Expect::anyOf(...$tables),
+        ];
     }
     
     public function process(array $data): Response
     {
-        $this->em->getUserTokenRepo()
-            ->createQueryBuilder('UT')
+        $this->em->getAuthTokenRepo()->createQueryBuilder('Token')
             ->delete()
-            ->where('UT.user IN (:ids)')
-            ->setParameter('ids', $data['user_ids'])
+            ->where('Token.sourceId IN (:source_ids)')
+            ->andWhere('Token.source = :source')
+            ->setParameter('source_ids', $data['source_ids'])
+            ->setParameter('source', $data['source'])
             ->getQuery()
             ->execute();
         

@@ -23,20 +23,20 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Backend features
 - 🟢&nbsp; JWT Auth with route resources protection.
-- 🟢&nbsp; Requests validation by Nette/Schema.
+- 🟢&nbsp; Requests validation by Nette\Schema.
 - 🟢&nbsp; Symfony events & event subscribers for a lot of stuff.
 - 🟢&nbsp; Fully integrated Doctrine ORM.
 - 🟢&nbsp; Symfony Http\Kernel for handling requests.
 - 🟢&nbsp; File storage with AWS S3 adapter.
-- 🟢&nbsp; Tracy/Debugger with AWS S3 logger adapter.
-- 🟢&nbsp; Custom extensions with Nette/DI/Extensions.
+- 🟢&nbsp; Tracy\Debugger with AWS S3 logger adapter.
+- 🟢&nbsp; Custom extensions with Nette\DI\Extensions.
 - 🟢&nbsp; Custom Symfony console commands.
 - 🟢&nbsp; PHPStan static analysis on level 8.
 
 ## Working on (07/2023)
 - 🟢 App.php refactoring
 - 🟢 Upgrade to symfony router 6.3
-- 🟢 Add Symfony/Kernel and controller argument resolver with autowiring
+- 🟢 Add Symfony\Kernel and controller argument resolver with autowiring
 - 🟢 Bootstrap.php refactoring (make it extendable in neon)
 - 🟢 Add kernel events (CSP, CORS)
 - 🟡 Split User entity into User & Admin entity
@@ -63,7 +63,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Application event hooks / events
+- 🟠 Collection CRUD & Application events
 - 🟠 Button for fake-data bulk insert into collection.
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
 - 🟠 Navbar resources access (vue composable)
@@ -74,7 +74,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
 - 🟠 Print composer.json & package.json version in admin panel
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 GitHub actions (phpstan, tester, vulnerability audits, cmd tests)
+- 🟠 GitHub actions (phpstan, tester, vulnerability audits, cmd tests, API tests)
 - 🟠 Extension (Simple cart + GoPay)
 - 🟠 Make intro videos (for developers & for administrators)
 

@@ -9,13 +9,12 @@ namespace Saas\Http\Request\User;
 
 use Saas\Database\EntityManager;
 use Saas\Http\Request\Auth;
-use Doctrine\ORM\AbstractQuery;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProfileRequest extends Request
 {
-    public function __construct(private readonly EntityManager $em, private readonly Auth $auth)
+    public function __construct(protected readonly EntityManager $em, protected readonly Auth $auth)
     {
     }
     
@@ -26,15 +25,17 @@ class ProfileRequest extends Request
     
     public function process(array $data): Response
     {
-        $user = $this->em->getUserRepo()
-            ->createQueryBuilder('User')
-            ->select('User.id, User.email, Role.name as role, User.lastLogin, User.createdAt')
-            ->innerJoin('User.role', 'Role')
-            ->where('User.id = :id')
-            ->setParameter('id', $this->auth->getUser()->getId())
-            ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
-        
-        return $this->json($user);
+        // TODO: update this logic
+//        $user = $this->em->getUserRepo()
+//            ->createQueryBuilder('User')
+//            ->select('User.id, User.email, Role.name as role, User.lastLogin, User.createdAt')
+//            ->innerJoin('User.role', 'Role')
+//            ->where('User.id = :id')
+//            ->setParameter('id', $this->auth->getUser()->getId())
+//            ->getQuery()
+//            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
+//
+//        return $this->json($user);
+        return $this->json();
     }
 }

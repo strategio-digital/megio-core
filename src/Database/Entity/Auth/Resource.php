@@ -5,17 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity\Role;
+namespace Saas\Database\Entity\Auth;
 
-use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TId;
-use Saas\Database\Repository\RoleResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Saas\Database\Enum\ResourceType;
+use Saas\Database\Field\TCreatedAt;
+use Saas\Database\Field\TId;
+use Saas\Database\Repository\Auth\ResourceRepository;
 
-#[ORM\Table(name: '`role_resource`')]
-#[ORM\Entity(repositoryClass: RoleResourceRepository::class)]
+#[ORM\Table(name: '`auth_resource`')]
+#[ORM\Entity(repositoryClass: ResourceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Resource
 {
@@ -25,9 +26,11 @@ class Resource
     #[ORM\Column(unique: true, nullable: false)]
     private string $name;
     
+    #[ORM\Column(length: 32, nullable: false)]
+    private string $type;
+    
     /** @var Collection<int, Role> */
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'resources')]
-    #[ORM\JoinTable(name: '`role_resource_access`')]
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'resources')]
     private Collection $roles;
     
     public function __construct()
@@ -73,5 +76,21 @@ class Resource
         }
         
         return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @param ResourceType $type
+     */
+    public function setType(ResourceType $type): void
+    {
+        $this->type = $type->value;
     }
 }

@@ -9,7 +9,7 @@ namespace Saas\Http\Request;
 
 use Saas\Database\Entity\User\User;
 use Saas\Database\EntityManager;
-use Saas\Security\JWT\Jwt;
+use Saas\Security\JWT\JWTResolver;
 use Lcobucci\JWT\Token;
 
 class Auth
@@ -21,7 +21,7 @@ class Auth
     private ?string $authHeader;
     
     public function __construct(
-        private readonly Jwt           $jwt,
+        private readonly JWTResolver   $jwt,
         private readonly EntityManager $em,
         private readonly Request       $request
     )

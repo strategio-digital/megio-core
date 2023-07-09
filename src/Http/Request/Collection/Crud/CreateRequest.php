@@ -23,7 +23,7 @@ class CreateRequest extends BaseCrudRequest
     
     public function schema(): array
     {
-        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
+        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntities());
         
         // TODO: get rows types trough reflection and validate them
         
@@ -42,7 +42,7 @@ class CreateRequest extends BaseCrudRequest
         $ids = [];
         
         foreach ($data['rows'] as $row) {
-            /** @var \Saas\Database\Interface\CrudEntity $entity */
+            /** @var \Saas\Database\Interface\Crud $entity */
             $entity = new $meta->className();
             
             try {

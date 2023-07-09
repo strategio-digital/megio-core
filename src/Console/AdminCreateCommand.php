@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace Saas\Console;
 
-use Saas\Database\Entity\Role\Role;
-use Saas\Database\Entity\User\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Saas\Database\Entity\Admin;
+use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
-use Saas\Security\Permissions\DefaultRole;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(name: 'app:user:create-admin', description: 'Create a new administrator account', aliases: ['admin'])]
-class UserCreateAdminCommand extends Command
+class AdminCreateCommand extends Command
 {
     public function __construct(private readonly EntityManager $em)
     {
@@ -36,14 +36,18 @@ class UserCreateAdminCommand extends Command
         $email = $input->getArgument('email');
         $passwd = $input->getArgument('password');
         
-        /** @var Role $role */
-        $role = $this->em->getRoleRepo()->findOneBy(['name' => DefaultRole::Admin->name()]);
-        $user = (new User())->setEmail($email)->setPassword($passwd)->setRole($role);
         
-        $this->em->persist($user);
-        $this->em->flush();
+        try {
+            $admin = new Admin();
+            $admin->setEmail($email);
+            $admin->setPassword($passwd);
+            $this->em->persist($admin);
+            $this->em->flush();
+            $output->writeln('<info>Admin successfully created.</info>');
+        } catch (EntityException|UniqueConstraintViolationException $e) {
+            $output->writeln("<error>{$e->getMessage()}</error>");
+        }
         
-        $output->writeln('<info>User with \'admin\' role successfully created.</info>');
         return Command::SUCCESS;
     }
 }

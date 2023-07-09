@@ -22,7 +22,7 @@ async function loadFunction(newPagination: IPagination): Promise<IResp> {
     loading.value = true
     emits('onLoadingChange', loading.value)
 
-    const resp = await api.collections.crud.show({
+    const resp = await api.collections.show({
         table: props.tableName,
         schema: true,
         currentPage: newPagination.currentPage,

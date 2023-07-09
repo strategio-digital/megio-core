@@ -9,35 +9,34 @@ use Saas\Http\Request\User as User;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
-    // Admin
-    $routes->add(Router::ROUTE_ADMIN, '/admin{uri}')
+    // Admin app
+    $routes->add(Router::ROUTE_APP, '/admin{uri}')
         ->methods(['GET'])
         ->controller([AppController::class, 'app'])
         ->requirements(['uri' => '.*']);
     
-    // Api
-    $api = $routes->collection()->prefix('/api');
-    $api->add(Router::ROUTE_API, '/')->methods(['GET'])->controller([AppController::class, 'api']);
+    // Api overview
+    $routes->add(Router::ROUTE_API, '/api')->methods(['GET'])->controller([AppController::class, 'api']);
     
     // Auth
-    $auth = $api->collection('auth.')->prefix('/auth');
+    $auth = $routes->collection('saas.auth.')->prefix('/saas/auth');
     $auth->add('email', '/email')->methods(['POST'])->controller(Auth\EmailAuthRequest::class);
     $auth->add('revoke-token', '/revoke-token')->methods(['POST'])->controller(Auth\RevokeTokenRequest::class);
     
     // User extra
-    $user = $api->collection('user.')->prefix('/user');
-    $user->add('profile', '/show-profile')->methods(['POST'])->controller(User\ProfileRequest::class);
-    $user->add('avatar', '/upload-avatar')->methods(['POST'])->controller(User\UploadAvatarRequest::class);
+    $user = $routes->collection('saas.admin.')->prefix('/saas/admin');
+    $user->add('profile', '/profile')->methods(['POST'])->controller(User\ProfileRequest::class);
+    $user->add('avatar', '/avatar')->methods(['POST'])->controller(User\UploadAvatarRequest::class);
     
-    // Saas collections CRUD
-    $crud = $api->collection('saas.crud.')->prefix('/saas/crud');
-    $crud->add('show', '/show')->methods(['POST'])->controller(Crud\ShowRequest::class);
-    $crud->add('show-one', '/show-one')->methods(['POST'])->controller(Crud\ShowOneRequest::class);
-    $crud->add('create', '/create')->methods(['POST'])->controller(Crud\CreateRequest::class);
-    $crud->add('delete', '/delete')->methods(['DELETE'])->controller(Crud\DeleteRequest::class);
-    $crud->add('update', '/update')->methods(['PATCH'])->controller(Crud\UpdateRequest::class);
+    // Saas collections
+    $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');
+    $collection->add('show', '/show')->methods(['POST'])->controller(Crud\ShowRequest::class);
+    $collection->add('show-one', '/show-one')->methods(['POST'])->controller(Crud\ShowOneRequest::class);
+    $collection->add('create', '/create')->methods(['POST'])->controller(Crud\CreateRequest::class);
+    $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Crud\DeleteRequest::class);
+    $collection->add('update', '/update')->methods(['PATCH'])->controller(Crud\UpdateRequest::class);
     
-    // Saas collections meta
-    $meta = $api->collection('saas.meta.')->prefix('/saas/meta');
+    // Saas metadata
+    $meta = $routes->collection(Router::ROUTE_META_PREFIX)->prefix('/saas/metadata');
     $meta->add('navbar', '/navbar')->methods(['POST'])->controller(Meta\NavbarRequest::class);
 };

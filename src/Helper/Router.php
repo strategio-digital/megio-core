@@ -9,6 +9,9 @@ namespace Saas\Helper;
 
 class Router
 {
-    public const ROUTE_API = 'api';
-    public const ROUTE_ADMIN = 'admin';
+    public const ROUTE_API = 'saas.api';
+    public const ROUTE_APP = 'saas.app';
+    
+    public const ROUTE_COLLECTION_PREFIX = 'saas.collection.';
+    public const ROUTE_META_PREFIX = 'saas.metadata.';
 }

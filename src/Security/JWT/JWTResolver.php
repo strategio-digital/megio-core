@@ -18,11 +18,11 @@ use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Validation\Constraint;
 
-class Jwt
+class JWTResolver
 {
-    const ISSUER = 'strategio-fw';
+    const ISSUER = 'strategio.dev';
     
-    const PERMIT_FOR = 'strategio-fw-apps';
+    const PERMIT_FOR = 'strategio-saas-apps';
     
     private Configuration $config;
     

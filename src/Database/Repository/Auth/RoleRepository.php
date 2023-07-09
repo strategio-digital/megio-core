@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Repository;
+namespace Saas\Database\Repository\Auth;
 
 use Doctrine\ORM\EntityRepository;
 

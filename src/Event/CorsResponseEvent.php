@@ -25,28 +25,21 @@ class CorsResponseEvent implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         
-        // Allow all origins & set cookies or sessions for them
-        if ($request->headers->has('Origin')) {
-            $response = new Response();
-            $response->headers->set('Access-Control-Allow-Origin', $request->headers->get('Origin'));
-            $response->headers->set('Access-Control-Allow-Credentials', 'true');
-            $event->setResponse($response);
-            $event->getResponse()?->sendHeaders();
+        if ($request->headers->has('origin')) {
+            header('Access-Control-Allow-Origin: ' . $request->headers->get('Origin'));
+            header('Access-Control-Allow-Credentials: true');
         }
-        
+
         // Allow all HTTP methods
         if ($request->getMethod() === 'OPTIONS') {
-            $response = new Response();
             if ($request->headers->has('Access-Control-Request-Method')) {
-                $response->headers->set('Access-Control-Allow-Methods', '*');
+                header('Access-Control-Allow-Methods: *');
             }
-            
+
             if ($request->headers->has('Access-Control-Request-Headers')) {
-                $response->headers->set('Access-Control-Allow-Headers', $request->headers->get('Access-Control-Request-Headers'));
+                header('Access-Control-Allow-Headers: ' . $request->headers->get('Access-Control-Request-Headers'));
             }
-            
-            $event->setResponse($response);
-            $event->getResponse()?->send();
+            exit;
         }
     }
 }

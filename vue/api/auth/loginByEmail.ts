@@ -11,13 +11,13 @@ interface IResp extends IResponse {
     data: IAuthUser
 }
 
-const loginByEmail = async (email: string, password: string): Promise<IResp> => {
-    const resp = await api.fetch('/auth/email', {
+const loginByEmail = async (email: string, password: string, source: string): Promise<IResp> => {
+    const resp = await api.fetch('saas/auth/email', {
         method: 'POST',
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ source, email, password })
     })
 
-    if (resp.success && resp.data.user_role) {
+    if (resp.success && (resp.data.roles.includes('admin') || resp.data.resources?.length !== 0)) {
         localStorage.setItem('strategio_saas_user', JSON.stringify(resp.data))
     }
 

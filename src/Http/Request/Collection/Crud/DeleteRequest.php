@@ -20,7 +20,7 @@ class DeleteRequest extends BaseCrudRequest
     
     public function schema(): array
     {
-        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
+        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntities());
         
         return [
             'table' => Expect::anyOf(...$tables)->required(),

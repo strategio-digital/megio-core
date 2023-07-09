@@ -10,12 +10,12 @@ namespace Saas\Database\CrudHelper;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
-use Saas\Database\Entity\Admin\Admin;
-use Saas\Database\Entity\Role\Resource;
-use Saas\Database\Entity\Role\Role;
-use Saas\Database\Entity\User\Token;
+use Saas\Database\Entity\Admin;
+use Saas\Database\Entity\Auth\Resource;
+use Saas\Database\Entity\Auth\Role;
+use Saas\Database\Entity\Auth\Token;
 use Saas\Database\EntityManager;
-use Saas\Database\Interface\CrudEntity;
+use Saas\Database\Interface\Crud;
 
 class CrudHelper
 {
@@ -44,7 +44,7 @@ class CrudHelper
     /**
      * @return array<int, array{table: string, value: class-string}>
      */
-    public function getAllEntityClassNames(): array
+    public function getAllEntities(): array
     {
         $metadata = $this->em->getMetadataFactory()->getAllMetadata();
         
@@ -62,7 +62,7 @@ class CrudHelper
      */
     public function getEntityClassName(string $tableName): ?string
     {
-        $entityNames = $this->getAllEntityClassNames();
+        $entityNames = $this->getAllEntities();
         $current = current(array_filter($entityNames, fn($namespace) => $namespace['table'] === $tableName));
         return $current ? $current['value'] : null;
     }
@@ -148,12 +148,12 @@ class CrudHelper
     }
     
     /**
-     * @param \Saas\Database\Interface\CrudEntity $entity
+     * @param \Saas\Database\Interface\Crud $entity
      * @param array<string, mixed> $props
-     * @return \Saas\Database\Interface\CrudEntity
+     * @return \Saas\Database\Interface\Crud
      * @throws \Saas\Database\CrudHelper\CrudException
      */
-    public function setUpEntityProps(CrudEntity $entity, array $props): CrudEntity
+    public function setUpEntityProps(Crud $entity, array $props): Crud
     {
         $ref = new \ReflectionClass($entity);
         $methods = array_map(fn($method) => $method->name, $ref->getMethods());

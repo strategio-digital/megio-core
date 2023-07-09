@@ -23,7 +23,7 @@ class UpdateRequest extends BaseCrudRequest
     
     public function schema(): array
     {
-        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntityClassNames());
+        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntities());
         
         // TODO: get rows types trough reflection and validate them
         
@@ -52,7 +52,7 @@ class UpdateRequest extends BaseCrudRequest
             ->where('E.id IN (:ids)')
             ->setParameter('ids', $ids);
         
-        /** @var \Saas\Database\Interface\CrudEntity[] $rows */
+        /** @var \Saas\Database\Interface\Crud[] $rows */
         $rows = $qb->getQuery()->getResult();
         
         foreach ($data['rows'] as $row) {

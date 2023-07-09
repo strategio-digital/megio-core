@@ -13,7 +13,7 @@ import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
 import navbar from '@/saas/api/collections/meta/navbar'
 
-const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/api' : '/api'
+const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
 
 const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> => {
     const url = endpoint + uri
@@ -49,14 +49,12 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
 export default {
     fetch: fetchApi,
     collections: {
-        crud: {
-            show,
-            showOne,
-            remove
-        },
-        meta: {
-            navbar
-        }
+        show,
+        showOne,
+        remove
+    },
+    metadata: {
+        navbar
     },
     auth: {
         currentUser,

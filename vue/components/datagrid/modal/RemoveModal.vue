@@ -19,7 +19,7 @@ const emits = defineEmits<{
 async function handleAccept() {
     loading.value = true
 
-    await api.collections.crud.remove({
+    await api.collections.remove({
         table: props.collection,
         ids: props.rows.map(row => row.id)
     })

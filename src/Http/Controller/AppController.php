@@ -23,7 +23,7 @@ class AppController extends Controller
         $routes = $container->getByName('routes');
         
         /** @var \Symfony\Component\Routing\Route $route */
-        $route = $routes->get(Router::ROUTE_ADMIN);
+        $route = $routes->get(Router::ROUTE_APP);
         $appPath = $route->compile()->getStaticPrefix();
         
         return $this->render(Path::saasVendorDir() . '/view/controller/admin.latte', [

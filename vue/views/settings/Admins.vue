@@ -18,7 +18,7 @@ const datagrid = ref()
 async function loadFunction(newPagination: IPagination): Promise<IResp> {
     loading.value = true
 
-    const resp = await api.collections.crud.show({
+    const resp = await api.collections.show({
         table: collection,
         schema: true,
         currentPage: newPagination.currentPage,

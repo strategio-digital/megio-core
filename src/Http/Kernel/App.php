@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Saas\Http\Kernel;
 
-use Saas\Extension\Doctrine\Doctrine;
-use Saas\Extension\Doctrine\PostgresDefaultSchemaSubscriber;
 use Saas\Helper\Path;
 use Saas\Http\Resolver\ControllerResolver;
 use Saas\Http\Resolver\DIValueResolver;
@@ -97,6 +95,8 @@ class App
      */
     public function cmd(): void
     {
+        self::createKernel();
+        
         $app = new \Symfony\Component\Console\Application();
         $services = $this->container->findByType(Command::class);
         

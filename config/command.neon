@@ -1,7 +1,7 @@
 services:
     # SaaS commands
     - Saas\Console\PermissionsUpdateCommand
-    - Saas\Console\UserCreateAdminCommand
+    - Saas\Console\AdminCreateCommand
 
     # Doctrine ORM commands
     #- Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand(@entityManagerProvider)

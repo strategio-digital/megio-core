@@ -7,14 +7,14 @@ declare(strict_types=1);
 
 namespace Saas\Database;
 
-use Saas\Database\Entity\Role\Resource;
-use Saas\Database\Entity\Role\Role;
-use Saas\Database\Entity\User\Token;
-use Saas\Database\Entity\User\User;
-use Saas\Database\Repository\RoleRepository;
-use Saas\Database\Repository\RoleResourceRepository;
-use Saas\Database\Repository\UserRepository;
-use Saas\Database\Repository\UserTokenRepository;
+use Saas\Database\Entity\Admin;
+use Saas\Database\Entity\Auth\Resource;
+use Saas\Database\Entity\Auth\Role;
+use Saas\Database\Entity\Auth\Token;
+use Saas\Database\Repository\AdminRepository;
+use Saas\Database\Repository\Auth\ResourceRepository;
+use Saas\Database\Repository\Auth\RoleRepository;
+use Saas\Database\Repository\Auth\TokenRepository;
 use Saas\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
@@ -29,22 +29,22 @@ class EntityManager extends \Doctrine\ORM\EntityManager
         parent::__construct($em->getConnection(), $em->getConfiguration());
     }
     
-    public function getUserRepo(): UserRepository
+    public function getAdminRepo(): AdminRepository
     {
-        return $this->getRepository(User::class); // @phpstan-ignore-line
+        return $this->getRepository(Admin::class); // @phpstan-ignore-line
     }
     
-    public function getUserTokenRepo(): UserTokenRepository
+    public function getAuthTokenRepo(): TokenRepository
     {
         return $this->getRepository(Token::class); // @phpstan-ignore-line
     }
     
-    public function getRoleRepo(): RoleRepository
+    public function getAuthRoleRepo(): RoleRepository
     {
         return $this->getRepository(Role::class); // @phpstan-ignore-line
     }
     
-    public function getRoleResourceRepo(): RoleResourceRepository
+    public function getAuthResourceRepo(): ResourceRepository
     {
         return $this->getRepository(Resource::class); // @phpstan-ignore-line
     }

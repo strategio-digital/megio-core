@@ -24,7 +24,7 @@ class NavbarRequest extends Request
     
     public function process(array $data): Response
     {
-        $classes = $this->helper->getAllEntityClassNames();
+        $classes = $this->helper->getAllEntities();
         $classes = array_filter($classes, fn($class) => !in_array($class['value'], CrudHelper::EXCLUDED_IN_COLLECTIONS));
         $tables = array_map(fn($class) => $class['table'], $classes);
         

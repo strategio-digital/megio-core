@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadAvatarRequest extends Request
 {
-    public function __construct(private readonly Auth $auth, private readonly Storage $storage)
+    public function __construct(protected readonly Auth $auth, protected readonly Storage $storage)
     {
     }
     
@@ -32,15 +32,19 @@ class UploadAvatarRequest extends Request
      */
     public function process(array $data): Response
     {
-        $user = $this->auth->getUser();
+        // TODO: update this logic
         
-        $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
-        $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
+//        $user = $this->auth->getUser();
+//
+//        $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
+//        $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
+//
+//        return $this->json([
+//            'message' => "File successfully uploaded.'",
+//            'name' => $file->getFilename(),
+//            'destination' => $file->getPathname()
+//        ]);
         
-        return $this->json([
-            'message' => "File successfully uploaded.'",
-            'name' => $file->getFilename(),
-            'destination' => $file->getPathname()
-        ]);
+        return $this->json();
     }
 }

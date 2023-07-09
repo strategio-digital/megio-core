@@ -20,6 +20,10 @@ services:
     - Saas\Debugger\ResponseFormatter
     - Saas\Database\CrudHelper\CrudHelper
 
+    - Saas\Security\JWT\JWTResolver
+    - Saas\Security\JWT\ClaimsFormatter
+    - Saas\Database\Manager\AuthResourceManager
+
 includes:
    - command.neon
    - latte.neon

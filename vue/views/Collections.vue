@@ -33,7 +33,7 @@ watch(() => route.params.name, () => {
 })
 
 onMounted(async () => {
-    const navbar = await api.collections.meta.navbar()
+    const navbar = await api.metadata.navbar()
     const items = navbar.data.items
 
     collections.value = items

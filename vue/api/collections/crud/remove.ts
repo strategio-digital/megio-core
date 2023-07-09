@@ -14,7 +14,7 @@ export interface IResp extends IResponse {
 }
 
 const remove = async (params: IRemoveParams): Promise<IResp> => {
-    const resp = await api.fetch(`/saas/crud/delete`, {
+    const resp = await api.fetch(`saas/collections/delete`, {
         method: 'DELETE',
         body: JSON.stringify(params)
     })

@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Saas\Database\Interface;
 
-interface CrudEntity
+interface AuthUser
 {
     public function getId(): string;
     
-    public function getCreatedAt(): \DateTime;
+    public function getPassword(): string;
     
-    public function getUpdatedAt(): \DateTime;
+    public function getEmail(): string;
+    
+    public function setLastLogin(): AuthUser;
 }

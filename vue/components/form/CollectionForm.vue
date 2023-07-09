@@ -23,7 +23,7 @@ const item = ref<IUser>()
 async function refresh() {
     loading.value = true
 
-    const resp = await api.collections.crud.showOne({
+    const resp = await api.collections.showOne({
         table: props.collection,
         id: props.id,
         schema: true
