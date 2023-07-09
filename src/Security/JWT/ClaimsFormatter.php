@@ -22,10 +22,12 @@ class ClaimsFormatter
     public function format(AuthUser $user, array $roles, ?array $resources): array
     {
         return [
-            'id' => $user->getId(),
-            'email' => $user->getEmail(),
-            'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
-            'resources' => $resources ? array_map(fn(Resource $resource) => $resource->getName(), $resources) : null
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
+                'resources' => $resources ? array_map(fn(Resource $resource) => $resource->getName(), $resources) : null
+            ]
         ];
     }
 }

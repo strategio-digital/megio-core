@@ -95,7 +95,7 @@ class EmailAuthRequest extends Request
         
         return $this->json([
             'bearer_token' => $token->getToken(),
-            'token_id' => $token->getId(),
+            'bearer_token_id' => $token->getId(),
             ...$claims
         ]);
     }

@@ -5,9 +5,11 @@
 
 export interface IAuthUser {
     bearer_token: string
-    token_id: string
-    id: string
-    email: string
-    roles: string[]
-    resources: string[]|null
+    bearer_token_id: string
+    user: {
+        id: string
+        email: string
+        roles: string[]
+        resources: string[]|null
+    }
 }
