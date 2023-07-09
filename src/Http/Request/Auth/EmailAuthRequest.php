@@ -9,8 +9,6 @@ namespace Saas\Http\Request\Auth;
 
 use Nette\Security\Passwords;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\Entity\Admin;
-use Saas\Database\Entity\Auth\Role;
 use Saas\Database\Entity\Auth\Token;
 use Saas\Database\EntityManager;
 use Saas\Database\Interface\AuthUser;
@@ -55,8 +53,6 @@ class EmailAuthRequest extends Request
         }
         
         $userRepo = $this->em->getRepository($className);
-        $roleRepo = $this->em->getAuthRoleRepo();
-        //$resourceRepo = $this->em->getAuthResourceRepo();
         
         /** @var AuthUser|null $user */
         $user = $userRepo->findOneBy(['email' => $data['email']]);
@@ -70,20 +66,9 @@ class EmailAuthRequest extends Request
         $token->setSourceId($user->getId());
         $this->em->persist($token);
         
-        // TODO: user roles and theirs resources
-        $resources = null;
-        
-        if ($className !== Admin::class) {
-            /** @var \Saas\Database\Entity\Auth\Role[] $roles */
-            $roles = $roleRepo->findBy([]);
-            $resources = [];
-        } else {
-            $roles = [(new Role())->setName('admin')];
-        }
-        
         $expiration = (new \DateTime())->modify(self::EXPIRATION_TIME);
         $immutable = \DateTimeImmutable::createFromMutable($expiration);
-        $claims = $this->claims->format($user, $roles, $resources);
+        $claims = $this->claims->format($user);
         $jwt = $this->jwt->createToken($immutable, $claims);
         
         $token->setExpiration($expiration);

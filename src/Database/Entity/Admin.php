@@ -7,9 +7,12 @@ declare(strict_types=1);
 
 namespace Saas\Database\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\Passwords;
 use Nette\Utils\Validators;
+use Saas\Database\Entity\Auth\Role;
 use Saas\Database\Field\TCreatedAt;
 use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
@@ -22,6 +25,8 @@ use Saas\Database\Repository\AdminRepository;
 #[ORM\HasLifecycleCallbacks]
 class Admin implements Crud, AuthUser
 {
+    const ROLE_ADMIN = 'admin';
+    
     use TId;
     use TCreatedAt;
     use TUpdatedAt;
@@ -54,10 +59,10 @@ class Admin implements Crud, AuthUser
     
     /**
      * @param string $password
-     * @return self
+     * @return Admin
      * @throws \Saas\Database\Entity\EntityException
      */
-    public function setPassword(string $password): self
+    public function setPassword(string $password): Admin
     {
         $length = mb_strlen($password);
         
@@ -79,10 +84,10 @@ class Admin implements Crud, AuthUser
     
     /**
      * @param string $email
-     * @return $this
+     * @return Admin
      * @throws \Saas\Database\Entity\EntityException
      */
-    public function setEmail(string $email): self
+    public function setEmail(string $email): Admin
     {
         if (!Validators::isEmail($email)) {
             throw new EntityException('E-mail address is not valid');
@@ -97,5 +102,15 @@ class Admin implements Crud, AuthUser
     {
         $this->lastLogin = new \DateTime();
         return $this;
+    }
+    
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getRoles(): Collection
+    {
+        $role = new Role();
+        $role->setName(self::ROLE_ADMIN);
+        return new ArrayCollection([$role]);
     }
 }

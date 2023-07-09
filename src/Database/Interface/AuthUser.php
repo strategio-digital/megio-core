@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Saas\Database\Interface;
 
+use Doctrine\Common\Collections\Collection;
+use Saas\Database\Entity\Auth\Role;
+
 interface AuthUser
 {
     public function getId(): string;
@@ -15,5 +18,10 @@ interface AuthUser
     
     public function getEmail(): string;
     
+    /** @return Collection<int, Role> */
+    public function getRoles(): Collection;
+    
     public function setLastLogin(): AuthUser;
+    
+    public function setPassword(string $password): AuthUser;
 }

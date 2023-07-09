@@ -52,19 +52,19 @@ class CreateRequest extends BaseCrudRequest
             } catch (CrudException|EntityException $e) {
                 return $this->error([$e->getMessage()], 406);
             }
-            
-            $this->em->beginTransaction();
-            
-            try {
-                $this->em->flush();
-                $this->em->commit();
-            } catch (UniqueConstraintViolationException $e) {
-                $this->em->rollback();
-                return $this->error([$e->getMessage()]);
-            } catch (\Exception $e) {
-                $this->em->rollback();
-                throw $e;
-            }
+        }
+        
+        $this->em->beginTransaction();
+        
+        try {
+            $this->em->flush();
+            $this->em->commit();
+        } catch (UniqueConstraintViolationException $e) {
+            $this->em->rollback();
+            return $this->error([$e->getMessage()]);
+        } catch (\Exception $e) {
+            $this->em->rollback();
+            throw $e;
         }
         
         return $this->json([

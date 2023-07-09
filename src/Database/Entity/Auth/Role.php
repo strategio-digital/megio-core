@@ -10,6 +10,8 @@ namespace Saas\Database\Entity\Auth;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Saas\Database\Entity\Admin;
+use Saas\Database\Entity\EntityException;
 use Saas\Database\Field\TCreatedAt;
 use Saas\Database\Field\TId;
 use Saas\Database\Repository\Auth\RoleRepository;
@@ -73,5 +75,14 @@ class Role
         }
         
         return $this;
+    }
+    
+    #[ORM\PreFlush]
+    #[ORM\PrePersist]
+    public function preventAdminRole(): void
+    {
+        if ($this->name === Admin::ROLE_ADMIN) {
+            throw new EntityException('You can not create admin role, admin role is default.');
+        }
     }
 }

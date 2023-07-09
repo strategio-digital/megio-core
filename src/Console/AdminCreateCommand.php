@@ -36,7 +36,6 @@ class AdminCreateCommand extends Command
         $email = $input->getArgument('email');
         $passwd = $input->getArgument('password');
         
-        
         try {
             $admin = new Admin();
             $admin->setEmail($email);

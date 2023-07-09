@@ -11,4 +11,5 @@ enum ResourceType: string
 {
     case ROUTE_NAME = 'route.name';
     case COLLECTION = 'collection';
+    case CUSTOM = 'custom';
 }
