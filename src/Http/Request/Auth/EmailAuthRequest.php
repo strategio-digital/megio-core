@@ -56,7 +56,6 @@ class EmailAuthRequest extends Request
         
         $userRepo = $this->em->getRepository($className);
         $roleRepo = $this->em->getAuthRoleRepo();
-        $tokenRepo = $this->em->getAuthTokenRepo();
         //$resourceRepo = $this->em->getAuthResourceRepo();
         
         /** @var AuthUser|null $user */
@@ -66,16 +65,10 @@ class EmailAuthRequest extends Request
             return $this->error(['Invalid credentials'], 401);
         }
         
-        // Prevent multiple user login
-        /** @var \Saas\Database\Entity\Auth\Token|null $token */
-        //$token = $tokenRepo->findOneBy(['sourceId' => $user->getId(), 'source' => $data['source']]);
-        
-        //if (!$token) {
-            $token = new Token();
-            $token->setSource($data['source']);
-            $token->setSourceId($user->getId());
-            $this->em->persist($token);
-        //}
+        $token = new Token();
+        $token->setSource($data['source']);
+        $token->setSourceId($user->getId());
+        $this->em->persist($token);
         
         // TODO: user roles and theirs resources
         $resources = null;
