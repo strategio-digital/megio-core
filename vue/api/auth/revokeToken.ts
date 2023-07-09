@@ -12,10 +12,10 @@ interface IResp extends IResponse {
     }
 }
 
-const revokeToken = async (user_ids: string[]): Promise<IResp> => {
+const revokeToken = async (user_ids: string[], source: string): Promise<IResp> => {
     const resp = await api.fetch(`saas/auth/revoke-token`, {
         method: 'POST',
-        body: JSON.stringify({ user_ids })
+        body: JSON.stringify({ source, user_ids })
     })
 
     return { ...resp, data: resp.data }
