@@ -6,5 +6,6 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 return static function (RoutingConfigurator $routes): void {
     $routes->add('home', '/')
         ->methods(['GET'])
-        ->controller([HomeController::class, 'index']);
+        ->controller([HomeController::class, 'index'])
+        ->options(['auth' => false]);;
 };

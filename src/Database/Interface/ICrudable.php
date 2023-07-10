@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Database\Interface;
 
-interface Crud
+interface ICrudable
 {
     public function getId(): string;
     

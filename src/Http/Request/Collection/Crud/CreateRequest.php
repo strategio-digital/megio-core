@@ -42,7 +42,7 @@ class CreateRequest extends BaseCrudRequest
         $ids = [];
         
         foreach ($data['rows'] as $row) {
-            /** @var \Saas\Database\Interface\Crud $entity */
+            /** @var \Saas\Database\Interface\ICrudable $entity */
             $entity = new $meta->className();
             
             try {

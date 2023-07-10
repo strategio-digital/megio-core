@@ -11,7 +11,7 @@ use Nette\Security\Passwords;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\Entity\Auth\Token;
 use Saas\Database\EntityManager;
-use Saas\Database\Interface\AuthUser;
+use Saas\Database\Interface\IAuthenticable;
 use Saas\Http\Request\Request;
 use Saas\Security\JWT\ClaimsFormatter;
 use Saas\Security\JWT\JWTResolver;
@@ -34,7 +34,7 @@ class EmailAuthRequest extends Request
     public function schema(): array
     {
         $all = $this->crudHelper->getAllEntities();
-        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], AuthUser::class));
+        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], IAuthenticable::class));
         $tables = array_map(fn($class) => $class['table'], $filtered);
         
         return [
@@ -48,13 +48,13 @@ class EmailAuthRequest extends Request
     {
         $className = $this->crudHelper->getEntityClassName($data['source']);
         
-        if (!$className || !is_subclass_of($className, AuthUser::class)) {
+        if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
             return $this->error(['Invalid source']);
         }
         
         $userRepo = $this->em->getRepository($className);
         
-        /** @var AuthUser|null $user */
+        /** @var IAuthenticable|null $user */
         $user = $userRepo->findOneBy(['email' => $data['email']]);
         
         if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
@@ -68,7 +68,7 @@ class EmailAuthRequest extends Request
         
         $expiration = (new \DateTime())->modify(self::EXPIRATION_TIME);
         $immutable = \DateTimeImmutable::createFromMutable($expiration);
-        $claims = $this->claims->format($user);
+        $claims = $this->claims->format($user, $token);
         $jwt = $this->jwt->createToken($immutable, $claims);
         
         $token->setExpiration($expiration);
@@ -80,7 +80,6 @@ class EmailAuthRequest extends Request
         
         return $this->json([
             'bearer_token' => $token->getToken(),
-            'bearer_token_id' => $token->getId(),
             ...$claims
         ]);
     }

@@ -10,7 +10,7 @@ namespace Saas\Http\Request\Auth;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\EntityManager;
 use Nette\Schema\Expect;
-use Saas\Database\Interface\AuthUser;
+use Saas\Database\Interface\IAuthenticable;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,7 +23,7 @@ class RevokeTokenRequest extends Request
     public function schema(): array
     {
         $all = $this->crudHelper->getAllEntities();
-        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], AuthUser::class));
+        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], IAuthenticable::class));
         $tables = array_map(fn($class) => $class['table'], $filtered);
         
         return [

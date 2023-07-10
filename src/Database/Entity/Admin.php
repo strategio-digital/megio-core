@@ -16,14 +16,14 @@ use Saas\Database\Entity\Auth\Role;
 use Saas\Database\Field\TCreatedAt;
 use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
-use Saas\Database\Interface\Crud;
-use Saas\Database\Interface\AuthUser;
+use Saas\Database\Interface\ICrudable;
+use Saas\Database\Interface\IAuthenticable;
 use Saas\Database\Repository\AdminRepository;
 
 #[ORM\Table(name: '`admin`')]
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Admin implements Crud, AuthUser
+class Admin implements ICrudable, IAuthenticable
 {
     const ROLE_ADMIN = 'admin';
     
@@ -98,7 +98,7 @@ class Admin implements Crud, AuthUser
     }
     
     #[ORM\PrePersist]
-    public function setLastLogin(): AuthUser
+    public function setLastLogin(): IAuthenticable
     {
         $this->lastLogin = new \DateTime();
         return $this;

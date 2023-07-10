@@ -9,15 +9,16 @@ namespace Saas\Security\JWT;
 
 use Saas\Database\Entity\Admin;
 use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Interface\AuthUser;
+use Saas\Database\Entity\Auth\Token;
+use Saas\Database\Interface\IAuthenticable;
 
 class ClaimsFormatter
 {
     /**
-     * @param \Saas\Database\Interface\AuthUser $user
+     * @param \Saas\Database\Interface\IAuthenticable $user
      * @return array<string, mixed>
      */
-    public function format(AuthUser $user): array
+    public function format(IAuthenticable $user, Token $token): array
     {
         $resources = [];
         
@@ -32,6 +33,7 @@ class ClaimsFormatter
         }
         
         return [
+            'bearer_token_id' => $token->getId(),
             'user' => [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),

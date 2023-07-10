@@ -8,10 +8,11 @@ declare(strict_types=1);
 namespace Saas\Debugger;
 
 use Nette\DI\Container;
+use Saas\Security\Auth\AuthUser;
 
 class ResponseFormatter
 {
-    public function __construct(private readonly Container $container)
+    public function __construct(private readonly Container $container, private readonly AuthUser $user)
     {
     }
     
@@ -21,11 +22,17 @@ class ResponseFormatter
      */
     public function formatResponseData(array $data): array
     {
+        $user = $this->user->get();
         $executionTime = microtime(true) - $this->container->parameters['startedAt'];
         
         return $_ENV['APP_ENV_MODE'] !== 'develop' ? $data : array_merge($data, [
             '#' => [
-                'execution_time' => floor($executionTime * 1000) . 'ms'
+                'auth_user' => $user ? [
+                    'id' => $user->getId(),
+                    'roles' => count($this->user->getRoles()),
+                    'resources' => count($this->user->getResources()),
+                ] : null,
+                'execution_time' => floor($executionTime * 1000) . 'ms',
             ]
         ]);
     }

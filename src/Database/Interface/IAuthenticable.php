@@ -10,7 +10,7 @@ namespace Saas\Database\Interface;
 use Doctrine\Common\Collections\Collection;
 use Saas\Database\Entity\Auth\Role;
 
-interface AuthUser
+interface IAuthenticable
 {
     public function getId(): string;
     
@@ -21,7 +21,7 @@ interface AuthUser
     /** @return Collection<int, Role> */
     public function getRoles(): Collection;
     
-    public function setLastLogin(): AuthUser;
+    public function setLastLogin(): IAuthenticable;
     
-    public function setPassword(string $password): AuthUser;
+    public function setPassword(string $password): IAuthenticable;
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Saas\Event\AuthRequestEvent;
 use Saas\Helper\Router;
 use Saas\Http\Controller\AppController;
 use Saas\Http\Request\Auth as Auth;
@@ -13,15 +14,22 @@ return static function (RoutingConfigurator $routes): void {
     $routes->add(Router::ROUTE_APP, '/admin{uri}')
         ->methods(['GET'])
         ->controller([AppController::class, 'app'])
-        ->requirements(['uri' => '.*']);
+        ->requirements(['uri' => '.*'])
+        ->options(['auth' => false]);
     
     // Api overview
-    $routes->add(Router::ROUTE_API, '/api')->methods(['GET'])->controller([AppController::class, 'api']);
+    $routes->add(Router::ROUTE_API, '/api')
+        ->methods(['GET'])
+        ->controller([AppController::class, 'api'])
+        ->options(['auth' => false]);
     
     // Auth
     $auth = $routes->collection('saas.auth.')->prefix('/saas/auth');
-    $auth->add('email', '/email')->methods(['POST'])->controller(Auth\EmailAuthRequest::class);
     $auth->add('revoke-token', '/revoke-token')->methods(['POST'])->controller(Auth\RevokeTokenRequest::class);
+    $auth->add('email', '/email')
+        ->methods(['POST'])
+        ->controller(Auth\EmailAuthRequest::class)
+        ->options(['auth' => false]);
     
     // User extra
     $user = $routes->collection('saas.admin.')->prefix('/saas/admin');

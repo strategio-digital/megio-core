@@ -22,6 +22,7 @@ services:
 
     - Saas\Security\JWT\JWTResolver
     - Saas\Security\JWT\ClaimsFormatter
+    - Saas\Security\Auth\AuthUser
     - Saas\Database\Manager\AuthResourceManager
 
 includes:

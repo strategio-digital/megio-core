@@ -52,7 +52,7 @@ class UpdateRequest extends BaseCrudRequest
             ->where('E.id IN (:ids)')
             ->setParameter('ids', $ids);
         
-        /** @var \Saas\Database\Interface\Crud[] $rows */
+        /** @var \Saas\Database\Interface\ICrudable[] $rows */
         $rows = $qb->getQuery()->getResult();
         
         foreach ($data['rows'] as $row) {

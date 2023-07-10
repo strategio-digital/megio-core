@@ -15,7 +15,7 @@ use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\Entity\Auth\Role;
 use Saas\Database\Entity\Auth\Token;
 use Saas\Database\EntityManager;
-use Saas\Database\Interface\Crud;
+use Saas\Database\Interface\ICrudable;
 
 class CrudHelper
 {
@@ -148,12 +148,12 @@ class CrudHelper
     }
     
     /**
-     * @param \Saas\Database\Interface\Crud $entity
+     * @param \Saas\Database\Interface\ICrudable $entity
      * @param array<string, mixed> $props
-     * @return \Saas\Database\Interface\Crud
+     * @return \Saas\Database\Interface\ICrudable
      * @throws \Saas\Database\CrudHelper\CrudException
      */
-    public function setUpEntityProps(Crud $entity, array $props): Crud
+    public function setUpEntityProps(ICrudable $entity, array $props): ICrudable
     {
         $ref = new \ReflectionClass($entity);
         $methods = array_map(fn($method) => $method->name, $ref->getMethods());
