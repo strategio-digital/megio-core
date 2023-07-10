@@ -7,5 +7,5 @@ return static function (RoutingConfigurator $routes): void {
     $routes->add('home', '/')
         ->methods(['GET'])
         ->controller([HomeController::class, 'index'])
-        ->options(['auth' => false]);;
+        ->options(['auth' => false]);
 };

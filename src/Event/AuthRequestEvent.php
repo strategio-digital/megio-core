@@ -126,6 +126,13 @@ class AuthRequestEvent implements EventSubscriberInterface
         
         /** @var IAuthenticable $user */
         $this->authUser->setAuthUser($user);
+        
+        $requestResources = implode('|', $claims->get('user')['resources']);
+        $userResources = implode('|', $this->authUser->getResources());
+        
+        if ($userResources !== $requestResources) {
+            $this->sendErrors(['User permissions have been changed']);
+        }
     }
     
     /**
