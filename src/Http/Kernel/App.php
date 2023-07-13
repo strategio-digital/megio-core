@@ -72,6 +72,7 @@ class App
      */
     public function run(): void
     {
+        Request::setTrustedProxies(explode(',', $_ENV['APP_TRUSTED_PROXIES']), -1);
         $kernel = self::createKernel();
         
         try {
