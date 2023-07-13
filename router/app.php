@@ -1,12 +1,11 @@
 <?php
 
-use Saas\Event\AuthRequestEvent;
 use Saas\Helper\Router;
 use Saas\Http\Controller\AppController;
 use Saas\Http\Request\Auth as Auth;
 use Saas\Http\Request\Collection\Crud as Crud;
 use Saas\Http\Request\Collection\Meta as Meta;
-use Saas\Http\Request\User as User;
+use Saas\Http\Request\Admin as Admin;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
@@ -33,8 +32,8 @@ return static function (RoutingConfigurator $routes): void {
     
     // User extra
     $user = $routes->collection('saas.admin.')->prefix('/saas/admin');
-    $user->add('profile', '/profile')->methods(['POST'])->controller(User\ProfileRequest::class);
-    $user->add('avatar', '/avatar')->methods(['POST'])->controller(User\UploadAvatarRequest::class);
+    $user->add('profile', '/profile')->methods(['POST'])->controller(Admin\ProfileRequest::class);
+    $user->add('avatar', '/avatar')->methods(['POST'])->controller(Admin\UploadAvatarRequest::class);
     
     // Saas collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');

@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\User;
+namespace Saas\Http\Request\Admin;
 
-use Saas\Http\Request\Auth;
 use Saas\Http\Request\Request;
+use Saas\Security\Auth\AuthUser;
 use Saas\Storage\Storage;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadAvatarRequest extends Request
 {
-    public function __construct(protected readonly Auth $auth, protected readonly Storage $storage)
+    public function __construct(protected readonly AuthUser $user, protected readonly Storage $storage)
     {
     }
     
@@ -32,19 +32,19 @@ class UploadAvatarRequest extends Request
      */
     public function process(array $data): Response
     {
-        // TODO: update this logic
+        $user = $this->user->get();
         
-//        $user = $this->auth->getUser();
-//
-//        $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
-//        $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
-//
-//        return $this->json([
-//            'message' => "File successfully uploaded.'",
-//            'name' => $file->getFilename(),
-//            'destination' => $file->getPathname()
-//        ]);
+        if (!$user) {
+            return $this->error(['You are not logged in']);
+        }
         
-        return $this->json();
+        $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");
+        $file = $this->storage->get()->upload($data['avatar'], "user/{$user->getId()}/avatar/");
+        
+        return $this->json([
+            'message' => "File successfully uploaded.'",
+            'name' => $file->getFilename(),
+            'destination' => $file->getPathname()
+        ]);
     }
 }

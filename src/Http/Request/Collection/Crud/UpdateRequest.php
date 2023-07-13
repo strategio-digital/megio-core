@@ -32,8 +32,8 @@ class UpdateRequest extends BaseCrudRequest
             'rows' => Expect::arrayOf(
                 Expect::structure([
                     'id' => Expect::string()->required(),
-                    'data' => Expect::array()->min(1)->required()
-                ])
+                    'data' => Expect::arrayOf('int|float|string|bool', 'string')->min(1)->required()
+                ])->castTo('array')
             )->min(1)->required()
         ];
     }

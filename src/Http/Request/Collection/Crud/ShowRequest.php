@@ -30,7 +30,7 @@ class ShowRequest extends BaseCrudRequest
             'orderBy' => Expect::arrayOf(Expect::structure([
                 'col' => Expect::string()->required(),
                 'desc' => Expect::bool()->required()
-            ]))->min(1)->default([['col' => 'createdAt', 'desc' => true]])
+            ])->castTo('array'))->min(1)->default([['col' => 'createdAt', 'desc' => true]])
         ];
     }
     

@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\Passwords;
 use Nette\Utils\Validators;
 use Saas\Database\Entity\Auth\Role;
+use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\Field\TCreatedAt;
 use Saas\Database\Field\TId;
 use Saas\Database\Field\TUpdatedAt;
@@ -97,7 +98,11 @@ class Admin implements ICrudable, IAuthenticable
         return $this;
     }
     
-    #[ORM\PrePersist]
+    public function getLastLogin(): ?\DateTime
+    {
+        return $this->lastLogin;
+    }
+    
     public function setLastLogin(): IAuthenticable
     {
         $this->lastLogin = new \DateTime();
@@ -112,5 +117,13 @@ class Admin implements ICrudable, IAuthenticable
         $role = new Role();
         $role->setName(self::ROLE_ADMIN);
         return new ArrayCollection([$role]);
+    }
+    
+    /**
+     * @return Collection<int, Resource>
+     */
+    public function getResources(): Collection
+    {
+        return new ArrayCollection([]);
     }
 }

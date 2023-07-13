@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Saas\Database\Interface;
 
 use Doctrine\Common\Collections\Collection;
+use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\Entity\Auth\Role;
 
 interface IAuthenticable
@@ -18,8 +19,13 @@ interface IAuthenticable
     
     public function getEmail(): string;
     
+    public function getLastLogin(): ?\DateTime;
+    
     /** @return Collection<int, Role> */
     public function getRoles(): Collection;
+    
+    /** @return Collection<int, Resource> */
+    public function getResources(): Collection;
     
     public function setLastLogin(): IAuthenticable;
     

@@ -25,9 +25,8 @@ abstract class Request extends Controller implements IRequest
      */
     public function validate(array|null $data, array $structure): array|false
     {
-        $schema = Expect::structure($structure);
-        $data = (new Processor())->process($schema, $data);
-        return json_decode((string)json_encode($data), true);
+        $schema = Expect::structure($structure)->castTo('array');
+        return (new Processor())->process($schema, $data);
     }
     
     /**
