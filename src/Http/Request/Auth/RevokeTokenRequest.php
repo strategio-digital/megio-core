@@ -36,8 +36,8 @@ class RevokeTokenRequest extends Request
     {
         $this->em->getAuthTokenRepo()->createQueryBuilder('Token')
             ->delete()
-            ->where('Token.sourceId IN (:source_ids)')
-            ->andWhere('Token.source = :source')
+            ->where('Token.source = :source')
+            ->andWhere('Token.sourceId IN (:source_ids)')
             ->setParameter('source_ids', $data['source_ids'])
             ->setParameter('source', $data['source'])
             ->getQuery()
