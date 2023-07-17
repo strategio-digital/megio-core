@@ -8,7 +8,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Installation guide
 1. Create project by `curl -sL bit.ly/3AnA49z | bash /dev/stdin create <project-folder>`
-2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/template/readme.md)
+2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/sandbox/readme.md)
 
 ## Core features
 - 🟢&nbsp; Web-ready dev-stack (simple router & Latte templates)
