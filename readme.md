@@ -51,7 +51,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Extendable (collections) datagrid with global configs
 
 ## Priority
-- 🟡 Role access table (Routes & Collections CRUD)
+- 🟡 Role access table (Routes, Collections, Navbar)
 - 🟡 Navbar resources access (vue composable)
 - 🟡 Brainstorm entity mapping via orisai/object-mapper
 - 🟡 Collections edit / update page with custom vue-components
