@@ -26,14 +26,14 @@ class AuthResourceManager
     }
     
     /**
-     * Returns count of affected resources
+     * Returns affected resources
      * @return array{created: string[], removed: string[]}
      * @throws \Doctrine\ORM\Exception\ORMException
      */
     public function updateRouteResources(): array
     {
         /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
-        $resources = $this->em->getAuthResourceRepo()->findAll();
+        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::ROUTE->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
         $routeNames = array_keys($this->routes->all());
         
@@ -41,19 +41,17 @@ class AuthResourceManager
         $remove = [];
         
         foreach ($routeNames as $name) {
-            $isRouteCollection = Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX);
-            if (!in_array($name, $resourceNames) && !$isRouteCollection) {
+            if (!in_array($name, $resourceNames)) {
                 $create[] = $name;
                 $resource = new Resource();
-                $resource->setType(ResourceType::ROUTE_NAME);
+                $resource->setType(ResourceType::ROUTE);
                 $resource->setName($name);
                 $this->em->persist($resource);
             }
         }
         
         foreach ($resourceNames as $name) {
-            $isRouteCollection = Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX);
-            if (!in_array($name, $routeNames) && !$isRouteCollection) {
+            if (!in_array($name, $routeNames)) {
                 $remove[] = $name;
             }
         }
@@ -68,16 +66,16 @@ class AuthResourceManager
     }
     
     /**
-     * Returns count of affected resources
+     * Returns affected resources
      * @return array{created: string[], removed: string[]}
      * @throws \Doctrine\ORM\Exception\ORMException
      */
     public function updateCollectionResources(): array
     {
         /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
-        $resources = $this->em->getAuthResourceRepo()->findAll();
+        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::COLLECTION->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
-        $collectionNames = $this->getCollectionResourceNames();
+        $collectionNames = $this->generateCollectionResourceNames();
         
         $create = [];
         $remove = [];
@@ -93,8 +91,7 @@ class AuthResourceManager
         }
         
         foreach ($resourceNames as $name) {
-            $isRouteCollection = Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX);
-            if (!in_array($name, $collectionNames) && $isRouteCollection) {
+            if (!in_array($name, $collectionNames)) {
                 $remove[] = $name;
             }
         }
@@ -111,7 +108,7 @@ class AuthResourceManager
     /**
      * @return string[]
      */
-    private function getCollectionResourceNames(): array
+    private function generateCollectionResourceNames(): array
     {
         $resourceNames = array_keys($this->routes->all());
         $tables = array_map(fn($entity) => $entity['table'], $this->crudHelper->getAllEntities());
@@ -134,16 +131,11 @@ class AuthResourceManager
      */
     private function removeResources(array $names): void
     {
-        /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
-        $resources = $this->em->getAuthResourceRepo()->findAll();
-        $resourcesToRemove = array_filter($resources, fn(Resource $resource) => in_array($resource->getName(), $names));
-        $ids = array_map(fn(Resource $resource) => $resource->getId(), $resourcesToRemove);
-        
         $this->em->getAuthResourceRepo()
             ->createQueryBuilder('Resource')
             ->delete()
-            ->andWhere('Resource.id IN (:ids)')
-            ->setParameter('ids', $ids)
+            ->andWhere('Resource.name IN (:names)')
+            ->setParameter('names', $names)
             ->getQuery()->execute();
     }
 }

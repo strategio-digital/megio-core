@@ -27,7 +27,7 @@ class CrudHelper
     
     const
         PROPERTY_SHOW_ALL = 'showAllFields',
-        PROPERTY_SHOW_ONE = 'showOneField',
+        PROPERTY_SHOW_ONE = 'showOneFields',
         PROPERTY_INVISIBLE = 'invisibleFields';
     
     protected ?string $error = null;

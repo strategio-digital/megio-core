@@ -29,8 +29,8 @@ class ResponseFormatter
             '#' => [
                 'auth_user' => $user ? [
                     'id' => $user->getId(),
-                    'roles' => count($this->user->getRoles()),
-                    'resources' => count($this->user->getResources()),
+                    'roles' => $this->user->getRoles(),
+                    'resources_count' => count($this->user->getResources()),
                 ] : null,
                 'execution_time' => floor($executionTime * 1000) . 'ms',
             ]

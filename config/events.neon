@@ -1,4 +1,5 @@
 events:
     - Saas\Event\AuthRequestEvent
+    - Saas\Event\AuthRouteRequestEvent
     - Saas\Event\CorsResponseEvent
     - Saas\Event\CSPResponseEvent
