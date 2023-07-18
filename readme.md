@@ -60,7 +60,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 MultiFile uploader
 - 🟠 Admin datagrid + CRUD
 - 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
-- 🟠 **Collection Editor** (Doctrine entity builder, migrations)
+- 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
 
 ## Backlog
 - 🟠 App settings (edit envFile - dev only)
