@@ -47,9 +47,11 @@ class AuthRouteRequestEvent implements EventSubscriberInterface
             return;
         }
         
-        $isAdmin = $this->authUser->get() instanceof Admin;
+        if ($this->authUser->get() instanceof Admin) {
+            return;
+        }
         
-        if (!$isAdmin && !in_array($routeName, $this->authUser->getResources())) {
+        if (!in_array($routeName, $this->authUser->getResources())) {
             $this->sendErrors(["This route-resource '{$routeName}' is not allowed for current user"]);
         }
     }
