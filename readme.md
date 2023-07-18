@@ -33,7 +33,9 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Custom Symfony console commands.
 - 🟢&nbsp; PHPStan static analysis on level 8.
 
-## Working on (07/2023)
+## Changelog
+
+### 07/2023
 - 🟢 App.php refactoring
 - 🟢 Upgrade to symfony router 6.3
 - 🟢 Add Symfony\Kernel and controller argument resolver with autowiring
@@ -44,26 +46,27 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Make User entity commutable and test it in sandbox project
 - 🟡 Add JWTAuthRequestEvent mechanism for Routes & Collections
 
-## Done (06/2023)
+### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
 - 🟢 Extendable (collections) datagrid with global configs
 
 ## Priority
-- 🟡 Collections edit/update form
+- 🟡 Role access table (Routes & Collections CRUD)
+- 🟡 Brainstorm entity mapping via orisai/object-mapper
+- 🟡 Collections edit / update page with custom vue-components
 - 🟡 CRUD request-validation by entity props
-- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
-- 🟠 Admin datagrid + CRUD
-- 🟠 Role access table (Routes & Collections CRUD)
-- 🟠 **Collection Editor** (Doctrine entity builder, migrations, API permissions)
+- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
 - 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
 - 🟠 MultiFile uploader
-- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
+- 🟠 Admin datagrid + CRUD
+- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
+- 🟠 **Collection Editor** (Doctrine entity builder, migrations)
 
 ## Backlog
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Collection CRUD & Application events
+- 🟠 Collection CRUD events & Application events
 - 🟠 Button for fake-data bulk insert into collection.
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
 - 🟠 Navbar resources access (vue composable)
@@ -78,9 +81,9 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Request Nginx rate limiter & IP address proxy resolver
 - 🟠 Make intro videos (for developers & for administrators)
 
-### Make some tests
+### Make some automatic tests
 - Phpstan
-- Nette tester
+- Nette tester / PHP Unit
 - Vulnerability audits
 - Console commands tests
 - API endpoints tests
