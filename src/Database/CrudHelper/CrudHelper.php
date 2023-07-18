@@ -20,10 +20,10 @@ use Saas\Database\Interface\ICrudable;
 class CrudHelper
 {
     /** @var class-string[] */
-    const EXCLUDED_IN_CRUD = [Role::class, Resource::class, Token::class];
+    const EXCLUDED_EVERYWHERE = [Role::class, Resource::class, Token::class];
     
     /** @var class-string[] */
-    const EXCLUDED_IN_COLLECTIONS = [Admin::class];
+    const INVISIBLE_IN_COLLECTION_NAV = [Admin::class];
     
     const
         PROPERTY_SHOW_ALL = 'showAllFields',
@@ -53,7 +53,7 @@ class CrudHelper
             return ['table' => str_replace('`', '', $attr->name ?? ''), 'value' => $metadata->name];
         }, $metadata);
         
-        return array_filter($entities, fn($entity) => !in_array($entity['value'], self::EXCLUDED_IN_CRUD));
+        return array_filter($entities, fn($entity) => !in_array($entity['value'], self::EXCLUDED_EVERYWHERE));
     }
     
     /**
