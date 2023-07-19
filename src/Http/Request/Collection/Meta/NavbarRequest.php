@@ -35,7 +35,7 @@ class NavbarRequest extends Request
         
         if (!$this->authUser->get() instanceof Admin) {
             $resources = $this->authUser->getResources();
-            $tables = array_filter($tables, fn($table) => in_array(Router::ROUTE_COLLECTION_PREFIX . '. ' . $table, $resources));
+            $tables = array_filter($tables, fn($table) => in_array(Router::ROUTE_META_NAVBAR . '.' . $table, $resources));
         }
         
         sort($tables);

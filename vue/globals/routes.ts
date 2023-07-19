@@ -8,6 +8,13 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Login',
+        props: { source: 'user', title: 'Přihlášení' },
+        component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Login.vue')
+    },
+    {
+        path: '/admin',
+        name: 'AdminLogin',
+        props: { source: 'admin', title: 'Admin přihlášení' },
         component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Login.vue')
     },
     {

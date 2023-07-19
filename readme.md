@@ -46,6 +46,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Make User entity commutable and test it in sandbox project
 - 🟢 Add Collection CRUD events & Application events
 - 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
+- 🟢 Split Login form into Admin & User form
 - 🟡 Add Navbar resources access (vue composable)
 
 ### 06/2023

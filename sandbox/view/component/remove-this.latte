@@ -11,10 +11,15 @@
         <img src="{vite('assets/img/strategio.svg')}" alt="Strategio SaaS" class="logo" height="100" width="100">
         <div class="text">
             <h1>{$title}</h1>
-            <p>{$description}</p>
-            <a href="https://github.com/strategio-digital/saas" target="_blank">Github</a> |
-            <a href="{route(Saas\Helper\Router::ROUTE_API)}" target="_blank">API</a> |
-            <a href="{route(Saas\Helper\Router::ROUTE_APP, ['uri' => '/'])}">App login</a>
+            <div style="line-height: 1.5rem">
+                <p>{$description}</p>
+                <div style="display: flex; justify-content: center">
+                    <a href="https://github.com/strategio-digital/saas" target="_blank">Github</a>
+                    <a href="{route(Saas\Helper\Router::ROUTE_API)}" target="_blank">API</a>
+                    <a href="{route(Saas\Helper\Router::ROUTE_APP, ['uri' => '/'])}">User</a>
+                    <a href="{route(Saas\Helper\Router::ROUTE_APP, ['uri' => '/admin'])}">Admin</a>
+                </div>
+            </div>
         </div>
         <div id="vue-app" style="height: 1rem"></div>
     </div>
