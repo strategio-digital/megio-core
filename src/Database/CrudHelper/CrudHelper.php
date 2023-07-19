@@ -134,11 +134,11 @@ class CrudHelper
         $invisibleFields = [];
         
         if ($schema) {
-            $schemaProps = $this->getEntitySchema($className);
-            $fieldsSchema = array_values(array_filter($schemaProps, fn($prop) => in_array($prop['name'], $visibleProps)));
             $invisibleFields = $this->getPropertyDefaults($className, self::PROPERTY_INVISIBLE);
+            $schemaProps = $this->getEntitySchema($className);
+            $fields = array_values(array_filter($schemaProps, fn($prop) => in_array($prop['name'], $visibleProps)));
+            $fieldsSchema = $this->sortFieldsByOrder($fields, $visibleProps);
         }
-        
         
         return new EntityMetadata($className, $tableName, $visibleProps, $fieldsSchema, $invisibleFields);
     }
@@ -198,5 +198,27 @@ class CrudHelper
             'nullable' => $nullable,
             'maxLength' => $maxLength
         ];
+    }
+    
+    /**
+     * @param array<int, array<string, mixed>> $fields
+     * @param array<int, string> $sortedNames
+     * @return array<int, array<string, mixed>>
+     */
+    public function sortFieldsByOrder(array $fields, array $sortedNames) : array
+    {
+        $associativeFields = [];
+        foreach ($fields as $field) {
+            $associativeFields[$field['name']] = $field;
+        }
+        
+        $sortedFields = [];
+        foreach ($sortedNames as $name) {
+            if (array_key_exists($name, $associativeFields)) {
+                $sortedFields[] = $associativeFields[$name];
+            }
+        }
+        
+        return $sortedFields;
     }
 }
