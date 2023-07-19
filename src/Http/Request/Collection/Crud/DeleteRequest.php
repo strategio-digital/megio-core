@@ -10,6 +10,9 @@ namespace Saas\Http\Request\Collection\Crud;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
+use Saas\Event\CollectionEvent;
+use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteRequest extends BaseCrudRequest
@@ -34,18 +37,36 @@ class DeleteRequest extends BaseCrudRequest
             return $this->error([$this->helper->getError()]);
         }
         
+        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
         $repo = $this->em->getRepository($meta->className);
         
-        $repo->createQueryBuilder('E')
-            ->delete()
+        $qb = $repo->createQueryBuilder('E')
             ->where('E.id IN (:ids)')
-            ->setParameter('ids', $data['ids'])
-            ->getQuery()
-            ->execute();
+            ->setParameter('ids', $data['ids']);
         
-        return $this->json([
+        $countRows = (clone $qb)->select('count(E.id)')->getQuery()->getSingleScalarResult();
+        $countItems = count($data['ids']);
+        $diff = $countItems - $countRows;
+        
+        if ($diff !== 0) {
+            // TODO: how to handle this in event? - Add new event?
+            return $this->error(["{$diff} of {$countItems} items you want to delete already does not exist"], 404);
+        }
+        
+        $qb->delete()->getQuery()->execute();
+        
+        $result = [
             'ids' => $data['ids'],
             'message' => "Items successfully deleted"
-        ]);
+        ];
+        
+        $response = $this->json($result);
+        
+        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        
+        return $response;
     }
 }

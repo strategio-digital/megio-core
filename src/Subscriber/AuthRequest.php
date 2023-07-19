@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event;
+namespace Saas\Subscriber;
 
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\Entity\Admin;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
 
-class AuthRequestEvent implements EventSubscriberInterface
+class AuthRequest implements EventSubscriberInterface
 {
     protected RequestEvent $event;
     

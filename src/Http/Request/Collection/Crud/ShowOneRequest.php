@@ -11,6 +11,9 @@ use Doctrine\ORM\AbstractQuery;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
+use Saas\Event\CollectionEvent;
+use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowOneRequest extends BaseCrudRequest
@@ -36,6 +39,9 @@ class ShowOneRequest extends BaseCrudRequest
             return $this->error([$this->helper->getError()]);
         }
         
+        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
         $repo = $this->em->getRepository($meta->className);
         
         $qb = $repo->createQueryBuilder('E')
@@ -45,16 +51,22 @@ class ShowOneRequest extends BaseCrudRequest
         
         $item = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
-        $response = ['item' => $item];
+        $result = ['item' => $item];
         
         if (!$item) {
+            // TODO: how to handle this in event? - Add new event?
             return $this->error(['Item not found'], 404);
         }
         
         if ($data['schema']) {
-            $response['schema'] = $meta->getSchema();
+            $result['schema'] = $meta->getSchema();
         }
         
-        return $this->json($response);
+        $response = $this->json($result);
+        
+        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        
+        return $response;
     }
 }

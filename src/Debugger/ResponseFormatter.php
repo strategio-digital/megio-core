@@ -26,7 +26,7 @@ class ResponseFormatter
         $executionTime = microtime(true) - $this->container->parameters['startedAt'];
         
         return $_ENV['APP_ENV_MODE'] !== 'develop' ? $data : array_merge($data, [
-            '#' => [
+            '@debug' => [
                 'auth_user' => $user ? [
                     'id' => $user->getId(),
                     'roles' => $this->user->getRoles(),

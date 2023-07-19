@@ -13,6 +13,10 @@ use Saas\Database\CrudHelper\CrudException;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
+use Saas\Event\CollectionEvent;
+use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
+use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\CollectionEvent\OnProcessingExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateRequest extends BaseCrudRequest
@@ -44,6 +48,9 @@ class UpdateRequest extends BaseCrudRequest
             return $this->error([$this->helper->getError()]);
         }
         
+        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
         $ids = array_map(fn($row) => $row['id'], $data['rows']);
         
         $qb = $this->em->getRepository($meta->className)
@@ -58,12 +65,16 @@ class UpdateRequest extends BaseCrudRequest
         foreach ($data['rows'] as $row) {
             $dbRow = current(array_filter($rows, fn($db) => $db->getId() === $row['id']));
             if (!$dbRow) {
+                // TODO: how to handle this in event? - Add new event?
                 return $this->error(["Item '{$row['id']}' not found"], 404);
             }
             try {
                 $this->helper->setUpEntityProps($dbRow, $row['data']);
             } catch (CrudException|EntityException $e) {
-                return $this->error([$e->getMessage()], 406);
+                $response = $this->error([$e->getMessage()], 406);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $response;
             }
         }
         
@@ -74,15 +85,25 @@ class UpdateRequest extends BaseCrudRequest
             $this->em->commit();
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
-            return $this->error([$e->getMessage()]);
+            $response = $this->error([$e->getMessage()]);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $response;
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
         }
         
-        return $this->json([
+        $result = [
             'ids' => $ids,
             'message' => "Items successfully updated"
-        ]);
+        ];
+        
+        $response = $this->json($result);
+        
+        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        
+        return $response;
     }
 }

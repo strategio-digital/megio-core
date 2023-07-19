@@ -10,6 +10,7 @@ namespace Saas\Http\Controller\Base;
 use Latte\Engine;
 use Nette\DI\Container;
 use Saas\Debugger\ResponseFormatter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,12 +23,14 @@ abstract class Controller implements IController
     private ResponseFormatter $formatter;
     private UrlGenerator $urlGenerator;
     private Engine $latte;
+    protected EventDispatcher $dispatcher;
     
     public function __inject(Container $container): void
     {
         $this->formatter = $container->getByType(ResponseFormatter::class); //@phpstan-ignore-line
         $this->urlGenerator = $container->getByType(UrlGenerator::class); //@phpstan-ignore-line
         $this->latte = $container->getByType(Engine::class); //@phpstan-ignore-line
+        $this->dispatcher = $container->getByType(EventDispatcher::class); //@phpstan-ignore-line
     }
     
     /**

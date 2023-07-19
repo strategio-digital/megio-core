@@ -10,6 +10,9 @@ namespace Saas\Http\Request\Collection\Crud;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\EntityManager;
 use Nette\Schema\Expect;
+use Saas\Event\CollectionEvent;
+use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowRequest extends BaseCrudRequest
@@ -40,6 +43,9 @@ class ShowRequest extends BaseCrudRequest
             return $this->error([$this->helper->getError()]);
         }
         
+        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
         $repo = $this->em->getRepository($meta->className);
         
         $qb = $repo->createQueryBuilder('E')
@@ -54,7 +60,7 @@ class ShowRequest extends BaseCrudRequest
             $qb->addOrderBy("E.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $response = [
+        $result = [
             'pagination' => [
                 'currentPage' => $data['currentPage'],
                 'lastPage' => (int)ceil($count / $data['itemsPerPage']),
@@ -65,9 +71,14 @@ class ShowRequest extends BaseCrudRequest
         ];
         
         if ($data['schema']) {
-            $response['schema'] = $meta->getSchema();
+            $result['schema'] = $meta->getSchema();
         }
         
-        return $this->json($response);
+        $response = $this->json($result);
+        
+        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        
+        return $response;
     }
 }

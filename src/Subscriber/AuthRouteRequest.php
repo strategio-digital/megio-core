@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event;
+namespace Saas\Subscriber;
 
 use Saas\Database\Entity\Admin;
 use Saas\Security\Auth\AuthUser;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
 
-class AuthRouteRequestEvent implements EventSubscriberInterface
+class AuthRouteRequest implements EventSubscriberInterface
 {
     protected RequestEvent $event;
     

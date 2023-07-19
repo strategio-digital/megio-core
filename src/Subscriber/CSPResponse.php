@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event;
+namespace Saas\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class CSPResponseEvent implements EventSubscriberInterface
+class CSPResponse implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {

@@ -1,5 +1,6 @@
 events:
-    - Saas\Event\AuthRequestEvent
-    - Saas\Event\AuthRouteRequestEvent
-    - Saas\Event\CorsResponseEvent
-    - Saas\Event\CSPResponseEvent
+    - Saas\Subscriber\AuthRequest
+    - Saas\Subscriber\AuthRouteRequest
+    - Saas\Subscriber\AuthCollectionRequest
+    - Saas\Subscriber\CorsResponse
+    - Saas\Subscriber\CSPResponse

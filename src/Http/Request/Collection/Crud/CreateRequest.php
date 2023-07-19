@@ -13,11 +13,18 @@ use Saas\Database\CrudHelper\CrudException;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
+use Saas\Event\CollectionEvent;
+use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\CollectionEvent\OnProcessingExceptionEvent;
+use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateRequest extends BaseCrudRequest
 {
-    public function __construct(protected readonly EntityManager $em, protected readonly CrudHelper $helper)
+    public function __construct(
+        protected readonly EntityManager $em,
+        protected readonly CrudHelper    $helper,
+    )
     {
     }
     
@@ -39,6 +46,9 @@ class CreateRequest extends BaseCrudRequest
             return $this->error([$this->helper->getError()]);
         }
         
+        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
         $ids = [];
         
         foreach ($data['rows'] as $row) {
@@ -50,7 +60,10 @@ class CreateRequest extends BaseCrudRequest
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
             } catch (CrudException|EntityException $e) {
-                return $this->error([$e->getMessage()], 406);
+                $response = $this->error([$e->getMessage()], 406);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $response;
             }
         }
         
@@ -61,15 +74,25 @@ class CreateRequest extends BaseCrudRequest
             $this->em->commit();
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
-            return $this->error([$e->getMessage()]);
+            $response = $this->error([$e->getMessage()]);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $response;
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
         }
         
-        return $this->json([
+        $result = [
             'ids' => $ids,
             'message' => "Items successfully created"
-        ]);
+        ];
+        
+        $response = $this->json($result);
+        
+        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        
+        return $response;
     }
 }

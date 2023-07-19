@@ -44,7 +44,9 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Split User entity into User & Admin entity
 - 🟢 Admin & User login mechanism refactoring
 - 🟢 Make User entity commutable and test it in sandbox project
-- 🟡 Add JWTAuth mechanism for Routes & Collections
+- 🟢 Add Collection CRUD events & Application events
+- 🟡 Add JWTAuth mechanism for Routes, Collections, Navbar
+- 🟡 Add Navbar resources access (vue composable)
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
@@ -52,7 +54,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 ## Priority
 - 🟡 Role access table (Routes, Collections, Navbar)
-- 🟡 Navbar resources access (vue composable)
 - 🟡 Brainstorm entity mapping via orisai/object-mapper
 - 🟡 Collections edit / update page with custom vue-components
 - 🟡 CRUD request-validation by entity props
@@ -67,7 +68,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Collection CRUD events & Application events
 - 🟠 Button for fake-data bulk insert into collection.
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
 - 🟠 Scheduled database backups to S3 & log dashboard
