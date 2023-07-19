@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
     // Admin app
-    $routes->add(Router::ROUTE_APP, '/admin{uri}')
+    $routes->add(Router::ROUTE_APP, '/app{uri}')
         ->methods(['GET'])
         ->controller([AppController::class, 'app'])
         ->requirements(['uri' => '.*'])

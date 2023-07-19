@@ -28,7 +28,7 @@ async function onSubmit() {
         const resp = await api.auth.loginByEmail(data.value.email, data.value.password, 'admin')
 
         if (resp.success) {
-            if (resp.data.user.resources?.length === 0 && !resp.data.user.roles.includes('admin')) {
+            if (resp.data.user.resources?.length === 0 && ! resp.data.user.roles.includes('admin')) {
                 alert.value = 'Nedostatečné oprávnění.'
             } else {
                 router.push({ name: 'Dashboard' })
@@ -54,11 +54,7 @@ async function onSubmit() {
                     <h1>Přihlášení</h1>
                     <v-text-field label="E-mail" v-model="data.email" :rules="schema.email" />
                     <v-text-field type="password" label="Heslo" v-model="data.password" :rules="schema.password" />
-
-                    <v-alert v-if="alert" color="error" icon="$info" class="mb-5">
-                        {{ alert }}
-                    </v-alert>
-
+                    <v-alert v-if="alert" color="error" icon="$info" class="mb-5">{{ alert }}</v-alert>
                     <v-btn type="submit" size="large" color="warning" :loading="loading" :disabled="loading">
                         Přihlásit se
                     </v-btn>

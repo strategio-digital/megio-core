@@ -1,6 +1,6 @@
 {*
  * Copyright (c) 2022 Strategio Digital s.r.o.
- * @author Jiří Zapletal (https://strategio.digital, jz@strategio.digital)
+ * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  *}
 
 {varType string $title}
@@ -14,7 +14,7 @@
             <p>{$description}</p>
             <a href="https://github.com/strategio-digital/saas" target="_blank">Github</a> |
             <a href="{route(Saas\Helper\Router::ROUTE_API)}" target="_blank">API</a> |
-            <a href="{route(Saas\Helper\Router::ROUTE_APP, ['uri' => '/'])}">Admin login</a>
+            <a href="{route(Saas\Helper\Router::ROUTE_APP, ['uri' => '/'])}">App login</a>
         </div>
         <div id="vue-app" style="height: 1rem"></div>
     </div>
