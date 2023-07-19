@@ -25,9 +25,10 @@ class PermissionsUpdateCommand extends Command
     {
         $routes = $this->manager->updateRouteResources();
         $collections = $this->manager->updateCollectionResources();
+        $navbar = $this->manager->updateCollectionNavResources();
         
-        $created = array_merge($routes['created'], $collections['created']);
-        $removed = array_merge($routes['removed'], $collections['removed']);
+        $created = array_merge($routes['created'], $collections['created'], $navbar['created']);
+        $removed = array_merge($routes['removed'], $collections['removed'], $navbar['removed']);
         
         foreach ($created as $resource) {
             $output->writeln("<info>Resource '{$resource}' created.</info>");

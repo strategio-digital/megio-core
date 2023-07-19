@@ -10,7 +10,6 @@ namespace Saas\Database\CrudHelper;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
-use Saas\Database\Entity\Admin;
 use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\Entity\Auth\Role;
 use Saas\Database\Entity\Auth\Token;
@@ -21,9 +20,6 @@ class CrudHelper
 {
     /** @var class-string[] */
     const EXCLUDED_EVERYWHERE = [Role::class, Resource::class, Token::class];
-    
-    /** @var class-string[] */
-    const INVISIBLE_IN_COLLECTION_NAV = [Admin::class];
     
     const
         PROPERTY_SHOW_ALL = 'showAllFields',
