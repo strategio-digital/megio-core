@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace Saas\Subscriber;
 
 use Saas\Database\Entity\Admin;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
 use Saas\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

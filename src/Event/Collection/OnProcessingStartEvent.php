@@ -5,17 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\RequestEvent;
+namespace Saas\Event\Collection;
 
+use Saas\Database\CrudHelper\EntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class BeforeValidationEvent extends Event
+class OnProcessingStartEvent extends Event
 {
     public function __construct(
-        private mixed            $data,
-        private mixed            $schema,
-        private readonly Request $request
+        private mixed                   $data,
+        private readonly Request        $request,
+        private readonly EntityMetadata $metadata,
     )
     {
     }
@@ -29,19 +30,11 @@ class BeforeValidationEvent extends Event
     }
     
     /**
-     * @return mixed
+     * @return \Saas\Database\CrudHelper\EntityMetadata
      */
-    public function getSchema(): mixed
+    public function getMetadata(): EntityMetadata
     {
-        return $this->schema;
-    }
-    
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function getRequest(): Request
-    {
-        return $this->request;
+        return $this->metadata;
     }
     
     /**
@@ -53,10 +46,10 @@ class BeforeValidationEvent extends Event
     }
     
     /**
-     * @param mixed $schema
+     * @return \Symfony\Component\HttpFoundation\Request
      */
-    public function setSchema(mixed $schema): void
+    public function getRequest(): Request
     {
-        $this->schema = $schema;
+        return $this->request;
     }
 }

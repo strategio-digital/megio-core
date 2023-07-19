@@ -5,18 +5,21 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\CollectionEvent;
+namespace Saas\Event\Collection;
 
 use Saas\Database\CrudHelper\EntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OnProcessingStartEvent extends Event
+class OnProcessingExceptionEvent extends Event
 {
     public function __construct(
         private mixed                   $data,
         private readonly Request        $request,
         private readonly EntityMetadata $metadata,
+        private readonly \Throwable     $exception,
+        private Response                $response,
     )
     {
     }
@@ -30,11 +33,35 @@ class OnProcessingStartEvent extends Event
     }
     
     /**
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+    
+    /**
      * @return \Saas\Database\CrudHelper\EntityMetadata
      */
     public function getMetadata(): EntityMetadata
     {
         return $this->metadata;
+    }
+    
+    /**
+     * @return \Throwable
+     */
+    public function getException(): \Throwable
+    {
+        return $this->exception;
+    }
+    
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
     }
     
     /**
@@ -46,10 +73,10 @@ class OnProcessingStartEvent extends Event
     }
     
     /**
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @param \Symfony\Component\HttpFoundation\Response $response
      */
-    public function getRequest(): Request
+    public function setResponse(Response $response): void
     {
-        return $this->request;
+        $this->response = $response;
     }
 }

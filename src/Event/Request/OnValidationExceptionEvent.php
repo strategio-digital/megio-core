@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\RequestEvent;
+namespace Saas\Event\Request;
 
 use Nette\Schema\ValidationException;
 use Symfony\Component\HttpFoundation\Request;

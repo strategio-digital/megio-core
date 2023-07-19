@@ -13,10 +13,10 @@ use Saas\Database\CrudHelper\CrudException;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
-use Saas\Event\CollectionEvent\OnProcessingExceptionEvent;
-use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
+use Saas\Event\Collection\OnProcessingExceptionEvent;
+use Saas\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateRequest extends BaseCrudRequest

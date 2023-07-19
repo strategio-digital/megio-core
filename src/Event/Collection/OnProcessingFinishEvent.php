@@ -5,20 +5,20 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\CollectionEvent;
+namespace Saas\Event\Collection;
 
 use Saas\Database\CrudHelper\EntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OnProcessingExceptionEvent extends Event
+class OnProcessingFinishEvent extends Event
 {
     public function __construct(
         private mixed                   $data,
         private readonly Request        $request,
         private readonly EntityMetadata $metadata,
-        private readonly \Throwable     $exception,
+        private mixed                   $result,
         private Response                $response,
     )
     {
@@ -49,11 +49,11 @@ class OnProcessingExceptionEvent extends Event
     }
     
     /**
-     * @return \Throwable
+     * @return mixed
      */
-    public function getException(): \Throwable
+    public function getResult(): mixed
     {
-        return $this->exception;
+        return $this->result;
     }
     
     /**
@@ -70,6 +70,14 @@ class OnProcessingExceptionEvent extends Event
     public function setData(mixed $data): void
     {
         $this->data = $data;
+    }
+    
+    /**
+     * @param mixed $result
+     */
+    public function setResult(mixed $result): void
+    {
+        $this->result = $result;
     }
     
     /**

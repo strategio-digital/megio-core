@@ -13,11 +13,12 @@ use Saas\Database\CrudHelper\CrudException;
 use Saas\Database\Entity\EntityException;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
-use Saas\Event\CollectionEvent\OnProcessingExceptionEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingFinishEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
+use Saas\Event\Collection\OnProcessingExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateRequest extends BaseCrudRequest
 {
@@ -64,10 +65,15 @@ class UpdateRequest extends BaseCrudRequest
         
         foreach ($data['rows'] as $row) {
             $dbRow = current(array_filter($rows, fn($db) => $db->getId() === $row['id']));
+            
             if (!$dbRow) {
-                // TODO: how to handle this in event? - Add new event?
-                return $this->error(["Item '{$row['id']}' not found"], 404);
+                $e = new NotFoundHttpException("Item '{$row['id']}' not found");
+                $response = $this->error([$e->getMessage()], 404);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $response;
             }
+            
             try {
                 $this->helper->setUpEntityProps($dbRow, $row['data']);
             } catch (CrudException|EntityException $e) {

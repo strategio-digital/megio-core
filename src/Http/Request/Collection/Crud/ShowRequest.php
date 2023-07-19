@@ -10,9 +10,9 @@ namespace Saas\Http\Request\Collection\Crud;
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\EntityManager;
 use Nette\Schema\Expect;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
-use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
+use Saas\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowRequest extends BaseCrudRequest

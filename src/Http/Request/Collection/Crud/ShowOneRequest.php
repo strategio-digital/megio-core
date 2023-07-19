@@ -11,10 +11,12 @@ use Doctrine\ORM\AbstractQuery;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
-use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingExceptionEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
+use Saas\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ShowOneRequest extends BaseCrudRequest
 {
@@ -51,12 +53,15 @@ class ShowOneRequest extends BaseCrudRequest
         
         $item = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
-        $result = ['item' => $item];
-        
         if (!$item) {
-            // TODO: how to handle this in event? - Add new event?
-            return $this->error(['Item not found'], 404);
+            $e = new NotFoundHttpException("Item '{$data['id']}' not found");
+            $response = $this->error([$e->getMessage()], 404);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $response;
         }
+        
+        $result = ['item' => $item];
         
         if ($data['schema']) {
             $result['schema'] = $meta->getSchema();

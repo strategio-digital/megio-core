@@ -10,10 +10,12 @@ namespace Saas\Http\Request\Collection\Crud;
 use Nette\Schema\Expect;
 use Saas\Database\EntityManager;
 use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Event\CollectionEvent;
-use Saas\Event\CollectionEvent\OnProcessingStartEvent;
-use Saas\Event\CollectionEvent\OnProcessingFinishEvent;
+use Saas\Event\Collection\CollectionEvent;
+use Saas\Event\Collection\OnProcessingExceptionEvent;
+use Saas\Event\Collection\OnProcessingStartEvent;
+use Saas\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteRequest extends BaseCrudRequest
 {
@@ -51,8 +53,11 @@ class DeleteRequest extends BaseCrudRequest
         $diff = $countItems - $countRows;
         
         if ($diff !== 0) {
-            // TODO: how to handle this in event? - Add new event?
-            return $this->error(["{$diff} of {$countItems} items you want to delete already does not exist"], 404);
+            $e = new NotFoundHttpException("{$diff} of {$countItems} items you want to delete already does not exist");
+            $response = $this->error([$e->getMessage()], 404);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $response;
         }
         
         $qb->delete()->getQuery()->execute();

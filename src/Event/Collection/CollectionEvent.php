@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event;
+namespace Saas\Event\Collection;
 
 final class CollectionEvent
 {
