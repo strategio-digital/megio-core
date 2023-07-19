@@ -20,8 +20,7 @@ use Saas\Database\Repository\Auth\ResourceRepository;
 #[ORM\HasLifecycleCallbacks]
 class Resource
 {
-    use TId;
-    use TCreatedAt;
+    use TId, TCreatedAt;
     
     #[ORM\Column(unique: true, nullable: false)]
     private string $name;

@@ -20,9 +20,7 @@ use Saas\Database\Repository\Auth\TokenRepository;
 #[ORM\HasLifecycleCallbacks]
 class Token
 {
-    use TId;
-    use TCreatedAt;
-    use TUpdatedAt;
+    use TId, TCreatedAt, TUpdatedAt;
     
     #[ORM\Column(length: 32, nullable: false)]
     private string $source;

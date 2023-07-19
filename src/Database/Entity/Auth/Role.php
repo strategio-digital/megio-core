@@ -21,8 +21,7 @@ use Saas\Database\Repository\Auth\RoleRepository;
 #[ORM\HasLifecycleCallbacks]
 class Role
 {
-    use TId;
-    use TCreatedAt;
+    use TId, TCreatedAt;
     
     #[ORM\Column(length: 32, unique: true)]
     private string $name;

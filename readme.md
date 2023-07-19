@@ -45,7 +45,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Admin & User login mechanism refactoring
 - 🟢 Make User entity commutable and test it in sandbox project
 - 🟢 Add Collection CRUD events & Application events
-- 🟡 Add JWTAuth mechanism for Routes, Collections, Navbar
+- 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
 - 🟡 Add Navbar resources access (vue composable)
 
 ### 06/2023
