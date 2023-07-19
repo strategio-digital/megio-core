@@ -31,10 +31,7 @@ class ProfileRequest extends Request
             return $this->error(['You are not logged in']);
         }
         
-        $roles = $user->getRoles()->map(fn($role) => [
-            'id' => $role->getId(),
-            'name' => $role->getName()
-        ])->toArray();
+        $roles = $user->getRoles()->map(fn($role) => $role->getName())->toArray();
         
         return $this->json([
             'id' => $user->getId(),
