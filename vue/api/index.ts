@@ -34,10 +34,11 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
     const resp = await fetch(url, info)
     const json = await resp.json()
 
-    if(user && resp.status === 401) {
-        logout()
-        window.location.href = '/'
-    }
+    // TODO: do not logout, but show error alert
+    // if(user && resp.status === 401) {
+    //     logout()
+    //     window.location.href = '/'
+    // }
 
     return {
         success: resp.ok,
