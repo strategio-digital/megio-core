@@ -48,7 +48,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
 - 🟢 Split Login form into Admin & User form
 - 🟡 Add Navbar resources access (vue composable)
-- 🟡 Add Alert system and show alerts on response status > 400 && < 500
+- 🟡 Add Alert system and show alerts on response status 40X
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
