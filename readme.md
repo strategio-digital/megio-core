@@ -48,14 +48,15 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Split Login form into Admin & User form
 - 🟢 Add Alert system and show alerts on response status 40X
 - 🟢 Request Nginx rate limiter & IP address proxy resolver
-- 🟡 Add Navbar resources access (vue composable + hide non-admin stuff)
+- 🟢 Add navbar resources, Vue composable and hide non-admin stuff
+- 🟡 Resource loader from vue router.
+- 🟡 Role access table (Routes, Collections, CollectionsNav, Views)
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
 - 🟢 Extendable (collections) datagrid with global configs
 
 ## Priority
-- 🟡 Role access table (Routes, Collections, CollectionsNav, Views)
 - 🟡 Brainstorm entity mapping via orisai/object-mapper
 - 🟡 Collections edit / update page with custom vue-components
 - 🟡 CRUD request-validation by entity props

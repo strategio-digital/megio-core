@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { hasResource, hasRole } from '@/saas/api/auth/currentUser'
 import { COLLECTION_EMPTY_ROUTE } from '@/saas/components/navbar/types/Constants'
 import Layout from '@/saas/components/layout/Layout.vue'
 import CollectionDatagrid from '@/saas/components/collection/CollectionDatagrid.vue'
@@ -72,17 +73,19 @@ onMounted(async () => {
 
         <template v-slot:navigation>
             <v-list density="comfortable">
-                <v-list-item
-                    v-for="name in collections"
-                    :title="name"
-                    :value="name"
-                    :to="{ name: 'saas.view.collections', params: { name: name }}"
-                    :active="isActive(name)"
-                    :prepend-icon="isActive(name) ? 'mdi-folder-open-outline' : 'mdi-folder-outline'"
-                />
+                <template v-for="name in collections" :key="name">
+                    <v-list-item
+                        v-if="hasResource('saas.collections.nav.' + name)"
+                        :title="name"
+                        :value="name"
+                        :to="{ name: 'saas.view.collections', params: { name: name }}"
+                        :active="isActive(name)"
+                        :prepend-icon="isActive(name) ? 'mdi-folder-open-outline' : 'mdi-folder-outline'"
+                    />
+                </template>
             </v-list>
 
-            <v-btn v-if="!navbarLoading" variant="tonal" class="w-100">
+            <v-btn v-if="!navbarLoading && hasRole('admin')" variant="tonal" class="w-100">
                 Přidat kolekci
             </v-btn>
 

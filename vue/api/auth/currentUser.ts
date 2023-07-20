@@ -31,4 +31,12 @@ export const hasResource = (resource: string): boolean => {
     return currentUserResources().includes(resource)
 }
 
+export const hasAllOfResources = (resources: string[]): boolean => {
+    return resources.every(resource => hasResource(resource))
+}
+
+export const hasAnyOfResources = (resources: string[]): boolean => {
+    return resources.some(resource => hasResource(resource))
+}
+
 export default currentUser

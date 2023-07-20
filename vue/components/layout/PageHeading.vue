@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { hasRole } from '@/saas/api/auth/currentUser'
+
 defineProps<{ breadcrumb: string[] }>()
 const emits = defineEmits<{
     (e: 'onRefresh'): void
@@ -25,7 +27,7 @@ const emits = defineEmits<{
                 </template>
             </v-tooltip>
 
-            <v-tooltip location="top" text="Upravit kolekci" offset="-5">
+            <v-tooltip v-if="hasRole('admin')" location="top" text="Upravit kolekci" offset="-5">
                 <template v-slot:activator="{ props }">
                     <v-btn
                         v-bind="props"

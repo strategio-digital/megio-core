@@ -3,6 +3,7 @@ import { inject, useSlots } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from '@/saas/components/theme/useTheme'
 import { useLogout } from '@/saas/components/user/useLogout'
+import { hasResource } from '@/saas/api/auth/currentUser'
 import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
 
 const props = defineProps<{ loading?: boolean }>()
@@ -39,24 +40,25 @@ const route = useRoute()
             </router-link>
 
             <v-list density="comfortable">
-                <v-tooltip
-                    v-for="nav in navbar.items"
-                    :key="nav.route.name"
-                    location="end"
-                    :text="nav.title"
-                    offset="-5"
-                >
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                            :active="route.path.startsWith(nav.activePrefix)"
-                            :to="nav.route"
-                            :prepend-icon="nav.icon"
-                            :value="nav.route.name"
-                            :title="nav.title"
-                        />
-                    </template>
-                </v-tooltip>
+                <template v-for="nav in navbar.items" :key="nav.route.name">
+                    <v-tooltip
+                        v-if="hasResource(nav.route.name)"
+                        location="end"
+                        :text="nav.title"
+                        offset="-5"
+                    >
+                        <template v-slot:activator="{ props }">
+                            <v-list-item
+                                v-bind="props"
+                                :active="route.path.startsWith(nav.activePrefix)"
+                                :to="nav.route"
+                                :prepend-icon="nav.icon"
+                                :value="nav.route.name"
+                                :title="nav.title"
+                            />
+                        </template>
+                    </v-tooltip>
+                </template>
             </v-list>
 
             <template v-slot:append>
