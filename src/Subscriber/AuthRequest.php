@@ -150,7 +150,7 @@ class AuthRequest implements EventSubscriberInterface
      */
     public function sendError(string $error, int $status = 401): ?Response
     {
-        $this->event->setResponse(new JsonResponse(['errors' => $error], $status));
+        $this->event->setResponse(new JsonResponse(['errors' => [$error]], $status));
         return $this->event->getResponse()?->send();
     }
 }
