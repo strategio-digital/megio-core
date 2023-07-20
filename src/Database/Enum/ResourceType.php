@@ -10,7 +10,7 @@ namespace Saas\Database\Enum;
 enum ResourceType: string
 {
     case ROUTE = 'route';
-    case COLLECTION = 'collection';
+    case COLLECTION_DATA = 'collection.data';
     case COLLECTION_NAV = 'collection.nav';
     case CUSTOM = 'custom';
 }

@@ -45,5 +45,5 @@ return static function (RoutingConfigurator $routes): void {
     
     // Saas metadata
     $meta = $routes->collection()->prefix('/saas/metadata');
-    $meta->add(Router::ROUTE_META_NAVBAR, '/navbar')->methods(['POST'])->controller(Meta\NavbarRequest::class);
+    $meta->add(Router::ROUTE_META_NAVBAR, '/collections/navbar')->methods(['POST'])->controller(Meta\NavbarRequest::class);
 };

@@ -31,6 +31,7 @@ class NavbarRequest extends Request
     public function process(array $data): Response
     {
         $classes = $this->helper->getAllEntities();
+        $classes = array_filter($classes, fn($class) => $class['value'] !== Admin::class);
         $tables = array_map(fn($class) => $class['table'], $classes);
         
         if (!$this->authUser->get() instanceof Admin) {

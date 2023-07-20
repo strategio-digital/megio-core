@@ -73,7 +73,7 @@ class AuthResourceManager
     public function updateCollectionResources(): array
     {
         /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
-        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::COLLECTION->value]);
+        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::COLLECTION_DATA->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
         $collectionNames = $this->generateCollectionResourceNames();
         
@@ -84,7 +84,7 @@ class AuthResourceManager
             if (!in_array($name, $resourceNames)) {
                 $create[] = $name;
                 $resource = new Resource();
-                $resource->setType(ResourceType::COLLECTION);
+                $resource->setType(ResourceType::COLLECTION_DATA);
                 $resource->setName($name);
                 $this->em->persist($resource);
             }
