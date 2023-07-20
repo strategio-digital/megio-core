@@ -3,9 +3,10 @@ import { inject, ref, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/saas/api'
 import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
+import { useToast } from '@/saas/components/toast/useToast'
 
 const props = defineProps<{ loading?: boolean }>()
-
+const toast = useToast();
 const navbar: INavbarSettings | undefined = inject('navbar')
 const slots = useSlots()
 const router = useRouter()
@@ -19,9 +20,10 @@ function changeTheme() {
     localStorage.setItem('strategio_saas_theme', theme.value)
 }
 
-function logout() {
+async function logout() {
     api.auth.logout()
-    router.push({ name: 'Login' })
+    await router.push({ name: 'Login' })
+    toast.add('Právě jste se úspěšně odhlásili', 'warning')
 }
 </script>
 

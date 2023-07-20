@@ -16,6 +16,7 @@ use Saas\Security\JWT\JWTResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
@@ -43,7 +44,7 @@ class AuthRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onRequest(RequestEvent $event): void
+    public function onRequest(RequestEvent $event): ?Response
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -54,20 +55,19 @@ class AuthRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return;
+            return null;
         }
         
         $authHeader = $this->request->headers->get('Authorization');
         
         if (!is_string($authHeader)) {
-            $this->sendErrors(['Invalid or empty Authorization header']);
+            return $this->sendError('Invalid or empty Authorization header');
         }
         
-        /** @var string $authHeader */
         $bearer = trim(str_replace('Bearer', '', $authHeader));
         
         if (!$this->jwt->isTrustedToken($bearer)) {
-            $this->sendErrors(['Invalid or expired token']);
+            return $this->sendError('Invalid or expired token');
         }
         
         $jwt = $this->jwt->parseToken($bearer);
@@ -78,32 +78,31 @@ class AuthRequest implements EventSubscriberInterface
         $tokenId = $claims->get('bearer_token_id');
         
         if (!$tokenId) {
-            $this->sendErrors(['Missing bearer_token_id in JWT token claims']);
+            return $this->sendError('Missing bearer_token_id in JWT token claims');
         }
         
         /** @var \Saas\Database\Entity\Auth\Token|null $token */
         $token = $this->em->getAuthTokenRepo()->findOneBy(['id' => $tokenId]);
         
         if (!$token) {
-            $this->sendErrors(['Unknown JWT token, probably it was revoked']);
+            return $this->sendError('Unknown JWT token, probably it was revoked');
         }
         
         /** @var \Saas\Database\Entity\Auth\Token $token */
         if ($jwt->isExpired(new \DateTime())) {
             $this->em->remove($token);
             $this->em->flush();
-            $this->sendErrors(['JWT token expired']);
+            return $this->sendError('JWT token expired');
         }
         
         $className = $this->crudHelper->getEntityClassName($token->getSource());
         
         if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
-            $this->sendErrors(["For source {$token->getSource()} does not exists IAuthenticable entity"]);
+            return $this->sendError("For source {$token->getSource()} does not exists IAuthenticable entity");
         }
         
         /** @var class-string $className */
         $userRepo = $this->em->getRepository($className);
-        
         
         $qb = $userRepo->createQueryBuilder('User')
             ->addSelect('User')
@@ -121,7 +120,7 @@ class AuthRequest implements EventSubscriberInterface
         $user = $qb->getQuery()->getOneOrNullResult();
         
         if (!$user) {
-            $this->sendErrors(["User does not exist in '{$token->getSource()}' source"]);
+            return $this->sendError("User does not exist in '{$token->getSource()}' source");
         }
         
         /** @var IAuthenticable $user */
@@ -129,7 +128,7 @@ class AuthRequest implements EventSubscriberInterface
         
         
         $claimsResources = $claims->get('user')['resources'];
-        $authResources =  $this->authUser->getResources();
+        $authResources = $this->authUser->getResources();
         
         sort($claimsResources);
         sort($authResources);
@@ -138,17 +137,20 @@ class AuthRequest implements EventSubscriberInterface
         $userResources = implode('|', $authResources);
         
         if ($userResources !== $requestResources) {
-            $this->sendErrors(['User permissions have been changed']);
+            return $this->sendError('User permissions have been changed');
         }
+        
+        return null;
     }
     
     /**
-     * @param string[] $errors
-     * @return void
+     * @param string $error
+     * @param int $status
+     * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function sendErrors(array $errors): void
+    public function sendError(string $error, int $status = 401): ?Response
     {
-        $this->event->setResponse(new JsonResponse(['errors' => $errors], 401));
-        $this->event->getResponse()?->send();
+        $this->event->setResponse(new JsonResponse(['errors' => $error], $status));
+        return $this->event->getResponse()?->send();
     }
 }

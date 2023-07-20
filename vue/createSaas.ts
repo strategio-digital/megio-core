@@ -3,7 +3,6 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 import { App } from 'vue'
-import { createPinia } from 'pinia'
 import { createVuetify } from 'vuetify'
 import { RouteRecordRaw } from 'vue-router'
 import { vuetifyOptions } from '@/saas/plugins/vuetify'
@@ -24,7 +23,6 @@ export type SaasOptions = {
 }
 
 export const createSaas = (options: SaasOptions) => {
-    const pinia = createPinia()
     const vuetify = createVuetify(vuetifyOptions)
     const router = createRouter(options.routes, options.root)
 
@@ -36,7 +34,6 @@ export const createSaas = (options: SaasOptions) => {
             app.provide('datagrid-columns', options.datagrid.columns)
             app.provide('collection-summaries', options.collection.summaries(router))
             app.use(vuetify)
-            app.use(pinia)
             app.use(router)
         }
     }

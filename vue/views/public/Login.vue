@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/saas/components/toast/useToast'
 import api from '@/saas/api'
 
 const props = defineProps<{ source: string, title: string }>()
 
+const toast = useToast()
 const router = useRouter()
 const loading = ref(false)
 const valid = ref()
-const alert = ref()
 
 const schema = ref({
     email: [
@@ -25,19 +26,12 @@ const data = ref({ email: '', password: '' })
 async function onSubmit() {
     if (valid.value) {
         loading.value = true
-        alert.value = ''
 
         const resp = await api.auth.loginByEmail(data.value.email, data.value.password, props.source)
 
-        if (resp.success) {
-            if (resp.data.user.resources?.length === 0 && ! resp.data.user.roles.includes('admin')) {
-                alert.value = 'Nedostatečné oprávnění.'
-            } else {
-                router.push({ name: 'Dashboard' })
-            }
-        } else {
-            console.error(resp.errors)
-            alert.value = 'Nesprávné přihlašovácací údaje.'
+        if (resp.success && (resp.data.user.resources?.length !== 0 || resp.data.user.roles.includes('admin'))) {
+            await router.push({ name: 'Dashboard' })
+            toast.add('Právě jste se úspěšně přihlásili', 'success')
         }
 
         loading.value = false
@@ -54,10 +48,26 @@ async function onSubmit() {
             <div class="w-100 pa-10" style="border-radius: .3rem; background-color: rgba(255,255,255,0.97)">
                 <v-form validate-on="blur" v-model="valid" ref="form" @submit.prevent="onSubmit">
                     <h2>{{ title }}</h2>
-                    <v-text-field label="E-mail" v-model="data.email" :rules="schema.email" />
-                    <v-text-field type="password" label="Heslo" v-model="data.password" :rules="schema.password" />
-                    <v-alert v-if="alert" color="error" icon="$info" class="mb-5">{{ alert }}</v-alert>
-                    <v-btn type="submit" size="large" color="warning" :loading="loading" :disabled="loading">
+                    <v-text-field
+                        autocomplete="email"
+                        label="E-mail"
+                        v-model="data.email"
+                        :rules="schema.email"
+                    />
+                    <v-text-field
+                        autocomplete="current-password"
+                        type="password"
+                        label="Heslo"
+                        v-model="data.password"
+                        :rules="schema.password"
+                    />
+                    <v-btn
+                        type="submit"
+                        size="large"
+                        color="warning"
+                        :loading="loading"
+                        :disabled="loading"
+                    >
                         Přihlásit se
                     </v-btn>
                 </v-form>

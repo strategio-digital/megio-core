@@ -14,6 +14,7 @@ use Saas\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 
 class AuthCollectionRequest implements EventSubscriberInterface
@@ -36,7 +37,7 @@ class AuthCollectionRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onProcess(OnProcessingStartEvent $event): void
+    public function onProcess(OnProcessingStartEvent $event): ?Response
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -47,28 +48,22 @@ class AuthCollectionRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return;
+            return null;
         }
-
+        
         if ($this->authUser->get() instanceof Admin) {
-            return;
+            return null;
         }
         
         $tableName = $event->getMetadata()->tableName;
         $resourceName = $routeName . '.' . $tableName;
         
         if (!in_array($resourceName, $this->authUser->getResources())) {
-            $this->sendErrors(["This collection-resource '{$resourceName}' is not allowed for current user"]);
+            $message = "This collection-resource '{$resourceName}' is not allowed for current user";
+            $response = new JsonResponse(['errors' => [$message]], 401);
+            return $response->send();
         }
-    }
-    
-    /**
-     * @param string[] $errors
-     * @return void
-     */
-    public function sendErrors(array $errors): void
-    {
-        (new JsonResponse(['errors' => $errors], 401))->send();
-        $this->event->stopPropagation();
+        
+        return null;
     }
 }

@@ -12,6 +12,7 @@ use Saas\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
@@ -33,7 +34,7 @@ class AuthRouteRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onRequest(RequestEvent $event): void
+    public function onRequest(RequestEvent $event): ?Response
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -44,25 +45,20 @@ class AuthRouteRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return;
+            return null;
         }
         
         if ($this->authUser->get() instanceof Admin) {
-            return;
+            return null;
         }
         
         if (!in_array($routeName, $this->authUser->getResources())) {
-            $this->sendErrors(["This route-resource '{$routeName}' is not allowed for current user"]);
+            $message = "This route-resource '{$routeName}' is not allowed for current user";
+            $response = new JsonResponse(['errors' => [$message]], 401);
+            $this->event->setResponse($response);
+            return $this->event->getResponse()?->send();
         }
-    }
-    
-    /**
-     * @param string[] $errors
-     * @return void
-     */
-    public function sendErrors(array $errors): void
-    {
-        $this->event->setResponse(new JsonResponse(['errors' => $errors], 401));
-        $this->event->getResponse()?->send();
+        
+        return null;
     }
 }

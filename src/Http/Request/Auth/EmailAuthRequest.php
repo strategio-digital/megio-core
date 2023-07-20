@@ -58,7 +58,7 @@ class EmailAuthRequest extends Request
         $user = $userRepo->findOneBy(['email' => $data['email']]);
         
         if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
-            return $this->error(['Invalid credentials'], 401);
+            return $this->error(['Invalid e-mail or password credentials'], 401);
         }
         
         $token = new Token();

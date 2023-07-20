@@ -12,8 +12,11 @@ import showOne from '@/saas/api/collections/crud/showOne'
 import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
 import navbar from '@/saas/api/collections/meta/navbar'
+import { useToast } from '@/saas/components/toast/useToast'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
+
+const toast = useToast()
 
 const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> => {
     const url = endpoint + uri
@@ -34,11 +37,9 @@ const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> =
     const resp = await fetch(url, info)
     const json = await resp.json()
 
-    // TODO: do not logout, but show error alert
-    // if(user && resp.status === 401) {
-    //     logout()
-    //     window.location.href = '/'
-    // }
+    if (resp.status < 200 || resp.status > 299) {
+        json.errors.map((message: string) => toast.add(message, 'error'))
+    }
 
     return {
         success: resp.ok,
@@ -62,5 +63,5 @@ export default {
         loginByEmail,
         logout,
         revokeToken
-    },
+    }
 }
