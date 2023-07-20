@@ -11,27 +11,26 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/sandbox/readme.md)
 
 ## Core features
-- 🟢&nbsp; Web-ready dev-stack (simple router & Latte templates)
-- 🟢&nbsp; API-ready dev-stack (simple router & UI route permissions editor)
-- 🟢&nbsp; Fully configurable & extendable Vue 3 Admin panel.
-- 🟠&nbsp; Admin panel with UI Doctrine ORM entity builder.
-- 🟠&nbsp; Admin panel with UI datagrid editor based on Doctrine entities.
-- 🟢&nbsp; Vite assets bundler for fast compiling scss, ts, vue, etc.
-- 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
-- 🟢&nbsp; Stateless and scalable architecture for PHP applications.
-- 🟢&nbsp; Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
+- 🟢 Web-ready dev-stack (simple router & Latte templates)
+- 🟢 API-ready dev-stack (simple router & UI route permissions editor)
+- 🟢 Fully configurable & extendable Vue 3 Admin panel.
+- 🟠 Admin panel with UI datagrid editor based on Doctrine entities.
+- 🟢 Vite assets bundler for fast compiling scss, ts, vue, etc.
+- 🟢 One click deployment with Dockerfile and easypanel.io.
+- 🟢 Stateless and scalable architecture for PHP applications.
+- 🟢 Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
 
 ## Backend features
-- 🟢&nbsp; JWT Auth with route resources protection.
-- 🟢&nbsp; Requests validation by Nette\Schema.
-- 🟢&nbsp; Symfony events & event subscribers for a lot of stuff.
-- 🟢&nbsp; Fully integrated Doctrine ORM.
-- 🟢&nbsp; Symfony Http\Kernel for handling requests.
-- 🟢&nbsp; File storage with AWS S3 adapter.
-- 🟢&nbsp; Tracy\Debugger with AWS S3 logger adapter.
-- 🟢&nbsp; Custom extensions with Nette\DI\Extensions.
-- 🟢&nbsp; Custom Symfony console commands.
-- 🟢&nbsp; PHPStan static analysis on level 8.
+- 🟢 JWT Auth with route resources protection.
+- 🟢 Requests validation by Nette\Schema.
+- 🟢 Symfony events & event subscribers for a lot of stuff.
+- 🟢 Fully integrated Doctrine ORM.
+- 🟢 Symfony Http\Kernel for handling requests.
+- 🟢 File storage with AWS S3 adapter.
+- 🟢 Tracy\Debugger with AWS S3 logger adapter.
+- 🟢 Custom extensions with Nette\DI\Extensions.
+- 🟢 Custom Symfony console commands.
+- 🟢 PHPStan static analysis on level 8.
 
 ## Changelog
 
@@ -49,7 +48,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Split Login form into Admin & User form
 - 🟢 Add Alert system and show alerts on response status 40X
 - 🟢 Request Nginx rate limiter & IP address proxy resolver
-- 🟡 Add Navbar resources access (vue composable)
+- 🟡 Add Navbar resources access (vue composable + hide non-admin stuff)
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
