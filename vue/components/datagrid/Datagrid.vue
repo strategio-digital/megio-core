@@ -12,6 +12,7 @@ import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
 import UnknownRenderer from '@/saas/components/datagrid/column/native/UnknownRenderer.vue'
 import { useTheme } from '@/saas/components/theme/useTheme'
+import { tr } from 'vuetify/locale'
 
 defineExpose({ refresh })
 
@@ -21,7 +22,8 @@ const props = defineProps<{
     bulkActions: IDatagridAction[]
     rowActions: IDatagridAction[]
     loadFunction: (pagination: IPagination) => Promise<IResp>
-    allowActionsFiltering?: boolean
+    allowActionsFiltering?: boolean,
+    loading?: boolean
 }>()
 
 const emits = defineEmits<{
@@ -205,7 +207,7 @@ onUpdated(() => resolveMultiselect())
                     </div>
 
                     <!-- bulk actions -->
-                    <v-menu>
+                    <v-menu v-if="loading === false">
                         <template v-slot:activator="{ props }">
                             <v-btn
                                 v-bind="props"
@@ -244,7 +246,7 @@ onUpdated(() => resolveMultiselect())
 
                 <!-- datagrid settings -->
                 <th class="text-right">
-                    <v-menu :close-on-content-click="false">
+                    <v-menu :close-on-content-click="false" v-if="loading === false">
                         <template v-slot:activator="{ props }">
                             <v-btn
                                 icon="mdi-dots-vertical"
@@ -328,7 +330,7 @@ onUpdated(() => resolveMultiselect())
 
                 <!-- row actions -->
                 <td class=" text-right text-no-wrap">
-                    <v-menu>
+                    <v-menu v-if="loading === false">
                         <template v-slot:activator="{ props }">
                             <v-btn icon="mdi-chevron-down" v-bind="props" size="small" variant="plain"></v-btn>
                         </template>

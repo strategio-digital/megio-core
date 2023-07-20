@@ -52,7 +52,7 @@ function handleFirstColumnClick(row: IRow) {
 
 <template>
     <div class="h-100" v-show="!loading">
-        <PageHeading :breadcrumb="['Nastavení', tableName]" @onRefresh="() => datagrid.refresh()" />
+        <PageHeading v-if="!loading" :breadcrumb="['Nastavení', tableName]" @onRefresh="() => datagrid.refresh()" />
         <Datagrid
             v-if="actions"
             ref="datagrid"
@@ -63,6 +63,7 @@ function handleFirstColumnClick(row: IRow) {
             :bulkActions="actions.bulk"
             :allowActionsFiltering="true"
             :defaultItemsPerPage="15"
+            :loading="loading"
             emptyDataMessage="Tato kolekce je prázdná."
             @onFirstColumnClick="handleFirstColumnClick"
         />
