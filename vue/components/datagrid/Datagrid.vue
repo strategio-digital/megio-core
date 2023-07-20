@@ -11,6 +11,7 @@ import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSetting
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
 import BulkAction from '@/saas/components/datagrid/action/BulkAction.vue'
 import UnknownRenderer from '@/saas/components/datagrid/column/native/UnknownRenderer.vue'
+import { useTheme } from '@/saas/components/theme/useTheme'
 
 defineExpose({ refresh })
 
@@ -33,6 +34,7 @@ const emits = defineEmits<{
 
 
 const router = useRouter()
+const { isDark } = useTheme();
 const modalRenderers: IDatagridSettings['modals'] | undefined = inject('datagrid-modals')
 const columnRenderers: IDatagridSettings['columns'] | undefined = inject('datagrid-columns')
 
@@ -236,7 +238,7 @@ onUpdated(() => resolveMultiselect())
                 <!-- dynamic column names -->
                 <template v-for="col in columnFields" :key="col.name">
                     <th :class="[['bool', 'boolean'].includes(col.type) ? 'text-center' : 'text-start']">
-                        {{ col.name.toUpperCase() }}
+                        {{ col.name.replace(/([A-Z]+)*([A-Z][a-z])/g, "$1 $2").toUpperCase() }}
                     </th>
                 </template>
 
@@ -305,7 +307,7 @@ onUpdated(() => resolveMultiselect())
                 <template v-for="(col, colIdx) in columnFields" :key="col.name + '_' + item.id">
                     <td
                         class="text-no-wrap"
-                        :class="{'text-indigo-accent-2 text-decoration-underline' : colIdx === 0}"
+                        :class="{'text-grey' : isDark && colIdx !== 0, 'text-indigo-accent-2 text-decoration-underline' : colIdx === 0}"
                         :style="{cursor: colIdx === 0 ? 'pointer' : undefined}"
                         @click.prevent="colIdx === 0 && onFirstColumnClick(item)"
                     >

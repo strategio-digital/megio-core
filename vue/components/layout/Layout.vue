@@ -1,30 +1,26 @@
 <script lang="ts" setup>
-import { inject, ref, useSlots } from 'vue'
+import { inject, useSlots } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/saas/api'
-import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
 import { useToast } from '@/saas/components/toast/useToast'
+import { useTheme } from '@/saas/components/theme/useTheme'
+import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
+import api from '@/saas/api'
 
 const props = defineProps<{ loading?: boolean }>()
-const toast = useToast();
 const navbar: INavbarSettings | undefined = inject('navbar')
+
+const { theme, switchTheme } = useTheme()
+const toast = useToast();
 const slots = useSlots()
 const router = useRouter()
 const route = useRoute()
-
-const themeStorage = localStorage.getItem('strategio_saas_theme')
-const theme = ref(themeStorage || 'light')
-
-function changeTheme() {
-    theme.value = theme.value === 'light' ? 'dark' : 'light'
-    localStorage.setItem('strategio_saas_theme', theme.value)
-}
 
 async function logout() {
     api.auth.logout()
     await router.push({ name: 'Login' })
     toast.add('Právě jste se úspěšně odhlásili', 'warning')
 }
+
 </script>
 
 <template>
@@ -77,7 +73,7 @@ async function logout() {
                         <template v-slot:activator="{ props }">
                             <v-list-item
                                 v-bind="props"
-                                @click="changeTheme"
+                                @click="switchTheme"
                                 :prepend-icon="theme === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'"
                                 :title="theme === 'light' ? 'Tmavý režim' : 'Světlý režim'"
                                 value="theme"
