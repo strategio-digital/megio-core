@@ -32,6 +32,8 @@ async function onSubmit() {
         if (resp.success && (resp.data.user.resources?.length !== 0 || resp.data.user.roles.includes('admin'))) {
             await router.push({ name: 'Dashboard' })
             toast.add('Právě jste se úspěšně přihlásili', 'success')
+        } else if (resp.success) {
+            toast.add('Nemáte dostatečná oprávnění pro přihlášení', 'error')
         }
 
         loading.value = false
