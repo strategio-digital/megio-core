@@ -64,7 +64,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
 - 🟠 MultiFile uploader
 - 🟠 Admin datagrid + CRUD
-- 🟠 Make some docs (inspire by [docusaurus.io](https://docusaurus.io/))
+- 🟠 Make some docs (inspired by [docusaurus.io](https://docusaurus.io/))
+- 🟠 Custom page components (inspired by Strapi.io)
 - 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
 
 ## Backlog
