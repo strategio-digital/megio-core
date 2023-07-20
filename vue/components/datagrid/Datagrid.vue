@@ -237,7 +237,7 @@ onUpdated(() => resolveMultiselect())
 
                 <!-- dynamic column names -->
                 <template v-for="col in columnFields" :key="col.name">
-                    <th :class="[['bool', 'boolean'].includes(col.type) ? 'text-center' : 'text-start']">
+                    <th :class="[['bool', 'boolean'].includes(col.type) ? 'text-center' : 'text-start']" class="text-body-2">
                         {{ col.name.replace(/([A-Z]+)*([A-Z][a-z])/g, "$1 $2").toUpperCase() }}
                     </th>
                 </template>
@@ -293,7 +293,7 @@ onUpdated(() => resolveMultiselect())
             <tbody>
             <tr v-for="item in data.items">
                 <!-- checkbox for bulk actions -->
-                <td>
+                <td :class="{'text-grey' : isDark, 'text-grey-darken-3' : !isDark }">
                     <v-checkbox
                         v-model="selected"
                         :value="item"
@@ -306,7 +306,7 @@ onUpdated(() => resolveMultiselect())
                 <!-- dynamic column values -->
                 <template v-for="(col, colIdx) in columnFields" :key="col.name + '_' + item.id">
                     <td
-                        class="text-no-wrap"
+                        class="text-no-wrap text-body-2"
                         :class="{'text-grey' : isDark && colIdx !== 0, 'text-indigo-accent-2 text-decoration-underline' : colIdx === 0}"
                         :style="{cursor: colIdx === 0 ? 'pointer' : undefined}"
                         @click.prevent="colIdx === 0 && onFirstColumnClick(item)"
