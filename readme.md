@@ -19,7 +19,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢&nbsp; Vite assets bundler for fast compiling scss, ts, vue, etc.
 - 🟢&nbsp; One click deployment with Dockerfile and easypanel.io.
 - 🟢&nbsp; Stateless and scalable architecture for PHP applications.
-- 🟢&nbsp; Optimized image for maximum memory savings (about 20Mb costs)
+- 🟢&nbsp; Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
 
 ## Backend features
 - 🟢&nbsp; JWT Auth with route resources protection.
