@@ -47,8 +47,9 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add Collection CRUD events & Application events
 - 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
 - 🟢 Split Login form into Admin & User form
+- 🟢 Add Alert system and show alerts on response status 40X
+- 🟠 Request Nginx rate limiter & IP address proxy resolver
 - 🟡 Add Navbar resources access (vue composable)
-- 🟡 Add Alert system and show alerts on response status 40X
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
@@ -70,8 +71,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
+- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 Scheduled database backups to S3 & log dashboard
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
@@ -80,7 +81,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Print composer.json & package.json version in admin panel
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
 - 🟠 Extension (Simple cart + GoPay)
-- 🟠 Request Nginx rate limiter & IP address proxy resolver
 - 🟠 Make intro videos (for developers & for administrators)
 
 ### Make some automatic tests
