@@ -76,7 +76,7 @@ onMounted(async () => {
                     v-for="name in collections"
                     :title="name"
                     :value="name"
-                    :to="{ name: 'Collections', params: { name: name }}"
+                    :to="{ name: 'saas.view.collections', params: { name: name }}"
                     :active="isActive(name)"
                     :prepend-icon="isActive(name) ? 'mdi-folder-open-outline' : 'mdi-folder-outline'"
                 />

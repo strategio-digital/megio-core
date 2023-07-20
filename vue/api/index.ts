@@ -15,7 +15,6 @@ import navbar from '@/saas/api/collections/meta/navbar'
 import { useToast } from '@/saas/components/toast/useToast'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
-
 const toast = useToast()
 
 const fetchApi = async (uri: string, options: RequestInit): Promise<IResponse> => {

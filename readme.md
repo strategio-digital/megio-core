@@ -55,7 +55,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Extendable (collections) datagrid with global configs
 
 ## Priority
-- 🟡 Role access table (Routes, Collections, Navbar)
+- 🟡 Role access table (Routes, Collections, CollectionsNav, Views)
 - 🟡 Brainstorm entity mapping via orisai/object-mapper
 - 🟡 Collections edit / update page with custom vue-components
 - 🟡 CRUD request-validation by entity props
@@ -91,9 +91,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - API endpoints tests
 - Doctrine schema-validation
 
-## Tutorials
-**TODO Beginner:**
-
+## Make some tutorials
 1. How to start new project and create first collections.
 2. How to handle request and render collection data in Latte template.
 3. How to handle API requests and send example e-mail.

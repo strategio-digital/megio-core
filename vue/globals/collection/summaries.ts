@@ -11,7 +11,7 @@ const summaries = (router: Router): ICollectionSummary[] => {
         // {
         //     collectionName: 'admin',
         //     onFirstColumnClick: (collection: string, row: IRow) => router.push({
-        //         name: 'Admins'
+        //         name: 'saas.view.settings.admins'
         //         //params: { id: row.id }
         //     })
         // }

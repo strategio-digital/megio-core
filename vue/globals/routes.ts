@@ -7,50 +7,55 @@ import { RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'Login',
+        name: 'saas.view.login',
         props: { source: 'user', title: 'Přihlášení' },
         component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Login.vue')
     },
     {
         path: '/admin',
-        name: 'AdminLogin',
+        name: 'saas.view.admin.login',
         props: { source: 'admin', title: 'Admin přihlášení' },
         component: () => import(/* webpackChunkName: "public" */ '@/saas/views/public/Login.vue')
     },
     {
         path: '/dashboard',
-        name: 'Dashboard',
+        name: 'saas.view.dashboard',
         component: () => import(/* webpackChunkName: "dashboard" */ '@/saas/views/Dashboard.vue')
     },
     {
         path: '/collections/:name',
-        name: 'Collections',
+        name: 'saas.view.collections',
         component: () => import(/* webpackChunkName: "collections" */ '@/saas/views/Collections.vue')
     },
     {
         path: '/settings',
-        name: 'Application',
+        name: 'saas.view.application',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Application.vue')
     },
     {
         path: '/settings/roles',
-        name: 'Roles',
+        name: 'saas.view.settings.roles',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Roles.vue')
     },
     {
         path: '/settings/admins',
-        name: 'Admins',
+        name: 'saas.view.settings.admins',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Admins.vue')
     },
     {
         path: '/settings/emails',
-        name: 'Emails',
+        name: 'saas.view.settings.emails',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Emails.vue')
     },
     {
         path: '/settings/storage',
-        name: 'Storage',
+        name: 'saas.view.settings.storage',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Storage.vue')
+    },
+    {
+        path: '/401',
+        name: 'saas.view.401',
+        component: () => import(/* webpackChunkName: "errors" */ '@/saas/views/error/401.vue')
     }
 ]
 

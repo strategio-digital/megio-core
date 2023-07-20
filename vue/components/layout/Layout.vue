@@ -1,25 +1,17 @@
 <script lang="ts" setup>
 import { inject, useSlots } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useToast } from '@/saas/components/toast/useToast'
+import { useRoute } from 'vue-router'
 import { useTheme } from '@/saas/components/theme/useTheme'
+import { useLogout } from '@/saas/components/user/useLogout'
 import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
-import api from '@/saas/api'
 
 const props = defineProps<{ loading?: boolean }>()
 const navbar: INavbarSettings | undefined = inject('navbar')
 
 const { theme, switchTheme } = useTheme()
-const toast = useToast();
+const { logout } = useLogout()
 const slots = useSlots()
-const router = useRouter()
 const route = useRoute()
-
-async function logout() {
-    api.auth.logout()
-    await router.push({ name: 'Login' })
-    toast.add('Právě jste se úspěšně odhlásili', 'warning')
-}
 
 </script>
 

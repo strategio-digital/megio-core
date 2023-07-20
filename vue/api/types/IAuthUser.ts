@@ -10,6 +10,6 @@ export interface IAuthUser {
         id: string
         email: string
         roles: string[]
-        resources: string[]|null
+        resources: string[]
     }
 }

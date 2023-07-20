@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { IRow } from '@/saas/api/types/IRow'
+import { useToast } from '@/saas/components/toast/useToast'
 import api from '@/saas/api'
 
 const props = defineProps<{
@@ -8,6 +9,8 @@ const props = defineProps<{
     rows: IRow[],
     collection: string
 }>()
+
+const toast = useToast()
 
 const loading = ref(false)
 
@@ -19,10 +22,14 @@ const emits = defineEmits<{
 async function handleAccept() {
     loading.value = true
 
-    await api.collections.remove({
+    const resp = await api.collections.remove({
         table: props.collection,
         ids: props.rows.map(row => row.id)
     })
+
+    if (resp.success) {
+        toast.add('Položka byla úspěšně odstraněna', 'warning')
+    }
 
     loading.value = false
     emits('onAccept')

@@ -10,7 +10,7 @@ import { COLLECTION_EMPTY_ROUTE } from '@/saas/components/navbar/types/Constants
 const navbar: INavbarSettings = {
     brand: {
         title: 'Strategio SaaS',
-        routeName: 'Dashboard',
+        routeName: 'saas.view.dashboard',
         logo
     },
     items: [
@@ -19,7 +19,7 @@ const navbar: INavbarSettings = {
             activePrefix: '/dashboard',
             icon: 'mdi-view-dashboard',
             route: {
-                name: 'Dashboard'
+                name: 'saas.view.dashboard'
             }
         },
         {
@@ -27,7 +27,7 @@ const navbar: INavbarSettings = {
             activePrefix: '/collections',
             icon: 'mdi-database',
             route: {
-                name: 'Collections',
+                name: 'saas.view.collections',
                 params: {
                     name: COLLECTION_EMPTY_ROUTE
                 }
@@ -38,7 +38,7 @@ const navbar: INavbarSettings = {
             activePrefix: '/settings',
             icon: 'mdi-hammer-screwdriver',
             route: {
-                name: 'Application'
+                name: 'saas.view.application'
             }
         }
     ]
