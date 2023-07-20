@@ -48,7 +48,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
 - 🟢 Split Login form into Admin & User form
 - 🟢 Add Alert system and show alerts on response status 40X
-- 🟠 Request Nginx rate limiter & IP address proxy resolver
+- 🟢 Request Nginx rate limiter & IP address proxy resolver
 - 🟡 Add Navbar resources access (vue composable)
 
 ### 06/2023
