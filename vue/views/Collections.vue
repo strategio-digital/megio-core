@@ -89,11 +89,7 @@ onMounted(async () => {
                 Přidat kolekci
             </v-btn>
 
-            <div
-                class="d-flex justify-center align-center"
-                style="height: calc(100% - 2rem)"
-                v-if="navbarLoading"
-            >
+            <div class="d-flex" v-if="navbarLoading">
                 <v-progress-circular indeterminate :size="30" :width="3" />
             </div>
         </template>

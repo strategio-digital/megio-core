@@ -5,9 +5,9 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
-import { IShowOneParams } from '@/saas/api/types/IShowOneParams'
-import { IRow } from '@/saas/api/types/IRow'
-import { ISchema } from '@/saas/api/types/ISchema'
+import { IShowOneParams } from '@/saas/api/collections/types/IShowOneParams'
+import { IRow } from '@/saas/api/collections/types/IRow'
+import { ISchema } from '@/saas/api/collections/types/ISchema'
 
 export interface IResp extends IResponse {
     data: IRow | any,

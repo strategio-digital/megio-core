@@ -1,26 +1,30 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { GroupedResourcesWithRoles, Resource } from '@/saas/api/resurces/show'
+import { useToast } from '@/saas/components/toast/useToast'
+import { IResource } from '@/saas/api/resurces/types/IResource'
+import { IGroupedResourcesWithRoles } from '@/saas/api/resurces/types/IGroupedResourcesWithRoles'
+import { IResp as IRespShow } from '@/saas/api/resurces/show'
+import { IResp as IRespUpdate } from '@/saas/api/resurces/update'
 import Layout from '@/saas/components/layout/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import api from '@/saas/api'
 
 const router = useRouter()
+const toast = useToast();
 
 const loading = ref(true)
-const resources = ref<Resource[]>([])
+const resources = ref<IResource[]>([])
 const roles = ref<string[]>([])
-const groupedResourcesWithRoles = ref<GroupedResourcesWithRoles[]>([])
-
+const groupedResourcesWithRoles = ref<IGroupedResourcesWithRoles[]>([])
 const routes = ref<string[]>(router.getRoutes().map(route => route.name as string))
 
-const routesToAdd = computed((): string[] => {
+const resourcesToAdd = computed((): string[] => {
     const dbResources = resources.value.map(resource => resource.name)
     return routes.value.filter(name => ! dbResources.includes(name))
 })
 
-const routesToRemove = computed((): string[] => {
+const resourcesToRemove = computed((): string[] => {
     return resources.value.filter(resource =>
         ! routes.value.includes(resource.name) && resource.type === 'router.vue')
     .map(value => value.name)
@@ -28,21 +32,28 @@ const routesToRemove = computed((): string[] => {
 
 const badgeText = computed((): string | null => {
     let result = ''
-    if (routesToAdd.value.length) result += '+' + routesToAdd.value.length
-    if (routesToAdd.value.length && routesToRemove.value.length) result += ' / '
-    if (routesToRemove.value.length) result += '-' + routesToRemove.value.length
+    if (resourcesToAdd.value.length) result += '+' + resourcesToAdd.value.length
+    if (resourcesToAdd.value.length && resourcesToRemove.value.length) result += ' | '
+    if (resourcesToRemove.value.length) result += '-' + resourcesToRemove.value.length
     return result === '' ? null : result
 })
 
+function unwrapResponse(resp: IRespShow|IRespUpdate) {
+    groupedResourcesWithRoles.value = resp.data.grouped_resources_with_roles
+    resources.value = resp.data.resources
+    roles.value = resp.data.roles
+}
+
+async function updateResources() {
+    loading.value = true;
+    const resp = await api.resources.updateViewResources(resourcesToAdd.value, resourcesToRemove.value)
+    if(resp.success) unwrapResponse(resp);
+    loading.value = false;
+}
+
 onMounted(async () => {
     const resp = await api.resources.show()
-
-    if (resp.success) {
-        groupedResourcesWithRoles.value = resp.data.grouped_resources_with_roles
-        resources.value = resp.data.resources
-        roles.value = resp.data.roles
-    }
-
+    if (resp.success) unwrapResponse(resp)
     loading.value = false
 })
 </script>
@@ -58,7 +69,7 @@ onMounted(async () => {
                         <v-btn variant="tonal" prepend-icon="mdi-plus" class="ms-3">
                             Nová role
                         </v-btn>
-                        <v-btn variant="tonal" color="red" v-if="badgeText" class="ms-3">
+                        <v-btn v-if="badgeText" @click="updateResources" variant="tonal" color="red"  class="ms-3">
                             <v-badge
                                 :content="badgeText"
                                 color="red"
@@ -73,14 +84,14 @@ onMounted(async () => {
                 <v-alert v-if="badgeText" color="red" variant="tonal" border="start" icon="$warning" class="mt-5">
                     Upravili jste položky ve vue-routeru. Je tedy potřeba aktualizovat vaše
                     view-resources. To provedete kliknutím na tlačítko "aktualizovat".
-                    <div class="mt-3 text-green" v-if="routesToAdd.length">
-                        <span class="font-weight-bold">[+{{ routesToAdd.length }}]: </span>
-                        {{ routesToAdd.join(' | ') }}
+                    <div class="mt-3 text-green" v-if="resourcesToAdd.length">
+                        <span class="font-weight-bold">[+{{ resourcesToAdd.length }}]: </span>
+                        {{ resourcesToAdd.join(' | ') }}
                     </div>
 
-                    <div class="mt-3 text-red" v-if="routesToRemove.length">
-                        <span class="font-weight-bold">[-{{ routesToRemove.length }}]: </span>
-                        {{ routesToRemove.join(' | ') }}
+                    <div class="mt-3 text-red" v-if="resourcesToRemove.length">
+                        <span class="font-weight-bold">[-{{ resourcesToRemove.length }}]: </span>
+                        {{ resourcesToRemove.join(' | ') }}
                     </div>
                 </v-alert>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { IRow } from '@/saas/api/types/IRow'
+import { IRow } from '@/saas/api/collections/types/IRow'
 import { useToast } from '@/saas/components/toast/useToast'
 import api from '@/saas/api'
 
@@ -38,7 +38,7 @@ async function handleAccept() {
 </script>
 
 <template>
-    <v-dialog v-model="props.open" :max-width="500" scrollable persistent>
+    <v-dialog v-model="props.open" :max-width="500" :scrollable="true" :persistent="true">
         <v-card>
             <v-card-title class="text-h5 mt-3 px-5 pt-5 pb-0">
                 Odstranit položk{{ rows.length === 1 ? 'u' : 'y' }}

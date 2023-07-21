@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue'
-import { IPagination } from '@/saas/api/types/IPagination'
+import { IPagination } from '@/saas/api/collections/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import { IRow } from '@/saas/api/types/IRow'
+import { IRow } from '@/saas/api/collections/types/IRow'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import ICollectionSummary from '@/saas/components/collection/types/ICollectionSummary'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IRow } from '@/saas/api/types/IRow'
+import { IRow } from '@/saas/api/collections/types/IRow'
 import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 
 defineProps<{ row: IRow, rowAction: IDatagridAction }>()

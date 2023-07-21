@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { IRow } from '@/saas/api/types/IRow'
-import { ISchema } from '@/saas/api/types/ISchema'
-import { ISchemaProp } from '@/saas/api/types/ISchemaProp'
+import { IRow } from '@/saas/api/collections/types/IRow'
+import { ISchema } from '@/saas/api/collections/types/ISchema'
+import { ISchemaProp } from '@/saas/api/collections/types/ISchemaProp'
 
 const props = defineProps<{
     value: any

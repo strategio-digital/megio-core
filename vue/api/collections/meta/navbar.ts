@@ -6,7 +6,7 @@
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
 
-interface IResp extends IResponse {
+export interface IResp extends IResponse {
     data: {
         items: string[]
     }

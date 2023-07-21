@@ -5,7 +5,7 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
-import { IRemoveParams } from '@/saas/api/types/IRemoveParams'
+import { IRemoveParams } from '@/saas/api/collections/types/IRemoveParams'
 
 export interface IResp extends IResponse {
     data: {

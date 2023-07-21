@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, inject } from 'vue'
 import { IResp } from '@/saas/api/collections/crud/show'
-import { IRow } from '@/saas/api/types/IRow'
-import { IPagination } from '@/saas/api/types/IPagination'
+import { IRow } from '@/saas/api/collections/types/IRow'
+import { IPagination } from '@/saas/api/collections/types/IPagination'
 import Layout from '@/saas/components/layout/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import PageHeading from '@/saas/components/layout/PageHeading.vue'

@@ -5,10 +5,10 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
-import { IShowParams } from '@/saas/api/types/IShowParams'
-import { IRow } from '@/saas/api/types/IRow'
-import { IPagination } from '@/saas/api/types/IPagination'
-import { ISchema } from '@/saas/api/types/ISchema'
+import { IShowParams } from '@/saas/api/collections/types/IShowParams'
+import { IRow } from '@/saas/api/collections/types/IRow'
+import { IPagination } from '@/saas/api/collections/types/IPagination'
+import { ISchema } from '@/saas/api/collections/types/ISchema'
 
 export interface IResp extends IResponse {
     data: {

@@ -2,10 +2,10 @@
 import { Component as VueComponent, ComputedRef } from 'vue'
 import { ref, onUpdated, onMounted, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { IRow } from '@/saas/api/types/IRow'
-import { IPagination } from '@/saas/api/types/IPagination'
+import { IRow } from '@/saas/api/collections/types/IRow'
+import { IPagination } from '@/saas/api/collections/types/IPagination'
 import { IResp } from '@/saas/api/collections/crud/show'
-import { ISchemaProp } from '@/saas/api/types/ISchemaProp'
+import { ISchemaProp } from '@/saas/api/collections/types/ISchemaProp'
 import IDatagridAction from '@/saas/components/datagrid/types/IDatagridAction'
 import IDatagridSettings from '@/saas/components/datagrid/types/IDatagridSettings'
 import RowAction from '@/saas/components/datagrid/action/RowAction.vue'
@@ -191,7 +191,7 @@ onUpdated(() => resolveMultiselect())
         />
 
         <!-- table -->
-        <v-table density="default" hover v-if="data.items.length && data.schema">
+        <v-table density="default" :hover="true" v-if="data.items.length && data.schema">
             <thead>
             <tr class="text-no-wrap">
                 <!-- bulk actions -->

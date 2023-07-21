@@ -42,7 +42,7 @@ async function onSubmit() {
 </script>
 
 <template>
-    <div class="d-flex justify-center align-center w-100 h-100 bg-gradient-blue">
+    <div class="d-flex justify-center align-center w-100 h-100 bg-gradient-blue px-5">
         <div class="w-100 position-relative" style="max-width: 450px">
             <div v-if="source === 'admin'" class="text-center position-absolute" style="right: 20px; bottom: -30px">
                 <img src="@/saas/assets/img/strategio.svg" height="100" width="100" alt="Strategio SaaS">

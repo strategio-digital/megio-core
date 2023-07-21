@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import api from '@/saas/api'
-import { IUser } from '@/saas/api/types/IUser'
+import { IUser } from '@/saas/api/auth/types/IUser'
 import useFormBuilder from '@/saas/composables/form/useFormBuilder'
 import FormFields from '@/saas/components/form/FormFields.vue'
 

@@ -18,7 +18,7 @@ const route = useRoute()
 
 <template>
     <v-app :theme="theme">
-        <v-navigation-drawer v-if="navbar" permanent rail rail-width="86">
+        <v-navigation-drawer v-if="navbar" :permanent="true" :rail="true" rail-width="86">
             <router-link
                 :to="{ name: navbar.brand.routeName }"
                 class="ps-2 mb-4 mt-3 d-flex text-no-wrap align-center text-decoration-none"
@@ -91,22 +91,19 @@ const route = useRoute()
         </v-navigation-drawer>
 
         <template v-if="slots.navigation">
-            <v-navigation-drawer permanent>
+            <v-navigation-drawer :permanent="true">
                 <slot name="navigation"></slot>
             </v-navigation-drawer>
         </template>
 
-        <v-main>
-            <div class="position-relative w-100 h-100">
-                <div
-                    :class="[theme, props.loading || 'invisible']"
-                    style="z-index: 10"
-                    class="position-absolute w-100 h-100 d-flex justify-center align-center bg-overlay"
-                >
-                    <v-progress-circular indeterminate :size="50" :width="5" />
-                </div>
-                <slot><h1>...</h1></slot>
+        <v-main :scrollable="true">
+            <div :class="[theme, props.loading || 'invisible']"
+                 style="z-index: 10; top: 0; bottom: 0; left: 0; right: 0; height: 100vh"
+                 class="position-absolute w-100 d-flex bg-overlay"
+            >
+                <v-progress-circular indeterminate :size="30" :width="3" class="mt-8 ms-7" />
             </div>
+            <slot><h1>...</h1></slot>
         </v-main>
     </v-app>
 </template>

@@ -13,6 +13,7 @@ import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
 import navbar from '@/saas/api/collections/meta/navbar'
 import showResources from '@/saas/api/resurces/show'
+import updateViewResources from '@/saas/api/resurces/update'
 import { useToast } from '@/saas/components/toast/useToast'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
@@ -63,6 +64,7 @@ export default {
         revokeToken
     },
     resources: {
-        show: showResources
+        show: showResources,
+        updateViewResources
     }
 }

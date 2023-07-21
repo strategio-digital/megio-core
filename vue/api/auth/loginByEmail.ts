@@ -5,7 +5,7 @@
 
 import api from '@/saas/api'
 import { IResponse } from '@/saas/api/types/IResponse'
-import { IAuthUser } from '@/saas/api/types/IAuthUser'
+import { IAuthUser } from '@/saas/api/auth/types/IAuthUser'
 
 interface IResp extends IResponse {
     data: IAuthUser
