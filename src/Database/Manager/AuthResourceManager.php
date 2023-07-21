@@ -33,7 +33,7 @@ class AuthResourceManager
     public function updateRouteResources(): array
     {
         /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
-        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::ROUTE->value]);
+        $resources = $this->em->getAuthResourceRepo()->findBy(['type' => ResourceType::ROUTER->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
         $routeNames = array_keys($this->routes->all());
         
@@ -44,7 +44,7 @@ class AuthResourceManager
             if (!in_array($name, $resourceNames)) {
                 $create[] = $name;
                 $resource = new Resource();
-                $resource->setType(ResourceType::ROUTE);
+                $resource->setType(ResourceType::ROUTER);
                 $resource->setName($name);
                 $this->em->persist($resource);
             }

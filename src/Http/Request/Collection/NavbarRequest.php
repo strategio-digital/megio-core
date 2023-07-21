@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection\Meta;
+namespace Saas\Http\Request\Collection;
 
 use Saas\Database\CrudHelper\CrudHelper;
 use Saas\Database\Entity\Admin;

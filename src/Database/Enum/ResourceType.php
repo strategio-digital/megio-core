@@ -9,7 +9,8 @@ namespace Saas\Database\Enum;
 
 enum ResourceType: string
 {
-    case ROUTE = 'route';
+    case ROUTER = 'router';
+    case ROUTER_VUE = 'router.vue';
     case COLLECTION_DATA = 'collection.data';
     case COLLECTION_NAV = 'collection.nav';
     case CUSTOM = 'custom';

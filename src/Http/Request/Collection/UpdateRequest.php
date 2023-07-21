@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection\Crud;
+namespace Saas\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Nette\Schema\Expect;

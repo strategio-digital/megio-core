@@ -3,13 +3,12 @@
 use Saas\Helper\Router;
 use Saas\Http\Controller\AppController;
 use Saas\Http\Request\Auth as Auth;
-use Saas\Http\Request\Collection\Crud as Crud;
-use Saas\Http\Request\Collection\Meta as Meta;
+use Saas\Http\Request\Collection as Collection;
 use Saas\Http\Request\Admin as Admin;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
-    // Admin app
+    // App
     $routes->add(Router::ROUTE_APP, '/app{uri}')
         ->methods(['GET'])
         ->controller([AppController::class, 'app'])
@@ -30,20 +29,26 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Auth\EmailAuthRequest::class)
         ->options(['auth' => false]);
     
-    // User extra
+    // Admin
     $user = $routes->collection('saas.admin.')->prefix('/saas/admin');
     $user->add('profile', '/profile')->methods(['POST'])->controller(Admin\ProfileRequest::class);
     $user->add('avatar', '/avatar')->methods(['POST'])->controller(Admin\UploadAvatarRequest::class);
     
-    // Saas collections
+    // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');
-    $collection->add('show', '/show')->methods(['POST'])->controller(Crud\ShowRequest::class);
-    $collection->add('show-one', '/show-one')->methods(['POST'])->controller(Crud\ShowOneRequest::class);
-    $collection->add('create', '/create')->methods(['POST'])->controller(Crud\CreateRequest::class);
-    $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Crud\DeleteRequest::class);
-    $collection->add('update', '/update')->methods(['PATCH'])->controller(Crud\UpdateRequest::class);
+    $collection->add('show', '/show')->methods(['POST'])->controller(Collection\ShowRequest::class);
+    $collection->add('show-one', '/show-one')->methods(['POST'])->controller(Collection\ShowOneRequest::class);
+    $collection->add('create', '/create')->methods(['POST'])->controller(Collection\CreateRequest::class);
+    $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Collection\DeleteRequest::class);
+    $collection->add('update', '/update')->methods(['PATCH'])->controller(Collection\UpdateRequest::class);
     
-    // Saas metadata
-    $meta = $routes->collection()->prefix('/saas/metadata');
-    $meta->add(Router::ROUTE_META_NAVBAR, '/collections/navbar')->methods(['POST'])->controller(Meta\NavbarRequest::class);
+    // Collections navbar
+    $routes->add(Router::ROUTE_META_NAVBAR, '/saas/collections/navbar')
+        ->methods(['POST'])
+        ->controller(Collection\NavbarRequest::class);
+    
+    // Resources
+    $routes->add('saas.resources.show', '/saas/resources/show')
+        ->methods(['POST'])
+        ->controller(\Saas\Http\Request\Resource\ShowAllRequest::class);
 };

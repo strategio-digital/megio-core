@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection\Crud;
+namespace Saas\Http\Request\Collection;
 
 use Doctrine\ORM\AbstractQuery;
 use Nette\Schema\Expect;

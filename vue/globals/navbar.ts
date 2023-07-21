@@ -38,7 +38,7 @@ const navbar: INavbarSettings = {
             activePrefix: '/settings',
             icon: 'mdi-hammer-screwdriver',
             route: {
-                name: 'saas.view.application'
+                name: 'saas.view.settings.application'
             }
         }
     ]

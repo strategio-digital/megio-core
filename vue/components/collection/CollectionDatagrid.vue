@@ -52,7 +52,7 @@ function handleFirstColumnClick(row: IRow) {
 
 <template>
     <div class="h-100" v-show="!loading">
-        <PageHeading v-if="!loading" :breadcrumb="['Nastavení', tableName]" @onRefresh="() => datagrid.refresh()" />
+        <PageHeading v-if="!loading" :breadcrumb="['Kolekce', tableName]" @onRefresh="() => datagrid.refresh()" />
         <Datagrid
             v-if="actions"
             ref="datagrid"

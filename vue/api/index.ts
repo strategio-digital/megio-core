@@ -12,6 +12,7 @@ import showOne from '@/saas/api/collections/crud/showOne'
 import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
 import navbar from '@/saas/api/collections/meta/navbar'
+import showResources from '@/saas/api/resurces/show'
 import { useToast } from '@/saas/components/toast/useToast'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
@@ -52,9 +53,7 @@ export default {
     collections: {
         show,
         showOne,
-        remove
-    },
-    metadata: {
+        remove,
         navbar
     },
     auth: {
@@ -62,5 +61,8 @@ export default {
         loginByEmail,
         logout,
         revokeToken
+    },
+    resources: {
+        show: showResources
     }
 }

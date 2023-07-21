@@ -29,13 +29,13 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/settings',
-        name: 'saas.view.application',
+        name: 'saas.view.settings.application',
         component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Application.vue')
     },
     {
-        path: '/settings/roles',
-        name: 'saas.view.settings.roles',
-        component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Roles.vue')
+        path: '/settings/resources',
+        name: 'saas.view.settings.resources',
+        component: () => import(/* webpackChunkName: "settings" */ '@/saas/views/settings/Resources.vue')
     },
     {
         path: '/settings/admins',

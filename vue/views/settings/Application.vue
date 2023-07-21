@@ -7,7 +7,7 @@ import SettingNav from '@/saas/components/navbar/SettingNav.vue'
     <Layout>
         <template v-slot:default>
             <div class="pa-7">
-                <v-breadcrumbs :items="['Nastavení', 'Aplikace']" class="pa-0" style="font-size: 1.4rem" />
+                <v-breadcrumbs :items="['Aplikace']" class="pa-0" style="font-size: 1.4rem" />
                 <p class="mt-5">Todo: ...</p>
             </div>
         </template>

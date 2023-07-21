@@ -53,7 +53,7 @@ class AuthRouteRequest implements EventSubscriberInterface
         }
         
         if (!in_array($routeName, $this->authUser->getResources())) {
-            $message = "This route-resource '{$routeName}' is not allowed for current user";
+            $message = "This router-resource '{$routeName}' is not allowed for current user";
             $response = new JsonResponse(['errors' => [$message]], 401);
             $this->event->setResponse($response);
             return $this->event->getResponse()?->send();

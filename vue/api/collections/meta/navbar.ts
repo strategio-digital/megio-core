@@ -13,7 +13,7 @@ interface IResp extends IResponse {
 }
 
 const navbar = async (): Promise<IResp> => {
-    const resp = await api.fetch(`saas/metadata/collections/navbar`, { method: 'POST' })
+    const resp = await api.fetch(`saas/collections/navbar`, { method: 'POST' })
     return { ...resp, data: resp.data }
 }
 
