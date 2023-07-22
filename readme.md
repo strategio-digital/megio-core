@@ -49,7 +49,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add Alert system and show alerts on response status 40X
 - 🟢 Request Nginx rate limiter & IP address proxy resolver
 - 🟢 Add navbar resources, Vue composable and hide non-admin stuff
-- 🟡 Resource loader from vue router.
+- 🟢 Resource loader from vue router & resource auto-update.
 - 🟡 Role access table (Routes, Collections, CollectionsNav, Views)
 
 ### 06/2023
@@ -88,9 +88,10 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - Phpstan
 - Nette tester / PHP Unit
 - Vulnerability audits
-- Console commands tests
-- API endpoints tests
+- Cors tests from another domain
 - Doctrine schema-validation
+- API endpoints tests
+- Sandbox project deploy (easypanel project with webhook)
 
 ## Make some tutorials
 1. How to start new project and create first collections.

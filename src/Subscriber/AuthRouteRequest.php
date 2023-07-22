@@ -34,7 +34,7 @@ class AuthRouteRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onRequest(RequestEvent $event): ?Response
+    public function onRequest(RequestEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -45,20 +45,18 @@ class AuthRouteRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return null;
+            return;
         }
         
         if ($this->authUser->get() instanceof Admin) {
-            return null;
+            return;
         }
         
         if (!in_array($routeName, $this->authUser->getResources())) {
             $message = "This router-resource '{$routeName}' is not allowed for current user";
             $response = new JsonResponse(['errors' => [$message]], 401);
+            $this->event->stopPropagation();
             $this->event->setResponse($response);
-            return $this->event->getResponse()?->send();
         }
-        
-        return null;
     }
 }

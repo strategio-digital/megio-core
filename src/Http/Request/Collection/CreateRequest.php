@@ -47,7 +47,11 @@ class CreateRequest extends BaseCrudRequest
         }
         
         $event = new OnProcessingStartEvent($data, $this->request, $meta);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
+        }
         
         $ids = [];
         
@@ -62,8 +66,8 @@ class CreateRequest extends BaseCrudRequest
             } catch (CrudException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-                return $response;
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
             }
         }
         
@@ -76,8 +80,8 @@ class CreateRequest extends BaseCrudRequest
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
             $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-            return $response;
+            $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $dispatcher->getResponse();
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
@@ -91,8 +95,8 @@ class CreateRequest extends BaseCrudRequest
         $response = $this->json($result);
         
         $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
-        return $response;
+        return $dispatcher->getResponse();
     }
 }

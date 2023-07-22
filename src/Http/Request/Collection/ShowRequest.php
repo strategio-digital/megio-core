@@ -44,7 +44,11 @@ class ShowRequest extends BaseCrudRequest
         }
         
         $event = new OnProcessingStartEvent($data, $this->request, $meta);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
+        }
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -77,8 +81,8 @@ class ShowRequest extends BaseCrudRequest
         $response = $this->json($result);
         
         $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
-        return $response;
+        return $dispatcher->getResponse();
     }
 }

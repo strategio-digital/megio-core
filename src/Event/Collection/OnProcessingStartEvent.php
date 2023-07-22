@@ -9,10 +9,13 @@ namespace Saas\Event\Collection;
 
 use Saas\Database\CrudHelper\EntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class OnProcessingStartEvent extends Event
 {
+    protected ?Response $response = null;
+    
     public function __construct(
         private mixed                   $data,
         private readonly Request        $request,
@@ -51,5 +54,21 @@ class OnProcessingStartEvent extends Event
     public function getRequest(): Request
     {
         return $this->request;
+    }
+    
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response|null
+     */
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+    
+    /**
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     */
+    public function setResponse(Response $response): void
+    {
+        $this->response = $response;
     }
 }

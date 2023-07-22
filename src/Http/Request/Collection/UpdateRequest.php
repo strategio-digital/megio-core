@@ -50,7 +50,11 @@ class UpdateRequest extends BaseCrudRequest
         }
         
         $event = new OnProcessingStartEvent($data, $this->request, $meta);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
+        }
         
         $ids = array_map(fn($row) => $row['id'], $data['rows']);
         
@@ -70,8 +74,8 @@ class UpdateRequest extends BaseCrudRequest
                 $e = new NotFoundHttpException("Item '{$row['id']}' not found");
                 $response = $this->error([$e->getMessage()], 404);
                 $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-                return $response;
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
             }
             
             try {
@@ -79,8 +83,8 @@ class UpdateRequest extends BaseCrudRequest
             } catch (CrudException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-                $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-                return $response;
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
             }
         }
         
@@ -93,8 +97,8 @@ class UpdateRequest extends BaseCrudRequest
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
             $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-            return $response;
+            $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $dispatcher->getResponse();
         } catch (\Exception $e) {
             $this->em->rollback();
             throw $e;
@@ -108,8 +112,8 @@ class UpdateRequest extends BaseCrudRequest
         $response = $this->json($result);
         
         $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
-        return $response;
+        return $dispatcher->getResponse();
     }
 }

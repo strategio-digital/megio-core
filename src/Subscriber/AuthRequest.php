@@ -44,7 +44,7 @@ class AuthRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onRequest(RequestEvent $event): ?Response
+    public function onRequest(RequestEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -55,19 +55,21 @@ class AuthRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return null;
+            return;
         }
         
         $authHeader = $this->request->headers->get('Authorization');
         
         if (!is_string($authHeader)) {
-            return $this->sendError('Invalid or empty Authorization header');
+            $this->sendError('Invalid or empty Authorization header');
+            return;
         }
         
         $bearer = trim(str_replace('Bearer', '', $authHeader));
         
         if (!$this->jwt->isTrustedToken($bearer)) {
-            return $this->sendError('Invalid or expired token');
+            $this->sendError('Invalid or expired token');
+            return;
         }
         
         $jwt = $this->jwt->parseToken($bearer);
@@ -78,27 +80,31 @@ class AuthRequest implements EventSubscriberInterface
         $tokenId = $claims->get('bearer_token_id');
         
         if (!$tokenId) {
-            return $this->sendError('Missing bearer_token_id in JWT token claims');
+            $this->sendError('Missing bearer_token_id in JWT token claims');
+            return;
         }
         
         /** @var \Saas\Database\Entity\Auth\Token|null $token */
         $token = $this->em->getAuthTokenRepo()->findOneBy(['id' => $tokenId]);
         
         if (!$token) {
-            return $this->sendError('Unknown JWT token, probably it was revoked');
+            $this->sendError('Unknown JWT token, probably it was revoked');
+            return;
         }
         
         /** @var \Saas\Database\Entity\Auth\Token $token */
         if ($jwt->isExpired(new \DateTime())) {
             $this->em->remove($token);
             $this->em->flush();
-            return $this->sendError('JWT token expired');
+            $this->sendError('JWT token expired');
+            return;
         }
         
         $className = $this->crudHelper->getEntityClassName($token->getSource());
         
         if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
-            return $this->sendError("For source {$token->getSource()} does not exists IAuthenticable entity");
+            $this->sendError("For source {$token->getSource()} does not exists IAuthenticable entity");
+            return;
         }
         
         /** @var class-string $className */
@@ -120,12 +126,12 @@ class AuthRequest implements EventSubscriberInterface
         $user = $qb->getQuery()->getOneOrNullResult();
         
         if (!$user) {
-            return $this->sendError("User does not exist in '{$token->getSource()}' source");
+            $this->sendError("User does not exist in '{$token->getSource()}' source");
+            return;
         }
         
         /** @var IAuthenticable $user */
         $this->authUser->setAuthUser($user);
-        
         
         $claimsResources = $claims->get('user')['resources'];
         $authResources = $this->authUser->getResources();
@@ -137,20 +143,17 @@ class AuthRequest implements EventSubscriberInterface
         $userResources = implode('|', $authResources);
         
         if ($userResources !== $requestResources) {
-            return $this->sendError('User permissions have been changed');
+            $this->sendError('User permissions have been changed');
         }
-        
-        return null;
     }
     
     /**
      * @param string $error
      * @param int $status
-     * @return \Symfony\Component\HttpFoundation\Response|null
      */
-    public function sendError(string $error, int $status = 401): ?Response
+    public function sendError(string $error, int $status = 401): void
     {
         $this->event->setResponse(new JsonResponse(['errors' => [$error]], $status));
-        return $this->event->getResponse()?->send();
+        $this->event->stopPropagation();
     }
 }

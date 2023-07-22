@@ -37,7 +37,7 @@ class AuthCollectionRequest implements EventSubscriberInterface
         ];
     }
     
-    public function onProcess(OnProcessingStartEvent $event): ?Response
+    public function onProcess(OnProcessingStartEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -48,11 +48,11 @@ class AuthCollectionRequest implements EventSubscriberInterface
         $currentRoute = $this->routes->get($routeName);
         
         if ($currentRoute->getOption('auth') === false) {
-            return null;
+            return;
         }
         
         if ($this->authUser->get() instanceof Admin) {
-            return null;
+            return;
         }
         
         $tableName = $event->getMetadata()->tableName;
@@ -60,10 +60,7 @@ class AuthCollectionRequest implements EventSubscriberInterface
         
         if (!in_array($resourceName, $this->authUser->getResources())) {
             $message = "This collection-resource '{$resourceName}' is not allowed for current user";
-            $response = new JsonResponse(['errors' => [$message]], 401);
-            return $response->send();
+            $this->event->setResponse(new JsonResponse(['errors' => [$message]], 401));
         }
-        
-        return null;
     }
 }

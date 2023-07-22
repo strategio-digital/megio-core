@@ -40,7 +40,11 @@ class DeleteRequest extends BaseCrudRequest
         }
         
         $event = new OnProcessingStartEvent($data, $this->request, $meta);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
+        }
         
         $repo = $this->em->getRepository($meta->className);
         
@@ -56,8 +60,8 @@ class DeleteRequest extends BaseCrudRequest
             $e = new NotFoundHttpException("{$diff} of {$countItems} items you want to delete already does not exist");
             $response = $this->error([$e->getMessage()], 404);
             $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
-            $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-            return $response;
+            $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            return $dispatcher->getResponse();
         }
         
         $qb->delete()->getQuery()->execute();
@@ -70,8 +74,8 @@ class DeleteRequest extends BaseCrudRequest
         $response = $this->json($result);
         
         $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
-        $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
-        return $response;
+        return $dispatcher->getResponse();
     }
 }
