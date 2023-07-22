@@ -10,8 +10,17 @@ namespace Saas\Database\Enum;
 enum ResourceType: string
 {
     case ROUTER = 'router';
-    case ROUTER_VUE = 'router.vue';
+    case ROUTER_VIEW = 'router.view';
     case COLLECTION_DATA = 'collection.data';
     case COLLECTION_NAV = 'collection.nav';
-    case CUSTOM = 'custom';
+    
+    public function getResourcesMethodName(): string {
+        // Method names in AuthResourceManager
+        return match($this) {
+            self::ROUTER => 'routerResources',
+            self::ROUTER_VIEW => 'routerViewResources',
+            self::COLLECTION_DATA => 'collectionDataResources',
+            self::COLLECTION_NAV => 'collectionNavResources',
+        };
+    }
 }

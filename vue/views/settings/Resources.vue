@@ -2,57 +2,54 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/saas/components/toast/useToast'
-import { IResource } from '@/saas/api/resurces/types/IResource'
-import { IGroupedResourcesWithRoles } from '@/saas/api/resurces/types/IGroupedResourcesWithRoles'
-import { IResp as IRespShow } from '@/saas/api/resurces/show'
-import { IResp as IRespUpdate } from '@/saas/api/resurces/update'
+import { IResource } from '@/saas/api/resources/types/IResource'
+import { IGroupedResourcesWithRoles } from '@/saas/api/resources/types/IGroupedResourcesWithRoles'
+import { IResp as IRespShow } from '@/saas/api/resources/show'
+import { IResp as IRespUpdate } from '@/saas/api/resources/updateRole'
+import { IRole } from '@/saas/api/resources/types/IRole'
+import { IResourceDiff } from '@/saas/api/resources/types/IResourceDiff'
 import Layout from '@/saas/components/layout/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
 import api from '@/saas/api'
 
 const router = useRouter()
-const toast = useToast();
+const toast = useToast()
 
 const loading = ref(true)
 const resources = ref<IResource[]>([])
 const roles = ref<string[]>([])
 const groupedResourcesWithRoles = ref<IGroupedResourcesWithRoles[]>([])
+const resourceDiff = ref<IResourceDiff>()
 const routes = ref<string[]>(router.getRoutes().map(route => route.name as string))
 
-const resourcesToAdd = computed((): string[] => {
-    const dbResources = resources.value.map(resource => resource.name)
-    return routes.value.filter(name => ! dbResources.includes(name))
+const badgeText = computed((): number => {
+    return ((resourceDiff.value?.to_create.length || 0) + (resourceDiff.value?.to_remove.length || 0))
 })
 
-const resourcesToRemove = computed((): string[] => {
-    return resources.value.filter(resource =>
-        ! routes.value.includes(resource.name) && resource.type === 'router.vue')
-    .map(value => value.name)
-})
-
-const badgeText = computed((): string | null => {
-    let result = ''
-    if (resourcesToAdd.value.length) result += '+' + resourcesToAdd.value.length
-    if (resourcesToAdd.value.length && resourcesToRemove.value.length) result += ' | '
-    if (resourcesToRemove.value.length) result += '-' + resourcesToRemove.value.length
-    return result === '' ? null : result
-})
-
-function unwrapResponse(resp: IRespShow|IRespUpdate) {
+function unwrapResponse(resp: IRespShow | IRespUpdate) {
     groupedResourcesWithRoles.value = resp.data.grouped_resources_with_roles
+    resourceDiff.value = resp.data.resources_diff
     resources.value = resp.data.resources
     roles.value = resp.data.roles
 }
 
-async function updateResources() {
-    loading.value = true;
-    const resp = await api.resources.updateViewResources(resourcesToAdd.value, resourcesToRemove.value)
-    if(resp.success) unwrapResponse(resp);
-    loading.value = false;
+async function update() {
+    loading.value = true
+    const resp = await api.resources.update(routes.value)
+    if (resp.success) unwrapResponse(resp)
+    loading.value = false
+    toast.add('Aktualizace resources proběhla úspěšně', 'success')
+}
+
+async function updateRole(role: IRole, resource: IResource) {
+    const resp = await api.resources.updateRole(role.id, resource.id, role.enabled)
+    if (resp.success) {
+        toast.add('Změna oprávnění proběhla úspěšně', 'success')
+    }
 }
 
 onMounted(async () => {
-    const resp = await api.resources.show()
+    const resp = await api.resources.show(routes.value)
     if (resp.success) unwrapResponse(resp)
     loading.value = false
 })
@@ -69,8 +66,9 @@ onMounted(async () => {
                         <v-btn variant="tonal" prepend-icon="mdi-plus" class="ms-3">
                             Nová role
                         </v-btn>
-                        <v-btn v-if="badgeText" @click="updateResources" variant="tonal" color="red"  class="ms-3">
+                        <v-btn @click="update" variant="tonal" color="red" class="ms-3">
                             <v-badge
+                                v-if="badgeText"
                                 :content="badgeText"
                                 color="red"
                                 offset-y="-22"
@@ -81,17 +79,20 @@ onMounted(async () => {
                     </div>
                 </div>
 
-                <v-alert v-if="badgeText" color="red" variant="tonal" border="start" icon="$warning" class="mt-5">
-                    Upravili jste položky ve vue-routeru. Je tedy potřeba aktualizovat vaše
-                    view-resources. To provedete kliknutím na tlačítko "aktualizovat".
-                    <div class="mt-3 text-green" v-if="resourcesToAdd.length">
-                        <span class="font-weight-bold">[+{{ resourcesToAdd.length }}]: </span>
-                        {{ resourcesToAdd.join(' | ') }}
+                <v-alert color="red" variant="tonal" border="start" icon="$warning" class="mt-5" v-if="badgeText !== 0">
+                    <div>
+                        Upravili jste položky routeru. Je tedy potřeba aktualizovat vaše
+                        resources. To provedete kliknutím na tlačítko "aktualizovat".
                     </div>
 
-                    <div class="mt-3 text-red" v-if="resourcesToRemove.length">
-                        <span class="font-weight-bold">[-{{ resourcesToRemove.length }}]: </span>
-                        {{ resourcesToRemove.join(' | ') }}
+                    <div class="mt-3 text-green" v-if="resourceDiff?.to_create.length">
+                        <span class="font-weight-bold">[+{{ resourceDiff?.to_create.length }}]: </span>
+                        {{ resourceDiff?.to_create.join(' | ') }}
+                    </div>
+
+                    <div class="mt-3 text-red" v-if="resourceDiff?.to_remove.length">
+                        <span class="font-weight-bold">[-{{ resourceDiff?.to_remove.length }}]: </span>
+                        {{ resourceDiff?.to_remove.join(' | ') }}
                     </div>
                 </v-alert>
 
@@ -117,7 +118,12 @@ onMounted(async () => {
                                 />
                             </td>
                             <td v-for="role in resource.roles" :key="role.id">
-                                <v-checkbox class="d-flex justify-center" color="primary" :model-value="role.enabled" />
+                                <v-checkbox
+                                    class="d-flex justify-center"
+                                    color="primary"
+                                    v-model="role.enabled"
+                                    @change="updateRole(role, resource)"
+                                />
                             </td>
                         </tr>
                         </tbody>

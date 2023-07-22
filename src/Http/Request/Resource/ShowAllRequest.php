@@ -7,32 +7,37 @@ declare(strict_types=1);
 
 namespace Saas\Http\Request\Resource;
 
+use Nette\Schema\Expect;
 use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\Entity\Auth\Role;
 use Saas\Database\EntityManager;
+use Saas\Database\Enum\ResourceType;
+use Saas\Database\Manager\AuthResourceManager;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowAllRequest extends Request
 {
-    public function __construct(protected EntityManager $em)
+    public function __construct(protected EntityManager $em, protected AuthResourceManager $manager)
     {
     }
     
     public function schema(): array
     {
-        return [];
+        return [
+            'view_resources' => Expect::arrayOf('string')
+        ];
     }
     
     public function process(array $data): Response
     {
         /** @var \Saas\Database\Entity\Auth\Resource[] $allResources */
-        $allResources = $this->em->getAuthResourceRepo()->findAll();
+        $allResources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
         
         /** @var \Saas\Database\Entity\Auth\Role[] $roles */
         $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
             ->select('Role', 'Resource')
-            ->join('Role.resources', 'Resource')
+            ->leftJoin('Role.resources', 'Resource')
             ->getQuery()
             ->getResult();
         
@@ -56,6 +61,8 @@ class ShowAllRequest extends Request
             $groups[$resource['type']][] = $resource;
         }
         
+        $diff = $this->manager->updateResources(false, $data['view_resources'], ...ResourceType::cases());
+        
         return $this->json([
             'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
             'resources' => array_map(fn(Resource $resource) => [
@@ -63,7 +70,11 @@ class ShowAllRequest extends Request
                 'name' => $resource->getName(),
                 'type' => $resource->getType()
             ], $allResources),
-            'grouped_resources_with_roles' => $groups
+            'grouped_resources_with_roles' => $groups,
+            'resources_diff' => [
+                'to_create' => $diff['created'],
+                'to_remove' => $diff['removed'],
+            ]
         ]);
     }
 }

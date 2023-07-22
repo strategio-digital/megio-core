@@ -5,6 +5,7 @@ use Saas\Http\Controller\AppController;
 use Saas\Http\Request\Auth as Auth;
 use Saas\Http\Request\Collection as Collection;
 use Saas\Http\Request\Admin as Admin;
+use Saas\Http\Request\Resource as Resource;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 return static function (RoutingConfigurator $routes): void {
@@ -48,7 +49,8 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Collection\NavbarRequest::class);
     
     // Resources
-    $routes->add('saas.resources.show', '/saas/resources/show')
-        ->methods(['POST'])
-        ->controller(\Saas\Http\Request\Resource\ShowAllRequest::class);
+    $resources = $routes->collection('saas.resources.')->prefix('/saas/resources');
+    $resources->add('show', '/show')->methods(['POST'])->controller(Resource\ShowAllRequest::class);
+    $resources->add('update', '/update')->methods(['POST'])->controller(Resource\UpdateResourceRequest::class);
+    $resources->add('update.role', '/update-role')->methods(['POST'])->controller(Resource\UpdateRoleRequest::class);
 };

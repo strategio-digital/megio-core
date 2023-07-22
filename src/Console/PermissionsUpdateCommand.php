@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Saas\Console;
 
+use Saas\Database\Enum\ResourceType;
 use Saas\Database\Manager\AuthResourceManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -23,23 +24,23 @@ class PermissionsUpdateCommand extends Command
     
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $routes = $this->manager->updateRouteResources();
-        $collections = $this->manager->updateCollectionResources();
-        $navbar = $this->manager->updateCollectionNavResources();
+        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::ROUTER_VIEW);
+        $result = $this->manager->updateResources(true, [], ...$types);
         
-        $created = array_merge($routes['created'], $collections['created'], $navbar['created']);
-        $removed = array_merge($routes['removed'], $collections['removed'], $navbar['removed']);
-        
-        foreach ($created as $resource) {
+        foreach ($result['created'] as $resource) {
             $output->writeln("<info>Resource '{$resource}' created.</info>");
         }
         
-        foreach ($removed as $resource) {
+        foreach ($result['removed'] as $resource) {
             $output->writeln("<comment>Resource '{$resource}' removed.</comment>");
         }
         
-        if (count($created) + count($removed) === 0) {
-            $output->writeln('<comment>No resources for creation or remove.</comment>');
+        $diffCount = count($result['created']) + count($result['removed']);
+        
+        if ($diffCount === 0) {
+            $output->writeln('<comment>No resources for update.</comment>');
+        } else {
+            $output->writeln("<info>Updated {$diffCount} resources.</info>");
         }
         
         return Command::SUCCESS;

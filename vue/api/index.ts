@@ -3,7 +3,6 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  */
 
-import { IResponse } from '@/saas/api/types/IResponse'
 import loginByEmail from '@/saas/api/auth/loginByEmail'
 import logout from '@/saas/api/auth/logout'
 import currentUser from '@/saas/api/auth/currentUser'
@@ -12,8 +11,11 @@ import showOne from '@/saas/api/collections/crud/showOne'
 import remove from '@/saas/api/collections/crud/remove'
 import revokeToken from '@/saas/api/auth/revokeToken'
 import navbar from '@/saas/api/collections/meta/navbar'
-import showResources from '@/saas/api/resurces/show'
-import updateViewResources from '@/saas/api/resurces/update'
+import showResources from '@/saas/api/resources/show'
+import updateResources from '@/saas/api/resources/update'
+import updateRole from '@/saas/api/resources/updateRole'
+
+import { IResponse } from '@/saas/api/types/IResponse'
 import { useToast } from '@/saas/components/toast/useToast'
 
 const endpoint = (import.meta as any).env.DEV ? 'http://localhost:8090/' : '/'
@@ -65,6 +67,7 @@ export default {
     },
     resources: {
         show: showResources,
-        updateViewResources
+        update: updateResources,
+        updateRole
     }
 }

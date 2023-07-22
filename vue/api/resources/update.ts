@@ -4,28 +4,29 @@
  */
 
 import { IResponse } from '@/saas/api/types/IResponse'
+import { IResource } from '@/saas/api/resources/types/IResource'
+import { IGroupedResourcesWithRoles } from '@/saas/api/resources/types/IGroupedResourcesWithRoles'
+import { IResourceDiff } from '@/saas/api/resources/types/IResourceDiff'
 import api from '@/saas/api'
-import { IResource } from '@/saas/api/resurces/types/IResource'
-import { IGroupedResourcesWithRoles } from '@/saas/api/resurces/types/IGroupedResourcesWithRoles'
 
 export interface IResp extends IResponse {
     data: {
         roles: string[],
         resources: IResource[],
         grouped_resources_with_roles: IGroupedResourcesWithRoles[],
+        resources_diff: IResourceDiff
     }
 }
 
-const updateViewResources = async (addResources: string[], removeResources: string[]): Promise<IResp> => {
-    const resp = await api.fetch(`saas/resources/update-view-resources`, {
+const update = async (viewResources: string[]): Promise<IResp> => {
+    const resp = await api.fetch(`saas/resources/update`, {
         method: 'POST',
         body: JSON.stringify({
-            addResources,
-            removeResources
+            view_resources: viewResources
         })
     })
 
     return { ...resp, data: resp.data }
 }
 
-export default updateViewResources
+export default update

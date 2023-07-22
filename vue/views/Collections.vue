@@ -75,7 +75,7 @@ onMounted(async () => {
             <v-list density="comfortable">
                 <template v-for="name in collections" :key="name">
                     <v-list-item
-                        v-if="hasResource('saas.collections.nav.' + name)"
+                        v-if="hasResource('saas.collection.nav.' + name)"
                         :title="name"
                         :value="name"
                         :to="{ name: 'saas.view.collections', params: { name: name }}"
