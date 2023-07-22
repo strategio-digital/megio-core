@@ -39,8 +39,6 @@ class CorsRequest implements EventSubscriberInterface
             if ($headers) {
                 $response->headers->set('Access-Control-Allow-Headers', $headers);
             }
-            
-            $this->forceHeadersOnlyInDevelopmentModeBecauseOfTracy($event->getRequest());
         }
     }
     
@@ -57,7 +55,6 @@ class CorsRequest implements EventSubscriberInterface
         if (Request::METHOD_OPTIONS === $method) {
             $response = new Response();
             $event->setResponse($response);
-            $this->forceHeadersOnlyInDevelopmentModeBecauseOfTracy($event->getRequest());
         }
     }
     
@@ -77,28 +74,6 @@ class CorsRequest implements EventSubscriberInterface
         
         if ($headers) {
             $response->headers->set('Access-Control-Allow-Headers', $headers);
-        }
-        
-        $this->forceHeadersOnlyInDevelopmentModeBecauseOfTracy($event->getRequest());
-    }
-    
-    
-    /*
-     * Cannot be written as pure SymfonyResponse - it's important to use header() function.
-     * Because of Tracy/Debugger overrides these headers hardcoded.
-     */
-    private function forceHeadersOnlyInDevelopmentModeBecauseOfTracy(Request $request): void
-    {
-        if ($_ENV['APP_ENV_MODE'] === 'develop') {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Credentials: true');
-            header('Access-Control-Allow-Methods: *');
-            
-            $headers = $request->headers->get('Access-Control-Request-Headers');
-            
-            if ($headers) {
-                header('Access-Control-Allow-Headers: ' . $headers);
-            }
         }
     }
 }

@@ -82,7 +82,7 @@ class App
         }
         
         // Remember: Tracy overrides Response headers!
-        if ($_ENV['APP_ENV_MODE'] === 'develop' && !$response instanceof JsonResponse) {
+        if ($_ENV['APP_ENV_MODE'] === 'develop' && !$response instanceof JsonResponse && !$this->request->isMethod('OPTIONS')) {
             Debugger::renderLoader();
         }
         
