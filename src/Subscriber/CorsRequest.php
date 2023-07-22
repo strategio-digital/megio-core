@@ -9,10 +9,7 @@ namespace Saas\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Tracy\Debugger;
 
 class CorsRequest implements EventSubscriberInterface
 {
