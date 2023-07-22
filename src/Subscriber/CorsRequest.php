@@ -8,15 +8,18 @@ declare(strict_types=1);
 namespace Saas\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Tracy\Debugger;
 
-class CorsResponse implements EventSubscriberInterface
+class CorsRequest implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['onRequest']
+            KernelEvents::FINISH_REQUEST => ['onFinishRequest']
         ];
     }
     
@@ -24,7 +27,7 @@ class CorsResponse implements EventSubscriberInterface
      * Cannot be written as pure SymfonyResponse - it's important to use header() function.
      * Because of Tracy/Debugger overrides these headers hardcoded.
      */
-    public function onRequest(RequestEvent $event): void
+    public function onFinishRequest(FinishRequestEvent $event): void
     {
         $request = $event->getRequest();
         
