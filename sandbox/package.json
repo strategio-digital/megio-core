@@ -5,6 +5,6 @@
     "build": "vue-tsc && vite build"
   },
   "dependencies": {
-    "strategio-saas": "dev"
+    "strategio-saas": "0.1.0-dev"
   }
 }
