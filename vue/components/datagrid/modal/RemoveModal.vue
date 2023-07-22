@@ -27,12 +27,12 @@ async function handleAccept() {
         ids: props.rows.map(row => row.id)
     })
 
+    loading.value = false
+
     if (resp.success) {
         toast.add('Položka byla úspěšně odstraněna', 'warning')
+        emits('onAccept')
     }
-
-    loading.value = false
-    emits('onAccept')
 }
 
 </script>
