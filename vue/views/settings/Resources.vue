@@ -36,9 +36,11 @@ function unwrapResponse(resp: IRespShow | IRespUpdate) {
 async function update() {
     loading.value = true
     const resp = await api.resources.update(routes.value)
-    if (resp.success) unwrapResponse(resp)
+    if (resp.success)  {
+        unwrapResponse(resp)
+        toast.add('Aktualizace resources proběhla úspěšně', 'success')
+    }
     loading.value = false
-    toast.add('Aktualizace resources proběhla úspěšně', 'success')
 }
 
 async function updateRole(role: IRole, resource: IResource) {
