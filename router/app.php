@@ -59,8 +59,7 @@ return static function (RoutingConfigurator $routes): void {
     // Collections navbar
     $routes->add(Router::ROUTE_META_NAVBAR, '/saas/collections/navbar')
         ->methods(['POST'])
-        ->controller(Collection\NavbarRequest::class)
-        ->options(['inResources' => false]);;
+        ->controller(Collection\NavbarRequest::class);
     
     // Resources
     $resources = $routes->collection('saas.resources.')->prefix('/saas/resources');

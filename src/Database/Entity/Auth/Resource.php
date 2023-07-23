@@ -78,11 +78,11 @@ class Resource
     }
     
     /**
-     * @return string
+     * @return ResourceType
      */
-    public function getType(): string
+    public function getType(): ResourceType
     {
-        return $this->type;
+        return ResourceType::from($this->type);
     }
     
     /**

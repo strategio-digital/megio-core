@@ -115,7 +115,12 @@ onMounted(async () => {
                         </thead>
                         <tbody>
                         <tr class="text-body-2" v-for="resource in resources" :key="resource.id">
-                            <td style="width: 100%">{{ resource.name }}</td>
+                            <td style="width: 100%">
+                                <div>{{ resource.name }}</div>
+                                <div v-if="resource.hint" style="font-size: .8rem" class="text-grey-darken-1">
+                                    {{ resource.hint }}
+                                </div>
+                            </td>
                             <td class="text-center">
                                 <v-checkbox
                                     class="d-flex justify-center"

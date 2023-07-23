@@ -15,10 +15,15 @@ use Saas\Database\Enum\ResourceType;
 use Saas\Database\Manager\AuthResourceManager;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouteCollection;
 
 class ShowAllRequest extends Request
 {
-    public function __construct(protected EntityManager $em, protected AuthResourceManager $manager)
+    public function __construct(
+        protected EntityManager       $em,
+        protected AuthResourceManager $manager,
+        protected RouteCollection     $routes
+    )
     {
     }
     
@@ -43,6 +48,8 @@ class ShowAllRequest extends Request
             ->getResult();
         
         $groups = $this->groupResources($resources, $roles);
+        $groups = $this->sortCollectionDataResources($groups);
+        
         $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::ROUTER_VIEW);
         
         if ($data['make_view_diff']) {
@@ -56,7 +63,7 @@ class ShowAllRequest extends Request
             'resources' => array_map(fn(Resource $resource) => [
                 'id' => $resource->getId(),
                 'name' => $resource->getName(),
-                'type' => $resource->getType()
+                'type' => $resource->getType()->value
             ], $resources),
             'grouped_resources_with_roles' => $groups,
             'resources_diff' => [
@@ -79,7 +86,8 @@ class ShowAllRequest extends Request
             $result[] = [
                 'id' => $resource->getId(),
                 'name' => $resource->getName(),
-                'type' => $resource->getType(),
+                'type' => $resource->getType()->value,
+                'hint' => $this->createHint($resource->getType(),  $resource->getName()),
                 'roles' => array_map(fn(Role $role) => [
                     'id' => $role->getId(),
                     'name' => $role->getName(),
@@ -94,5 +102,52 @@ class ShowAllRequest extends Request
         }
         
         return $groups;
+    }
+    
+    /**
+     * @param array<string, mixed> $resources
+     * @return array<string, mixed>
+     */
+    private function sortCollectionDataResources(array $resources): array
+    {
+        $key = ResourceType::COLLECTION_DATA->value;
+        if (array_key_exists($key, $resources)) {
+            $groups = [];
+            foreach ($resources[$key] as $value) {
+                $groupName = pathinfo($value['name'], PATHINFO_EXTENSION);
+                $groups[$groupName][] = $value;
+            }
+            
+            $resources[$key] = [];
+            foreach ($groups as $value) {
+                foreach ($value as $item) {
+                    $resources[$key][] = $item;
+                }
+            }
+        }
+        
+        return $resources;
+    }
+    
+    private function createHint(ResourceType $type, string $name): string|null
+    {
+        if ($type === ResourceType::ROUTER_VIEW) {
+            return null;
+        }
+        
+        if ($type === ResourceType::COLLECTION_NAV || $type === ResourceType::COLLECTION_DATA) {
+            $last = pathinfo($name, PATHINFO_EXTENSION);
+            $name = substr_replace($name, '', -strlen($last) - 1, strlen($last) + 1);
+        }
+        
+        $route = $this->routes->get($name);
+        
+        if (!$route) {
+            return null;
+        }
+        
+        $methods = implode(', ', $route->getMethods());
+        
+        return "[$methods] {$route->getPath()}";
     }
 }
