@@ -25,28 +25,28 @@ return static function (RoutingConfigurator $routes): void {
     // Auth
     $auth = $routes->collection('saas.auth.')->prefix('/saas/auth');
     
+    $auth->add('email', '/email')
+        ->methods(['POST'])
+        ->controller(Auth\EmailAuthRequest::class)
+        ->options(['auth' => false]);
+    
     $auth->add('revoke-token', '/revoke-token')
         ->methods(['POST'])
         ->controller(Auth\RevokeTokenRequest::class)
         ->options(['inResources' => false]);
     
-    $auth->add('email', '/email')
-        ->methods(['POST'])
-        ->controller(Auth\EmailAuthRequest::class)
-        ->options(['auth' => false, 'inResources' => false]);
-    
     // Admin
-    $user = $routes->collection('saas.admin.')->prefix('/saas/admin');
+    $admin = $routes->collection('saas.admin.')->prefix('/saas/admin');
     
-    $user->add('profile', '/profile')
+    $admin->add('profile', '/profile')
         ->methods(['POST'])
         ->controller(Admin\ProfileRequest::class)
         ->options(['inResources' => false]);;
     
-    $user->add('avatar', '/avatar')
+    $admin->add('avatar', '/avatar')
         ->methods(['POST'])
         ->controller(Admin\UploadAvatarRequest::class)
-        ->options(['auth' => false, 'inResources' => false]);;
+        ->options(['inResources' => false]);;
     
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');

@@ -6,14 +6,16 @@
 import { useRouter } from 'vue-router'
 import { useToast } from '@/saas/components/toast/useToast'
 import api from '@/saas/api'
+import { hasRole } from '@/saas/api/auth/currentUser'
 
 export const useLogout = () => {
     const router = useRouter()
     const toast = useToast();
 
     async function logout() {
+        const name = hasRole('admin') ? 'saas.view.admin.login' : 'saas.view.login'
         api.auth.logout()
-        await router.push({ name: 'saas.view.login' })
+        await router.push({ name })
         toast.add('Právě jste se úspěšně odhlásili', 'warning')
     }
 
