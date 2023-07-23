@@ -64,9 +64,9 @@ onMounted(async () => {
                 />
 
                 <div v-if="!loading && collections.length === 0">
-                    <v-breadcrumbs :items="['Kolekce']" class="pa-0" style="font-size: 1.4rem" />
+                    <v-breadcrumbs :items="['Kolekce']" class="pa-0 pt-3" style="font-size: 1.4rem" />
                     <div class="d-flex justify-center align-center">
-                        <div class="border-0 border-t border-dashed w-100 py-5 mt-8 text-center">
+                        <div class="border-0 border-t border-dashed w-100 py-5 mt-11 text-center">
                             Data nejsou k dispozici.
                         </div>
                     </div>
