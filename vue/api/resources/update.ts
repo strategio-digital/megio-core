@@ -22,7 +22,8 @@ const update = async (viewResources: string[]): Promise<IResp> => {
     const resp = await api.fetch(`saas/resources/update`, {
         method: 'POST',
         body: JSON.stringify({
-            view_resources: viewResources
+            view_resources: viewResources,
+            make_view_diff: true
         })
     })
 

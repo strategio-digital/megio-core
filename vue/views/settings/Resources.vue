@@ -20,7 +20,12 @@ const resources = ref<IResource[]>([])
 const roles = ref<string[]>([])
 const groupedResourcesWithRoles = ref<IGroupedResourcesWithRoles[]>([])
 const resourceDiff = ref<IResourceDiff>()
-const routes = ref<string[]>(router.getRoutes().map(route => route.name as string))
+
+const routes = computed(() => {
+    return router.getRoutes()
+    .filter(route => route.meta.auth !== false && route.meta.inResources !== false)
+    .map(route => route.name as string)
+})
 
 const badgeText = computed((): number => {
     return ((resourceDiff.value?.to_create.length || 0) + (resourceDiff.value?.to_remove.length || 0))
@@ -36,7 +41,7 @@ function unwrapResponse(resp: IRespShow | IRespUpdate) {
 async function update() {
     loading.value = true
     const resp = await api.resources.update(routes.value)
-    if (resp.success)  {
+    if (resp.success) {
         unwrapResponse(resp)
         toast.add('Aktualizace resources proběhla úspěšně', 'success')
     }

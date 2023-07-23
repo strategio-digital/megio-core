@@ -9,10 +9,12 @@ namespace Saas\Database\Manager;
 
 use Nette\Utils\Strings;
 use Saas\Database\CrudHelper\CrudHelper;
+use Saas\Database\Entity\Admin;
 use Saas\Database\Entity\Auth\Resource;
 use Saas\Database\EntityManager;
 use Saas\Database\Enum\ResourceType;
 use Saas\Helper\Router;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 readonly class AuthResourceManager
@@ -107,7 +109,9 @@ readonly class AuthResourceManager
      */
     public function routerResources(): array
     {
-        return array_keys($this->routes->all());
+        $routes = $this->routes->all();
+        $routes = array_filter($routes, fn(Route $route) => $route->getOption('auth') !== false && $route->getOption('inResources') !== false);
+        return array_keys($routes);
     }
     
     /**
@@ -124,8 +128,13 @@ readonly class AuthResourceManager
      */
     public function collectionDataResources(): array
     {
+        $excluded = [Admin::class];
+        $entities = $this->crudHelper->getAllEntities();
+        $entities = array_filter($entities, fn($entity) => !in_array($entity['value'], $excluded));
+        
+        $tables = array_map(fn($entity) => $entity['table'], $entities);
         $resourceNames = array_keys($this->routes->all());
-        $tables = array_map(fn($entity) => $entity['table'], $this->crudHelper->getAllEntities());
+        
         $collectionRouteNames = array_filter($resourceNames, fn($name) => Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX));
         
         $names = [];
@@ -144,7 +153,11 @@ readonly class AuthResourceManager
      */
     public function collectionNavResources(): array
     {
-        $tables = array_map(fn($entity) => $entity['table'], $this->crudHelper->getAllEntities());
+        $excluded = [Admin::class];
+        $entities = $this->crudHelper->getAllEntities();
+        $entities = array_filter($entities, fn($entity) => !in_array($entity['value'], $excluded));
+        
+        $tables = array_map(fn($entity) => $entity['table'], $entities);
         $names = [];
         
         foreach ($tables as $tableName) {

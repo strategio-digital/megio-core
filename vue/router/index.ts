@@ -11,24 +11,24 @@ const createRouter = (routes: RouteRecordRaw[], routeRoot: string) => {
         const user = api.auth.currentUser()
         const routeTo = to.name?.toString()
 
-        // skip route if routeTo is 401
+        // show 401 if user is logged in and route is 401
         if (user && routeTo === 'saas.view.401') {
             return next()
         }
 
         // redirect to dashboard if route does not exist
-        if (!routeTo) {
+        if (! routeTo) {
             toast.add('You are trying to access non-existent route (404)', 'error')
             return next({ name: 'saas.view.dashboard' })
         }
 
-        // redirect to login page if user is not logged in
-        if (user && ['saas.view.login', 'saas.view.admin.login'].includes(routeTo)) {
+        // redirect to dashboard if user is logged in & route is not public
+        if (user && to.meta.auth === false) {
             return next({ name: 'saas.view.dashboard' })
         }
 
-        // redirect to dashboard if user is logged in
-        if (! user && ! ['saas.view.login', 'saas.view.admin.login'].includes(routeTo)) {
+        // redirect to login page if user is not logged in and route is not public
+        if (! user && to.meta.auth !== false) {
             return next({ name: 'saas.view.login' })
         }
 

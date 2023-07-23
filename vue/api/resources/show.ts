@@ -21,7 +21,10 @@ export interface IResp extends IResponse {
 const show = async (viewResources: string[] | null = null): Promise<IResp> => {
     const resp = await api.fetch(`saas/resources/show`, {
         method: 'POST',
-        body: JSON.stringify({ view_resources: viewResources })
+        body: JSON.stringify({
+            view_resources: viewResources,
+            make_view_diff: true
+        })
     })
     return { ...resp, data: resp.data }
 }

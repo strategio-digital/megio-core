@@ -25,14 +25,15 @@ class ShowAllRequest extends Request
     public function schema(): array
     {
         return [
-            'view_resources' => Expect::arrayOf('string')
+            'view_resources' => Expect::arrayOf('string')->required(),
+            'make_view_diff' => Expect::bool()->default(false)->required(),
         ];
     }
     
     public function process(array $data): Response
     {
-        /** @var \Saas\Database\Entity\Auth\Resource[] $allResources */
-        $allResources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
+        /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
+        $resources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
         
         /** @var \Saas\Database\Entity\Auth\Role[] $roles */
         $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
@@ -41,10 +42,41 @@ class ShowAllRequest extends Request
             ->getQuery()
             ->getResult();
         
-        $resources = [];
+        $groups = $this->groupResources($resources, $roles);
+        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::ROUTER_VIEW);
         
-        foreach ($allResources as $resource) {
-            $resources[] = [
+        if ($data['make_view_diff']) {
+            $types = ResourceType::cases();
+        }
+        
+        $diff = $this->manager->updateResources(false, $data['view_resources'], ...$types);
+        
+        return $this->json([
+            'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
+            'resources' => array_map(fn(Resource $resource) => [
+                'id' => $resource->getId(),
+                'name' => $resource->getName(),
+                'type' => $resource->getType()
+            ], $resources),
+            'grouped_resources_with_roles' => $groups,
+            'resources_diff' => [
+                'to_create' => $diff['created'],
+                'to_remove' => $diff['removed'],
+            ]
+        ]);
+    }
+    
+    /**
+     * @param Resource[] $resources
+     * @param Role[] $roles
+     * @return array<string, mixed>
+     */
+    private function groupResources(array $resources, array $roles): array
+    {
+        $result = [];
+        
+        foreach ($resources as $resource) {
+            $result[] = [
                 'id' => $resource->getId(),
                 'name' => $resource->getName(),
                 'type' => $resource->getType(),
@@ -57,24 +89,10 @@ class ShowAllRequest extends Request
         }
         
         $groups = [];
-        foreach ($resources as $resource) {
+        foreach ($result as $resource) {
             $groups[$resource['type']][] = $resource;
         }
         
-        $diff = $this->manager->updateResources(false, $data['view_resources'], ...ResourceType::cases());
-        
-        return $this->json([
-            'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
-            'resources' => array_map(fn(Resource $resource) => [
-                'id' => $resource->getId(),
-                'name' => $resource->getName(),
-                'type' => $resource->getType()
-            ], $allResources),
-            'grouped_resources_with_roles' => $groups,
-            'resources_diff' => [
-                'to_create' => $diff['created'],
-                'to_remove' => $diff['removed'],
-            ]
-        ]);
+        return $groups;
     }
 }

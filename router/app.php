@@ -24,16 +24,29 @@ return static function (RoutingConfigurator $routes): void {
     
     // Auth
     $auth = $routes->collection('saas.auth.')->prefix('/saas/auth');
-    $auth->add('revoke-token', '/revoke-token')->methods(['POST'])->controller(Auth\RevokeTokenRequest::class);
+    
+    $auth->add('revoke-token', '/revoke-token')
+        ->methods(['POST'])
+        ->controller(Auth\RevokeTokenRequest::class)
+        ->options(['inResources' => false]);
+    
     $auth->add('email', '/email')
         ->methods(['POST'])
         ->controller(Auth\EmailAuthRequest::class)
-        ->options(['auth' => false]);
+        ->options(['auth' => false, 'inResources' => false]);
     
     // Admin
     $user = $routes->collection('saas.admin.')->prefix('/saas/admin');
-    $user->add('profile', '/profile')->methods(['POST'])->controller(Admin\ProfileRequest::class);
-    $user->add('avatar', '/avatar')->methods(['POST'])->controller(Admin\UploadAvatarRequest::class);
+    
+    $user->add('profile', '/profile')
+        ->methods(['POST'])
+        ->controller(Admin\ProfileRequest::class)
+        ->options(['inResources' => false]);;
+    
+    $user->add('avatar', '/avatar')
+        ->methods(['POST'])
+        ->controller(Admin\UploadAvatarRequest::class)
+        ->options(['auth' => false, 'inResources' => false]);;
     
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');
@@ -46,11 +59,24 @@ return static function (RoutingConfigurator $routes): void {
     // Collections navbar
     $routes->add(Router::ROUTE_META_NAVBAR, '/saas/collections/navbar')
         ->methods(['POST'])
-        ->controller(Collection\NavbarRequest::class);
+        ->controller(Collection\NavbarRequest::class)
+        ->options(['inResources' => false]);;
     
     // Resources
     $resources = $routes->collection('saas.resources.')->prefix('/saas/resources');
-    $resources->add('show', '/show')->methods(['POST'])->controller(Resource\ShowAllRequest::class);
-    $resources->add('update', '/update')->methods(['POST'])->controller(Resource\UpdateResourceRequest::class);
-    $resources->add('update.role', '/update-role')->methods(['POST'])->controller(Resource\UpdateRoleRequest::class);
+    
+    $resources->add('show', '/show')
+        ->methods(['POST'])
+        ->controller(Resource\ShowAllRequest::class)
+        ->options(['inResources' => false]);
+    
+    $resources->add('update', '/update')
+        ->methods(['POST'])
+        ->controller(Resource\UpdateResourceRequest::class)
+        ->options(['inResources' => false]);
+    
+    $resources->add('update.role', '/update-role')
+        ->methods(['POST'])
+        ->controller(Resource\UpdateRoleRequest::class)
+        ->options(['inResources' => false]);
 };
