@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:user:create', description: 'Create a new user account', aliases: ['user:create'])]
+#[AsCommand(name: 'app:user:create', description: 'Create a new user account', aliases: ['user'])]
 class UserCreateCommand extends Command
 {
     public function __construct(private readonly EntityManager $em)
@@ -41,16 +41,21 @@ class UserCreateCommand extends Command
         $user = new User();
         
         if ($roleName) {
-            $role = new Role();
-            $role->setName($roleName);
+            $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $roleName]);
             
-            /** @var Resource[] $resources */
-            $resources = $this->em->getRepository(Resource::class)->findAll();
-            foreach ($resources as $resource) {
-                $role->addResource($resource);
+            if (!$role) {
+                $role = new Role();
+                $role->setName($roleName);
+                
+                /** @var Resource[] $resources */
+                $resources = $this->em->getRepository(Resource::class)->findAll();
+                foreach ($resources as $resource) {
+                    $role->addResource($resource);
+                }
+                
+                $this->em->persist($role);
             }
             
-            $this->em->persist($role);
             $user->addRole($role);
         }
         
