@@ -31,6 +31,16 @@ const badgeText = computed((): number => {
     return ((resourceDiff.value?.to_create.length || 0) + (resourceDiff.value?.to_remove.length || 0))
 })
 
+function getRouteHint(routeName: string) {
+    const route = router.getRoutes().filter(route => route.name === routeName).shift()
+
+    if (route) {
+        return '[GET] ' + router.options.history.base + route.path
+    }
+
+    return null
+}
+
 function unwrapResponse(resp: IRespShow | IRespUpdate) {
     groupedResourcesWithRoles.value = resp.data.grouped_resources_with_roles
     resourceDiff.value = resp.data.resources_diff
@@ -119,6 +129,9 @@ onMounted(async () => {
                                 <div>{{ resource.name }}</div>
                                 <div v-if="resource.hint" style="font-size: .8rem" class="text-grey-darken-1">
                                     {{ resource.hint }}
+                                </div>
+                                <div v-else-if="resource.type === 'router.view'" style="font-size: .8rem" class="text-grey-darken-1">
+                                    {{ getRouteHint(resource.name) }}
                                 </div>
                             </td>
                             <td class="text-center">
