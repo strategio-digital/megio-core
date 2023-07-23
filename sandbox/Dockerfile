@@ -20,6 +20,7 @@ COPY ./tsconfig.node.json ./tsconfig.node.json
 COPY ./tsconfig.json ./tsconfig.json
 COPY --from=build-stage-php /build/vendor /build/vendor
 
+RUN yarn cache clean --mirror
 RUN yarn && yarn build
 
 FROM php:8.2-fpm-alpine
