@@ -34,7 +34,7 @@ body {
 }
 
 .text {
-    margin: 3rem 0;
+    margin: 2rem 0;
     color: #aaa;
 
 
@@ -53,5 +53,27 @@ body {
         color: darkorange;
         padding: 1rem 1rem 0;
         text-decoration: none;
+    }
+
+    .btn {
+        opacity: .7;
+        border: none;
+        display: inline-block;
+        margin: 1rem .3rem 0 .3rem;
+        padding: .7rem 2rem ;
+        line-height: 1;
+        background-color: darkorange;
+        border-radius: 2rem;
+        color: white;
+        font-size: .8rem;
+        font-weight: bold;
+        text-transform: lowercase;
+        transition: 300ms opacity ease;
+
+        &:hover,
+        &:focus,
+        &:active {
+            opacity: 1;
+        }
     }
 }
