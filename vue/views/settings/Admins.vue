@@ -54,7 +54,7 @@ function handleFirstColumnClick(row: IRow) {
                     :bulkActions="actions.bulk"
                     :allowActionsFiltering="true"
                     :defaultItemsPerPage="15"
-                    emptyDataMessage="Zatím nebyl přidán žádný administrátor"
+                    emptyDataMessage="Data nejsou k dispozici."
                     @onFirstColumnClick="handleFirstColumnClick"
                 />
             </div>

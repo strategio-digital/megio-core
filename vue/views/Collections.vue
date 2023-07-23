@@ -34,23 +34,21 @@ watch(() => route.params.name, () => {
 })
 
 onMounted(async () => {
-    const navbar = await api.collections.navbar()
-    const items = navbar.data.items
-
-    collections.value = items
-    navbarLoading.value = false
-
-    if (items.length === 0) {
-        loading.value = false
-    }
-
+    const resp = await api.collections.navbar()
     const routeName = route.params.name.toString()
 
-    if (routeName === COLLECTION_EMPTY_ROUTE && collections.value.length !== 0) {
-        tableName.value = items[0]
-    } else {
-        tableName.value = routeName
+    if (resp.success) {
+        collections.value = resp.data.items
+
+        if (routeName === COLLECTION_EMPTY_ROUTE && collections.value.length !== 0) {
+            tableName.value = resp.data.items[0]
+        } else {
+            tableName.value = routeName
+        }
     }
+
+    navbarLoading.value = false
+    loading.value = false
 })
 </script>
 
@@ -64,9 +62,14 @@ onMounted(async () => {
                     :table-name="tableName"
                     @onLoadingChange="handleLoading"
                 />
+
                 <div v-if="!loading && collections.length === 0">
                     <v-breadcrumbs :items="['Kolekce']" class="pa-0" style="font-size: 1.4rem" />
-                    <p class="mt-3">Zatím nebyla vytvořena žádná kolekce.</p>
+                    <div class="d-flex justify-center align-center">
+                        <div class="border-0 border-t border-dashed w-100 py-5 mt-8 text-center">
+                            Data nejsou k dispozici.
+                        </div>
+                    </div>
                 </div>
             </div>
         </template>

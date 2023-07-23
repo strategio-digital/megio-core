@@ -64,7 +64,7 @@ function handleFirstColumnClick(row: IRow) {
             :allowActionsFiltering="true"
             :defaultItemsPerPage="15"
             :loading="loading"
-            emptyDataMessage="Tato kolekce je prázdná."
+            emptyDataMessage="Data nejsou k dispozici."
             @onFirstColumnClick="handleFirstColumnClick"
         />
     </div>
