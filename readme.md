@@ -50,7 +50,8 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Request Nginx rate limiter & IP address proxy resolver
 - 🟢 Add navbar resources, Vue composable and hide non-admin stuff
 - 🟢 Resource loader from vue router & resource auto-update.
-- 🟡 Role access table (Routes, Collections, CollectionsNav, Views)
+- 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
+- 🟡 Role add modal, role remove modal, cascade delete.
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
