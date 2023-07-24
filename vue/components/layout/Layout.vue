@@ -42,7 +42,7 @@ const route = useRoute()
             <v-list density="comfortable">
                 <template v-for="nav in navbar.items" :key="nav.route.name">
                     <v-tooltip
-                        v-if="hasResource(nav.route.name)"
+                        v-if="hasResource(nav.route.name.toString())"
                         location="end"
                         :text="nav.title"
                         offset="-5"
