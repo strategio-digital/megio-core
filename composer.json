@@ -41,7 +41,8 @@
         "doctrine/migrations": "^3.5",
         "lcobucci/jwt": "^4.2",
         "aws/aws-sdk-php": "^3.240",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "siketyan/yarn-lock": "^1.0"
     },
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse -l 8 src/ router/ --memory-limit 1G",

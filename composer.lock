@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c862039b514fb0fb57cf1d156da8c76a",
+    "content-hash": "939817df702183f3baacfa6d270eeb1b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3049,6 +3049,62 @@
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
+            "name": "siketyan/yarn-lock",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/siketyan/php-yarn-lock.git",
+                "reference": "c42e79a0e0702347cd6e006c8048c097116940c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/siketyan/php-yarn-lock/zipball/c42e79a0e0702347cd6e006c8048c097116940c7",
+                "reference": "c42e79a0e0702347cd6e006c8048c097116940c7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "symfony/yaml": "^5|^6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.17",
+                "phpunit/phpunit": "^10.1",
+                "quartetcom/static-analysis-kit": "~8.1.15"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Siketyan\\YarnLock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Natsuki Ikeguchi",
+                    "email": "me@s6n.jp"
+                }
+            ],
+            "description": "A Parser Library for yarn.lock in PHP.",
+            "support": {
+                "issues": "https://github.com/siketyan/php-yarn-lock/issues",
+                "source": "https://github.com/siketyan/php-yarn-lock/tree/v1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/siketyan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/siketyan",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2023-05-27T09:33:32+00:00"
+        },
+        {
             "name": "symfony/cache",
             "version": "v6.3.1",
             "source": {
@@ -5198,6 +5254,77 @@
                 }
             ],
             "time": "2023-04-21T08:48:44+00:00"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "v6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "a9a8337aa641ef2aa39c3e028f9107ec391e5927"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/a9a8337aa641ef2aa39c3e028f9107ec391e5927",
+                "reference": "a9a8337aa641ef2aa39c3e028f9107ec391e5927",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "conflict": {
+                "symfony/console": "<5.4"
+            },
+            "require-dev": {
+                "symfony/console": "^5.4|^6.0"
+            },
+            "bin": [
+                "Resources/bin/yaml-lint"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Yaml\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Loads and dumps YAML files",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/yaml/tree/v6.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-04-28T13:28:14+00:00"
         },
         {
             "name": "tracy/tracy",
