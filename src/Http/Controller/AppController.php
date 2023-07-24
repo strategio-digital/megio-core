@@ -54,6 +54,7 @@ class AppController extends Controller
         return $this->json([
             'name' => $_ENV['APP_NAME'],
             'mode' => $_ENV['APP_ENV_MODE'],
+            'log_adapter' => $_ENV['LOG_ADAPTER'],
             'storage_adapter' => $storage->getAdapterName(),
             'execution_time' => floor((microtime(true) - $container->parameters['startedAt']) * 1000) . 'ms',
             'current_dt' => [
