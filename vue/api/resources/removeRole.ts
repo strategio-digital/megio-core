@@ -12,22 +12,17 @@ import api from '@/saas/api'
 
 export interface IResp extends IResponse {
     data: {
-        roles: IRole[],
-        resources: IResource[],
-        grouped_resources_with_roles: IGroupedResourcesWithRoles[],
-        resources_diff: IResourceDiff
+        message: string
     }
 }
 
-const show = async (viewResources: string[] | null = null): Promise<IResp> => {
-    const resp = await api.fetch(`saas/resources/show`, {
-        method: 'POST',
-        body: JSON.stringify({
-            view_resources: viewResources,
-            make_view_diff: true
-        })
+const removeRole = async (roleId: string): Promise<IResp> => {
+    const resp = await api.fetch(`saas/resources/delete-role`, {
+        method: 'DELETE',
+        body: JSON.stringify({ id: roleId })
     })
+
     return { ...resp, data: resp.data }
 }
 
-export default show
+export default removeRole

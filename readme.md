@@ -77,12 +77,13 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Scheduled database backups to S3 & log dashboard
 - 🟠 AI Text helper (Chat GPT + PHP Storm style)
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs & progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
-- 🟠 Extension (Simple cart + GoPay)
+- 🟠 Add Simple cart + GoPay extension
+- 🟠 Add multitenatn extensions
+- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 Make intro videos (for developers & for administrators)
 
 ### Make some automatic tests

@@ -14,6 +14,7 @@ import navbar from '@/saas/api/collections/meta/navbar'
 import showResources from '@/saas/api/resources/show'
 import updateResources from '@/saas/api/resources/update'
 import updateRole from '@/saas/api/resources/updateRole'
+import removeRole from '@/saas/api/resources/removeRole'
 
 import { IResponse } from '@/saas/api/types/IResponse'
 import { useToast } from '@/saas/components/toast/useToast'
@@ -68,6 +69,7 @@ export default {
     resources: {
         show: showResources,
         update: updateResources,
-        updateRole
+        updateRole,
+        removeRole,
     }
 }

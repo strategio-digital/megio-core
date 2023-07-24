@@ -6,7 +6,8 @@ import { IResource } from '@/saas/api/resources/types/IResource'
 import { IRole } from '@/saas/api/resources/types/IRole'
 
 export interface IGroupedResourcesWithRoles {
-    [key: string]: IResource & {
-        roles: IRole[]
-    }
+    groupName: string,
+    resources: Array<IResource & {
+        roles: IRole[],
+    }>,
 }

@@ -58,14 +58,22 @@ class ShowAllRequest extends Request
         
         $diff = $this->manager->updateResources(false, $data['view_resources'], ...$types);
         
+        $groupedResourcesWithRoles = [];
+        foreach ($groups as $name => $group) {
+            $groupedResourcesWithRoles[] = [
+                'groupName' => $name,
+                'resources' => $group
+            ];
+        }
+        
         return $this->json([
-            'roles' => array_map(fn(Role $role) => $role->getName(), $roles),
+            'roles' => array_map(fn(Role $role) => [ 'id' => $role->getId(), 'name' => $role->getName() ], $roles),
             'resources' => array_map(fn(Resource $resource) => [
                 'id' => $resource->getId(),
                 'name' => $resource->getName(),
                 'type' => $resource->getType()->value
             ], $resources),
-            'grouped_resources_with_roles' => $groups,
+            'grouped_resources_with_roles' => $groupedResourcesWithRoles,
             'resources_diff' => [
                 'to_create' => $diff['created'],
                 'to_remove' => $diff['removed'],

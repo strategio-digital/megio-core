@@ -5,13 +5,14 @@
 
 import { IResponse } from '@/saas/api/types/IResponse'
 import { IResource } from '@/saas/api/resources/types/IResource'
+import { IRole } from '@/saas/api/resources/types/IRole'
 import { IGroupedResourcesWithRoles } from '@/saas/api/resources/types/IGroupedResourcesWithRoles'
 import { IResourceDiff } from '@/saas/api/resources/types/IResourceDiff'
 import api from '@/saas/api'
 
 export interface IResp extends IResponse {
     data: {
-        roles: string[],
+        roles: IRole[],
         resources: IResource[],
         grouped_resources_with_roles: IGroupedResourcesWithRoles[],
         resources_diff: IResourceDiff

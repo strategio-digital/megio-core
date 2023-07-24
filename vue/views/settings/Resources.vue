@@ -3,23 +3,28 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from '@/saas/components/toast/useToast'
 import { IResource } from '@/saas/api/resources/types/IResource'
-import { IGroupedResourcesWithRoles } from '@/saas/api/resources/types/IGroupedResourcesWithRoles'
-import { IResp as IRespShow } from '@/saas/api/resources/show'
-import { IResp as IRespUpdate } from '@/saas/api/resources/updateRole'
 import { IRole } from '@/saas/api/resources/types/IRole'
 import { IResourceDiff } from '@/saas/api/resources/types/IResourceDiff'
+import { IGroupedResourcesWithRoles } from '@/saas/api/resources/types/IGroupedResourcesWithRoles'
+import { IResp as IRespShow } from '@/saas/api/resources/show'
+import { IResp as IRespUpdate } from '@/saas/api/resources/update'
 import Layout from '@/saas/components/layout/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
+import RemoveRoleModal from '@/saas/components/resource/RemoveModal.vue'
 import api from '@/saas/api'
 
 const router = useRouter()
 const toast = useToast()
 
 const loading = ref(true)
+const modalOpen = ref(false)
 const resources = ref<IResource[]>([])
-const roles = ref<string[]>([])
+const roles = ref<IRole[]>([])
 const groupedResourcesWithRoles = ref<IGroupedResourcesWithRoles[]>([])
 const resourceDiff = ref<IResourceDiff>()
+
+const currentRole = ref<IRole>()
+const removeModalOpen = ref<boolean>(false)
 
 const routes = computed(() => {
     return router.getRoutes()
@@ -27,7 +32,7 @@ const routes = computed(() => {
     .map(route => route.name as string)
 })
 
-const badgeText = computed((): number => {
+const badgeDiff = computed((): number => {
     return ((resourceDiff.value?.to_create.length || 0) + (resourceDiff.value?.to_remove.length || 0))
 })
 
@@ -39,6 +44,30 @@ function getRouteHint(routeName: string) {
     }
 
     return null
+}
+
+function toggleRemoveModal(role: IRole | null = null) {
+    if (role) {
+        currentRole.value = role
+        removeModalOpen.value = true
+    } else {
+        removeModalOpen.value = false
+    }
+}
+
+function removeModalSuccess(role: IRole) {
+    roles.value = roles.value.filter(r => r.id !== role.id)
+    groupedResourcesWithRoles.value = groupedResourcesWithRoles.value.map(group => {
+            const rr = group.resources.map(res => {
+                return {
+                    ...res,
+                    roles: res.roles.filter(rol => rol.id !== role.id)
+                }
+            })
+            return { ...group, resources: rr }
+        }
+    )
+    toggleRemoveModal(null)
 }
 
 function unwrapResponse(resp: IRespShow | IRespUpdate) {
@@ -59,9 +88,9 @@ async function update() {
 }
 
 async function updateRole(role: IRole, resource: IResource) {
-    const resp = await api.resources.updateRole(role.id, resource.id, role.enabled)
+    const resp = await api.resources.updateRole(role.id, resource.id, role.enabled || false)
     if (resp.success) {
-        toast.add('Změna oprávnění proběhla úspěšně', 'success')
+        toast.add(resp.data.message, 'success')
     }
 }
 
@@ -73,6 +102,13 @@ onMounted(async () => {
 </script>
 
 <template>
+    <RemoveRoleModal
+        v-if="currentRole"
+        :open="removeModalOpen"
+        :role="currentRole"
+        @onCancel="toggleRemoveModal(null)"
+        @onAccept="removeModalSuccess"
+    />
     <Layout :loading="loading">
         <template v-slot:default>
             <div class="pa-7">
@@ -80,23 +116,15 @@ onMounted(async () => {
                     <v-breadcrumbs :items="['Role a oprávnění']" class="pa-0" style="font-size: 1.4rem" />
 
                     <div class="d-flex ms-3">
-                        <v-btn variant="tonal" prepend-icon="mdi-plus" class="ms-3">
-                            Nová role
-                        </v-btn>
+                        <v-btn variant="tonal" prepend-icon="mdi-plus" class="ms-3">Nová role</v-btn>
                         <v-btn @click="update" variant="tonal" color="red" class="ms-3">
-                            <v-badge
-                                v-if="badgeText"
-                                :content="badgeText"
-                                color="red"
-                                offset-y="-22"
-                                offset-x="12"
-                            />
+                            <v-badge v-if="badgeDiff" :content="badgeDiff" color="red" offset-y="-22" offset-x="12" />
                             <span>Aktualizovat</span>
                         </v-btn>
                     </div>
                 </div>
 
-                <v-alert color="red" variant="tonal" border="start" icon="$warning" class="mt-5" v-if="badgeText !== 0">
+                <v-alert color="red" variant="tonal" border="start" icon="$warning" class="mt-5" v-if="badgeDiff !== 0">
                     <div>
                         Upravili jste položky routeru. Je tedy potřeba aktualizovat vaše
                         resources. To provedete kliknutím na tlačítko "aktualizovat".
@@ -113,24 +141,41 @@ onMounted(async () => {
                     </div>
                 </v-alert>
 
-                <div class="py-5 mt-5" v-for="(resources, groupName) in groupedResourcesWithRoles" :key="groupName">
-                    <h2 class="mt-0 mb-0">{{ groupName }}</h2>
+                <div class="mt-5">
+                    <v-chip class="me-3">admin</v-chip>
+                    <v-chip
+                        v-for="role in roles"
+                        :key="role.id"
+                        append-icon="mdi-close"
+                        class="me-3"
+                        @click="toggleRemoveModal(role)"
+                    >
+                        {{ role.name }}
+                    </v-chip>
+                </div>
+
+                <div class="py-5 mt-5" v-for="group in groupedResourcesWithRoles" :key="group.groupName">
+                    <h2 class="mt-0 mb-0">{{ group.groupName }}</h2>
                     <v-table density="default" :hover="true">
                         <thead>
                         <tr>
                             <th></th>
                             <th>admin</th>
-                            <th v-for="role in roles" :key="role">{{ role }}</th>
+                            <th v-for="role in roles" :key="role.id">{{ role.name }}</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="text-body-2" v-for="resource in resources" :key="resource.id">
+                        <tr class="text-body-2" v-for="resource in group.resources" :key="resource.id">
                             <td style="width: 100%">
                                 <div>{{ resource.name }}</div>
                                 <div v-if="resource.hint" style="font-size: .8rem" class="text-grey-darken-1">
                                     {{ resource.hint }}
                                 </div>
-                                <div v-else-if="resource.type === 'router.view'" style="font-size: .8rem" class="text-grey-darken-1">
+                                <div
+                                    v-else-if="resource.type === 'router.view'"
+                                    style="font-size: .8rem"
+                                    class="text-grey-darken-1"
+                                >
                                     {{ getRouteHint(resource.name) }}
                                 </div>
                             </td>
@@ -142,7 +187,7 @@ onMounted(async () => {
                                     :disabled="true"
                                 />
                             </td>
-                            <td v-for="role in resource.roles" :key="role.id">
+                            <td v-for="role in resource.roles" :key="role.id + resource.id">
                                 <v-checkbox
                                     class="d-flex justify-center"
                                     color="primary"
