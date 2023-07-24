@@ -52,6 +52,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Resource loader from vue router & resource auto-update.
 - 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
 - 🟡 Role add modal, role remove modal, cascade delete.
+- 🟢 Print composer.lock & yarn.lock version in admin panel
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
@@ -73,15 +74,14 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 AI Text helper (Chat GPT + PHP Storm style)
-- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 Scheduled database backups to S3 & log dashboard
+- 🟠 AI Text helper (Chat GPT + PHP Storm style)
+- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
+- 🟠 Button for fake-data bulk insert into collection.
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs & progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
-- 🟠 Print composer.json & package.json version in admin panel
-- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
 - 🟠 Extension (Simple cart + GoPay)
 - 🟠 Make intro videos (for developers & for administrators)
 
