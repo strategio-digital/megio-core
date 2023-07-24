@@ -3,6 +3,7 @@
  * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
  *}
 {varType string $appPath}
+{varType string $appVersions}
 
 <!DOCTYPE html>
 <html lang="cs" style="overflow: hidden">
@@ -20,6 +21,6 @@
     {vite('assets/saas.ts', true)|noescape}
 </head>
 <body>
-<div id="app-saas" data-app-path="{$appPath}"></div>
+<div id="app-saas" data-app-path="{$appPath}" data-app-versions="{json_encode($appVersions)}"></div>
 </body>
 </html>

@@ -41,9 +41,11 @@ const app: HTMLElement | null = document.getElementById('app-saas')
 
 if (app) {
     const appPath = app.dataset.appPath as string
+    const appVersions = JSON.parse(app.dataset.appVersions as string);
 
     const saas = createSaas({
         root: appPath,
+        versions: appVersions,
         routes,
         navbar,
         datagrid: {

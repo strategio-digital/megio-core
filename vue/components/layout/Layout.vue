@@ -5,9 +5,11 @@ import { useTheme } from '@/saas/components/theme/useTheme'
 import { useLogout } from '@/saas/components/user/useLogout'
 import { hasResource } from '@/saas/api/auth/currentUser'
 import INavbarSettings from '@/saas/components/navbar/types/INavbarSettings'
+import IVersions from '@/saas/components/version/IVersions'
 
 const props = defineProps<{ loading?: boolean }>()
 const navbar: INavbarSettings | undefined = inject('navbar')
+const versions: IVersions | undefined = inject('versions')
 
 const { theme, switchTheme } = useTheme()
 const { logout } = useLogout()
@@ -87,6 +89,15 @@ const route = useRoute()
                         </template>
                     </v-tooltip>
                 </v-list>
+
+                <div style="font-size: .6rem; color: #aaaaaa; z-index: 10000000; text-align: center">
+                    <div>
+                        <a :href="`https://github.com/strategio-digital/saas/tree/${versions.commit_reference}`" target="_blank" style="color: #aaaaaa">
+                            {{ versions.composer }}
+                        </a>
+                    </div>
+                    <div>{{ versions.yarn }}</div>
+                </div>
             </template>
         </v-navigation-drawer>
 

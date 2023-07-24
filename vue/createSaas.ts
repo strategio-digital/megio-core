@@ -13,9 +13,11 @@ import createRouter from '@/saas/router'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import '@/saas/style.scss'
+import IVersions from '@/saas/components/version/IVersions'
 
 export type SaasOptions = {
     root: string
+    versions: IVersions,
     routes: RouteRecordRaw[]
     navbar: INavbarSettings,
     datagrid: IDatagridSettings
@@ -29,6 +31,7 @@ export const createSaas = (options: SaasOptions) => {
     return {
         install: (app: App) => {
             app.provide('navbar', options.navbar)
+            app.provide('versions', options.versions)
             app.provide('datagrid-actions', options.datagrid.actions)
             app.provide('datagrid-modals', options.datagrid.modals)
             app.provide('datagrid-columns', options.datagrid.columns)

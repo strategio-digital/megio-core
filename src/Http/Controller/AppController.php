@@ -30,7 +30,7 @@ class AppController extends Controller
         
         return $this->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
             'appPath' => $appPath,
-            'saasVersions' => $this->versions(),
+            'appVersions' => $this->versions(),
         ]);
     }
     
