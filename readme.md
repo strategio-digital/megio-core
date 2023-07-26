@@ -2,7 +2,7 @@
 # Strategio SaaS
 Most powerful tool for creating webs, apps & APIs.
 
-Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
+🟢 Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 
 <img src="https://jzapletal.s3.eu-west-1.amazonaws.com/strategio-saas-edit-data.png" width="100%" alt="Strategio SaaS">
 
@@ -11,89 +11,68 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/sandbox/readme.md)
 
 ## Core features
-- 🟢 Web-ready dev-stack (simple router & Latte templates)
-- 🟢 API-ready dev-stack (simple router & UI route permissions editor)
-- 🟢 Fully configurable & extendable Vue 3 Admin panel.
-- 🟠 Admin panel with UI datagrid editor based on Doctrine entities.
-- 🟢 Vite assets bundler for fast compiling scss, ts, vue, etc.
-- 🟢 One click deployment with Dockerfile and easypanel.io.
-- 🟢 Stateless and scalable architecture for PHP applications.
-- 🟢 Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
+- [x] Web-ready dev-stack (simple router & Latte templates)
+- [x] API-ready dev-stack (simple router & UI route permissions editor)
+- [x] Fully configurable & extendable Vue 3 Admin panel.
+- [ ] Admin panel with UI datagrid editor based on Doctrine entities.
+- [x] Vite assets bundler for fast compiling scss, ts, vue, etc.
+- [x] One click deployment with Dockerfile and easypanel.io.
+- [x] Stateless and scalable architecture for PHP applications.
+- [x] Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
 
 ## Backend features
-- 🟢 JWT Auth with route resources protection.
-- 🟢 Requests validation by Nette\Schema.
-- 🟢 Symfony events & event subscribers for a lot of stuff.
-- 🟢 Fully integrated Doctrine ORM.
-- 🟢 Symfony Http\Kernel for handling requests.
-- 🟢 File storage with AWS S3 adapter.
-- 🟢 Tracy\Debugger with AWS S3 logger adapter.
-- 🟢 Custom extensions with Nette\DI\Extensions.
-- 🟢 Custom Symfony console commands.
-- 🟢 PHPStan static analysis on level 8.
-
-## Priority
-- 🟡 Brainstorm entity mapping via orisai/object-mapper
-- 🟡 Collections edit / update page with custom vue-components
-- 🟡 CRUD request-validation by entity props
-- 🟠 Collection CRUD form with most useful field types (inspired by Nova & Pocketbase)
-- 🟠 Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
-- 🟠 MultiFile uploader
-- 🟠 Admin datagrid + CRUD
-- 🟠 Make some docs (inspired by [docusaurus.io](https://docusaurus.io/))
-- 🟠 Custom page components (inspired by Strapi.io)
+- [x] JWT Auth with route resources protection.
+- [x] Requests validation by Nette\Schema.
+- [x] Symfony events & event subscribers for a lot of stuff.
+- [x] Fully integrated Doctrine ORM.
+- [x] Symfony Http\Kernel for handling requests.
+- [x] File storage with AWS S3 adapter.
+- [x] Tracy\Debugger with AWS S3 logger adapter.
+- [x] Custom extensions with Nette\DI\Extensions.
+- [x] Custom Symfony console commands.
+- [x] PHPStan static analysis on level 8.
 
 ## Backlog
-- 🟠 Scheduled database backups to S3 & log dashboard
-- 🟠 AI text helper (Chat GPT + PHP Storm style)
-- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
-- 🟠 App settings (edit envFile - dev only)
-- 🟠 Storage settings (edit envFile - dev only)
-- 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Console cron jobs & progress dashboard
-- 🟠 Console redis jobs & progress dashboard
-- 🟠 Access log & error log dashboard with Tracy/BlueScreens
-- 🟠 Add cart extension (React with GoPay)
-- 🟠 Add multi-tenant extensions
-- 🟠 Button for fake-data bulk insert in collections
-- 🟠 Make intro videos (for developers & for administrators)
+### Priority (ASAP, this or next month)
+- [ ] Brainstorm entity mapping via orisai/object-mapper
+- [ ] Collections edit/update view with custom vue-components
+- [ ] Collections edit/update field types (inspired by Nova & Pocketbase)
+- [ ] Enhanced CRUD with inner/outer joins 1:1, 1:N, M:N
+- [ ] Admin datagrid + CRUD
+- [ ] MultiFile uploader
+- [ ] CRUD request-validation by entity props
 
-### Make some automatic tests
-- Phpstan
-- Nette tester / PHP Unit
-- Vulnerability audits
-- Cors tests from another domain
-- Doctrine schema-validation
-- API endpoints tests
-- Sandbox project deploy (easypanel project with webhook)
+### To release versions 1.0.0
+- [ ] Custom page components (inspired by Strapi.io)
+- [ ] Scheduled database backups to S3 & log dashboard
+- [ ] AI text helper (Chat GPT + PHP Storm style)
+- [ ] JSON translations (i18n, untranslated text finder, AI auto translate)
+- [ ] App settings (edit envFile - dev only)
+- [ ] Storage settings (edit envFile - dev only)
+- [ ] E-mail settings (edit envFile - dev only)
+- [ ] Console cron jobs & progress dashboard
+- [ ] Access log & error log dashboard with Tracy/BlueScreens
+- [ ] **Collection Editor** (Doctrine entity builder & safe migrations)
+- [ ] Make useful docs from my notes & use [docusaurus.io](https://docusaurus.io/)
 
-## Changelog
+#### Create automatic tests
+- [ ] Phpstan (GH Action)
+- [ ] Vulnerability audits (GH Action)
+- [ ] Doctrine schema-validation (GH Action)
+- [ ] Sandbox project deploy (GH Action)
+- [ ] Nette tester / PHP Unit (GH Action)
+- [ ] Cors tests from another domain
+- [ ] API endpoints tests
 
-### 07/2023
-- 🟢 App.php refactoring
-- 🟢 Upgrade to symfony router 6.3
-- 🟢 Add Symfony\Kernel and controller argument resolver with autowiring
-- 🟢 Bootstrap.php refactoring (make it extendable in neon)
-- 🟢 Add kernel events (CSP, CORS)
-- 🟢 Split User entity into User & Admin entity
-- 🟢 Admin & User login mechanism refactoring
-- 🟢 Make User entity commutable and test it in sandbox project
-- 🟢 Add Collection CRUD events & Application events
-- 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
-- 🟢 Split Login form into Admin & User form
-- 🟢 Add Alert system and show alerts on response status 40X
-- 🟢 Add Nginx request rate limiter & Symfony IP address proxy resolver
-- 🟢 Add navbar resources, Vue composable and hide non-admin stuff
-- 🟢 Resource loader for vue router & update button in admin panel.
-- 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
-- 🟢 Role add modal, role remove modal, cascade delete in SQLite / Postgres.
-- 🟢 Print composer.lock & yarn.lock version in admin panel
-- 🟢 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 
-### 06/2023
-- 🟢 API end-point for CRUD actions trough Doctrine Entities
-- 🟢 Extendable (collections) datagrid with global configs
+### Other ideas
+- [ ] Add article extension (for testing puroposes)
+- [ ] Add multi-tenant extensions (for invoice-gun app)
+- [ ] Add cart extension (React with GoPay)
+- [ ] Add localizations for collections (i18n)
+- [ ] Button for fake-data bulk insert in collections
+- [ ] Console redis jobs & progress dashboard
+- [ ] Make intro videos (for dev & for admins)
 
 ## Tutorials
 
@@ -116,3 +95,30 @@ pm.test("set html", function() {
     pm.visualizer.set(fixedHtml)
 });
 ```
+
+## Changelog
+
+### 07/2023
+- [x] App.php refactoring
+- [x] Upgrade to symfony router 6.3
+- [x] Add Symfony\Kernel and controller argument resolver with autowiring
+- [x] Bootstrap.php refactoring (make it extendable in neon)
+- [x] Add kernel events (CSP, CORS)
+- [x] Split User entity into User & Admin entity
+- [x] Admin & User login mechanism refactoring
+- [x] Make User entity commutable and test it in sandbox project
+- [x] Add Collection CRUD events & Application events
+- [x] Add JWTAuth mechanism for Routes, Collections, CollectionNav
+- [x] Split Login form into Admin & User form
+- [x] Add Alert system and show alerts on response status 40X
+- [x] Add Nginx request rate limiter & Symfony IP address proxy resolver
+- [x] Add navbar resources, Vue composable and hide non-admin stuff
+- [x] Resource loader for vue router & update button in admin panel.
+- [x] Role access table (Routes, Collections, CollectionsNav, Views)
+- [x] Role add modal, role remove modal, cascade delete in SQLite / Postgres.
+- [x] Print composer.lock & yarn.lock version in admin panel
+- [x] Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+
+### 06/2023
+- [x] CRUD API trough Doctrine Entities on scalar types
+- [x] Extendable collections with global configs
