@@ -9,7 +9,7 @@ namespace Saas\Database\Field;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Saas\Extension\Doctrine\UuidV6Generator;
+use Saas\Extension\Doctrine\Generator\UuidV6Generator;
 
 trait TId
 {

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine;
+namespace Saas\Extension\Doctrine\Subscriber;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Schema\PostgreSQLSchemaManager;
