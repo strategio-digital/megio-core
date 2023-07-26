@@ -47,11 +47,11 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
 - 🟢 Split Login form into Admin & User form
 - 🟢 Add Alert system and show alerts on response status 40X
-- 🟢 Request Nginx rate limiter & IP address proxy resolver
+- 🟢 Add Nginx request rate limiter & Symfony IP address proxy resolver
 - 🟢 Add navbar resources, Vue composable and hide non-admin stuff
-- 🟢 Resource loader from vue router & resource auto-update.
+- 🟢 Resource loader for vue router & update button in admin panel.
 - 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
-- 🟢 Role add modal, role remove modal, cascade delete.
+- 🟢 Role add modal, role remove modal, cascade delete in SQLite / Postgres.
 - 🟢 Print composer.lock & yarn.lock version in admin panel
 - 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 
