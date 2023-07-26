@@ -51,8 +51,9 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Add navbar resources, Vue composable and hide non-admin stuff
 - 🟢 Resource loader from vue router & resource auto-update.
 - 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
-- 🟡 Role add modal, role remove modal, cascade delete.
+- 🟢 Role add modal, role remove modal, cascade delete.
 - 🟢 Print composer.lock & yarn.lock version in admin panel
+- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities
@@ -73,7 +74,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Scheduled database backups to S3 & log dashboard
 - 🟠 AI text helper (Chat GPT + PHP Storm style)
 - 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
