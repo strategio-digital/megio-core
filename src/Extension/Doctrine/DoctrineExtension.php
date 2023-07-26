@@ -26,5 +26,6 @@ class DoctrineExtension extends CompilerExtension
         
         $this->initialization->addBody('$evm = $this->getService(?)->getEventManager();', ['entityManager']);
         $this->initialization->addBody('$evm->addEventSubscriber(new \Saas\Extension\Doctrine\PostgresDefaultSchemaSubscriber());');
+        $this->initialization->addBody('$evm->addEventSubscriber(new \Saas\Extension\Doctrine\SqliteForeignKeyChecksSubscriber());');
     }
 }

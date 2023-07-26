@@ -14,7 +14,8 @@ use Doctrine\ORM\Tools\ToolEvents;
 
 final class PostgresDefaultSchemaSubscriber implements EventSubscriber
 {
-    public function getSubscribedEvents()
+    /** @return string[] */
+    public function getSubscribedEvents(): array
     {
         return [
             ToolEvents::postGenerateSchema
