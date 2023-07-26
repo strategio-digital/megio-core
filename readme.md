@@ -113,9 +113,9 @@ pm.test("set html", function() {
 - [x] Add Alert system and show alerts on response status 40X
 - [x] Add Nginx request rate limiter & Symfony IP address proxy resolver
 - [x] Add navbar resources, Vue composable and hide non-admin stuff
-- [x] Resource loader for vue router & update button in admin panel.
+- [x] Resource loader for vue router & update button in admin panel
 - [x] Role access table (Routes, Collections, CollectionsNav, Views)
-- [x] Role add modal, role remove modal, cascade delete in SQLite / Postgres.
+- [x] Role add modal, role remove modal, cascade delete in SQLite / Postgres
 - [x] Print composer.lock & yarn.lock version in admin panel
 - [x] Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 
