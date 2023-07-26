@@ -32,33 +32,6 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Custom Symfony console commands.
 - 🟢 PHPStan static analysis on level 8.
 
-## Changelog
-
-### 07/2023
-- 🟢 App.php refactoring
-- 🟢 Upgrade to symfony router 6.3
-- 🟢 Add Symfony\Kernel and controller argument resolver with autowiring
-- 🟢 Bootstrap.php refactoring (make it extendable in neon)
-- 🟢 Add kernel events (CSP, CORS)
-- 🟢 Split User entity into User & Admin entity
-- 🟢 Admin & User login mechanism refactoring
-- 🟢 Make User entity commutable and test it in sandbox project
-- 🟢 Add Collection CRUD events & Application events
-- 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
-- 🟢 Split Login form into Admin & User form
-- 🟢 Add Alert system and show alerts on response status 40X
-- 🟢 Add Nginx request rate limiter & Symfony IP address proxy resolver
-- 🟢 Add navbar resources, Vue composable and hide non-admin stuff
-- 🟢 Resource loader for vue router & update button in admin panel.
-- 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
-- 🟢 Role add modal, role remove modal, cascade delete in SQLite / Postgres.
-- 🟢 Print composer.lock & yarn.lock version in admin panel
-- 🟢 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
-
-### 06/2023
-- 🟢 API end-point for CRUD actions trough Doctrine Entities
-- 🟢 Extendable (collections) datagrid with global configs
-
 ## Priority
 - 🟡 Brainstorm entity mapping via orisai/object-mapper
 - 🟡 Collections edit / update page with custom vue-components
@@ -95,15 +68,38 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - API endpoints tests
 - Sandbox project deploy (easypanel project with webhook)
 
-## Make some tutorials
-1. How to start new project and create first collections.
-2. How to handle request and render collection data in Latte template.
-3. How to handle API requests and send example e-mail.
-4. How to make CRUD operations with Doctrine ORM.
-5. How to upload files with S3 storage adapter.
-6. How to deploy your application with easypanel.io.
+## Changelog
 
-### How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YsqUZuv).
+### 07/2023
+- 🟢 App.php refactoring
+- 🟢 Upgrade to symfony router 6.3
+- 🟢 Add Symfony\Kernel and controller argument resolver with autowiring
+- 🟢 Bootstrap.php refactoring (make it extendable in neon)
+- 🟢 Add kernel events (CSP, CORS)
+- 🟢 Split User entity into User & Admin entity
+- 🟢 Admin & User login mechanism refactoring
+- 🟢 Make User entity commutable and test it in sandbox project
+- 🟢 Add Collection CRUD events & Application events
+- 🟢 Add JWTAuth mechanism for Routes, Collections, CollectionNav
+- 🟢 Split Login form into Admin & User form
+- 🟢 Add Alert system and show alerts on response status 40X
+- 🟢 Add Nginx request rate limiter & Symfony IP address proxy resolver
+- 🟢 Add navbar resources, Vue composable and hide non-admin stuff
+- 🟢 Resource loader for vue router & update button in admin panel.
+- 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
+- 🟢 Role add modal, role remove modal, cascade delete in SQLite / Postgres.
+- 🟢 Print composer.lock & yarn.lock version in admin panel
+- 🟢 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+
+### 06/2023
+- 🟢 API end-point for CRUD actions trough Doctrine Entities
+- 🟢 Extendable (collections) datagrid with global configs
+
+## Tutorials
+
+### 1. Video tutorials coming soon...
+
+### 2. How to debug API with [Postman](https://documenter.getpostman.com/view/14885541/2s8YsqUZuv).
 
 If you want to use Postman to debug API, just add this script into `Postman -> Collection -> Tests` section and you will be able to use Tracy\Debuuger in Postman.
 ```JS
