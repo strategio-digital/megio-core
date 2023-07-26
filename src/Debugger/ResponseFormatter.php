@@ -7,12 +7,18 @@ declare(strict_types=1);
 
 namespace Saas\Debugger;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Nette\DI\Container;
+use Saas\Extension\Doctrine\Tracy\SummaryHelper;
 use Saas\Security\Auth\AuthUser;
 
 class ResponseFormatter
 {
-    public function __construct(private readonly Container $container, private readonly AuthUser $user)
+    public function __construct(
+        private readonly Container $container,
+        private readonly AuthUser $user,
+        private readonly DebugStack $queryStack,
+    )
     {
     }
     
@@ -23,16 +29,23 @@ class ResponseFormatter
     public function formatResponseData(array $data): array
     {
         $user = $this->user->get();
+        $queriesHelper = new SummaryHelper($this->queryStack);
+        
         $executionTime = microtime(true) - $this->container->parameters['startedAt'];
         
         return $_ENV['APP_ENV_MODE'] !== 'develop' ? $data : array_merge($data, [
             '@debug' => [
+                'execution_time' => number_format($executionTime * 1000, 1, '.') . 'ms',
                 'auth_user' => $user ? [
                     'id' => $user->getId(),
                     'roles' => $this->user->getRoles(),
                     'resources_count' => count($this->user->getResources()),
                 ] : null,
-                'execution_time' => floor($executionTime * 1000) . 'ms',
+                'database' => [
+                    'query_time' => number_format($queriesHelper->getTotalTime() * 1000, 1, '.') . 'ms',
+                    'query_count' => $queriesHelper->count(),
+                    'queries' => $queriesHelper->count() ? array_values($this->queryStack->queries) : []
+                ]
             ]
         ]);
     }

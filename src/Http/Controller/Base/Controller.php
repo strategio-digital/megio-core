@@ -41,7 +41,7 @@ abstract class Controller implements IController
     public function render(string $path, array $params = []): Response
     {
         $html = $this->latte->renderToString($path, $params);
-        return new Response($html);
+        return new Response($html, 200, ['content-type' => 'text/html']);
     }
     
     /**

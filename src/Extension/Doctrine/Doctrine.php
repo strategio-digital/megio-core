@@ -7,7 +7,12 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Doctrine;
 
+use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Nette\Utils\FileSystem;
+use Saas\Extension\Doctrine\Subscriber\PostgresDefaultSchemaSubscriber;
+use Saas\Extension\Doctrine\Subscriber\SqliteForeignKeyChecksSubscriber;
 use Saas\Helper\Path;
 use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
@@ -21,6 +26,8 @@ use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 class Doctrine
 {
     protected EntityManager $entityManager;
+    
+    protected Connection $connection;
     
     protected Configuration $configuration;
     
@@ -61,12 +68,17 @@ class Doctrine
                 FileSystem::write($_ENV['DB_SQLITE_FILE'], '');
             }
         }
-    
+        
         if (!file_exists(Path::appDir() . '/../migrations')) {
             FileSystem::createDir(Path::appDir() . '/../migrations');
         }
         
-        $this->entityManager = EntityManager::create($this->connectionConfig, $this->configuration);
+        $evm = new EventManager();
+        $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
+        $evm->addEventSubscriber(new SqliteForeignKeyChecksSubscriber());
+        
+        $this->connection = DriverManager::getConnection($this->connectionConfig, $this->configuration, $evm);
+        $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
     }
     
     public function getMigrationFactory(): DependencyFactory
@@ -98,5 +110,10 @@ class Doctrine
     public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
+    }
+    
+    public function getConnection(): Connection
+    {
+        return $this->connection;
     }
 }

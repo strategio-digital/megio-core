@@ -82,7 +82,8 @@ class App
         }
         
         // Remember: Tracy overrides Response headers!
-        if ($_ENV['APP_ENV_MODE'] === 'develop' && !$response instanceof JsonResponse && !$this->request->isMethod('OPTIONS')) {
+        $isHtml = $response->headers->get('content-type') === 'text/html';
+        if ($_ENV['APP_ENV_MODE'] === 'develop' && $isHtml && !$this->request->isMethod('OPTIONS')) {
             Debugger::renderLoader();
         }
         

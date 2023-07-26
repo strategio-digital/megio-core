@@ -7,8 +7,10 @@ declare(strict_types=1);
 
 namespace Saas\Extension\Doctrine;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Nette\DI\CompilerExtension;
+use Saas\Extension\Doctrine\Debugger\SnapshotLogger;
 
 class DoctrineExtension extends CompilerExtension
 {
@@ -24,8 +26,10 @@ class DoctrineExtension extends CompilerExtension
         $builder->addDefinition('migrationFactory')
             ->setFactory('@doctrine::getMigrationFactory');
         
-        $this->initialization->addBody('$evm = $this->getService(?)->getEventManager();', ['entityManager']);
-        $this->initialization->addBody('$evm->addEventSubscriber(new \Saas\Extension\Doctrine\PostgresDefaultSchemaSubscriber());');
-        $this->initialization->addBody('$evm->addEventSubscriber(new \Saas\Extension\Doctrine\SqliteForeignKeyChecksSubscriber());');
+        $builder->addDefinition('doctrineDebugStack')->setType(DebugStack::class);
+        $this->initialization->addBody('$debugStack = $this->getService(?);', ['doctrineDebugStack']);
+        $this->initialization->addBody('$configuration = $this->getService(?)->getConnection()->getConfiguration();', ['doctrine']);
+        $this->initialization->addBody('$configuration->setSQLLogger($debugStack);');
+        $this->initialization->addBody('\Tracy\Debugger::getBar()->addPanel(new \Saas\Extension\Doctrine\Tracy\DoctrineTracyPanel($debugStack));');
     }
 }

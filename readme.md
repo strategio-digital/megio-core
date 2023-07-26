@@ -53,7 +53,7 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟢 Role access table (Routes, Collections, CollectionsNav, Views)
 - 🟢 Role add modal, role remove modal, cascade delete in SQLite / Postgres.
 - 🟢 Print composer.lock & yarn.lock version in admin panel
-- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+- 🟢 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 
 ### 06/2023
 - 🟢 API end-point for CRUD actions trough Doctrine Entities

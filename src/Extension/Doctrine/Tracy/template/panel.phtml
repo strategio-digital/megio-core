@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @var \Doctrine\DBAL\Logging\DebugStack $stack
+ * @var int $count
+ * @var float $time
+ */
+
+?>
+
+<?php if ($count === 0): ?>
+    <h1>No queries</h1>
+<?php else: ?>
+    <h1>Queries:<?= $count ?>, time:<?= $time ? sprintf('%0.3f', $time * 1000) : ''; ?> ms</h1>
+<?php endif; ?>
+
+<div class="tracy-inner">
+    <table class="tracy-sortable">
+        <tr>
+            <th>Time&nbsp;ms</th>
+            <th>SQL Statement</th>
+        </tr>
+        
+        <?php if ($count !== 0): ?>
+            <?php foreach ($stack->queries as $q): ?>
+                <tr>
+                    <td><?= sprintf('%0.2f', $q['executionMS'] * 1000); ?></td>
+                    <td class="tracy-dbal-sql">
+                        <?= \Nette\Utils\Strings::replace($q['sql'], '~([A-Z])~', '<strong>$1</strong>') ?>
+                        <?php if (array_key_exists('params', $q) && $q['params'] && count($q['params'])): ?>
+                            <div style=" margin-top: .3rem">
+                                <span style="font-weight: bold;">Params:</span>
+                                <?= json_encode($q['params']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </table>
+</div>
