@@ -11,14 +11,14 @@ Most powerful tool for creating webs, apps & APIs.
 2. Move to your project folder & finish installation steps by [readme.md](https://github.com/strategio-digital/saas/blob/master/sandbox/readme.md)
 
 ## Core features
-- [x] Web-ready dev-stack (simple router & Latte templates)
-- [x] API-ready dev-stack (simple router & UI route permissions editor)
+- [x] Web-ready dev-stack (simple router & Latte templates).
+- [x] API-ready dev-stack (simple router & UI route permissions editor).
 - [x] Fully configurable & extendable Vue 3 Admin panel.
 - [ ] Admin panel with UI datagrid editor based on Doctrine entities.
 - [x] Vite assets bundler for fast compiling scss, ts, vue, etc.
 - [x] One click deployment with Dockerfile and easypanel.io.
 - [x] Stateless and scalable architecture for PHP applications.
-- [x] Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs
+- [x] Optimized Docker image (Nginx & PHP-FPM) - about 20Mb costs.
 
 ## Backend features
 - [x] JWT Auth with route resources protection.
@@ -59,8 +59,8 @@ Most powerful tool for creating webs, apps & APIs.
 - [ ] Phpstan (GH Action)
 - [ ] Vulnerability audits (GH Action)
 - [ ] Doctrine schema-validation (GH Action)
-- [ ] Sandbox project deploy (GH Action)
 - [ ] Nette tester / PHP Unit (GH Action)
+- [ ] Sandbox project deploy (GH Action)
 - [ ] Cors tests from another domain
 - [ ] API endpoints tests
 
@@ -72,7 +72,7 @@ Most powerful tool for creating webs, apps & APIs.
 - [ ] Add localizations for collections (i18n)
 - [ ] Button for fake-data bulk insert in collections
 - [ ] Console redis jobs & progress dashboard
-- [ ] Make intro videos (for dev & for admins)
+- [ ] Make intro videos (for devs & for admins)
 
 ## Tutorials
 
