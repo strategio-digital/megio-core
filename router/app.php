@@ -79,6 +79,11 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Resource\UpdateRoleRequest::class)
         ->options(['inResources' => false]);
     
+    $resources->add('create.role', '/create-role')
+        ->methods(['POST'])
+        ->controller(Resource\CreateRoleRequest::class)
+        ->options(['inResources' => false]);
+    
     $resources->add('delete.role', '/delete-role')
         ->methods(['DELETE'])
         ->controller(Resource\DeleteRoleRequest::class)

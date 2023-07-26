@@ -8,12 +8,13 @@ declare(strict_types=1);
 namespace Saas\Http\Request\Resource;
 
 use Nette\Schema\Expect;
+use Nette\Utils\Strings;
 use Saas\Database\Entity\Auth\Role;
 use Saas\Database\EntityManager;
 use Saas\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeleteRoleRequest extends Request
+class CreateRoleRequest extends Request
 {
     public function __construct(protected EntityManager $em)
     {
@@ -22,26 +23,31 @@ class DeleteRoleRequest extends Request
     public function schema(): array
     {
         return [
-            'id' => Expect::string()->required(),
+            'name' => Expect::string()->min(3)->max(32)->required(),
         ];
     }
     
     public function process(array $data): Response
     {
-        /** @var Role|null $role */
-        $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['id']]);
+        $name = Strings::webalize($data['name']);
         
-        if (!$role) {
-            return $this->error(['This role is already deleted'], 404);
+        /** @var Role|null $role */
+        $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $name]);
+        
+        if ($role) {
+            return $this->error(['This role already exists']);
         }
         
-        $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
-            ->delete()
-            ->where('Role.id = :id')
-            ->setParameter('id', $role->getId())
-            ->getQuery()
-            ->execute();
+        $role = new Role();
+        $role->setName($name);
         
-        return $this->json(['message' => 'Role successfully deleted']);
+        $this->em->persist($role);
+        $this->em->flush();
+        
+        return $this->json([
+            'id' => $role->getId(),
+            'name' => $role->getName(),
+            'enabled' => false
+        ]);
     }
 }

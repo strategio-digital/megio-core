@@ -68,22 +68,22 @@ Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
 - 🟠 Admin datagrid + CRUD
 - 🟠 Make some docs (inspired by [docusaurus.io](https://docusaurus.io/))
 - 🟠 Custom page components (inspired by Strapi.io)
-- 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
 
 ## Backlog
+- 🟠 Scheduled database backups to S3 & log dashboard
+- 🟠 AI text helper (Chat GPT + PHP Storm style)
+- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
+- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
+- 🟠 **Collection Editor** (Doctrine entity builder & safe migrations)
 - 🟠 App settings (edit envFile - dev only)
 - 🟠 Storage settings (edit envFile - dev only)
 - 🟠 E-mail settings (edit envFile - dev only)
-- 🟠 Scheduled database backups to S3 & log dashboard
-- 🟠 AI Text helper (Chat GPT + PHP Storm style)
-- 🟠 JSON translations (i18n, untranslated text finder, AI auto translate)
-- 🟠 Doctrine SQL profiler: TracyBar, JsonResponse debugger (Queries count, SQL log, execution times)
 - 🟠 Console cron jobs & progress dashboard
 - 🟠 Console redis jobs & progress dashboard
 - 🟠 Access log & error log dashboard with Tracy/BlueScreens
-- 🟠 Add Simple cart + GoPay extension
-- 🟠 Add multitenatn extensions
-- 🟠 Button for fake-data bulk insert into collection.
+- 🟠 Add cart extension (React with GoPay)
+- 🟠 Add multi-tenant extensions
+- 🟠 Button for fake-data bulk insert in collections
 - 🟠 Make intro videos (for developers & for administrators)
 
 ### Make some automatic tests

@@ -10,7 +10,8 @@ import { IResp as IRespShow } from '@/saas/api/resources/show'
 import { IResp as IRespUpdate } from '@/saas/api/resources/update'
 import Layout from '@/saas/components/layout/Layout.vue'
 import SettingNav from '@/saas/components/navbar/SettingNav.vue'
-import RemoveRoleModal from '@/saas/components/resource/RemoveModal.vue'
+import RemoveRoleModal from '@/saas/components/resource/RemoveRoleModal.vue'
+import CreateRoleModal from '@/saas/components/resource/CreateRoleModal.vue'
 import api from '@/saas/api'
 
 const router = useRouter()
@@ -23,8 +24,9 @@ const roles = ref<IRole[]>([])
 const groupedResourcesWithRoles = ref<IGroupedResourcesWithRoles[]>([])
 const resourceDiff = ref<IResourceDiff>()
 
-const currentRole = ref<IRole>()
-const removeModalOpen = ref<boolean>(false)
+const currentRemovingRole = ref<IRole>()
+const removeRoleModalOpen = ref<boolean>(false)
+const createRoleModalOpen = ref<boolean>(false)
 
 const routes = computed(() => {
     return router.getRoutes()
@@ -46,28 +48,39 @@ function getRouteHint(routeName: string) {
     return null
 }
 
-function toggleRemoveModal(role: IRole | null = null) {
+function toggleRemoveRoleModal(role: IRole | null = null) {
     if (role) {
-        currentRole.value = role
-        removeModalOpen.value = true
+        currentRemovingRole.value = role
+        removeRoleModalOpen.value = true
     } else {
-        removeModalOpen.value = false
+        removeRoleModalOpen.value = false
     }
 }
 
-function removeModalSuccess(role: IRole) {
+function removeRoleModalSuccess(role: IRole) {
     roles.value = roles.value.filter(r => r.id !== role.id)
     groupedResourcesWithRoles.value = groupedResourcesWithRoles.value.map(group => {
             const rr = group.resources.map(res => {
-                return {
-                    ...res,
-                    roles: res.roles.filter(rol => rol.id !== role.id)
-                }
+                return { ...res, roles: res.roles.filter(rol => rol.id !== role.id) }
             })
             return { ...group, resources: rr }
         }
     )
-    toggleRemoveModal(null)
+    toggleRemoveRoleModal(null)
+}
+
+function createRoleModalSuccess(role: IRole) {
+    createRoleModalOpen.value = false
+    roles.value.push(role)
+
+    groupedResourcesWithRoles.value = groupedResourcesWithRoles.value.map(group => {
+        const rr = group.resources.map(res => {
+            const rls = res.roles
+            rls.push(role)
+            return { ...res, roles: rls }
+        })
+        return { ...group, resources: rr }
+    })
 }
 
 function unwrapResponse(resp: IRespShow | IRespUpdate) {
@@ -87,8 +100,9 @@ async function update() {
     loading.value = false
 }
 
-async function updateRole(role: IRole, resource: IResource) {
-    const resp = await api.resources.updateRole(role.id, resource.id, role.enabled || false)
+async function updateRole(enabled: boolean, role: IRole, resource: IResource) {
+    const resp = await api.resources.updateRole(role.id, resource.id, enabled)
+
     if (resp.success) {
         toast.add(resp.data.message, 'success')
     }
@@ -102,21 +116,30 @@ onMounted(async () => {
 </script>
 
 <template>
-    <RemoveRoleModal
-        v-if="currentRole"
-        :open="removeModalOpen"
-        :role="currentRole"
-        @onCancel="toggleRemoveModal(null)"
-        @onAccept="removeModalSuccess"
-    />
     <Layout :loading="loading">
         <template v-slot:default>
+            <RemoveRoleModal
+                v-if="currentRemovingRole"
+                :open="removeRoleModalOpen"
+                :role="currentRemovingRole"
+                @onCancel="toggleRemoveRoleModal(null)"
+                @onAccept="removeRoleModalSuccess"
+            />
+
+            <CreateRoleModal
+                :open="createRoleModalOpen"
+                @onCancel="createRoleModalOpen = false"
+                @onSuccess="createRoleModalSuccess"
+            />
+
             <div class="pa-7">
                 <div class="d-flex justify-space-between align-center">
                     <v-breadcrumbs :items="['Role a oprávnění']" class="pa-0" style="font-size: 1.4rem" />
 
                     <div class="d-flex ms-3">
-                        <v-btn variant="tonal" prepend-icon="mdi-plus" class="ms-3">Nová role</v-btn>
+                        <v-btn @click="createRoleModalOpen = true" variant="tonal" prepend-icon="mdi-plus" class="ms-3">
+                            Nová role
+                        </v-btn>
                         <v-btn @click="update" variant="tonal" color="red" class="ms-3">
                             <v-badge v-if="badgeDiff" :content="badgeDiff" color="red" offset-y="-22" offset-x="12" />
                             <span>Aktualizovat</span>
@@ -148,7 +171,7 @@ onMounted(async () => {
                         :key="role.id"
                         append-icon="mdi-close"
                         class="me-3"
-                        @click="toggleRemoveModal(role)"
+                        @click="toggleRemoveRoleModal(role)"
                     >
                         {{ role.name }}
                     </v-chip>
@@ -158,7 +181,7 @@ onMounted(async () => {
                     <h2 class="mt-0 mb-0">{{ group.groupName }}</h2>
                     <v-table density="default" :hover="true">
                         <thead>
-                        <tr>
+                        <tr class="text-no-wrap">
                             <th></th>
                             <th>admin</th>
                             <th v-for="role in roles" :key="role.id">{{ role.name }}</th>
@@ -187,12 +210,12 @@ onMounted(async () => {
                                     :disabled="true"
                                 />
                             </td>
-                            <td v-for="role in resource.roles" :key="role.id + resource.id">
+                            <td v-for="role in resource.roles" :key="`${role.id + resource.id}`">
                                 <v-checkbox
                                     class="d-flex justify-center"
                                     color="primary"
-                                    v-model="role.enabled"
-                                    @change="updateRole(role, resource)"
+                                    :model-value="role.enabled"
+                                    @change="(e) => updateRole(e.target.checked, role, resource)"
                                 />
                             </td>
                         </tr>

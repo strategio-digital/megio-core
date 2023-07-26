@@ -351,9 +351,7 @@ onUpdated(() => resolveMultiselect())
         </v-table>
 
         <div v-if="!data.items.length" class="d-flex justify-center align-center">
-            <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">
-                {{ emptyDataMessage }}
-            </div>
+            <div class="border-0 border-t border-dashed w-100 py-5 mt-5 text-center">{{ emptyDataMessage }}</div>
         </div>
 
         <!-- pagination -->

@@ -4,21 +4,20 @@
  */
 
 import { IResponse } from '@/saas/api/types/IResponse'
+import { IRole } from '@/saas/api/resources/types/IRole'
 import api from '@/saas/api'
 
 export interface IResp extends IResponse {
-    data: {
-        message: string
-    }
+    data: IRole
 }
 
-const removeRole = async (roleId: string): Promise<IResp> => {
-    const resp = await api.fetch(`saas/resources/delete-role`, {
-        method: 'DELETE',
-        body: JSON.stringify({ id: roleId })
+const createRole = async (name: string): Promise<IResp> => {
+    const resp = await api.fetch(`saas/resources/create-role`, {
+        method: 'POST',
+        body: JSON.stringify({ name })
     })
 
     return { ...resp, data: resp.data }
 }
 
-export default removeRole
+export default createRole

@@ -15,6 +15,7 @@ import showResources from '@/saas/api/resources/show'
 import updateResources from '@/saas/api/resources/update'
 import updateRole from '@/saas/api/resources/updateRole'
 import removeRole from '@/saas/api/resources/removeRole'
+import createRole from '@/saas/api/resources/createRole'
 
 import { IResponse } from '@/saas/api/types/IResponse'
 import { useToast } from '@/saas/components/toast/useToast'
@@ -69,6 +70,7 @@ export default {
     resources: {
         show: showResources,
         update: updateResources,
+        createRole,
         updateRole,
         removeRole,
     }

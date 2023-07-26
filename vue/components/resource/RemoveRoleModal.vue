@@ -10,7 +10,7 @@ const loading = ref(false)
 
 const emits = defineEmits<{
     (e: 'onCancel'): void
-    (e: 'onAccept', role: IRole) : void
+    (e: 'onAccept', role: IRole): void
 }>()
 
 async function handleAccept() {
