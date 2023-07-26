@@ -41,12 +41,12 @@ return static function (RoutingConfigurator $routes): void {
     $admin->add('profile', '/profile')
         ->methods(['POST'])
         ->controller(Admin\ProfileRequest::class)
-        ->options(['inResources' => false]);;
+        ->options(['inResources' => false]);
     
     $admin->add('avatar', '/avatar')
         ->methods(['POST'])
         ->controller(Admin\UploadAvatarRequest::class)
-        ->options(['inResources' => false]);;
+        ->options(['inResources' => false]);
     
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/saas/collections');

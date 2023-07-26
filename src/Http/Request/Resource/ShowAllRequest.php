@@ -44,6 +44,7 @@ class ShowAllRequest extends Request
         $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
             ->select('Role', 'Resource')
             ->leftJoin('Role.resources', 'Resource')
+            ->orderBy('Role.createdAt', 'ASC')
             ->getQuery()
             ->getResult();
         

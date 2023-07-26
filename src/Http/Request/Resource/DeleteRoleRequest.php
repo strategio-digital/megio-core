@@ -35,12 +35,8 @@ class DeleteRoleRequest extends Request
             return $this->error(['This role is already deleted'], 404);
         }
         
-        $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
-            ->delete()
-            ->where('Role.id = :id')
-            ->setParameter('id', $role->getId())
-            ->getQuery()
-            ->execute();
+        $this->em->remove($role);
+        $this->em->flush($role);
         
         return $this->json(['message' => 'Role successfully deleted']);
     }

@@ -41,6 +41,7 @@ class UserCreateCommand extends Command
         $user = new User();
         
         if ($roleName) {
+            /** @var Role|null $role */
             $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $roleName]);
             
             if (!$role) {

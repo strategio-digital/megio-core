@@ -43,8 +43,8 @@ class User implements ICrudable, IAuthenticable
     /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class)]
     #[ORM\JoinTable(name: 'user_has_role')]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
-    #[ORM\InverseJoinColumn(name: "role_id", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: "role_id", referencedColumnName: "id", onDelete: 'CASCADE')]
     protected Collection $roles;
     
     public function __construct()

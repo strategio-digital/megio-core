@@ -73,7 +73,7 @@ class Vite
                 throw new \Exception("Vite manifest file has wrong format.");
             }
             
-            $this->manifest = json_decode($content, true);;
+            $this->manifest = json_decode($content, true);
         }
         
         return $this->manifest;
