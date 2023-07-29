@@ -25,7 +25,7 @@ class SaasExtension extends Extension
     {
         return  [
             'vite' => [ViteFunction::class, 'create'], // Static
-            'thumbnail' => [ThumbnailFunction::class], // Static
+            'thumbnail' => [ThumbnailFunction::class, 'create'], // Static
             'route' => [$this->routeFunction, 'create'], // With DI
         ];
     }
