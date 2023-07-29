@@ -215,7 +215,7 @@ onMounted(async () => {
                                     class="d-flex justify-center"
                                     color="primary"
                                     :model-value="role.enabled"
-                                    @change="(e) => updateRole(e.target.checked, role, resource)"
+                                    @change="(e: InputEvent) => updateRole((e.target as HTMLInputElement).checked, role, resource)"
                                 />
                             </td>
                         </tr>

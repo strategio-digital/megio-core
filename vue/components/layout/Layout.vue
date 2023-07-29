@@ -44,7 +44,7 @@ const route = useRoute()
             <v-list density="comfortable">
                 <template v-for="nav in navbar.items" :key="nav.route.name">
                     <v-tooltip
-                        v-if="hasResource(nav.route.name.toString())"
+                        v-if="hasResource(nav.route.name?.toString() || '@undefined')"
                         location="end"
                         :text="nav.title"
                         offset="-5"
@@ -90,7 +90,7 @@ const route = useRoute()
                     </v-tooltip>
                 </v-list>
 
-                <div style="font-size: .6rem; color: #aaaaaa; z-index: 10000000; text-align: center">
+                <div v-if="versions" style="font-size: .6rem; color: #aaaaaa; z-index: 10000000; text-align: center">
                     <div>
                         <a :href="`https://github.com/strategio-digital/saas/tree/${versions.commit_reference}`" target="_blank" style="color: #aaaaaa">
                             {{ versions.composer }}
