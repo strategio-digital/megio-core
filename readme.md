@@ -3,7 +3,7 @@
 Most powerful tool for creating webs, apps & APIs.
 
 - Demo: https://saas.strategio.dev (u: admin@test.cz p: Test1234)
-- Documentation: https://docs.saas.strategio.dev/why-strategio-saas
+- Documentation: https://docs.saas.strategio.dev/docs/why-strategio-saas
 
 <img src="https://jzapletal.s3.eu-west-1.amazonaws.com/strategio-saas-edit-data.png" width="100%" alt="Strategio SaaS">
 
