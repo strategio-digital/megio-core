@@ -60,7 +60,8 @@ class Bootstrap
         $container = $this->createContainer($configPath);
         $container->parameters['startedAt'] = $startedAt;
         
-        // Register DI panel
+        // Register Tracy DI panel
+        $container->addService('tracy.bar', Debugger::getBar());
         Debugger::getBar()->addPanel(new ContainerPanel($container));
         
         // Initialize extensions
