@@ -36,9 +36,9 @@ class Path
         return self::$projectPath . '/www';
     }
     
-    public static function publicDir(): string
+    public static function wwwTempDir(): string
     {
-        return self::$projectPath . '/public';
+        return self::$projectPath . '/www/temp';
     }
     
     public static function configDir(): string

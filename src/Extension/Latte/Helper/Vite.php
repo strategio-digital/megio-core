@@ -25,7 +25,7 @@ class Vite
         }
         
         $entry = $this->getManifest()[$source];
-        return '/public/' . $entry['file'];
+        return '/temp/' . $entry['file'];
     }
     
     public function resolveEntrypoint(string $entryPoint): string
@@ -48,9 +48,9 @@ class Vite
         $entry = $this->getManifest()[$entryPoint];
         
         $result = array_merge(
-            [$this->sourceToHtmlTag('/public/' . $entry['file'])],
-            array_key_exists('css', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/public/' . $source), $entry['css']) : [],
-            array_key_exists('js', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/public/' . $source), $entry['js']) : []
+            [$this->sourceToHtmlTag('/temp/' . $entry['file'])],
+            array_key_exists('css', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/temp/' . $source), $entry['css']) : [],
+            array_key_exists('js', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/temp/' . $source), $entry['js']) : []
         );
         
         return implode(PHP_EOL, $result);
@@ -63,11 +63,11 @@ class Vite
     protected function getManifest(): array
     {
         if (!$this->manifest) {
-            if (!file_exists(Path::publicDir() . '/manifest.json')) {
+            if (!file_exists(Path::wwwTempDir() . '/manifest.json')) {
                 throw new \Exception("Vite manifest file not found, please execute 'yarn build' or 'yarn dev' command.");
             }
             
-            $content = file_get_contents(Path::publicDir() . '/manifest.json');
+            $content = file_get_contents(Path::wwwTempDir() . '/manifest.json');
             
             if (!$content) {
                 throw new \Exception("Vite manifest file has wrong format.");

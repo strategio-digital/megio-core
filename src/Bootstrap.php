@@ -39,12 +39,12 @@ class Bootstrap
         $_ENV = array_merge(getenv(), $_ENV);
         $envPath = Path::wwwDir() . '/../.env';
         
-        date_default_timezone_set($_ENV['TZ']);
-        
         if (file_exists($envPath)) {
             $dotenv = new Dotenv();
             $dotenv->loadEnv($envPath);
         }
+        
+        date_default_timezone_set($_ENV['APP_TIME_ZONE']);
         
         // Setup debugger
         Debugger::setLogger(new Logger(Path::logDir()));

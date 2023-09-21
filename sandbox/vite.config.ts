@@ -7,20 +7,17 @@ export default defineConfig({
         alias: {
             '@/assets': '/assets',
             '@/saas': '/vendor/strategio/saas/vue',
-            './vue': '/vendor/strategio/saas/vue',
+            './vue': '/vendor/strategio/saas/vue'
         }
-    },
-    build: {
-        outDir: 'public',
-        assetsDir: 'assets',
     },
     plugins: [
         vue(),
         laravel({
+            publicDirectory: 'www',
+            buildDirectory: 'temp',
             hotFile: 'temp/vite.hot',
-            buildDirectory: 'public',
             input: ['assets/app.ts', 'assets/saas.ts'],
             refresh: ['assets/**', 'view/**']
-        }),
+        })
     ]
 })

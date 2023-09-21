@@ -62,11 +62,18 @@ class Doctrine
             $this->connectionConfig['password'] = $_ENV['DB_PASSWORD'];
         }
         
-        if ($_ENV['DB_DRIVER'] === 'pdo_sqlite' || $_ENV['DB_DRIVER'] === 'sqlite3') {
-            $this->connectionConfig['path'] = $_ENV['DB_SQLITE_FILE'];
-            if (!file_exists($_ENV['DB_SQLITE_FILE'])) {
-                FileSystem::write($_ENV['DB_SQLITE_FILE'], '');
+        if ($_ENV['DB_DRIVER'] === 'pdo_sqlite') {
+            $filePath = $_ENV['DB_SQLITE_FILE'];
+            
+            if (!FileSystem::isAbsolute($filePath)) {
+                $filePath = Path::appDir() . '/../docker/temp/sqlite/' . $filePath;
             }
+            
+            if (!file_exists($filePath)) {
+                FileSystem::write($filePath, '');
+            }
+            
+            $this->connectionConfig['path'] = $filePath;
         }
         
         if (!file_exists(Path::appDir() . '/../migrations')) {

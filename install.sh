@@ -45,6 +45,7 @@ elif test "$1" = "update"; then
   cp -r "./.strategio-saas/saas-${VERSION}/sandbox/docker-entrypoint.sh" "./docker-entrypoint.sh"
   cp -r "./.strategio-saas/saas-${VERSION}/sandbox/Dockerfile" "./Dockerfile"
   cp -r "./.strategio-saas/saas-${VERSION}/sandbox/project.sh" "./project.sh"
+  cp -r "./.strategio-saas/saas-${VERSION}/sandbox/vite.config.ts" "./vite.config.ts"
 
   rm -rf "./project.zip" "./.strategio-saas" "./temp/*"
   echo -e ""
