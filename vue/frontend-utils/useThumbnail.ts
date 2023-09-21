@@ -16,9 +16,9 @@ interface IOnCreated {
     (params: Params, src: string): void
 }
 
-export const useThumbnail = (onCreated?: IOnCreated) => {
+export const useThumbnail = (onCreated?: IOnCreated, apiUri: string | null = null) => {
 
-    const api = useApi()
+    const api = useApi(apiUri)
 
     const requestQueue: string[] = []
 
