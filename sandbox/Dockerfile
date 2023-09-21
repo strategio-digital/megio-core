@@ -69,12 +69,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy source code & set permissions
 COPY . ./
 COPY --from=build-stage-php /build/vendor ./vendor
-COPY --from=build-stage-node /build/public ./public
+COPY --from=build-stage-node /build/www/temp ./www/temp
 
 # Resolve permissions
 RUN chmod -R ugo+w ./temp
 RUN chmod -R ugo+w ./log
-RUN chmod -R ugo+r ./public
+RUN chmod -R ugo+r ./www/temp
 RUN chown -R www-data:www-data /var/www/html
 
 # Add entrypoint
