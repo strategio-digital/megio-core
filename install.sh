@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Repository info
-VERSION='0.0.1' #can be 'master', 'develop', whatever
+VERSION='master' #can be '0.0.1', 'master', 'develop', 'whatever'
 REPOSITORY_OWNER='strategio-digital'
 REPOSITORY_NAME='saas-startup'
 
