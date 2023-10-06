@@ -84,7 +84,7 @@ class AppController extends Controller
         $content = file_get_contents(Path::appDir() . '/../composer.lock');
         
         if ($content && $json = json_decode($content, true)) {
-            $composer = current(array_filter($json['packages'], fn($package) => $package['name'] === 'strategio/saas'));
+            $composer = current(array_filter($json['packages'], fn($package) => $package['name'] === 'strategio/megio-core'));
             
             if ($composer) {
                 $composerVersion = $composer['version'];
@@ -96,7 +96,7 @@ class AppController extends Controller
         
         if ($content) {
             $json = YarnLock::toArray($content);
-            $yarn = current(array_filter($json, fn($key) => Strings::startsWith($key, 'strategio-saas@'), ARRAY_FILTER_USE_KEY));
+            $yarn = current(array_filter($json, fn($key) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
             
             if ($yarn) {
                 $yarnVersion = $yarn['version'];
