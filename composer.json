@@ -11,7 +11,8 @@
     "authors": [
         {
             "name": "Jiří Zapletal",
-            "email": "jz@strategio.dev"
+            "email": "jz@strategio.dev",
+            "homepage": "https://jz.strategio.dev"
         }
     ],
     "minimum-stability": "stable",
