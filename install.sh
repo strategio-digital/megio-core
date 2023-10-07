@@ -4,7 +4,7 @@
 VERSION='master' #can be '0.0.1', 'master', 'develop', 'whatever'
 TAGS_OR_HEADS='heads' # 'heads' for branches, 'tags' for tag-releases
 REPOSITORY_OWNER='strategio-digital'
-REPOSITORY_NAME='saas-startup'
+REPOSITORY_NAME='megio-starter'
 
 # Github
 GITHUB_FOLDER_NAME="${REPOSITORY_NAME}-${VERSION}"
