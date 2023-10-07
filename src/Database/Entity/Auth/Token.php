@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity\Auth;
+namespace Megio\Database\Entity\Auth;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TId;
-use Saas\Database\Field\TUpdatedAt;
-use Saas\Database\Repository\Auth\TokenRepository;
+use Megio\Database\Field\TCreatedAt;
+use Megio\Database\Field\TId;
+use Megio\Database\Field\TUpdatedAt;
+use Megio\Database\Repository\Auth\TokenRepository;
 
 #[ORM\Table(name: '`auth_token`')]
 #[ORM\Entity(repositoryClass: TokenRepository::class)]

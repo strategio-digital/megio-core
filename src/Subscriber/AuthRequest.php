@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Subscriber;
+namespace Megio\Subscriber;
 
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\Entity\Admin;
-use Saas\Database\EntityManager;
-use Saas\Database\Interface\IAuthenticable;
-use Saas\Security\Auth\AuthUser;
-use Saas\Security\JWT\JWTResolver;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\Entity\Admin;
+use Megio\Database\EntityManager;
+use Megio\Database\Interface\IAuthenticable;
+use Megio\Security\Auth\AuthUser;
+use Megio\Security\JWT\JWTResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,7 +84,7 @@ class AuthRequest implements EventSubscriberInterface
             return;
         }
         
-        /** @var \Saas\Database\Entity\Auth\Token|null $token */
+        /** @var \Megio\Database\Entity\Auth\Token|null $token */
         $token = $this->em->getAuthTokenRepo()->findOneBy(['id' => $tokenId]);
         
         if (!$token) {
@@ -92,7 +92,7 @@ class AuthRequest implements EventSubscriberInterface
             return;
         }
         
-        /** @var \Saas\Database\Entity\Auth\Token $token */
+        /** @var \Megio\Database\Entity\Auth\Token $token */
         if ($jwt->isExpired(new \DateTime())) {
             $this->em->remove($token);
             $this->em->flush();

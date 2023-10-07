@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity\Auth;
+namespace Megio\Database\Entity\Auth;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Saas\Database\Enum\ResourceType;
-use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TId;
-use Saas\Database\Repository\Auth\ResourceRepository;
+use Megio\Database\Enum\ResourceType;
+use Megio\Database\Field\TCreatedAt;
+use Megio\Database\Field\TId;
+use Megio\Database\Repository\Auth\ResourceRepository;
 
 #[ORM\Table(name: '`auth_resource`')]
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]

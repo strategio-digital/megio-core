@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Controller;
+namespace Megio\Http\Controller;
 
 use Nette\DI\Container;
 use Nette\Utils\Strings;
-use Saas\Helper\Path;
-use Saas\Helper\Router;
-use Saas\Http\Controller\Base\Controller;
-use Saas\Storage\Storage;
+use Megio\Helper\Path;
+use Megio\Helper\Router;
+use Megio\Http\Controller\Base\Controller;
+use Megio\Storage\Storage;
 use Siketyan\YarnLock\YarnLock;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
@@ -28,7 +28,7 @@ class AppController extends Controller
         $route = $routes->get(Router::ROUTE_APP);
         $appPath = $route->compile()->getStaticPrefix();
         
-        return $this->render(Path::saasVendorDir() . '/view/controller/admin.latte', [
+        return $this->render(Path::megioVendorDir() . '/view/controller/admin.latte', [
             'appPath' => $appPath,
             'appVersions' => $this->versions(),
         ]);
@@ -59,7 +59,7 @@ class AppController extends Controller
             'mode' => $_ENV['APP_ENV_MODE'],
             'log_adapter' => $_ENV['LOG_ADAPTER'],
             'storage_adapter' => $storage->getAdapterName(),
-            'saas_versions' => $this->versions(),
+            'megio_versions' => $this->versions(),
             'current_dt' => [
                 'date_time' => $dt->format('Y.m.d H:i:s:u'),
                 'time_zone' => $dt->getTimezone()->getName()

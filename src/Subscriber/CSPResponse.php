@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Subscriber;
+namespace Megio\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -29,7 +29,7 @@ class CSPResponse implements EventSubscriberInterface
             'X-Frame-Options' => 'SAMEORIGIN',
             'X-Xss-Protection' => '1; mode=block',
             'X-Content-Type-Options' => 'nosniff',
-            'X-Powered-By' => 'Strategio SaaS'
+            'X-Powered-By' => 'Megio Panel'
         ];
         
         foreach ($headers as $key => $value) {

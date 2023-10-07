@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Resolver;
+namespace Megio\Http\Resolver;
 
 use Nette\DI\Container;
-use Saas\Http\Request\IRequest;
+use Megio\Http\Request\IRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;

@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Subscriber;
+namespace Megio\Subscriber;
 
-use Saas\Database\Entity\Admin;
-use Saas\Event\Collection\CollectionEvent;
-use Saas\Event\Collection\OnProcessingStartEvent;
-use Saas\Security\Auth\AuthUser;
+use Megio\Database\Entity\Admin;
+use Megio\Event\Collection\CollectionEvent;
+use Megio\Event\Collection\OnProcessingStartEvent;
+use Megio\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

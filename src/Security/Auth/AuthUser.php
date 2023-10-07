@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Security\Auth;
+namespace Megio\Security\Auth;
 
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Interface\IAuthenticable as AuthUserInterface;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Interface\IAuthenticable as AuthUserInterface;
 
 class AuthUser
 {

@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Controller\Base;
+namespace Megio\Http\Controller\Base;
 
 use Latte\Engine;
 use Nette\DI\Container;
-use Saas\Debugger\ResponseFormatter;
+use Megio\Debugger\ResponseFormatter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\HeaderUtils;

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Helper;
+namespace Megio\Extension\Latte\Helper;
 
 class Thumbnail
 {

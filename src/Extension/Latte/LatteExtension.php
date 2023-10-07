@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte;
+namespace Megio\Extension\Latte;
 
 use Latte\Engine;
 use Nette\DI\CompilerExtension;
@@ -31,7 +31,7 @@ class LatteExtension extends CompilerExtension
         $d = $builder->addDefinition('latte')->setType(Engine::class);
         $this->initialization->addBody('$latte = $this->getService(?);', [$d->getName()]);
         $this->initialization->addBody('$latte->setAutoRefresh($_ENV["APP_ENV_MODE"] === "develop");');
-        $this->initialization->addBody('$latte->setTempDirectory(Saas\Helper\Path::tempDir() . "/latte");');
+        $this->initialization->addBody('$latte->setTempDirectory(Megio\Helper\Path::tempDir() . "/latte");');
         
         // Register latte extensions
         foreach ($config->extensions as $key => $className) {

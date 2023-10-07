@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\Collection;
+namespace Megio\Event\Collection;
 
 final class CollectionEvent
 {
-    public const ON_PROCESSING_START = 'saas.collection.processing.start';
+    public const ON_PROCESSING_START = 'megio.collection.processing.start';
     
-    public const ON_PROCESSING_EXCEPTION = 'saas.collection.processing.exception';
+    public const ON_PROCESSING_EXCEPTION = 'megio.collection.processing.exception';
     
-    public const ON_PROCESSING_FINISH = 'saas.collection.processing.finish';
+    public const ON_PROCESSING_FINISH = 'megio.collection.processing.finish';
 }

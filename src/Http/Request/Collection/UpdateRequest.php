@@ -5,18 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection;
+namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Nette\Schema\Expect;
-use Saas\Database\CrudHelper\CrudException;
-use Saas\Database\Entity\EntityException;
-use Saas\Database\EntityManager;
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Event\Collection\CollectionEvent;
-use Saas\Event\Collection\OnProcessingFinishEvent;
-use Saas\Event\Collection\OnProcessingStartEvent;
-use Saas\Event\Collection\OnProcessingExceptionEvent;
+use Megio\Database\CrudHelper\CrudException;
+use Megio\Database\Entity\EntityException;
+use Megio\Database\EntityManager;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Event\Collection\CollectionEvent;
+use Megio\Event\Collection\OnProcessingFinishEvent;
+use Megio\Event\Collection\OnProcessingStartEvent;
+use Megio\Event\Collection\OnProcessingExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -64,7 +64,7 @@ class UpdateRequest extends BaseCrudRequest
             ->where('E.id IN (:ids)')
             ->setParameter('ids', $ids);
         
-        /** @var \Saas\Database\Interface\ICrudable[] $rows */
+        /** @var \Megio\Database\Interface\ICrudable[] $rows */
         $rows = $qb->getQuery()->getResult();
         
         foreach ($data['rows'] as $row) {

@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Admin;
+namespace Megio\Http\Request\Admin;
 
-use Saas\Database\EntityManager;
-use Saas\Http\Request\Request;
-use Saas\Security\Auth\AuthUser;
+use Megio\Database\EntityManager;
+use Megio\Http\Request\Request;
+use Megio\Security\Auth\AuthUser;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProfileRequest extends Request

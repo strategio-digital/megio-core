@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Storage;
+namespace Megio\Storage;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

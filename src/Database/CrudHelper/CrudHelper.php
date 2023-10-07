@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\CrudHelper;
+namespace Megio\Database\CrudHelper;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Entity\Auth\Token;
-use Saas\Database\EntityManager;
-use Saas\Database\Interface\ICrudable;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Token;
+use Megio\Database\EntityManager;
+use Megio\Database\Interface\ICrudable;
 
 class CrudHelper
 {
@@ -109,7 +109,7 @@ class CrudHelper
      * @param string $tableName
      * @param string $visiblePropsProperty
      * @param bool $schema
-     * @return \Saas\Database\CrudHelper\EntityMetadata|null
+     * @return \Megio\Database\CrudHelper\EntityMetadata|null
      */
     public function getEntityMetadata(string $tableName, string $visiblePropsProperty, bool $schema = false): ?EntityMetadata
     {
@@ -144,10 +144,10 @@ class CrudHelper
     }
     
     /**
-     * @param \Saas\Database\Interface\ICrudable $entity
+     * @param \Megio\Database\Interface\ICrudable $entity
      * @param array<string, mixed> $props
-     * @return \Saas\Database\Interface\ICrudable
-     * @throws \Saas\Database\CrudHelper\CrudException
+     * @return \Megio\Database\Interface\ICrudable
+     * @throws \Megio\Database\CrudHelper\CrudException
      */
     public function setUpEntityProps(ICrudable $entity, array $props): ICrudable
     {

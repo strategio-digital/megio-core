@@ -4,8 +4,8 @@ services:
     - Symfony\Component\Routing\Matcher\UrlMatcher(@routes, @requestContext)
     - Symfony\Component\Routing\Generator\UrlGenerator(@routes, @requestContext)
 
-    - Saas\Http\Resolver\LinkResolver
-    - Saas\Http\Resolver\ControllerResolver
+    - Megio\Http\Resolver\LinkResolver
+    - Megio\Http\Resolver\ControllerResolver
 
     request:
         factory: Symfony\Component\HttpFoundation\Request::createFromGlobals()
@@ -14,16 +14,16 @@ services:
         setup:
             - fromRequest(@request)
 
-    - Saas\Bootstrap
-    - Saas\Http\Kernel\App
-    - Saas\Storage\Storage
-    - Saas\Debugger\ResponseFormatter
-    - Saas\Database\CrudHelper\CrudHelper
+    - Megio\Bootstrap
+    - Megio\Http\Kernel\App
+    - Megio\Storage\Storage
+    - Megio\Debugger\ResponseFormatter
+    - Megio\Database\CrudHelper\CrudHelper
 
-    - Saas\Security\JWT\JWTResolver
-    - Saas\Security\JWT\ClaimsFormatter
-    - Saas\Security\Auth\AuthUser
-    - Saas\Database\Manager\AuthResourceManager
+    - Megio\Security\JWT\JWTResolver
+    - Megio\Security\JWT\ClaimsFormatter
+    - Megio\Security\Auth\AuthUser
+    - Megio\Database\Manager\AuthResourceManager
 
 includes:
    - command.neon

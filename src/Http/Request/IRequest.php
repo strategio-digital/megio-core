@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request;
+namespace Megio\Http\Request;
 
 use Symfony\Component\HttpFoundation\Response;
 

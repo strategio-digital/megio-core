@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Helper;
+namespace Megio\Extension\Latte\Helper;
 
-use Saas\Helper\Path;
+use Megio\Helper\Path;
 
 class Vite
 {

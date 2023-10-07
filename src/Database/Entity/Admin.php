@@ -5,22 +5,22 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity;
+namespace Megio\Database\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TEmail;
-use Saas\Database\Field\TId;
-use Saas\Database\Field\TLastLogin;
-use Saas\Database\Field\TPassword;
-use Saas\Database\Field\TUpdatedAt;
-use Saas\Database\Interface\ICrudable;
-use Saas\Database\Interface\IAuthenticable;
-use Saas\Database\Repository\AdminRepository;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Field\TCreatedAt;
+use Megio\Database\Field\TEmail;
+use Megio\Database\Field\TId;
+use Megio\Database\Field\TLastLogin;
+use Megio\Database\Field\TPassword;
+use Megio\Database\Field\TUpdatedAt;
+use Megio\Database\Interface\ICrudable;
+use Megio\Database\Interface\IAuthenticable;
+use Megio\Database\Repository\AdminRepository;
 
 #[ORM\Table(name: '`admin`')]
 #[ORM\Entity(repositoryClass: AdminRepository::class)]

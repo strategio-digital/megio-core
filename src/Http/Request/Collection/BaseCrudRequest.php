@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection;
+namespace Megio\Http\Request\Collection;
 
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\CrudHelper\EntityMetadata;
-use Saas\Http\Request\Request;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\CrudHelper\EntityMetadata;
+use Megio\Http\Request\Request;
 
 abstract class BaseCrudRequest extends Request
 {

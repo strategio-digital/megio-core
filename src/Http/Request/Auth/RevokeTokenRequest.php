@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Auth;
+namespace Megio\Http\Request\Auth;
 
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\EntityManager;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityManager;
 use Nette\Schema\Expect;
-use Saas\Database\Interface\IAuthenticable;
-use Saas\Http\Request\Request;
+use Megio\Database\Interface\IAuthenticable;
+use Megio\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RevokeTokenRequest extends Request

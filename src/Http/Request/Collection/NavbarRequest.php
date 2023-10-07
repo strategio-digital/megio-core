@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection;
+namespace Megio\Http\Request\Collection;
 
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\Entity\Admin;
-use Saas\Helper\Router;
-use Saas\Http\Request\Request;
-use Saas\Security\Auth\AuthUser;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\Entity\Admin;
+use Megio\Helper\Router;
+use Megio\Http\Request\Request;
+use Megio\Security\Auth\AuthUser;
 use Symfony\Component\HttpFoundation\Response;
 
 class NavbarRequest extends Request

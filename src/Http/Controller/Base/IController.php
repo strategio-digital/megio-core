@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Controller\Base;
+namespace Megio\Http\Controller\Base;
 
 use Nette\DI\Container;
 use Symfony\Component\HttpFoundation\File\File;

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Storage;
+namespace Megio\Storage;
 
 use Nette\DI\Container;
 use Nette\Utils\Strings;
@@ -39,7 +39,7 @@ class Storage
     {
         $type = $type ?: $this->getAdapterName();
         $type = Strings::firstUpper($type);
-        $className = "Saas\\Storage\\Adapter\\{$type}Storage";
+        $className = "Megio\\Storage\\Adapter\\{$type}Storage";
         
         if (!class_exists($className)) {
             throw new \Exception("Storage adapter class '{$className}' does not exists");

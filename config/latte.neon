@@ -1,6 +1,6 @@
 latte:
     extensions:
-        - Saas\Extension\Latte\Extension\SaasExtension
+        - Megio\Extension\Latte\Extension\MegioExtension
 
 services:
-    - Saas\Extension\Latte\Function\RouteFunction
+    - Megio\Extension\Latte\Function\RouteFunction

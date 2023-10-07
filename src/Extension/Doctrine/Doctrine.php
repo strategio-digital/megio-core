@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine;
+namespace Megio\Extension\Doctrine;
 
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Nette\Utils\FileSystem;
-use Saas\Extension\Doctrine\Subscriber\PostgresDefaultSchemaSubscriber;
-use Saas\Extension\Doctrine\Subscriber\SqliteForeignKeyChecksSubscriber;
-use Saas\Helper\Path;
+use Megio\Extension\Doctrine\Subscriber\PostgresDefaultSchemaSubscriber;
+use Megio\Extension\Doctrine\Subscriber\SqliteForeignKeyChecksSubscriber;
+use Megio\Helper\Path;
 use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -37,7 +37,7 @@ class Doctrine
     public function __construct()
     {
         $srcEntityPath = Path::appDir() . '/Database/Entity';
-        $entityPaths = array_merge([Path::saasVendorDir() . '/src/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
+        $entityPaths = array_merge([Path::megioVendorDir() . '/src/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             $entityPaths,

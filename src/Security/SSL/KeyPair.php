@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Security\SSL;
+namespace Megio\Security\SSL;
 
 use Nette\Utils\FileSystem;
 

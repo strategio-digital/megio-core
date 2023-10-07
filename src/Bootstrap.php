@@ -5,13 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace Saas;
+namespace Megio;
 
 use Nette\DI\Compiler;
 use Nette\Neon\Neon;
-use Saas\Debugger\Logger;
-use Saas\Extension\Extension;
-use Saas\Helper\Path;
+use Megio\Debugger\Logger;
+use Megio\Extension\Extension;
+use Megio\Helper\Path;
 use Nette\Bridges\DITracy\ContainerPanel;
 use Nette\DI\Container;
 use Nette\DI\ContainerLoader;

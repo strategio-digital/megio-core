@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Extension;
+namespace Megio\Extension\Latte\Extension;
 
 use Latte\Extension;
-use Saas\Extension\Latte\Function\RouteFunction;
-use Saas\Extension\Latte\Function\ThumbnailFunction;
-use Saas\Extension\Latte\Function\ViteFunction;
+use Megio\Extension\Latte\Function\RouteFunction;
+use Megio\Extension\Latte\Function\ThumbnailFunction;
+use Megio\Extension\Latte\Function\ViteFunction;
 
-class SaasExtension extends Extension
+class MegioExtension extends Extension
 {
     public function __construct(protected RouteFunction $routeFunction)
     {

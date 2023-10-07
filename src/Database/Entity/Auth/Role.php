@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity\Auth;
+namespace Megio\Database\Entity\Auth;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Saas\Database\Entity\Admin;
-use Saas\Database\Entity\EntityException;
-use Saas\Database\Field\TCreatedAt;
-use Saas\Database\Field\TId;
-use Saas\Database\Repository\Auth\RoleRepository;
+use Megio\Database\Entity\Admin;
+use Megio\Database\Entity\EntityException;
+use Megio\Database\Field\TCreatedAt;
+use Megio\Database\Field\TId;
+use Megio\Database\Repository\Auth\RoleRepository;
 
 #[ORM\Table(name: '`auth_role`')]
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -63,7 +63,7 @@ class Role
     }
     
     /**
-     * @param \Saas\Database\Entity\Auth\Resource $resource
+     * @param \Megio\Database\Entity\Auth\Resource $resource
      * @return $this
      */
     public function addResource(Resource $resource): Role

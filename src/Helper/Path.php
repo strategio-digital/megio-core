@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Helper;
+namespace Megio\Helper;
 
 class Path
 {
@@ -56,7 +56,7 @@ class Path
         return self::$projectPath . '/router';
     }
     
-    public static function saasVendorDir(): string
+    public static function megioVendorDir(): string
     {
         return __DIR__ . '/../../';
     }

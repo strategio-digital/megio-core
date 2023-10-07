@@ -1,6 +1,6 @@
 events:
-    - Saas\Subscriber\AuthRequest
-    - Saas\Subscriber\AuthRouteRequest
-    - Saas\Subscriber\AuthCollectionRequest
-    - Saas\Subscriber\CorsRequest
-    - Saas\Subscriber\CSPResponse
+    - Megio\Subscriber\AuthRequest
+    - Megio\Subscriber\AuthRouteRequest
+    - Megio\Subscriber\AuthCollectionRequest
+    - Megio\Subscriber\CorsRequest
+    - Megio\Subscriber\CSPResponse

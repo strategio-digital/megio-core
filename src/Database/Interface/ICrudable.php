@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Interface;
+namespace Megio\Database\Interface;
 
 interface ICrudable
 {

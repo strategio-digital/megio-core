@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine\Middleware;
+namespace Megio\Extension\Doctrine\Middleware;
 
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware;
 use Doctrine\DBAL\Logging\Driver as LoggingDriver;
-use Saas\Extension\Doctrine\Logger\SnapshotLogger;
+use Megio\Extension\Doctrine\Logger\SnapshotLogger;
 
 class TracyMiddleware implements Middleware
 {

@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Resource;
+namespace Megio\Http\Request\Resource;
 
-use Saas\Database\Enum\ResourceType;
+use Megio\Database\Enum\ResourceType;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateResourceRequest extends ShowAllRequest

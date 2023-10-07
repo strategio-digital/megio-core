@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Events;
+namespace Megio\Extension\Events;
 
 use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;

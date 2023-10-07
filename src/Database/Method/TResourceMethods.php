@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Method;
+namespace Megio\Database\Method;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Saas\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Role;
 
 trait TResourceMethods
 {

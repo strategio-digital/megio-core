@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Field;
+namespace Megio\Database\Field;
 
 use Doctrine\ORM\Mapping as ORM;
 

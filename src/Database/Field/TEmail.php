@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Field;
+namespace Megio\Database\Field;
 
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Utils\Validators;
-use Saas\Database\Entity\EntityException;
+use Megio\Database\Entity\EntityException;
 
 trait TEmail
 {
@@ -27,7 +27,7 @@ trait TEmail
     /**
      * @param string $email
      * @return self
-     * @throws \Saas\Database\Entity\EntityException
+     * @throws \Megio\Database\Entity\EntityException
      */
     public function setEmail(string $email): self
     {

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\CrudHelper;
+namespace Megio\Database\CrudHelper;
 
 class EntityMetadata
 {

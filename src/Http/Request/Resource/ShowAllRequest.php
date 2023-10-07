@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Resource;
+namespace Megio\Http\Request\Resource;
 
 use Nette\Schema\Expect;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\EntityManager;
-use Saas\Database\Enum\ResourceType;
-use Saas\Database\Manager\AuthResourceManager;
-use Saas\Http\Request\Request;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\EntityManager;
+use Megio\Database\Enum\ResourceType;
+use Megio\Database\Manager\AuthResourceManager;
+use Megio\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -37,10 +37,10 @@ class ShowAllRequest extends Request
     
     public function process(array $data): Response
     {
-        /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
+        /** @var \Megio\Database\Entity\Auth\Resource[] $resources */
         $resources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
         
-        /** @var \Saas\Database\Entity\Auth\Role[] $roles */
+        /** @var \Megio\Database\Entity\Auth\Role[] $roles */
         $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
             ->select('Role', 'Resource')
             ->leftJoin('Role.resources', 'Resource')

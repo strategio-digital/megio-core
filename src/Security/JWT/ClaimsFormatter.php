@@ -5,18 +5,18 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Security\JWT;
+namespace Megio\Security\JWT;
 
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Entity\Auth\Token;
-use Saas\Database\Interface\IAuthenticable;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Token;
+use Megio\Database\Interface\IAuthenticable;
 
 class ClaimsFormatter
 {
     /**
-     * @param \Saas\Database\Interface\IAuthenticable $user
-     * @param \Saas\Database\Entity\Auth\Token $token
+     * @param \Megio\Database\Interface\IAuthenticable $user
+     * @param \Megio\Database\Entity\Auth\Token $token
      * @return array<string, mixed>
      */
     public function format(IAuthenticable $user, Token $token): array

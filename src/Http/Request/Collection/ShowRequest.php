@@ -5,14 +5,14 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Collection;
+namespace Megio\Http\Request\Collection;
 
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\EntityManager;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityManager;
 use Nette\Schema\Expect;
-use Saas\Event\Collection\CollectionEvent;
-use Saas\Event\Collection\OnProcessingStartEvent;
-use Saas\Event\Collection\OnProcessingFinishEvent;
+use Megio\Event\Collection\CollectionEvent;
+use Megio\Event\Collection\OnProcessingStartEvent;
+use Megio\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowRequest extends BaseCrudRequest

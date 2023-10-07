@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Admin;
+namespace Megio\Http\Request\Admin;
 
-use Saas\Http\Request\Request;
-use Saas\Security\Auth\AuthUser;
-use Saas\Storage\Storage;
+use Megio\Http\Request\Request;
+use Megio\Security\Auth\AuthUser;
+use Megio\Storage\Storage;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;

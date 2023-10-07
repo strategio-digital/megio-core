@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Subscriber;
+namespace Megio\Subscriber;
 
-use Saas\Database\Entity\Admin;
-use Saas\Security\Auth\AuthUser;
+use Megio\Database\Entity\Admin;
+use Megio\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

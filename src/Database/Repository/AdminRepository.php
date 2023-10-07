@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Repository;
+namespace Megio\Database\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

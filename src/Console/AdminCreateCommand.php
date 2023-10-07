@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Console;
+namespace Megio\Console;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Saas\Database\Entity\Admin;
-use Saas\Database\Entity\EntityException;
-use Saas\Database\EntityManager;
+use Megio\Database\Entity\Admin;
+use Megio\Database\Entity\EntityException;
+use Megio\Database\EntityManager;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

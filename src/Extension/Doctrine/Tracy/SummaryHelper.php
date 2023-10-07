@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine\Tracy;
+namespace Megio\Extension\Doctrine\Tracy;
 
 use Doctrine\DBAL\Logging\DebugStack;
 

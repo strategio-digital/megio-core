@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Function;
+namespace Megio\Extension\Latte\Function;
 
-use Saas\Extension\Latte\Helper\Thumbnail;
+use Megio\Extension\Latte\Helper\Thumbnail;
 
 class ThumbnailFunction
 {

@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Resource;
+namespace Megio\Http\Request\Resource;
 
 use Nette\Schema\Expect;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\EntityManager;
-use Saas\Http\Request\Request;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\EntityManager;
+use Megio\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteRoleRequest extends Request

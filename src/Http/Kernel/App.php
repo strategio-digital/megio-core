@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Kernel;
+namespace Megio\Http\Kernel;
 
-use Saas\Helper\Path;
-use Saas\Http\Resolver\ControllerResolver;
-use Saas\Http\Resolver\DIValueResolver;
+use Megio\Helper\Path;
+use Megio\Http\Resolver\ControllerResolver;
+use Megio\Http\Resolver\DIValueResolver;
 use Nette\DI\Container;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;

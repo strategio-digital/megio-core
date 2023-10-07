@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Entity;
+namespace Megio\Database\Entity;
 
 class EntityException extends \Exception
 {

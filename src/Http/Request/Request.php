@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request;
+namespace Megio\Http\Request;
 
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
-use Saas\Event\Request\AfterProcessEvent;
-use Saas\Event\Request\BeforeProcessEvent;
-use Saas\Event\Request\BeforeValidationEvent;
-use Saas\Event\Request\OnValidationExceptionEvent;
-use Saas\Event\Request\RequestEvent;
-use Saas\Http\Controller\Base\Controller;
+use Megio\Event\Request\AfterProcessEvent;
+use Megio\Event\Request\BeforeProcessEvent;
+use Megio\Event\Request\BeforeValidationEvent;
+use Megio\Event\Request\OnValidationExceptionEvent;
+use Megio\Event\Request\RequestEvent;
+use Megio\Http\Controller\Base\Controller;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 

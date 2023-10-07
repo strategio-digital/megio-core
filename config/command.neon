@@ -1,7 +1,7 @@
 services:
-    # SaaS commands
-    - Saas\Console\PermissionsUpdateCommand
-    - Saas\Console\AdminCreateCommand
+    # Megio commands
+    - Megio\Console\PermissionsUpdateCommand
+    - Megio\Console\AdminCreateCommand
 
     # Doctrine ORM commands
     #- Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand(@entityManagerProvider)

@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Function;
+namespace Megio\Extension\Latte\Function;
 
 
-use Saas\Extension\Latte\Helper\Vite;
+use Megio\Extension\Latte\Helper\Vite;
 
 class ViteFunction
 {

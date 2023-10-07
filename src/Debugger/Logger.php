@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Debugger;
+namespace Megio\Debugger;
 
-use Saas\Mailer\SmtpMailer;
-use Saas\Storage\Adapter\S3Storage;
+use Megio\Mailer\SmtpMailer;
+use Megio\Storage\Adapter\S3Storage;
 use Nette\Mail\Message;
 use Nette\Utils\Finder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

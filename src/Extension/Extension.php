@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension;
+namespace Megio\Extension;
 
 use Nette;
 use Nette\DI\CompilerExtension;

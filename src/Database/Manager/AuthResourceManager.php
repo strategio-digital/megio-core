@@ -5,15 +5,15 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Manager;
+namespace Megio\Database\Manager;
 
 use Nette\Utils\Strings;
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\Entity\Admin;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\EntityManager;
-use Saas\Database\Enum\ResourceType;
-use Saas\Helper\Router;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\Entity\Admin;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\EntityManager;
+use Megio\Database\Enum\ResourceType;
+use Megio\Helper\Router;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -30,7 +30,7 @@ readonly class AuthResourceManager
     /**
      * @param bool $flush
      * @param string[] $viewResources
-     * @param \Saas\Database\Enum\ResourceType ...$types
+     * @param \Megio\Database\Enum\ResourceType ...$types
      * @return array{created: string[], removed: string[]}
      * @throws \Doctrine\ORM\Exception\ORMException
      */
@@ -79,7 +79,7 @@ readonly class AuthResourceManager
      */
     public function diffNames(array $sourceNames, ResourceType $type): array
     {
-        /** @var \Saas\Database\Entity\Auth\Resource[] $resources */
+        /** @var \Megio\Database\Entity\Auth\Resource[] $resources */
         $resources = $this->em->getAuthResourceRepo()->findBy(['type' => $type->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
         

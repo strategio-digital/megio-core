@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Mailer;
+namespace Megio\Mailer;
 
 use Nette\Mail\Message;
 

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine;
+namespace Megio\Extension\Doctrine;
 
 use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
@@ -29,6 +29,6 @@ class DoctrineExtension extends CompilerExtension
         $this->initialization->addBody('$debugStack = $this->getService(?);', ['doctrineDebugStack']);
         $this->initialization->addBody('$configuration = $this->getService(?)->getConnection()->getConfiguration();', ['doctrine']);
         $this->initialization->addBody('$configuration->setSQLLogger($debugStack);');
-        $this->initialization->addBody('\Tracy\Debugger::getBar()->addPanel(new \Saas\Extension\Doctrine\Tracy\DoctrineTracyPanel($debugStack));');
+        $this->initialization->addBody('\Tracy\Debugger::getBar()->addPanel(new \Megio\Extension\Doctrine\Tracy\DoctrineTracyPanel($debugStack));');
     }
 }

@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Security\JWT;
+namespace Megio\Security\JWT;
 
-use Saas\Helper\Path;
-use Saas\Security\SSL\KeyPair;
+use Megio\Helper\Path;
+use Megio\Security\SSL\KeyPair;
 use Lcobucci\Clock\SystemClock;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
@@ -22,7 +22,7 @@ class JWTResolver
 {
     const ISSUER = 'strategio.dev';
     
-    const PERMIT_FOR = 'strategio-saas-apps';
+    const PERMIT_FOR = 'strategio-megio-apps';
     
     private Configuration $config;
     

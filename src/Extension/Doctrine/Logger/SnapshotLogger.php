@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Doctrine\Logger;
+namespace Megio\Extension\Doctrine\Logger;
 
 use Psr\Log\AbstractLogger;
 

@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Subscriber;
+namespace Megio\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;

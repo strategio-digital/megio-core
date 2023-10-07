@@ -5,17 +5,17 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database;
+namespace Megio\Database;
 
-use Saas\Database\Entity\Admin;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Entity\Auth\Role;
-use Saas\Database\Entity\Auth\Token;
-use Saas\Database\Repository\AdminRepository;
-use Saas\Database\Repository\Auth\ResourceRepository;
-use Saas\Database\Repository\Auth\RoleRepository;
-use Saas\Database\Repository\Auth\TokenRepository;
-use Saas\Extension\Doctrine\Doctrine;
+use Megio\Database\Entity\Admin;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Token;
+use Megio\Database\Repository\AdminRepository;
+use Megio\Database\Repository\Auth\ResourceRepository;
+use Megio\Database\Repository\Auth\RoleRepository;
+use Megio\Database\Repository\Auth\TokenRepository;
+use Megio\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
 class EntityManager extends \Doctrine\ORM\EntityManager

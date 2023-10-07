@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\Request;
+namespace Megio\Event\Request;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;

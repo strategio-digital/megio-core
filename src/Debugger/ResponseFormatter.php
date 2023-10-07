@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Debugger;
+namespace Megio\Debugger;
 
 use Doctrine\DBAL\Logging\DebugStack;
 use Nette\DI\Container;
-use Saas\Extension\Doctrine\Tracy\SummaryHelper;
-use Saas\Security\Auth\AuthUser;
+use Megio\Extension\Doctrine\Tracy\SummaryHelper;
+use Megio\Security\Auth\AuthUser;
 
 class ResponseFormatter
 {

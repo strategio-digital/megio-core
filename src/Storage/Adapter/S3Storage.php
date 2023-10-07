@@ -5,12 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Storage\Adapter;
+namespace Megio\Storage\Adapter;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\ObjectUploader;
 use Aws\S3\S3Client;
-use Saas\Storage\StorageAdapter;
+use Megio\Storage\StorageAdapter;
 use Nette\Utils\Strings;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

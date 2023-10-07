@@ -5,10 +5,10 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Resolver;
+namespace Megio\Http\Resolver;
 
 use Nette\DI\Container;
-use Saas\Http\Controller\Base\IController;
+use Megio\Http\Controller\Base\IController;
 
 class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
 {
@@ -19,7 +19,7 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
     
     public function instantiateController(string $class): object
     {
-        /** @var \Saas\Http\Controller\Base\IController $instance */
+        /** @var \Megio\Http\Controller\Base\IController $instance */
         $instance = $this->container->createInstance($class);
         
         if (is_subclass_of($instance::class, IController::class)) {

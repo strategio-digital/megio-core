@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Enum;
+namespace Megio\Database\Enum;
 
 enum ResourceType: string
 {

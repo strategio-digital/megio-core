@@ -5,11 +5,11 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Database\Interface;
+namespace Megio\Database\Interface;
 
 use Doctrine\Common\Collections\Collection;
-use Saas\Database\Entity\Auth\Resource;
-use Saas\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Resource;
+use Megio\Database\Entity\Auth\Role;
 
 interface IAuthenticable
 {

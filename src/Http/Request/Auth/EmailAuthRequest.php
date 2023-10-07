@@ -5,16 +5,16 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Http\Request\Auth;
+namespace Megio\Http\Request\Auth;
 
 use Nette\Security\Passwords;
-use Saas\Database\CrudHelper\CrudHelper;
-use Saas\Database\Entity\Auth\Token;
-use Saas\Database\EntityManager;
-use Saas\Database\Interface\IAuthenticable;
-use Saas\Http\Request\Request;
-use Saas\Security\JWT\ClaimsFormatter;
-use Saas\Security\JWT\JWTResolver;
+use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\Entity\Auth\Token;
+use Megio\Database\EntityManager;
+use Megio\Database\Interface\IAuthenticable;
+use Megio\Http\Request\Request;
+use Megio\Security\JWT\ClaimsFormatter;
+use Megio\Security\JWT\JWTResolver;
 use Symfony\Component\HttpFoundation\Response;
 use Nette\Schema\Expect;
 

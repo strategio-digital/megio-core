@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Event\Collection;
+namespace Megio\Event\Collection;
 
-use Saas\Database\CrudHelper\EntityMetadata;
+use Megio\Database\CrudHelper\EntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -41,7 +41,7 @@ class OnProcessingExceptionEvent extends Event
     }
     
     /**
-     * @return \Saas\Database\CrudHelper\EntityMetadata
+     * @return \Megio\Database\CrudHelper\EntityMetadata
      */
     public function getMetadata(): EntityMetadata
     {

@@ -5,9 +5,9 @@
  */
 declare(strict_types=1);
 
-namespace Saas\Extension\Latte\Function;
+namespace Megio\Extension\Latte\Function;
 
-use Saas\Http\Resolver\LinkResolver;
+use Megio\Http\Resolver\LinkResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouteFunction
