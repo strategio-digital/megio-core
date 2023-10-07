@@ -1,6 +1,6 @@
 {
-    "name": "strategio/saas",
-    "description": "Saas",
+    "name": "strategio/megio-core",
+    "description": "Most powerful tool for creating webs, apps & APIs.",
     "type": "library",
     "license": "MIT",
     "autoload": {
