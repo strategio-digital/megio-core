@@ -48,7 +48,7 @@ class Bootstrap
         
         // Setup debugger
         Debugger::setLogger(new Logger(Path::logDir()));
-        Debugger::enable($_ENV['APP_ENV_MODE'] === 'develop' ? Debugger::DEVELOPMENT : Debugger::PRODUCTION, Path::logDir());
+        Debugger::enable($_ENV['APP_ENV_MODE'] === 'develop' ? Debugger::Development : Debugger::Production, Path::logDir());
         Debugger::$strictMode = E_ALL;
         
         if (array_key_exists('TRACY_EDITOR', $_ENV) && array_key_exists('TRACY_EDITOR_MAPPING', $_ENV)) {
