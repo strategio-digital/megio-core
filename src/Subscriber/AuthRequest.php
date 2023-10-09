@@ -16,7 +16,6 @@ use Megio\Security\JWT\JWTResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouteCollection;
@@ -111,7 +110,7 @@ class AuthRequest implements EventSubscriberInterface
         $userRepo = $this->em->getRepository($className);
         
         $qb = $userRepo->createQueryBuilder('User')
-            ->addSelect('User')
+            ->select('User')
             ->andWhere('User.id = :source_id')
             ->setParameter('source_id', $token->getSourceId());
         
