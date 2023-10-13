@@ -132,17 +132,22 @@ class AuthRequest implements EventSubscriberInterface
         /** @var IAuthenticable $user */
         $this->authUser->setAuthUser($user);
         
-        $claimsResources = $claims->get('user')['resources'];
-        $authResources = $this->authUser->getResources();
+        // Don't watch only if strict mode is off
+        $watch = !(array_key_exists('AUTH_STRICT_RESOURCES', $_ENV) && $_ENV['AUTH_STRICT_RESOURCES'] === 'false');
         
-        sort($claimsResources);
-        sort($authResources);
-        
-        $requestResources = implode('|', $claimsResources);
-        $userResources = implode('|', $authResources);
-        
-        if ($userResources !== $requestResources) {
-            $this->sendError('User permissions have been changed');
+        if ($watch) {
+            $claimsResources = $claims->get('user')['resources'];
+            $authResources = $this->authUser->getResources();
+            
+            sort($claimsResources);
+            sort($authResources);
+            
+            $requestResources = implode('|', $claimsResources);
+            $userResources = implode('|', $authResources);
+            
+            if ($userResources !== $requestResources) {
+                $this->sendError('User permissions have been changed');
+            }
         }
     }
     

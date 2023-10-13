@@ -20,7 +20,7 @@ use Nette\Schema\Expect;
 
 class EmailAuthRequest extends Request
 {
-    const EXPIRATION_TIME = '+4 hours';
+    const EXPIRATION_TIME = '4hours';
     
     public function __construct(
         private readonly EntityManager   $em,
@@ -66,7 +66,9 @@ class EmailAuthRequest extends Request
         $token->setSourceId($user->getId());
         $this->em->persist($token);
         
-        $expiration = (new \DateTime())->modify(self::EXPIRATION_TIME);
+        $time = array_key_exists('AUTH_EXPIRATION', $_ENV) ? $_ENV['AUTH_EXPIRATION'] : self::EXPIRATION_TIME;
+        
+        $expiration = (new \DateTime())->modify('+' . $time);
         $immutable = \DateTimeImmutable::createFromMutable($expiration);
         $claims = $this->claims->format($user, $token);
         $jwt = $this->jwt->createToken($immutable, $claims);
