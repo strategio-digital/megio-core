@@ -27,10 +27,10 @@ abstract class Controller implements IController
     
     public function __inject(Container $container): void
     {
-        $this->formatter = $container->getByType(ResponseFormatter::class); //@phpstan-ignore-line
-        $this->urlGenerator = $container->getByType(UrlGenerator::class); //@phpstan-ignore-line
-        $this->latte = $container->getByType(Engine::class); //@phpstan-ignore-line
-        $this->dispatcher = $container->getByType(EventDispatcher::class); //@phpstan-ignore-line
+        $this->formatter = $container->getByType(ResponseFormatter::class);
+        $this->urlGenerator = $container->getByType(UrlGenerator::class);
+        $this->latte = $container->getByType(Engine::class);
+        $this->dispatcher = $container->getByType(EventDispatcher::class);
     }
     
     /**

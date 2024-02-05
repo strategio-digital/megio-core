@@ -52,7 +52,7 @@ class DeleteRequest extends BaseCrudRequest
             ->where('E.id IN (:ids)')
             ->setParameter('ids', $data['ids']);
         
-        $countRows = (clone $qb)->select('count(E.id)')->getQuery()->getSingleScalarResult();
+        $countRows = (int)(clone $qb)->select('count(E.id)')->getQuery()->getSingleScalarResult();
         $countItems = count($data['ids']);
         $diff = $countItems - $countRows;
         
