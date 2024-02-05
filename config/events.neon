@@ -4,3 +4,4 @@ events:
     - Megio\Subscriber\AuthCollectionRequest
     - Megio\Subscriber\CorsRequest
     - Megio\Subscriber\CSPResponse
+    # - Megio\Subscriber\RedirectToWww
