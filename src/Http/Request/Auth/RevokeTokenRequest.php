@@ -34,10 +34,10 @@ class RevokeTokenRequest extends Request
     
     public function process(array $data): Response
     {
-        $this->em->getAuthTokenRepo()->createQueryBuilder('Token')
+        $this->em->getAuthTokenRepo()->createQueryBuilder('token')
             ->delete()
-            ->where('Token.source = :source')
-            ->andWhere('Token.sourceId IN (:source_ids)')
+            ->where('token.source = :source')
+            ->andWhere('token.sourceId IN (:source_ids)')
             ->setParameter('source_ids', $data['source_ids'])
             ->setParameter('source', $data['source'])
             ->getQuery()

@@ -174,9 +174,9 @@ readonly class AuthResourceManager
     private function removeResources(array $names): void
     {
         $this->em->getAuthResourceRepo()
-            ->createQueryBuilder('Resource')
+            ->createQueryBuilder('resource')
             ->delete()
-            ->andWhere('Resource.name IN (:names)')
+            ->andWhere('resource.name IN (:names)')
             ->setParameter('names', $names)
             ->getQuery()->execute();
     }

@@ -48,11 +48,11 @@ class DeleteRequest extends BaseCrudRequest
         
         $repo = $this->em->getRepository($meta->className);
         
-        $qb = $repo->createQueryBuilder('E')
-            ->where('E.id IN (:ids)')
+        $qb = $repo->createQueryBuilder('entity')
+            ->where('entity.id IN (:ids)')
             ->setParameter('ids', $data['ids']);
         
-        $countRows = (int)(clone $qb)->select('count(E.id)')->getQuery()->getSingleScalarResult();
+        $countRows = (int)(clone $qb)->select('count(entity.id)')->getQuery()->getSingleScalarResult();
         $countItems = count($data['ids']);
         $diff = $countItems - $countRows;
         

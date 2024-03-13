@@ -59,9 +59,9 @@ class UpdateRequest extends BaseCrudRequest
         $ids = array_map(fn($row) => $row['id'], $data['rows']);
         
         $qb = $this->em->getRepository($meta->className)
-            ->createQueryBuilder('E')
-            ->select('E')
-            ->where('E.id IN (:ids)')
+            ->createQueryBuilder('entity')
+            ->select('entity')
+            ->where('entity.id IN (:ids)')
             ->setParameter('ids', $ids);
         
         /** @var \Megio\Database\Interface\ICrudable[] $rows */

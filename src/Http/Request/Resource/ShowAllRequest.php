@@ -41,10 +41,10 @@ class ShowAllRequest extends Request
         $resources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
         
         /** @var \Megio\Database\Entity\Auth\Role[] $roles */
-        $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('Role')
-            ->select('Role', 'Resource')
-            ->leftJoin('Role.resources', 'Resource')
-            ->orderBy('Role.createdAt', 'ASC')
+        $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('role')
+            ->select('role', 'resource')
+            ->leftJoin('role.resources', 'resource')
+            ->orderBy('role.createdAt', 'ASC')
             ->getQuery()
             ->getResult();
         

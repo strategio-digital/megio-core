@@ -50,9 +50,9 @@ class ShowOneRequest extends BaseCrudRequest
         
         $repo = $this->em->getRepository($meta->className);
         
-        $qb = $repo->createQueryBuilder('E')
-            ->select($meta->getQuerySelect('E'))
-            ->where('E.id = :id')
+        $qb = $repo->createQueryBuilder('entity')
+            ->select($meta->getQuerySelect('entity'))
+            ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
         $item = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);

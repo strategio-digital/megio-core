@@ -52,16 +52,16 @@ class ShowRequest extends BaseCrudRequest
         
         $repo = $this->em->getRepository($meta->className);
         
-        $qb = $repo->createQueryBuilder('E')
-            ->select($meta->getQuerySelect('E'));
+        $qb = $repo->createQueryBuilder('entity')
+            ->select($meta->getQuerySelect('entity'));
         
-        $count = (clone $qb)->select('count(E.id)')->getQuery()->getSingleScalarResult();
+        $count = (clone $qb)->select('count(entity.id)')->getQuery()->getSingleScalarResult();
         
         $qb->setFirstResult(($data['currentPage'] - 1) * $data['itemsPerPage'])
             ->setMaxResults($data['itemsPerPage']);
         
         foreach ($data['orderBy'] as $param) {
-            $qb->addOrderBy("E.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
+            $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
         $result = [

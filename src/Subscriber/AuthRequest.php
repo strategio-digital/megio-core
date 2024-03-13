@@ -109,17 +109,17 @@ class AuthRequest implements EventSubscriberInterface
         /** @var class-string $className */
         $userRepo = $this->em->getRepository($className);
         
-        $qb = $userRepo->createQueryBuilder('User')
-            ->select('User')
-            ->andWhere('User.id = :source_id')
+        $qb = $userRepo->createQueryBuilder('user')
+            ->select('user')
+            ->andWhere('user.id = :source_id')
             ->setParameter('source_id', $token->getSourceId());
         
         if ($className !== Admin::class) {
             $qb
-                ->addSelect('Role')
-                ->addSelect('Resource')
-                ->leftJoin('User.roles', 'Role')
-                ->leftJoin('Role.resources', 'Resource');
+                ->addSelect('role')
+                ->addSelect('resource')
+                ->leftJoin('user.roles', 'role')
+                ->leftJoin('role.resources', 'resource');
         }
         
         $user = $qb->getQuery()->getOneOrNullResult();
