@@ -38,7 +38,7 @@ class UpdateRequest extends Request
         // TODO: get rows types trough reflection and validate them
         
         return [
-            'table' => Expect::anyOf(...$names)->required(), // TODO: rename to recipeName
+            'recipe' => Expect::anyOf(...$names)->required(),
             'rows' => Expect::arrayOf(
                 Expect::structure([
                     'id' => Expect::string()->required(),
@@ -50,10 +50,10 @@ class UpdateRequest extends Request
     
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByName($data['table']);
+        $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['table']} not found"]);
+            return $this->error(["Collection {$data['recipe']} not found"]);
         }
         
         try {

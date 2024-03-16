@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Megio\Database\Manager;
 
+use Megio\Collection\RecipeFinder;
 use Nette\Utils\Strings;
-use Megio\Database\EntityFinder;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\EntityManager;
@@ -22,7 +22,7 @@ readonly class AuthResourceManager
     public function __construct(
         private EntityManager   $em,
         private RouteCollection $routes,
-        private EntityFinder    $entityFinder,
+        private RecipeFinder    $recipeFinder,
     )
     {
     }
@@ -128,19 +128,19 @@ readonly class AuthResourceManager
     public function collectionDataResources(): array
     {
         $excluded = [Admin::class];
-        $entities = $this->entityFinder->findAll();
-        $entities = array_filter($entities, fn($entity) => !in_array($entity['className'], $excluded));
+        $recipes = $this->recipeFinder->load()->getAll();
         
-        $tables = array_map(fn($entity) => $entity['table'], $entities);
+        /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
+        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
+        $recipeNames = array_map(fn($recipe) => $recipe->name(), $recipes);
+        
         $resourceNames = array_keys($this->routes->all());
-        
         $collectionRouteNames = array_filter($resourceNames, fn($name) => Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX));
         
         $names = [];
-        
-        foreach ($tables as $tableName) {
+        foreach ($recipeNames as $recipeName) {
             foreach ($collectionRouteNames as $routeName) {
-                $names[] = $routeName . '.' . $tableName;
+                $names[] = $routeName . '.' . $recipeName;
             }
         }
         
@@ -153,14 +153,15 @@ readonly class AuthResourceManager
     public function collectionNavResources(): array
     {
         $excluded = [Admin::class];
-        $entities = $this->entityFinder->findAll();
-        $entities = array_filter($entities, fn($entity) => !in_array($entity['className'], $excluded));
+        $recipes = $this->recipeFinder->load()->getAll();
         
-        $tables = array_map(fn($entity) => $entity['table'], $entities);
+        /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
+        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
+        $recipeNames = array_map(fn($recipe) => $recipe->name(), $recipes);
+        
         $names = [];
-        
-        foreach ($tables as $tableName) {
-            $names[] = Router::ROUTE_META_NAVBAR . '.' . $tableName;
+        foreach ($recipeNames as $recipeName) {
+            $names[] = Router::ROUTE_META_NAVBAR . '.' . $recipeName;
         }
         
         return $names;

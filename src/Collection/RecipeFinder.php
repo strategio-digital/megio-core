@@ -13,6 +13,8 @@ class RecipeFinder
     
     public function load(): self
     {
+        $this->recipes = [];
+        
         $appFiles = Finder::findFiles()->from(Path::appDir() . '/Recipe');
         foreach ($appFiles as $file) {
             $class = 'App\\Recipe\\' . $file->getBasename('.php');

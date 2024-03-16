@@ -38,17 +38,17 @@ class CreateRequest extends Request
         // TODO: get rows types trough reflection and validate them
         
         return [
-            'table' => Expect::anyOf(...$names)->required(), // TODO: rename to recipeName
+            'recipe' => Expect::anyOf(...$names)->required(),
             'rows' => Expect::array()->min(1)->max(1000)->required()
         ];
     }
     
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByName($data['table']);
+        $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['table']} not found"]);
+            return $this->error(["Collection {$data['recipe']} not found"]);
         }
         
         try {

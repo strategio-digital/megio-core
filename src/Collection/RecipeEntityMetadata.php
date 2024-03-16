@@ -22,12 +22,9 @@ readonly class RecipeEntityMetadata
     {
     }
     
-    /**
-     * @return string
-     */
-    public function getTableName(): string
+    public function getRecipe(): ICollectionRecipe
     {
-        return $this->tableName;
+        return $this->recipe;
     }
     
     /**
@@ -38,6 +35,20 @@ readonly class RecipeEntityMetadata
         return $this->entityRef;
     }
     
+    public function getType(): CollectionPropType
+    {
+        return $this->type;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return $this->tableName;
+    }
+    
+    
     public function getQbSelect(string $qbAlias): string
     {
         $schema = $this->getFullSchemaReflectedByDoctrine();
@@ -47,7 +58,7 @@ readonly class RecipeEntityMetadata
     
     /**
      * @return array{
-     *     meta: array{table: string, invisible: string[]},
+     *     meta: array{recipe: string, invisible: string[]},
      *     props: array{maxLength: int|null, name: string, nullable: bool, type: string}[]
      * }
      */
@@ -58,7 +69,7 @@ readonly class RecipeEntityMetadata
         
         return [
             'meta' => [
-                'table' => $this->tableName,
+                'recipe' => $this->recipe->name(),
                 'invisible' => $this->recipe->invisibleColumns()
             ],
             'props' => $this->sortColumns($props)

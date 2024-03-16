@@ -35,7 +35,7 @@ class ShowOneRequest extends Request
         $names = array_map(fn($r) => $r->name(), $this->recipeFinder->load()->getAll());
         
         return [
-            'table' => Expect::anyOf(...$names)->required(), // TODO: rename to recipeName
+            'recipe' => Expect::anyOf(...$names)->required(),
             'schema' => Expect::bool(false),
             'id' => Expect::string()->required(),
         ];
@@ -43,10 +43,10 @@ class ShowOneRequest extends Request
     
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByName($data['table']);
+        $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['table']} not found"]);
+            return $this->error(["Collection {$data['recipe']} not found"]);
         }
         
         try {
