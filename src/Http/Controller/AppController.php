@@ -1,8 +1,4 @@
 <?php
-/**
- * Copyright (c) 2022 Strategio Digital s.r.o.
- * @author Jiří Zapletal (https://strategio.dev, jz@strategio.dev)
- */
 declare(strict_types=1);
 
 namespace Megio\Http\Controller;
@@ -46,8 +42,7 @@ class AppController extends Controller
                 'path' => $route->getPath(),
                 'methods' => count($route->getMethods()) ? $route->getMethods() : null,
                 'options' => count($options) ? $options : null,
-                'route_rules' => count($route->getRequirements()) ? $route->getRequirements() : null,
-                'schema_rules' => '@not-implemented-yet'
+                'route_rules' => count($route->getRequirements()) ? $route->getRequirements() : null
             ];
             
         }, $routes->all());
@@ -96,7 +91,7 @@ class AppController extends Controller
         
         if ($content) {
             $json = YarnLock::toArray($content);
-            $yarn = current(array_filter($json, fn($key) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
+            $yarn = current(array_filter($json, fn(string $key) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
             
             if ($yarn) {
                 $yarnVersion = $yarn['version'];
