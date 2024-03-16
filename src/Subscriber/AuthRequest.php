@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Megio\Subscriber;
 
-use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityFinder;
 use Megio\Database\Entity\Admin;
 use Megio\Database\EntityManager;
 use Megio\Database\Interface\IAuthenticable;
@@ -27,7 +27,7 @@ class AuthRequest implements EventSubscriberInterface
     protected Request $request;
     
     public function __construct(
-        protected CrudHelper      $crudHelper,
+        protected EntityFinder    $entityFinder,
         protected JWTResolver     $jwt,
         protected EntityManager   $em,
         protected RouteCollection $routes,
@@ -99,14 +99,13 @@ class AuthRequest implements EventSubscriberInterface
             return;
         }
         
-        $className = $this->crudHelper->getEntityClassName($token->getSource());
+        $className = $this->entityFinder->getClassName($token->getSource());
         
         if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
             $this->sendError("For source {$token->getSource()} does not exists IAuthenticable entity");
             return;
         }
         
-        /** @var class-string $className */
         $userRepo = $this->em->getRepository($className);
         
         $qb = $userRepo->createQueryBuilder('user')

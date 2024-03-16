@@ -30,8 +30,6 @@ class CreateRoleRequest extends Request
     public function process(array $data): Response
     {
         $name = Strings::webalize($data['name']);
-        
-        /** @var Role|null $role */
         $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $name]);
         
         if ($role) {

@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Auth;
 
 use Nette\Security\Passwords;
-use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityFinder;
 use Megio\Database\Entity\Auth\Token;
 use Megio\Database\EntityManager;
 use Megio\Database\Interface\IAuthenticable;
@@ -26,15 +26,15 @@ class EmailAuthRequest extends Request
         private readonly EntityManager   $em,
         private readonly JWTResolver     $jwt,
         private readonly ClaimsFormatter $claims,
-        private readonly CrudHelper      $crudHelper
+        private readonly EntityFinder    $entityFinder
     )
     {
     }
     
     public function schema(): array
     {
-        $all = $this->crudHelper->getAllEntities();
-        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], IAuthenticable::class));
+        $all = $this->entityFinder->findAll();
+        $filtered = array_filter($all, fn($item) => is_subclass_of($item['className'], IAuthenticable::class));
         $tables = array_map(fn($class) => $class['table'], $filtered);
         
         return [
@@ -46,7 +46,7 @@ class EmailAuthRequest extends Request
     
     public function process(array $data): Response
     {
-        $className = $this->crudHelper->getEntityClassName($data['source']);
+        $className = $this->entityFinder->getClassName($data['source']);
         
         if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
             return $this->error(['Invalid source']);

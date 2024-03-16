@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Megio\Event\Collection;
 
-use Megio\Database\CrudHelper\EntityMetadata;
+use Megio\Collection\RecipeEntityMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -15,11 +15,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 class OnProcessingExceptionEvent extends Event
 {
     public function __construct(
-        private mixed                   $data,
-        private readonly Request        $request,
-        private readonly EntityMetadata $metadata,
-        private readonly \Throwable     $exception,
-        private Response                $response,
+        private mixed                         $data,
+        private readonly Request              $request,
+        private readonly RecipeEntityMetadata $metadata,
+        private readonly \Throwable           $exception,
+        private Response                      $response,
     )
     {
     }
@@ -41,9 +41,9 @@ class OnProcessingExceptionEvent extends Event
     }
     
     /**
-     * @return \Megio\Database\CrudHelper\EntityMetadata
+     * @return \Megio\Collection\RecipeEntityMetadata
      */
-    public function getMetadata(): EntityMetadata
+    public function getMetadata(): RecipeEntityMetadata
     {
         return $this->metadata;
     }

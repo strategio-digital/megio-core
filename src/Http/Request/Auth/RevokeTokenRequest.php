@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Auth;
 
-use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityFinder;
 use Megio\Database\EntityManager;
 use Nette\Schema\Expect;
 use Megio\Database\Interface\IAuthenticable;
@@ -16,14 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RevokeTokenRequest extends Request
 {
-    public function __construct(private readonly EntityManager $em, private readonly CrudHelper $crudHelper)
+    public function __construct(
+        private readonly EntityManager $em,
+        private readonly EntityFinder  $entityFinder
+    )
     {
     }
     
     public function schema(): array
     {
-        $all = $this->crudHelper->getAllEntities();
-        $filtered = array_filter($all, fn($item) => is_subclass_of($item['value'], IAuthenticable::class));
+        $all = $this->entityFinder->findAll();
+        $filtered = array_filter($all, fn($item) => is_subclass_of($item['className'], IAuthenticable::class));
         $tables = array_map(fn($class) => $class['table'], $filtered);
         
         return [

@@ -54,7 +54,7 @@ class AuthCollectionRequest implements EventSubscriberInterface
             return;
         }
         
-        $tableName = $event->getMetadata()->tableName;
+        $tableName = $event->getMetadata()->getTableName();
         $resourceName = $routeName . '.' . $tableName;
         
         if (!in_array($resourceName, $this->authUser->getResources())) {

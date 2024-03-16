@@ -37,7 +37,6 @@ class ShowAllRequest extends Request
     
     public function process(array $data): Response
     {
-        /** @var \Megio\Database\Entity\Auth\Resource[] $resources */
         $resources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
         
         /** @var \Megio\Database\Entity\Auth\Role[] $roles */

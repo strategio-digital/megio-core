@@ -31,10 +31,7 @@ class UpdateRoleRequest extends Request
     
     public function process(array $data): Response
     {
-        /** @var Resource|null $resource */
         $resource = $this->em->getAuthResourceRepo()->findOneBy(['id' => $data['resource_id']]);
-        
-        /** @var Role|null $role */
         $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['role_id']]);
         
         if (!$role || !$resource) {

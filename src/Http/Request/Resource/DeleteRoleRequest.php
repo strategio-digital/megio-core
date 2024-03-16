@@ -28,7 +28,6 @@ class DeleteRoleRequest extends Request
     
     public function process(array $data): Response
     {
-        /** @var Role|null $role */
         $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['id']]);
         
         if (!$role) {

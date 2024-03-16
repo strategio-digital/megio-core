@@ -31,15 +31,6 @@ class Admin implements ICrudable, IAuthenticable
     
     use TId, TCreatedAt, TUpdatedAt, TEmail, TPassword, TLastLogin;
     
-    /** @var string[] */
-    public array $invisibleFields = ['id', 'updatedAt'];
-    
-    /** @var string[] */
-    public array $showAllFields = ['email', 'lastLogin', 'createdAt', 'updatedAt'];
-    
-    /** @var string[] */
-    public array $showOneFields = ['email', 'lastLogin', 'createdAt', 'updatedAt'];
-    
     /**
      * @return Collection<int, Role>
      */

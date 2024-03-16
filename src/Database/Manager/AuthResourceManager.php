@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Megio\Database\Manager;
 
 use Nette\Utils\Strings;
-use Megio\Database\CrudHelper\CrudHelper;
+use Megio\Database\EntityFinder;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\EntityManager;
@@ -22,7 +22,7 @@ readonly class AuthResourceManager
     public function __construct(
         private EntityManager   $em,
         private RouteCollection $routes,
-        private CrudHelper      $crudHelper,
+        private EntityFinder    $entityFinder,
     )
     {
     }
@@ -79,7 +79,6 @@ readonly class AuthResourceManager
      */
     public function diffNames(array $sourceNames, ResourceType $type): array
     {
-        /** @var \Megio\Database\Entity\Auth\Resource[] $resources */
         $resources = $this->em->getAuthResourceRepo()->findBy(['type' => $type->value]);
         $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
         
@@ -129,8 +128,8 @@ readonly class AuthResourceManager
     public function collectionDataResources(): array
     {
         $excluded = [Admin::class];
-        $entities = $this->crudHelper->getAllEntities();
-        $entities = array_filter($entities, fn($entity) => !in_array($entity['value'], $excluded));
+        $entities = $this->entityFinder->findAll();
+        $entities = array_filter($entities, fn($entity) => !in_array($entity['className'], $excluded));
         
         $tables = array_map(fn($entity) => $entity['table'], $entities);
         $resourceNames = array_keys($this->routes->all());
@@ -154,8 +153,8 @@ readonly class AuthResourceManager
     public function collectionNavResources(): array
     {
         $excluded = [Admin::class];
-        $entities = $this->crudHelper->getAllEntities();
-        $entities = array_filter($entities, fn($entity) => !in_array($entity['value'], $excluded));
+        $entities = $this->entityFinder->findAll();
+        $entities = array_filter($entities, fn($entity) => !in_array($entity['className'], $excluded));
         
         $tables = array_map(fn($entity) => $entity['table'], $entities);
         $names = [];

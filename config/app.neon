@@ -18,7 +18,9 @@ services:
     - Megio\Http\Kernel\App
     - Megio\Storage\Storage
     - Megio\Debugger\ResponseFormatter
-    - Megio\Database\CrudHelper\CrudHelper
+
+    - Megio\Database\EntityFinder
+    - Megio\Collection\RecipeFinder
 
     - Megio\Security\JWT\JWTResolver
     - Megio\Security\JWT\ClaimsFormatter

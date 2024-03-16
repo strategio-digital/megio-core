@@ -8,45 +8,56 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\Exception\ORMException;
+use Megio\Collection\CollectionException;
+use Megio\Collection\CollectionPropType;
+use Megio\Collection\Mapping\ArrayToEntity;
+use Megio\Collection\RecipeFinder;
+use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
-use Megio\Database\CrudHelper\CrudException;
-use Megio\Database\Entity\EntityException;
 use Megio\Database\EntityManager;
-use Megio\Database\CrudHelper\CrudHelper;
 use Megio\Event\Collection\CollectionEvent;
 use Megio\Event\Collection\OnProcessingStartEvent;
 use Megio\Event\Collection\OnProcessingExceptionEvent;
 use Megio\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateRequest extends BaseCrudRequest
+class CreateRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly CrudHelper    $helper,
+        protected readonly RecipeFinder  $recipeFinder,
     )
     {
     }
     
     public function schema(): array
     {
-        $tables = array_map(fn($meta) => $meta['table'], $this->helper->getAllEntities());
+        $names = array_map(fn($r) => $r->name(), $this->recipeFinder->load()->getAll());
         
         // TODO: get rows types trough reflection and validate them
         
         return [
-            'table' => Expect::anyOf(...$tables)->required(),
+            'table' => Expect::anyOf(...$names)->required(), // TODO: rename to recipeName
             'rows' => Expect::array()->min(1)->max(1000)->required()
         ];
     }
     
     public function process(array $data): Response
     {
-        if (!$meta = $this->setUpMetadata($data['table'], false)) {
-            return $this->error([$this->helper->getError()]);
+        $recipe = $this->recipeFinder->findByName($data['table']);
+        
+        if ($recipe === null) {
+            return $this->error(["Collection {$data['table']} not found"]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $meta);
+        try {
+            $metadata = $recipe->getEntityMetadata(CollectionPropType::NONE);
+        } catch (CollectionException $e) {
+            return $this->error([$e->getMessage()]);
+        }
+        
+        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -56,16 +67,13 @@ class CreateRequest extends BaseCrudRequest
         $ids = [];
         
         foreach ($data['rows'] as $row) {
-            /** @var \Megio\Database\Interface\ICrudable $entity */
-            $entity = new $meta->className();
-            
             try {
-                $entity = $this->helper->setUpEntityProps($entity, $row);
+                $entity = ArrayToEntity::create($recipe, $metadata, $row);
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
-            } catch (CrudException|EntityException $e) {
+            } catch (CollectionException|ORMException $e) {
                 $response = $this->error([$e->getMessage()], 406);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
                 return $dispatcher->getResponse();
             }
@@ -79,7 +87,7 @@ class CreateRequest extends BaseCrudRequest
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $meta, $e, $response);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
             $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
             return $dispatcher->getResponse();
         } catch (\Exception $e) {
@@ -94,7 +102,7 @@ class CreateRequest extends BaseCrudRequest
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $meta, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();

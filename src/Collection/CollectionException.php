@@ -5,8 +5,8 @@
  */
 declare(strict_types=1);
 
-namespace Megio\Database\CrudHelper;
+namespace Megio\Collection;
 
-class CrudException extends \Exception
+class CollectionException extends \Exception
 {
 }
