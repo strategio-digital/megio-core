@@ -11,7 +11,7 @@ enum ResourceType: string
 {
     case ROUTER = 'router';
     case ROUTER_VIEW = 'router.view';
-    case COLLECTION_DATA = 'collection.data';
+    case COLLECTION_RECIPE = 'collection.recipe';
     case COLLECTION_NAV = 'collection.nav';
     
     public function getResourcesMethodName(): string {
@@ -19,7 +19,7 @@ enum ResourceType: string
         return match($this) {
             self::ROUTER => 'routerResources',
             self::ROUTER_VIEW => 'routerViewResources',
-            self::COLLECTION_DATA => 'collectionDataResources',
+            self::COLLECTION_RECIPE => 'collectionDataResources',
             self::COLLECTION_NAV => 'collectionNavResources',
         };
     }

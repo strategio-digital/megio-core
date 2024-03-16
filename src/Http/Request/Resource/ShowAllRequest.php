@@ -118,7 +118,7 @@ class ShowAllRequest extends Request
      */
     private function sortCollectionDataResources(array $resources): array
     {
-        $key = ResourceType::COLLECTION_DATA->value;
+        $key = ResourceType::COLLECTION_RECIPE->value;
         if (array_key_exists($key, $resources)) {
             $groups = [];
             foreach ($resources[$key] as $value) {
@@ -143,7 +143,7 @@ class ShowAllRequest extends Request
             return null;
         }
         
-        if ($type === ResourceType::COLLECTION_NAV || $type === ResourceType::COLLECTION_DATA) {
+        if ($type === ResourceType::COLLECTION_NAV || $type === ResourceType::COLLECTION_RECIPE) {
             $last = pathinfo($name, PATHINFO_EXTENSION);
             $name = substr_replace($name, '', -strlen($last) - 1, strlen($last) + 1);
         }
