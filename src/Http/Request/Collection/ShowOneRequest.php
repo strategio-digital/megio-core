@@ -42,11 +42,11 @@ class ShowOneRequest extends Request
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['recipe']} not found"]);
+            return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
         try {
-            $metadata = $recipe->getEntityMetadata(CollectionPropType::SHOW_ONE);
+            $metadata = $recipe->getEntityMetadata(CollectionPropType::READ_ONE);
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

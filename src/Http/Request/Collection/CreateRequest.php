@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\Exception\ORMException;
+use Megio\Collection\Builder\Builder;
 use Megio\Collection\CollectionException;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\Mapping\ArrayToEntity;
@@ -31,11 +32,11 @@ class CreateRequest extends Request
     {
         $names = array_map(fn($r) => $r->name(), $this->recipeFinder->load()->getAll());
         
-        // TODO: get rows types trough reflection and validate them
-        
         return [
             'recipe' => Expect::anyOf(...$names)->required(),
-            'rows' => Expect::array()->min(1)->max(1000)->required()
+            'rows' => Expect::arrayOf(
+                Expect::arrayOf('int|float|string|bool|null', 'string')->min(1)->required()
+            )->min(1)->max(1000)->required()
         ];
     }
     
@@ -44,7 +45,7 @@ class CreateRequest extends Request
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['recipe']} not found"]);
+            return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
         try {
@@ -63,8 +64,19 @@ class CreateRequest extends Request
         $ids = [];
         
         foreach ($data['rows'] as $row) {
+            $builder = $recipe->create(new Builder($recipe, $row))
+                ->build()
+                ->validate();
+            
+            if (!$builder->isValid()) {
+                $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, new CollectionException('Invalid data'), $response);
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
+            }
+            
             try {
-                $entity = ArrayToEntity::create($recipe, $metadata, $row);
+                $entity = ArrayToEntity::create($recipe, $metadata, $builder->toClearValues());
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
             } catch (CollectionException|ORMException $e) {

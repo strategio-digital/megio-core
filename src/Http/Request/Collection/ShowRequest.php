@@ -44,11 +44,11 @@ class ShowRequest extends Request
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['recipe']} not found"]);
+            return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
         try {
-            $metadata = $recipe->getEntityMetadata( CollectionPropType::SHOW_ALL);
+            $metadata = $recipe->getEntityMetadata( CollectionPropType::READ_ALL);
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

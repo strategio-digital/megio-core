@@ -4,13 +4,24 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Table;
+use Megio\Collection\Builder\Builder;
 use Megio\Database\Interface\ICrudable;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
-    public function invisibleColumns(): array
+    public function invisible(): array
     {
         return ['id', 'updatedAt'];
+    }
+    
+    public function create(Builder $builder): Builder
+    {
+        return $builder;
+    }
+    
+    public function update(Builder $builder): Builder
+    {
+        return $builder;
     }
     
     /**

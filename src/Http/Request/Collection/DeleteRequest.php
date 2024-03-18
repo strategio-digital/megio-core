@@ -40,7 +40,7 @@ class DeleteRequest extends Request
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['recipe']} not found"]);
+            return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
         try {

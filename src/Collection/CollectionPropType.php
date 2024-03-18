@@ -4,9 +4,8 @@ namespace Megio\Collection;
 
 enum CollectionPropType
 {
-    case INVISIBLE;
-    case SHOW_ONE;
-    case SHOW_ALL;
+    case READ_ONE;
+    case READ_ALL;
     case NONE;
     
     /**
@@ -16,9 +15,8 @@ enum CollectionPropType
     public function getPropNames(ICollectionRecipe $recipe): array
     {
         return match ($this) {
-            self::INVISIBLE => array_merge(['id'], $recipe->invisibleColumns()),
-            self::SHOW_ONE => array_merge(['id'], $recipe->showOneColumns()),
-            self::SHOW_ALL => array_merge(['id'], $recipe->showAllColumns()),
+            self::READ_ONE => array_merge(['id'], $recipe->readOne()),
+            self::READ_ALL => array_merge(['id'], $recipe->readAll()),
             self::NONE => [],
         };
     }

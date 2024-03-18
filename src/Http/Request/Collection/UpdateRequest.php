@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Megio\Collection\Builder\Builder;
 use Megio\Collection\CollectionException;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\Mapping\ArrayToEntity;
@@ -31,14 +32,12 @@ class UpdateRequest extends Request
     {
         $names = array_map(fn($r) => $r->name(), $this->recipeFinder->load()->getAll());
         
-        // TODO: get rows types trough reflection and validate them
-        
         return [
             'recipe' => Expect::anyOf(...$names)->required(),
             'rows' => Expect::arrayOf(
                 Expect::structure([
                     'id' => Expect::string()->required(),
-                    'data' => Expect::arrayOf('int|float|string|bool', 'string')->min(1)->required()
+                    'data' => Expect::arrayOf('int|float|string|bool|null', 'string')->min(1)->required()
                 ])->castTo('array')
             )->min(1)->required()
         ];
@@ -49,7 +48,7 @@ class UpdateRequest extends Request
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
-            return $this->error(["Collection {$data['recipe']} not found"]);
+            return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
         try {
@@ -87,8 +86,19 @@ class UpdateRequest extends Request
                 return $dispatcher->getResponse();
             }
             
+            $builder = $recipe->update(new Builder($recipe, $row['data']))
+                ->build()
+                ->validate();
+            
+            if (!$builder->isValid()) {
+                $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, new CollectionException('Invalid data'), $response);
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
+            }
+            
             try {
-                ArrayToEntity::update($metadata, $item, $row['data']);
+                ArrayToEntity::update($metadata, $item, $builder->toClearValues());
             } catch (CollectionException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);

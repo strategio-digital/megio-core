@@ -13,7 +13,7 @@ class ArrayToEntity
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
-     * @param array<string, int|float|string|bool> $data
+     * @param array<string, string|int|float|bool|null> $data
      * @return \Megio\Database\Interface\ICrudable
      * @throws \Megio\Collection\CollectionException
      */
@@ -30,7 +30,7 @@ class ArrayToEntity
     /**
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
      * @param \Megio\Database\Interface\ICrudable $entity
-     * @param array<string, int|float|string|bool> $data
+     * @param array<string, string|int|float|bool|null> $data
      * @return \Megio\Database\Interface\ICrudable
      * @throws \Megio\Collection\CollectionException
      */
@@ -49,7 +49,7 @@ class ArrayToEntity
                     $ref->getProperty($key)->setValue($entity, $value);
                 }
             } catch (\ReflectionException) {
-                throw new CollectionException("Property '{$key}' does not exist");
+                throw new CollectionException("Field '{$key}' does not exist on '{$metadata->getTableName()}' entity");
             }
         }
         

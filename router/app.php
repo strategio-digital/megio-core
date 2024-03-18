@@ -48,6 +48,11 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Admin\UploadAvatarRequest::class)
         ->options(['inResources' => false]);
     
+    // Collections navbar
+    $routes->add(Router::ROUTE_META_NAVBAR, '/megio/collections/navbar')
+        ->methods(['POST'])
+        ->controller(Collection\NavbarRequest::class);
+    
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/megio/collections');
     $collection->add('show', '/show')->methods(['POST'])->controller(Collection\ShowRequest::class);
@@ -56,10 +61,15 @@ return static function (RoutingConfigurator $routes): void {
     $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Collection\DeleteRequest::class);
     $collection->add('update', '/update')->methods(['PATCH'])->controller(Collection\UpdateRequest::class);
     
-    // Collections navbar
-    $routes->add(Router::ROUTE_META_NAVBAR, '/megio/collections/navbar')
+    // Forms
+    $form = $routes->collection('megio.form.')->prefix('/megio/form');
+    $form->add('collection.create', '/collection/create')
         ->methods(['POST'])
-        ->controller(Collection\NavbarRequest::class);
+        ->controller(Collection\Form\AddFormRequest::class);
+    
+    $form->add('collection.edit', '/collection/edit')
+        ->methods(['PATCH'])
+        ->controller(Collection\Form\EditFormRequest::class);
     
     // Resources
     $resources = $routes->collection('megio.resources.')->prefix('/megio/resources');

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Collection;
 
+use Megio\Collection\Builder\Builder;
+
 interface ICollectionRecipe
 {
     /** @return class-string */
@@ -11,14 +13,20 @@ interface ICollectionRecipe
     /** @return string */
     public function name(): string;
     
-    /** @return string[] */
-    public function invisibleColumns(): array;
     
     /** @return string[] */
-    public function showOneColumns(): array;
+    public function invisible(): array;
     
     /** @return string[] */
-    public function showAllColumns(): array;
+    public function readOne(): array;
+    
+    /** @return string[] */
+    public function readAll(): array;
+    
+    
+    public function create(Builder $builder): Builder;
+    
+    public function update(Builder $builder): Builder;
     
     /**
      * @throws \Megio\Collection\CollectionException

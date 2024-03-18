@@ -48,7 +48,6 @@ readonly class RecipeEntityMetadata
         return $this->tableName;
     }
     
-    
     public function getQbSelect(string $qbAlias): string
     {
         $schema = $this->getFullSchemaReflectedByDoctrine();
@@ -70,7 +69,7 @@ readonly class RecipeEntityMetadata
         return [
             'meta' => [
                 'recipe' => $this->recipe->name(),
-                'invisible' => $this->recipe->invisibleColumns()
+                'invisible' => $this->recipe->invisible()
             ],
             'props' => $this->sortColumns($props)
         ];
@@ -79,7 +78,7 @@ readonly class RecipeEntityMetadata
     /**
      * @return array{maxLength: int|null, name: string, nullable: bool, type: string}[]
      */
-    private function getFullSchemaReflectedByDoctrine(): array
+    public function getFullSchemaReflectedByDoctrine(): array
     {
         $props = [];
         foreach ($this->entityRef->getProperties() as $prop) {
@@ -103,7 +102,7 @@ readonly class RecipeEntityMetadata
      * @param \ReflectionProperty $prop
      * @return array{maxLength: int|null, name: string, nullable: bool, type: string}
      */
-    private function getColumnMetadata(Column $attr, \ReflectionProperty $prop): array
+    public function getColumnMetadata(Column $attr, \ReflectionProperty $prop): array
     {
         $propType = $prop->getType();
         $nullable = $attr->nullable;
@@ -131,7 +130,7 @@ readonly class RecipeEntityMetadata
      * @param array{maxLength: int|null, name: string, nullable: bool, type: string}[] $fields
      * @return array{maxLength: int|null, name: string, nullable: bool, type: string}[]
      */
-    private function sortColumns(array $fields): array
+    public function sortColumns(array $fields): array
     {
         $associativeFields = [];
         foreach ($fields as $field) {
