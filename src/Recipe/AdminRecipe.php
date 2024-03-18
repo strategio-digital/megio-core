@@ -38,4 +38,11 @@ class AdminRecipe extends CollectionRecipe
             ->add(new Email('email', 'E-mail', [new RequiredRule()]))
             ->add(new Password('password', 'Password', [new RequiredRule()]));
     }
+    
+    public function update(Builder $builder): Builder
+    {
+        return $builder
+            ->add(new Email('email', 'E-mail', [new RequiredRule()]))
+            ->add(new Password('password', 'Password'));
+    }
 }
