@@ -12,6 +12,7 @@ class MaxRule extends BaseRule
         protected string|null $message = null
     )
     {
+        parent::__construct($message);
     }
     
     public function name(): string
