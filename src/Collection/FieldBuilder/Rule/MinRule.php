@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Rule;
+namespace Megio\Collection\FieldBuilder\Rule;
 
-use Megio\Collection\Builder\Rule\Base\BaseRule;
+use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class MinRule extends BaseRule
 {

@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Field\Base;
+namespace Megio\Collection\FieldBuilder\Field\Base;
 
-use Megio\Collection\Builder\Builder;
-use Megio\Collection\Builder\Rule\Base\IRule;
+use Megio\Collection\FieldBuilder\FieldBuilder;
+use Megio\Collection\FieldBuilder\Rule\Base\IRule;
 
 interface IField
 {
@@ -21,7 +21,7 @@ interface IField
     
     public function addRule(IRule $rule): void;
     
-    /** @return \Megio\Collection\Builder\Rule\Base\IRule[] */
+    /** @return \Megio\Collection\FieldBuilder\Rule\Base\IRule[] */
     public function getRules(): array;
     
     /** @return array<string, string|int|float|bool|null> */
@@ -35,9 +35,9 @@ interface IField
     public function addError(string $message): void;
     
     
-    public function setBuilder(Builder $builder): void;
+    public function setBuilder(FieldBuilder $builder): void;
     
-    public function getBuilder(): Builder;
+    public function getBuilder(): FieldBuilder;
     
     /** @return array<string, mixed> */
     public function toArray(): array;

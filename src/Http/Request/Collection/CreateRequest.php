@@ -5,8 +5,8 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\Exception\ORMException;
-use Megio\Collection\Builder\Builder;
-use Megio\Collection\Builder\BuilderEventName;
+use Megio\Collection\FieldBuilder\FieldBuilder;
+use Megio\Collection\FieldBuilder\FieldBuilderEvent;
 use Megio\Collection\CollectionException;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\Mapping\ArrayToEntity;
@@ -25,7 +25,7 @@ class CreateRequest extends Request
     public function __construct(
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
-        protected readonly Builder       $builder,
+        protected readonly FieldBuilder  $builder,
     )
     {
     }
@@ -66,7 +66,7 @@ class CreateRequest extends Request
         $ids = [];
         
         foreach ($data['rows'] as $row) {
-            $builder = $recipe->create($this->builder->create($recipe, BuilderEventName::CREATE, $row))
+            $builder = $recipe->create($this->builder->create($recipe, FieldBuilderEvent::CREATE, $row))
                 ->build()
                 ->validate();
             

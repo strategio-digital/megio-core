@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder;
+namespace Megio\Collection\FieldBuilder;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Megio\Collection\Builder\Field\Base\IField;
-use Megio\Collection\Builder\Rule\MaxRule;
-use Megio\Collection\Builder\Rule\NullableRule;
-use Megio\Collection\Builder\Rule\UniqueRule;
+use Megio\Collection\FieldBuilder\Field\Base\IField;
+use Megio\Collection\FieldBuilder\Rule\MaxRule;
+use Megio\Collection\FieldBuilder\Rule\NullableRule;
+use Megio\Collection\FieldBuilder\Rule\UniqueRule;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
 
-class Builder
+class FieldBuilder
 {
     /** @var IField[] */
     protected array $fields = [];
@@ -39,7 +39,7 @@ class Builder
     
     protected bool $ignoreDoctrineRules = false;
     
-    protected BuilderEventName $eventName;
+    protected FieldBuilderEvent $event;
     
     public function __construct(
         protected readonly EntityManagerInterface $em
@@ -49,15 +49,15 @@ class Builder
     
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
-     * @param \Megio\Collection\Builder\BuilderEventName $name
+     * @param \Megio\Collection\FieldBuilder\FieldBuilderEvent $event
      * @param array<string, string|int|float|bool|null> $values
      * @return $this
      */
-    public function create(ICollectionRecipe $recipe, BuilderEventName $name, array $values = []): self
+    public function create(ICollectionRecipe $recipe, FieldBuilderEvent $event, array $values = []): self
     {
         $this->recipe = $recipe;
         $this->values = $values;
-        $this->eventName = $name;
+        $this->event = $event;
         return $this;
     }
     
@@ -81,10 +81,10 @@ class Builder
         foreach ($this->fields as $field) {
             $field->setBuilder($this);
             
-            $schema = current(array_filter($this->dbSchema, fn($f) => $f['name'] === $field->getName()));
+            $columnSchema = current(array_filter($this->dbSchema, fn($f) => $f['name'] === $field->getName()));
             
-            if (!$this->ignoreDoctrineRules && $schema) {
-                $field = $this->createRulesByDbSchema($field, $schema);
+            if (!$this->ignoreDoctrineRules && $columnSchema) {
+                $field = $this->createRulesByDbSchema($field, $columnSchema);
             }
             
             $rules = $field->getRules();
@@ -112,7 +112,7 @@ class Builder
         
         foreach ($valueNames as $valueName) {
             if (!in_array($valueName, $fieldNames)) {
-                $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->name()}' recipe for this action";
+                $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->name()}' recipe for '{$this->event->name}' action";
             }
         }
         
@@ -175,9 +175,9 @@ class Builder
         return $this->em;
     }
     
-    public function getEventName(): BuilderEventName
+    public function getEvent(): FieldBuilderEvent
     {
-        return $this->eventName;
+        return $this->event;
     }
     
     public function getMetadata(): RecipeEntityMetadata
@@ -221,7 +221,7 @@ class Builder
     }
     
     /**
-     * @param \Megio\Collection\Builder\Field\Base\IField $field
+     * @param \Megio\Collection\FieldBuilder\Field\Base\IField $field
      * @param array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null} $columnSchema
      * @return IField
      */

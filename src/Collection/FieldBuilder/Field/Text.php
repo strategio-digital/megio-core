@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Field;
+namespace Megio\Collection\FieldBuilder\Field;
 
-use Megio\Collection\Builder\Field\Base\BaseField;
-use Megio\Collection\Builder\Field\Base\FieldNativeType;
+use Megio\Collection\FieldBuilder\Field\Base\BaseField;
+use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
 
 class Text extends BaseField
 {
@@ -16,10 +16,10 @@ class Text extends BaseField
     /**
      * @param string $name
      * @param string $label
-     * @param \Megio\Collection\Builder\Rule\Base\IRule[] $rules
+     * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity
-     * @param \Megio\Collection\Builder\Field\Base\FieldNativeType $type
+     * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
     public function __construct(
         protected string          $name,

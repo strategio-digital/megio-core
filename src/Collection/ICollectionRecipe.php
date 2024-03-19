@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection;
 
-use Megio\Collection\Builder\Builder;
+use Megio\Collection\FieldBuilder\FieldBuilder;
 
 interface ICollectionRecipe
 {
@@ -24,9 +24,9 @@ interface ICollectionRecipe
     public function readAll(): array;
     
     
-    public function create(Builder $builder): Builder;
+    public function create(FieldBuilder $builder): FieldBuilder;
     
-    public function update(Builder $builder): Builder;
+    public function update(FieldBuilder $builder): FieldBuilder;
     
     /**
      * @throws \Megio\Collection\CollectionException

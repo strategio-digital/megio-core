@@ -1,6 +1,6 @@
 <?php
 
-namespace Megio\Collection\Builder\Field\Base;
+namespace Megio\Collection\FieldBuilder\Field\Base;
 
 enum FieldNativeType: string
 {

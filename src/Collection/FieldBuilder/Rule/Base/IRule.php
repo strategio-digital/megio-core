@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Rule\Base;
+namespace Megio\Collection\FieldBuilder\Rule\Base;
 
-use Megio\Collection\Builder\Field\Base\IField;
+use Megio\Collection\FieldBuilder\Field\Base\IField;
 
 interface IRule
 {

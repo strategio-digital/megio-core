@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder;
+namespace Megio\Collection\FieldBuilder;
 
-enum BuilderEventName
+enum FieldBuilderEvent
 {
     case CREATE;
     case UPDATE;

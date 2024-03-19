@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Field\Base;
+namespace Megio\Collection\FieldBuilder\Field\Base;
 
-use Megio\Collection\Builder\Builder;
-use Megio\Collection\Builder\Rule\Base\IRule;
+use Megio\Collection\FieldBuilder\FieldBuilder;
+use Megio\Collection\FieldBuilder\Rule\Base\IRule;
 
 abstract class BaseField implements IField
 {
-    protected Builder $builder;
+    protected FieldBuilder $builder;
     
     protected string|int|float|bool|null $value = null;
     
@@ -18,10 +18,10 @@ abstract class BaseField implements IField
     /**
      * @param string $name
      * @param string $label
-     * @param \Megio\Collection\Builder\Rule\Base\IRule[] $rules
+     * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity
-     * @param \Megio\Collection\Builder\Field\Base\FieldNativeType $type
+     * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
     public function __construct(
         protected string          $name,
@@ -85,12 +85,12 @@ abstract class BaseField implements IField
         $this->errors[] = $message;
     }
     
-    public function setBuilder(Builder $builder): void
+    public function setBuilder(FieldBuilder $builder): void
     {
         $this->builder = $builder;
     }
     
-    public function getBuilder(): Builder
+    public function getBuilder(): FieldBuilder
     {
         return $this->builder;
     }

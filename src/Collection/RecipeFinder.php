@@ -4,12 +4,17 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Megio\Helper\Path;
+use Nette\DI\Container;
 use Nette\Utils\Finder;
 
 class RecipeFinder
 {
     /** @var ICollectionRecipe[] */
     protected array $recipes = [];
+    
+    public function __construct(protected Container $container)
+    {
+    }
     
     public function load(): self
     {
@@ -19,7 +24,13 @@ class RecipeFinder
         foreach ($appFiles as $file) {
             $class = 'App\\Recipe\\' . $file->getBasename('.php');
             if (is_subclass_of($class, ICollectionRecipe::class)) {
-                $this->recipes[] = new $class();
+                /** @var ICollectionRecipe|null $recipe */
+                $recipe = $this->container->getByType($class, false);
+                if (!$recipe) {
+                    /** @var ICollectionRecipe $recipe */
+                    $recipe = $this->container->createInstance($class);
+                }
+                $this->recipes[] = $recipe;
             }
         }
         
@@ -27,10 +38,15 @@ class RecipeFinder
         foreach ($vendorFiles as $file) {
             $class = 'Megio\\Recipe\\' . $file->getBasename('.php');
             if (is_subclass_of($class, ICollectionRecipe::class)) {
-                $this->recipes[] = new $class();
+                /** @var ICollectionRecipe|null $recipe */
+                $recipe = $this->container->getByType($class, false);
+                if (!$recipe) {
+                    /** @var ICollectionRecipe $recipe */
+                    $recipe = $this->container->createInstance($class);
+                }
+                $this->recipes[] = $recipe;
             }
         }
-        
         return $this;
     }
     

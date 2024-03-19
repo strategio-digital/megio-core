@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Rule;
+namespace Megio\Collection\FieldBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
-use Megio\Collection\Builder\BuilderEventName;
-use Megio\Collection\Builder\Rule\Base\BaseRule;
+use Megio\Collection\FieldBuilder\FieldBuilderEvent;
+use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class UniqueRule extends BaseRule
 {
@@ -54,7 +54,7 @@ class UniqueRule extends BaseRule
             return true;
         }
         
-        $updating = $this->getBuilder()->getEventName() === BuilderEventName::UPDATE;
+        $updating = $this->getBuilder()->getEvent() === FieldBuilderEvent::UPDATE;
         
         if ($row && $updating && $row[$this->columnName] === $this->getValue()) {
             return true;

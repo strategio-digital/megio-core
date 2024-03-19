@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\Builder\Rule;
+namespace Megio\Collection\FieldBuilder\Rule;
 
 use Megio\Collection\CollectionException;
-use Megio\Collection\Builder\Rule\Base\BaseRule;
+use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class EqualRule extends BaseRule
 {
@@ -34,7 +34,7 @@ class EqualRule extends BaseRule
     {
         $value = $this->field->getValue();
         
-        /** @var \Megio\Collection\Builder\Field\Base\IField|false $targetField */
+        /** @var \Megio\Collection\FieldBuilder\Field\Base\IField|false $targetField */
         $targetField = current(array_filter($this->relatedFields, fn($field) => $field->getName() === $this->targetField));
         
         if (!$targetField) {
