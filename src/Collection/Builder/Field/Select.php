@@ -34,4 +34,12 @@ class Select extends BaseField
     {
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
+    
+    /** @return array<string, mixed> */
+    public function toArray(): array
+    {
+        $validations = parent::toArray();
+        $validations['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
+        return $validations;
+    }
 }
