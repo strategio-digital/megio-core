@@ -26,7 +26,6 @@ class EmailRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
         $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
         
         if (count($nullable) !== 0 && $value === null) {
