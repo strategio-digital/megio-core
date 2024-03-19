@@ -13,7 +13,7 @@ class ArrayToEntity
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
-     * @param array<string, string|int|float|bool|null> $data
+     * @param array<string, string|int|float|bool|null|array<string,mixed>> $data
      * @return \Megio\Database\Interface\ICrudable
      * @throws \Megio\Collection\CollectionException
      */
@@ -30,7 +30,7 @@ class ArrayToEntity
     /**
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
      * @param \Megio\Database\Interface\ICrudable $entity
-     * @param array<string, string|int|float|bool|null> $data
+     * @param array<string, string|int|float|bool|null|array<string,mixed>> $data
      * @return \Megio\Database\Interface\ICrudable
      * @throws \Megio\Collection\CollectionException
      */

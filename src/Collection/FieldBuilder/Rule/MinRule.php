@@ -28,6 +28,10 @@ class MinRule extends BaseRule
             return $this->message ?: "Field '{$this->field->getName()}' must contain at least {$this->min} characters";
         }
         
+        if (is_array($value)) {
+            return $this->message ?: "Field '{$this->field->getName()}' must contain at least {$this->min} items";
+        }
+        
         return $this->message ?: "Field '{$this->field->getName()}' must be equal or greater then {$this->min}";
     }
     
@@ -45,6 +49,10 @@ class MinRule extends BaseRule
         }
         
         if (is_string($value) && mb_strlen($value) >= $this->min) {
+            return true;
+        }
+        
+        if (is_array($value) && count($value) >= $this->min) {
             return true;
         }
         

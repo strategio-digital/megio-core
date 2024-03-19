@@ -10,7 +10,10 @@ abstract class BaseField implements IField
 {
     protected FieldBuilder $builder;
     
-    protected string|int|float|bool|null|UndefinedValue $value;
+    /**
+     * @var string|int|float|bool|null|array<string,mixed>|UndefinedValue
+     */
+    protected string|int|float|bool|null|array|UndefinedValue $value;
     
     /** @var string[] */
     protected array $errors = [];
@@ -71,12 +74,18 @@ abstract class BaseField implements IField
         return $this->mapToEntity;
     }
     
-    public function getValue(): string|int|float|bool|null|UndefinedValue
+    /**
+     * @return string|int|float|bool|null|array<string,mixed>|UndefinedValue
+     */
+    public function getValue(): string|int|float|bool|null|array|UndefinedValue
     {
         return $this->value;
     }
     
-    public function setValue(string|int|float|bool|null $value): void
+    /**
+     * @param string|int|float|bool|null|array<string,mixed> $value
+     */
+    public function setValue(string|int|float|bool|null|array $value): void
     {
         $this->value = $value;
     }

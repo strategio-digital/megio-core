@@ -6,6 +6,7 @@ namespace Megio\Collection\FieldBuilder\Field;
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
 use Megio\Collection\FieldBuilder\Rule\EmailRule;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 
 class Email extends BaseField
 {
@@ -31,6 +32,7 @@ class Email extends BaseField
         protected FieldNativeType            $type = FieldNativeType::EMAIL
     )
     {
+        $rules[] = new StringRule();
         $rules[] = new EmailRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }

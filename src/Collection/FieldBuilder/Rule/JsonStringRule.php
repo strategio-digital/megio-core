@@ -4,17 +4,19 @@ declare(strict_types=1);
 namespace Megio\Collection\FieldBuilder\Rule;
 
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
-class RequiredRule extends BaseRule
+class JsonStringRule extends BaseRule
 {
     public function name(): string
     {
-        return 'required';
+        return 'json-string';
     }
     
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' is required";
+        return $this->message ?: "Field '{$this->field->getName()}' must be a valid JSON string";
     }
     
     /**
@@ -30,20 +32,14 @@ class RequiredRule extends BaseRule
             return true;
         }
         
-        if (is_string($value) && trim($value) !== '') {
-            return true;
+        if (!is_string($value)) {
+            return false;
         }
         
-        if (is_integer($value) || is_float($value)) {
+        try {
+            Json::decode($value);
             return true;
-        }
-        
-        if (is_array($value)) {
-            return true;
-        }
-        
-        if ($value === true || $value === false) {
-            return true;
+        } catch (JsonException) {
         }
         
         return false;

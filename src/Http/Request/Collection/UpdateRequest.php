@@ -40,7 +40,7 @@ class UpdateRequest extends Request
             'rows' => Expect::arrayOf(
                 Expect::structure([
                     'id' => Expect::string()->required(),
-                    'data' => Expect::arrayOf('int|float|string|bool|null', 'string')->min(1)->required()
+                    'data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->min(1)->required()
                 ])->castTo('array')
             )->min(1)->required()
         ];

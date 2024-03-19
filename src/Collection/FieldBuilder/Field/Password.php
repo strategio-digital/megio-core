@@ -5,6 +5,7 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 
 class Password extends BaseField
 {
@@ -30,6 +31,7 @@ class Password extends BaseField
         protected FieldNativeType $type = FieldNativeType::PASSWORD
     )
     {
+        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

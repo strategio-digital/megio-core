@@ -37,7 +37,7 @@ class CreateRequest extends Request
         return [
             'recipe' => Expect::anyOf(...$names)->required(),
             'rows' => Expect::arrayOf(
-                Expect::arrayOf('int|float|string|bool|null', 'string')->min(1)->required()
+                Expect::arrayOf('int|float|string|bool|null|array', 'string')->min(1)->required()
             )->min(1)->max(1000)->required()
         ];
     }

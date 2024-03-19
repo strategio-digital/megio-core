@@ -60,8 +60,9 @@ abstract class BaseRule implements IRule
     
     /**
      * Shortcut to get the current field value
+     * @return string|int|float|bool|null|array<string,mixed>|UndefinedValue
      */
-    public function getValue(): string|int|float|bool|null|UndefinedValue
+    public function getValue(): string|int|float|bool|null|array|UndefinedValue
     {
         return $this->field->getValue();
     }

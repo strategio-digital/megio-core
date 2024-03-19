@@ -28,6 +28,10 @@ class MaxRule extends BaseRule
             return $this->message ?: "Field '{$this->field->getName()}' must be maximum of {$this->max} characters long";
         }
         
+        if (is_array($value)) {
+            return $this->message ?: "Field '{$this->field->getName()}' must have maximum of {$this->max} items";
+        }
+        
         return $this->message ?: "Field '{$this->field->getName()}' must be equal or less than {$this->max}";
     }
     
@@ -45,6 +49,10 @@ class MaxRule extends BaseRule
         }
         
         if (is_string($value) && mb_strlen($value) <= $this->max) {
+            return true;
+        }
+        
+        if (is_array($value) && count($value) <= $this->max) {
             return true;
         }
         

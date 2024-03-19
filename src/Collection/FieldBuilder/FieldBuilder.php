@@ -122,12 +122,14 @@ class FieldBuilder
                 ? $this->ignoredRules[$field->getName()]
                 : [];
             
-            if ($field->getValue() instanceof UndefinedValue === false) {
-                foreach ($field->getRules() as $rule) {
-                    if (!in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
-                        $field->addError($rule->message());
-                        $this->errors[$field->getName()][] = $rule->message();
-                    }
+            $nullable = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'nullable')) !== 0;
+            $required = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'required')) !== 0;
+            $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
+            
+            foreach ($field->getRules() as $rule) {
+                if (!$ignore && !in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
+                    $field->addError($rule->message());
+                    $this->errors[$field->getName()][] = $rule->message();
                 }
             }
         }
@@ -205,7 +207,7 @@ class FieldBuilder
     }
     
     /**
-     * @return array<string, string|int|float|bool|null>
+     * @return array<string, string|int|float|bool|null|array<string,mixed>>
      */
     public function toClearValues(): array
     {
