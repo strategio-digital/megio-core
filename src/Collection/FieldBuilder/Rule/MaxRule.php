@@ -20,7 +20,6 @@ class MaxRule extends BaseRule
         return 'max';
     }
     
-    
     public function message(): string
     {
         $value = $this->field->getValue();

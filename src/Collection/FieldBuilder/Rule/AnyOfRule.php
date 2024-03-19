@@ -25,7 +25,6 @@ class AnyOfRule extends BaseRule
         return 'anyOf';
     }
     
-    
     public function message(): string
     {
         $keys = implode(', ', $this->keys);

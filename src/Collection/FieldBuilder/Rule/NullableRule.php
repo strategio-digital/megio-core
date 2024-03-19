@@ -7,7 +7,6 @@ use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class NullableRule extends BaseRule
 {
-    
     public function name(): string
     {
         return 'nullable';

@@ -13,7 +13,6 @@ class EmailRule extends BaseRule
         return 'email';
     }
     
-    
     public function message(): string
     {
         return $this->message ?: "Field '{$this->field->getName()}' must be a valid email address";

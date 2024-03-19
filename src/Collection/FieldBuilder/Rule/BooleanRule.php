@@ -12,7 +12,6 @@ class BooleanRule extends BaseRule
         return 'boolean';
     }
     
-    
     public function message(): string
     {
         return $this->message ?: "Field '{$this->field->getName()}' must be a boolean";

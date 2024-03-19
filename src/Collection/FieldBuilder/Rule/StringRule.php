@@ -13,7 +13,6 @@ class StringRule extends BaseRule
         return 'string';
     }
     
-    
     public function message(): string
     {
         return $this->message ?: "Field '{$this->field->getName()}' must be a string";

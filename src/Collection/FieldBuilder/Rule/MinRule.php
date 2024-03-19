@@ -20,7 +20,6 @@ class MinRule extends BaseRule
         return 'min';
     }
     
-    
     public function message(): string
     {
         $value = $this->field->getValue();
