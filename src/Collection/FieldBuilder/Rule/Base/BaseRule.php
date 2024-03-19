@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\FieldBuilder\Rule\Base;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Megio\Collection\FieldBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\FieldBuilder\FieldBuilder;
 use Megio\Collection\FieldBuilder\Field\Base\IField;
 
@@ -60,7 +61,7 @@ abstract class BaseRule implements IRule
     /**
      * Shortcut to get the current field value
      */
-    public function getValue(): string|int|float|bool|null
+    public function getValue(): string|int|float|bool|null|UndefinedValue
     {
         return $this->field->getValue();
     }

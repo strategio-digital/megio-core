@@ -42,11 +42,7 @@ class EqualRule extends BaseRule
             return false;
         }
         
-        if ($value !== $targetField->getValue()) {
-            return false;
-        }
-        
-        return true;
+        return $value === $targetField->getValue();
     }
     
     /**

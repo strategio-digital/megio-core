@@ -5,6 +5,7 @@ namespace Megio\Collection\FieldBuilder;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\FieldBuilder\Field\Base\IField;
+use Megio\Collection\FieldBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\FieldBuilder\Rule\MaxRule;
 use Megio\Collection\FieldBuilder\Rule\NullableRule;
 use Megio\Collection\FieldBuilder\Rule\UniqueRule;
@@ -121,10 +122,12 @@ class FieldBuilder
                 ? $this->ignoredRules[$field->getName()]
                 : [];
             
-            foreach ($field->getRules() as $rule) {
-                if (!in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
-                    $field->addError($rule->message());
-                    $this->errors[$field->getName()][] = $rule->message();
+            if ($field->getValue() instanceof UndefinedValue === false) {
+                foreach ($field->getRules() as $rule) {
+                    if (!in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
+                        $field->addError($rule->message());
+                        $this->errors[$field->getName()][] = $rule->message();
+                    }
                 }
             }
         }
@@ -209,11 +212,10 @@ class FieldBuilder
         $values = [];
         
         foreach ($this->fields as $field) {
-            $required = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'required')) !== 0;
-            $ignored = $field->getValue() === null && $required === false;
-            
-            if ($field->mappedToEntity() === true && $ignored === false) {
-                $values[$field->getName()] = $field->getValue();
+            if ($field->mappedToEntity() === true) {
+                if ($field->getValue() instanceof UndefinedValue === false) {
+                    $values[$field->getName()] = $field->getValue();
+                }
             }
         }
         

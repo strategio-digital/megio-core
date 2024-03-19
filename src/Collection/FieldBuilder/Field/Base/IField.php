@@ -28,7 +28,7 @@ interface IField
     public function getAttrs(): array;
     
     
-    public function getValue(): string|int|float|bool|null;
+    public function getValue(): string|int|float|bool|null|UndefinedValue;
     
     public function setValue(string|int|float|bool|null $value): void;
     

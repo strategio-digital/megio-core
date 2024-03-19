@@ -5,16 +5,17 @@ namespace Megio\Collection\FieldBuilder\Rule;
 
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
-class RequiredRule extends BaseRule
+class BooleanRule extends BaseRule
 {
     public function name(): string
     {
-        return 'required';
+        return 'boolean';
     }
+    
     
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' is required";
+        return $this->message ?: "Field '{$this->field->getName()}' must be a boolean";
     }
     
     /**
@@ -27,14 +28,6 @@ class RequiredRule extends BaseRule
         $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
         
         if (count($nullable) !== 0 && $value === null) {
-            return true;
-        }
-        
-        if (is_string($value) && trim($value) !== '') {
-            return true;
-        }
-        
-        if (is_integer($value) || is_float($value)) {
             return true;
         }
         

@@ -26,10 +26,10 @@ class MaxRule extends BaseRule
         $value = $this->field->getValue();
         
         if (is_string($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must be at most {$this->max} characters long";
+            return $this->message ?: "Field '{$this->field->getName()}' must be maximum of {$this->max} characters long";
         }
         
-        return $this->message ?: "Field '{$this->field->getName()}' must be at most {$this->max} long";
+        return $this->message ?: "Field '{$this->field->getName()}' must be equal or less than {$this->max}";
     }
     
     /**
@@ -39,16 +39,21 @@ class MaxRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
         
-        if (is_string($value) && mb_strlen($value) > $this->max) {
-            return false;
+        if (count($nullable) !== 0 && $value === null) {
+            return true;
         }
         
-        if (is_numeric($value) && $value > $this->max) {
-            return false;
+        if (is_string($value) && mb_strlen($value) <= $this->max) {
+            return true;
         }
         
-        return true;
+        if ((is_integer($value) || is_float($value)) && $value <= $this->max) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**

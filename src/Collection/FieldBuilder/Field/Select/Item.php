@@ -5,9 +5,15 @@ namespace Megio\Collection\FieldBuilder\Field\Select;
 
 class Item
 {
+    /**
+     * @param string|int|float|bool|null $value
+     * @param string $label
+     * @param array<string, string|int|float|bool|null> $attrs
+     */
     public function __construct(
         protected string|int|float|bool|null $value,
-        protected string                     $label
+        protected string                     $label,
+        protected array                      $attrs = []
     )
     {
     }
@@ -23,13 +29,22 @@ class Item
     }
     
     /**
-     * @return array{label: string, value:string|int|float|bool|null}
+     * @return array<string, string|int|float|bool|null>
+     */
+    public function getAttrs(): array
+    {
+        return $this->attrs;
+    }
+    
+    /**
+     * @return array{label: string, value:string|int|float|bool|null, attrs: array<string, string|int|float|bool|null>}
      */
     public function toArray(): array
     {
         return [
             'label' => $this->getLabel(),
-            'value' => $this->getValue()
+            'value' => $this->getValue(),
+            'attrs' => $this->getAttrs()
         ];
     }
 }

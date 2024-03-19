@@ -10,7 +10,7 @@ abstract class BaseField implements IField
 {
     protected FieldBuilder $builder;
     
-    protected string|int|float|bool|null $value = null;
+    protected string|int|float|bool|null|UndefinedValue $value;
     
     /** @var string[] */
     protected array $errors = [];
@@ -32,6 +32,7 @@ abstract class BaseField implements IField
         protected FieldNativeType $type = FieldNativeType::CUSTOM
     )
     {
+        $this->value = new UndefinedValue();
     }
     
     public function getName(): string
@@ -70,7 +71,7 @@ abstract class BaseField implements IField
         return $this->mapToEntity;
     }
     
-    public function getValue(): string|int|float|bool|null
+    public function getValue(): string|int|float|bool|null|UndefinedValue
     {
         return $this->value;
     }

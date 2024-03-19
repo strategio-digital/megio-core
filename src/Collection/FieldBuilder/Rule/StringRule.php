@@ -4,17 +4,19 @@ declare(strict_types=1);
 namespace Megio\Collection\FieldBuilder\Rule;
 
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
+use Nette\Utils\Validators;
 
-class RequiredRule extends BaseRule
+class StringRule extends BaseRule
 {
     public function name(): string
     {
-        return 'required';
+        return 'string';
     }
+    
     
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' is required";
+        return $this->message ?: "Field '{$this->field->getName()}' must be a string";
     }
     
     /**
@@ -30,15 +32,7 @@ class RequiredRule extends BaseRule
             return true;
         }
         
-        if (is_string($value) && trim($value) !== '') {
-            return true;
-        }
-        
-        if (is_integer($value) || is_float($value)) {
-            return true;
-        }
-        
-        if ($value === true || $value === false) {
+        if (is_string($value)) {
             return true;
         }
         

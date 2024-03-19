@@ -14,8 +14,8 @@ class NullableRule extends BaseRule
     }
     
     /**
-     * This method is always true. This class exists only for detection nullability in rule:
-     * @see RequiredRule
+     * This method is always true. This rule exists only for detection nullability in other rules:
+     * @see BooleanRule for example
      */
     public function message(): string
     {
@@ -23,8 +23,8 @@ class NullableRule extends BaseRule
     }
     
     /**
-     * This method is always true. This class exists only for detection nullability in rule:
-     * @see RequiredRule
+     * This method is always true. This rule exists only for detection nullability in other rules:
+     * @see BooleanRule for example
      * @return bool
      */
     public function validate(): bool

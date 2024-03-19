@@ -26,10 +26,10 @@ class MinRule extends BaseRule
         $value = $this->field->getValue();
         
         if (is_string($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must be at least {$this->min} characters long";
+            return $this->message ?: "Field '{$this->field->getName()}' must contain at least {$this->min} characters";
         }
         
-        return $this->message ?: "Field '{$this->field->getName()}' must be at least {$this->min} long";
+        return $this->message ?: "Field '{$this->field->getName()}' must be equal or greater then {$this->min}";
     }
     
     /**
@@ -39,16 +39,21 @@ class MinRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
         
-        if (is_string($value) && mb_strlen($value) < $this->min) {
-            return false;
+        if (count($nullable) !== 0 && $value === null) {
+            return true;
         }
         
-        if (is_numeric($value) && $value < $this->min) {
-            return false;
+        if (is_string($value) && mb_strlen($value) >= $this->min) {
+            return true;
         }
         
-        return true;
+        if ((is_integer($value) || is_float($value)) && $value >= $this->min) {
+            return true;
+        }
+        
+        return false;
     }
     
     /**

@@ -27,12 +27,14 @@ class EmailRule extends BaseRule
     {
         $value = $this->field->getValue();
         
-        if (!is_string($value)) {
-            return false;
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        
+        if (count($nullable) !== 0 && $value === null) {
+            return true;
         }
         
-        if ($value === '') {
-            return true;
+        if (!is_string($value)) {
+            return false;
         }
         
         return Validators::isEmail($value);
