@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Megio\Collection\Builder\Builder;
+use Megio\Collection\Builder\BuilderEventName;
 use Megio\Collection\CollectionException;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\Mapping\ArrayToEntity;
@@ -24,7 +25,9 @@ class UpdateRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder)
+        protected readonly RecipeFinder  $recipeFinder,
+        protected readonly Builder       $builder,
+    )
     {
     }
     
@@ -52,7 +55,7 @@ class UpdateRequest extends Request
         }
         
         try {
-            $metadata = $recipe->getEntityMetadata( CollectionPropType::NONE);
+            $metadata = $recipe->getEntityMetadata(CollectionPropType::NONE);
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
@@ -86,7 +89,7 @@ class UpdateRequest extends Request
                 return $dispatcher->getResponse();
             }
             
-            $builder = $recipe->update(new Builder($recipe, $row['data']))
+            $builder = $recipe->update($this->builder->create($recipe, BuilderEventName::UPDATE, $row['data']))
                 ->build()
                 ->validate();
             

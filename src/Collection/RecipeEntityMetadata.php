@@ -76,7 +76,7 @@ readonly class RecipeEntityMetadata
     }
     
     /**
-     * @return array{maxLength: int|null, name: string, nullable: bool, type: string}[]
+     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[]
      */
     public function getFullSchemaReflectedByDoctrine(): array
     {
@@ -100,7 +100,7 @@ readonly class RecipeEntityMetadata
     /**
      * @param \Doctrine\ORM\Mapping\Column $attr
      * @param \ReflectionProperty $prop
-     * @return array{maxLength: int|null, name: string, nullable: bool, type: string}
+     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}
      */
     public function getColumnMetadata(Column $attr, \ReflectionProperty $prop): array
     {
@@ -120,6 +120,7 @@ readonly class RecipeEntityMetadata
         return [
             'name' => $prop->getName(),
             'type' => mb_strtolower($type),
+            'unique' => $attr->unique,
             'nullable' => $nullable,
             'maxLength' => $maxLength
         ];

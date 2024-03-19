@@ -9,7 +9,7 @@ use Megio\Collection\Builder\Rule\Base\BaseRule;
 class EqualRule extends BaseRule
 {
     public function __construct(
-        protected string      $target,
+        protected string      $targetField,
         protected string|null $message = null
     )
     {
@@ -23,7 +23,7 @@ class EqualRule extends BaseRule
     
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be equal to '{$this->target}'";
+        return $this->message ?: "Field '{$this->field->getName()}' must be equal to '{$this->targetField}'";
     }
     
     /**
@@ -35,10 +35,10 @@ class EqualRule extends BaseRule
         $value = $this->field->getValue();
         
         /** @var \Megio\Collection\Builder\Field\Base\IField|false $targetField */
-        $targetField = current(array_filter($this->relatedFields, fn($field) => $field->getName() === $this->target));
+        $targetField = current(array_filter($this->relatedFields, fn($field) => $field->getName() === $this->targetField));
         
         if (!$targetField) {
-            $this->message = "Field '{$this->target}' not found in related fields";
+            $this->message = "Field '{$this->targetField}' not found in related fields";
             return false;
         }
         
@@ -56,7 +56,7 @@ class EqualRule extends BaseRule
     public function toArray(): array
     {
         $validations = parent::toArray();
-        $validations['params']['target'] = $this->target;
+        $validations['params']['target'] = $this->targetField;
         return $validations;
     }
 }

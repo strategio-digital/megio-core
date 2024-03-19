@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
 use Megio\Collection\Builder\Builder;
+use Megio\Collection\Builder\BuilderEventName;
 use Megio\Collection\RecipeFinder;
 use Megio\Database\EntityManager;
 use Megio\Http\Request\Request;
@@ -15,7 +16,8 @@ class EditFormRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder
+        protected readonly RecipeFinder  $recipeFinder,
+        protected readonly Builder       $builder,
     )
     {
     }
@@ -52,7 +54,7 @@ class EditFormRequest extends Request
             return $this->error(["Item '{$data['id']}' not found"], 404);
         }
         
-        $builder = $recipe->update(new Builder($recipe, $row))->build();
+        $builder = $recipe->update($this->builder->create($recipe, BuilderEventName::UPDATE, $row))->build();
         
         if ($builder->countFields() === 0) {
             return $this->error(["Collection '{$data['recipe']}' has no editable fields"]);

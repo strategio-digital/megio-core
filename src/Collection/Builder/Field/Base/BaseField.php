@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Builder\Field\Base;
 
+use Megio\Collection\Builder\Builder;
 use Megio\Collection\Builder\Rule\Base\IRule;
 
 abstract class BaseField implements IField
 {
+    protected Builder $builder;
+    
     protected string|int|float|bool|null $value = null;
     
     /** @var string[] */
@@ -80,6 +83,16 @@ abstract class BaseField implements IField
     public function addError(string $message): void
     {
         $this->errors[] = $message;
+    }
+    
+    public function setBuilder(Builder $builder): void
+    {
+        $this->builder = $builder;
+    }
+    
+    public function getBuilder(): Builder
+    {
+        return $this->builder;
     }
     
     /**

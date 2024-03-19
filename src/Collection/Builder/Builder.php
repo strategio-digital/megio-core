@@ -3,32 +3,62 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Builder;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\Builder\Field\Base\IField;
 use Megio\Collection\Builder\Rule\MaxRule;
 use Megio\Collection\Builder\Rule\NullableRule;
+use Megio\Collection\Builder\Rule\UniqueRule;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\ICollectionRecipe;
+use Megio\Collection\RecipeEntityMetadata;
 
 class Builder
 {
     /** @var IField[] */
-    private array $fields = [];
+    protected array $fields = [];
     
     /** @var array<string, mixed> */
-    private array $buildFields = [];
+    protected array $buildFields = [];
     
     /** @var array<string, string[]> */
-    private array $errors = [];
+    protected array $errors = [];
+    
+    protected RecipeEntityMetadata $metadata;
+    
+    /** @var array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[] */
+    protected array $dbSchema = [];
+    
+    
+    protected ICollectionRecipe $recipe;
+    
+    /** @var array<string, string|int|float|bool|null> */
+    protected array $values = [];
+    
+    /** @var array<string, string[]> */
+    protected array $ignoredRules = [];
+    
+    protected bool $ignoreDoctrineRules = false;
+    
+    protected BuilderEventName $eventName;
+    
+    public function __construct(
+        protected readonly EntityManagerInterface $em
+    )
+    {
+    }
     
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
+     * @param \Megio\Collection\Builder\BuilderEventName $name
      * @param array<string, string|int|float|bool|null> $values
+     * @return $this
      */
-    public function __construct(
-        protected readonly ICollectionRecipe $recipe,
-        protected readonly array             $values = [],
-    )
+    public function create(ICollectionRecipe $recipe, BuilderEventName $name, array $values = []): self
     {
+        $this->recipe = $recipe;
+        $this->values = $values;
+        $this->eventName = $name;
+        return $this;
     }
     
     public function add(IField $field): self
@@ -45,11 +75,15 @@ class Builder
     
     public function build(): self
     {
-        $metadata = $this->recipe->getEntityMetadata(CollectionPropType::NONE);
-        $dbSchema = $metadata->getFullSchemaReflectedByDoctrine();
+        $this->metadata = $this->recipe->getEntityMetadata(CollectionPropType::NONE);
+        $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
         
         foreach ($this->fields as $field) {
-            if ($schema = current(array_filter($dbSchema, fn($f) => $f['name'] === $field->getName()))) {
+            $field->setBuilder($this);
+            
+            $schema = current(array_filter($this->dbSchema, fn($f) => $f['name'] === $field->getName()));
+            
+            if (!$this->ignoreDoctrineRules && $schema) {
                 $field = $this->createRulesByDbSchema($field, $schema);
             }
             
@@ -71,9 +105,6 @@ class Builder
         return $this;
     }
     
-    /**
-     * @return $this
-     */
     public function validate(): self
     {
         $fieldNames = array_keys($this->buildFields);
@@ -86,14 +117,33 @@ class Builder
         }
         
         foreach ($this->fields as $field) {
+            $ignoredFieldRules = array_key_exists($field->getName(), $this->ignoredRules)
+                ? $this->ignoredRules[$field->getName()]
+                : [];
+            
             foreach ($field->getRules() as $rule) {
-                if ($rule->validate() === false) {
+                if (!in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
                     $field->addError($rule->message());
                     $this->errors[$field->getName()][] = $rule->message();
                 }
             }
         }
         
+        return $this;
+    }
+    
+    /**
+     * @param array<string, string[]> $rules
+     */
+    public function ignoreRules(array $rules): self
+    {
+        $this->ignoredRules = $rules;
+        return $this;
+    }
+    
+    public function ignoreDoctrineRules(): self
+    {
+        $this->ignoreDoctrineRules = true;
         return $this;
     }
     
@@ -113,6 +163,34 @@ class Builder
     public function getErrors(): array
     {
         return $this->errors;
+    }
+    
+    public function getRecipe(): ICollectionRecipe
+    {
+        return $this->recipe;
+    }
+    
+    public function getEntityManager(): EntityManagerInterface
+    {
+        return $this->em;
+    }
+    
+    public function getEventName(): BuilderEventName
+    {
+        return $this->eventName;
+    }
+    
+    public function getMetadata(): RecipeEntityMetadata
+    {
+        return $this->metadata;
+    }
+    
+    /**
+     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[]
+     */
+    public function getDbSchema(): array
+    {
+        return $this->dbSchema;
     }
     
     /**
@@ -144,19 +222,23 @@ class Builder
     
     /**
      * @param \Megio\Collection\Builder\Field\Base\IField $field
-     * @param array{maxLength: int|null, name: string, nullable: bool, type: string} $schema
+     * @param array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null} $columnSchema
      * @return IField
      */
-    protected function createRulesByDbSchema(IField $field, array $schema): IField
+    protected function createRulesByDbSchema(IField $field, array $columnSchema): IField
     {
         $ruleNames = array_map(fn($rule) => $rule->name(), $field->getRules());
         
-        if (!in_array('nullable', $ruleNames) && $schema['nullable'] === true) {
+        if (!in_array('nullable', $ruleNames) && $columnSchema['nullable'] === true) {
             $field->addRule(new NullableRule());
         }
         
-        if (!in_array('max', $ruleNames) && $schema['maxLength'] !== null) {
-            $field->addRule(new MaxRule($schema['maxLength']));
+        if (!in_array('max', $ruleNames) && $columnSchema['maxLength'] !== null) {
+            $field->addRule(new MaxRule($columnSchema['maxLength']));
+        }
+        
+        if (!in_array('unique', $ruleNames) && $columnSchema['unique'] === true) {
+            $field->addRule(new UniqueRule($this->recipe->source(), $field->getName()));
         }
         
         return $field;

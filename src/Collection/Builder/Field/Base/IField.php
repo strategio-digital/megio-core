@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Builder\Field\Base;
 
+use Megio\Collection\Builder\Builder;
 use Megio\Collection\Builder\Rule\Base\IRule;
 
 interface IField
@@ -33,6 +34,10 @@ interface IField
     
     public function addError(string $message): void;
     
+    
+    public function setBuilder(Builder $builder): void;
+    
+    public function getBuilder(): Builder;
     
     /** @return array<string, mixed> */
     public function toArray(): array;

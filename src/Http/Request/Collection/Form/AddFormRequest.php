@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection\Form;
 
 use Megio\Collection\Builder\Builder;
+use Megio\Collection\Builder\BuilderEventName;
 use Megio\Collection\RecipeFinder;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
@@ -11,7 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AddFormRequest extends Request
 {
-    public function __construct(protected readonly RecipeFinder $recipeFinder)
+    public function __construct(
+        protected readonly RecipeFinder $recipeFinder,
+        protected readonly Builder      $builder,
+    )
     {
     }
     
@@ -32,7 +36,7 @@ class AddFormRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        $builder = $recipe->create(new Builder($recipe))->build();
+        $builder = $recipe->create($this->builder->create($recipe, BuilderEventName::CREATE))->build();
         
         if ($builder->countFields() === 0) {
             return $this->error(["Collection '{$data['recipe']}' has no creatable fields"]);
