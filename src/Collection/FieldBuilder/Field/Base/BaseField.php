@@ -24,15 +24,13 @@ abstract class BaseField implements IField
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity
-     * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
     public function __construct(
-        protected string          $name,
-        protected string          $label,
-        protected array           $rules = [],
-        protected array           $attrs = [],
-        protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::CUSTOM
+        protected string $name,
+        protected string $label,
+        protected array  $rules = [],
+        protected array  $attrs = [],
+        protected bool   $mapToEntity = true
     )
     {
         $this->value = new UndefinedValue();
@@ -62,11 +60,6 @@ abstract class BaseField implements IField
     public function getAttrs(): array
     {
         return $this->attrs;
-    }
-    
-    public function getType(): FieldNativeType
-    {
-        return $this->type;
     }
     
     public function mappedToEntity(): bool
@@ -117,7 +110,7 @@ abstract class BaseField implements IField
     public function toArray(): array
     {
         return [
-            'type' => $this->getType()->value,
+            'renderer' => $this->renderer(),
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'rules' => array_map(fn($rule) => $rule->toArray(), $this->getRules()),

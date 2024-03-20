@@ -10,8 +10,6 @@ interface IField
 {
     public function renderer(): string;
     
-    public function getType(): FieldNativeType;
-    
     public function mappedToEntity(): bool;
     
     
