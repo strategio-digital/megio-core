@@ -4,24 +4,27 @@ declare(strict_types=1);
 namespace Megio\Recipe;
 
 use Megio\Collection\FieldBuilder\Field\ArrayField;
+use Megio\Collection\FieldBuilder\Field\DateCzField;
+use Megio\Collection\FieldBuilder\Field\DateTimeCzField;
 use Megio\Collection\FieldBuilder\Field\DecimalField;
+use Megio\Collection\FieldBuilder\Field\HourMinuteCzField;
 use Megio\Collection\FieldBuilder\Field\IntegerField;
 use Megio\Collection\FieldBuilder\Field\JsonField;
 use Megio\Collection\FieldBuilder\Field\NumericField;
+use Megio\Collection\FieldBuilder\Field\PhoneCzField;
 use Megio\Collection\FieldBuilder\Field\SelectField;
 use Megio\Collection\FieldBuilder\Field\SlugField;
 use Megio\Collection\FieldBuilder\Field\TextAreaField;
+use Megio\Collection\FieldBuilder\Field\TimeCzField;
 use Megio\Collection\FieldBuilder\Field\ToggleBtnField;
 use Megio\Collection\FieldBuilder\Field\TextField;
+use Megio\Collection\FieldBuilder\Field\UrlField;
+use Megio\Collection\FieldBuilder\Field\VideoLinkField;
 use Megio\Collection\FieldBuilder\FieldBuilder;
 use Megio\Collection\FieldBuilder\Field\EmailField;
 use Megio\Collection\FieldBuilder\Field\PasswordField;
 use Megio\Collection\FieldBuilder\Rule\AnyOfRule;
-use Megio\Collection\FieldBuilder\Rule\DateCzRule;
-use Megio\Collection\FieldBuilder\Rule\DateTimeCzRule;
-use Megio\Collection\FieldBuilder\Rule\PhoneCzRule;
 use Megio\Collection\FieldBuilder\Rule\EqualRule;
-use Megio\Collection\FieldBuilder\Rule\HourMinuteCzRule;
 use Megio\Collection\FieldBuilder\Rule\IntegerRule;
 use Megio\Collection\FieldBuilder\Rule\JsonStringRule;
 use Megio\Collection\FieldBuilder\Rule\MaxRule;
@@ -30,10 +33,7 @@ use Megio\Collection\FieldBuilder\Rule\NullableRule;
 use Megio\Collection\FieldBuilder\Rule\RegexRule;
 use Megio\Collection\FieldBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
-use Megio\Collection\FieldBuilder\Rule\TimeCzRule;
 use Megio\Collection\FieldBuilder\Rule\UniqueRule;
-use Megio\Collection\FieldBuilder\Rule\UrlRule;
-use Megio\Collection\FieldBuilder\Rule\VideoLinkRule;
 use Megio\Database\Entity\Admin;
 
 class FieldRuleTestRecipe extends CollectionRecipe
@@ -74,9 +74,9 @@ class FieldRuleTestRecipe extends CollectionRecipe
             ->add(new PasswordField('equal_to_password', '', [new EqualRule('password')], [], false))
             
             // URL, phone, video
-            ->add(new TextField('url', '', [new RequiredRule(), new NullableRule(), new UrlRule()], [], false))
-            ->add(new TextField('cz_phone', '', [new RequiredRule(), new NullableRule(), new PhoneCzRule()], [], false))
-            ->add(new TextField('video_link', '', [new RequiredRule(), new NullableRule(), new VideoLinkRule()], [], false))
+            ->add(new UrlField('url', '', [new RequiredRule(), new NullableRule()], [], false))
+            ->add(new PhoneCzField('phone_cz', '', [new RequiredRule(), new NullableRule()], [], false))
+            ->add(new VideoLinkField('video_link', '', [new RequiredRule(), new NullableRule()], [], false))
             
             // JSON & JSON String
             ->add(new JsonField('json', '', [new RequiredRule(), new NullableRule()], [], false))
@@ -88,10 +88,10 @@ class FieldRuleTestRecipe extends CollectionRecipe
             ->add(new TextField('regex', '', [new RequiredRule(), new NullableRule(), new RegexRule('/^[a-z]+/')], [], false))
             
             // Date, Time, Datetime
-            ->add(new TextField('date_time', '', [new RequiredRule(), new NullableRule(), new DateTimeCzRule()], [], false))
-            ->add(new TextField('date', '', [new RequiredRule(), new NullableRule(), new DateCzRule()], [], false))
-            ->add(new TextField('time', '', [new RequiredRule(), new NullableRule(), new TimeCzRule()], [], false))
-            ->add(new TextField('hour_minute', '', [new RequiredRule(), new NullableRule(), new HourMinuteCzRule()], [], false))
+            ->add(new DateTimeCzField('date_time', '', [new RequiredRule(), new NullableRule()], [], false))
+            ->add(new DateCzField('date', '', [new RequiredRule(), new NullableRule()], [], false))
+            ->add(new TimeCzField('time', '', [new RequiredRule(), new NullableRule()], [], false))
+            ->add(new HourMinuteCzField('hour_minute', '', [new RequiredRule(), new NullableRule()], [], false))
             
             // Toggle switch (boolean)
             ->add(new ToggleBtnField('bool_true', '', [], [], false))
