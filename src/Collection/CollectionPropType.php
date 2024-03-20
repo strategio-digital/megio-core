@@ -15,8 +15,8 @@ enum CollectionPropType
     public function getPropNames(ICollectionRecipe $recipe): array
     {
         return match ($this) {
-            self::READ_ONE => array_merge(['id'], $recipe->readOne()),
-            self::READ_ALL => array_merge(['id'], $recipe->readAll()),
+            self::READ_ONE => array_merge(['id'], $recipe->showOne()),
+            self::READ_ALL => array_merge(['id'], $recipe->showAll()),
             self::NONE => [],
         };
     }

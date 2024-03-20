@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Collection;
 
-use Megio\Collection\FieldBuilder\FieldBuilder;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\ReadBuilder\ReadBuilder;
 
 interface ICollectionRecipe
 {
@@ -13,20 +14,20 @@ interface ICollectionRecipe
     /** @return string */
     public function name(): string;
     
-    
     /** @return string[] */
     public function invisible(): array;
     
     /** @return string[] */
-    public function readOne(): array;
+    public function showOne(): array;
     
     /** @return string[] */
-    public function readAll(): array;
+    public function showAll(): array;
     
+    public function readOne(ReadBuilder $builder): ReadBuilder;
     
-    public function create(FieldBuilder $builder): FieldBuilder;
+    public function create(WriteBuilder $builder): WriteBuilder;
     
-    public function update(FieldBuilder $builder): FieldBuilder;
+    public function update(WriteBuilder $builder): WriteBuilder;
     
     /**
      * @throws \Megio\Collection\CollectionException

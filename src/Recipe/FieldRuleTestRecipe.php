@@ -3,37 +3,37 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
-use Megio\Collection\FieldBuilder\Field\ArrayField;
-use Megio\Collection\FieldBuilder\Field\DateCzField;
-use Megio\Collection\FieldBuilder\Field\DateTimeCzField;
-use Megio\Collection\FieldBuilder\Field\DecimalField;
-use Megio\Collection\FieldBuilder\Field\HourMinuteCzField;
-use Megio\Collection\FieldBuilder\Field\IntegerField;
-use Megio\Collection\FieldBuilder\Field\JsonField;
-use Megio\Collection\FieldBuilder\Field\NumericField;
-use Megio\Collection\FieldBuilder\Field\PhoneCzField;
-use Megio\Collection\FieldBuilder\Field\SelectField;
-use Megio\Collection\FieldBuilder\Field\SlugField;
-use Megio\Collection\FieldBuilder\Field\TextAreaField;
-use Megio\Collection\FieldBuilder\Field\TimeCzField;
-use Megio\Collection\FieldBuilder\Field\ToggleBtnField;
-use Megio\Collection\FieldBuilder\Field\TextField;
-use Megio\Collection\FieldBuilder\Field\UrlField;
-use Megio\Collection\FieldBuilder\Field\VideoLinkField;
-use Megio\Collection\FieldBuilder\FieldBuilder;
-use Megio\Collection\FieldBuilder\Field\EmailField;
-use Megio\Collection\FieldBuilder\Field\PasswordField;
-use Megio\Collection\FieldBuilder\Rule\AnyOfRule;
-use Megio\Collection\FieldBuilder\Rule\EqualRule;
-use Megio\Collection\FieldBuilder\Rule\IntegerRule;
-use Megio\Collection\FieldBuilder\Rule\JsonStringRule;
-use Megio\Collection\FieldBuilder\Rule\MaxRule;
-use Megio\Collection\FieldBuilder\Rule\MinRule;
-use Megio\Collection\FieldBuilder\Rule\NullableRule;
-use Megio\Collection\FieldBuilder\Rule\RegexRule;
-use Megio\Collection\FieldBuilder\Rule\RequiredRule;
+use Megio\Collection\WriteBuilder\Field\ArrayField;
+use Megio\Collection\WriteBuilder\Field\DateCzField;
+use Megio\Collection\WriteBuilder\Field\DateTimeCzField;
+use Megio\Collection\WriteBuilder\Field\DecimalField;
+use Megio\Collection\WriteBuilder\Field\HourMinuteCzField;
+use Megio\Collection\WriteBuilder\Field\IntegerField;
+use Megio\Collection\WriteBuilder\Field\JsonField;
+use Megio\Collection\WriteBuilder\Field\NumericField;
+use Megio\Collection\WriteBuilder\Field\PhoneCzField;
+use Megio\Collection\WriteBuilder\Field\SelectField;
+use Megio\Collection\WriteBuilder\Field\SlugField;
+use Megio\Collection\WriteBuilder\Field\TextAreaField;
+use Megio\Collection\WriteBuilder\Field\TimeCzField;
+use Megio\Collection\WriteBuilder\Field\ToggleBtnField;
+use Megio\Collection\WriteBuilder\Field\TextField;
+use Megio\Collection\WriteBuilder\Field\UrlField;
+use Megio\Collection\WriteBuilder\Field\VideoLinkField;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\WriteBuilder\Field\EmailField;
+use Megio\Collection\WriteBuilder\Field\PasswordField;
+use Megio\Collection\WriteBuilder\Rule\AnyOfRule;
+use Megio\Collection\WriteBuilder\Rule\EqualRule;
+use Megio\Collection\WriteBuilder\Rule\IntegerRule;
+use Megio\Collection\WriteBuilder\Rule\JsonStringRule;
+use Megio\Collection\WriteBuilder\Rule\MaxRule;
+use Megio\Collection\WriteBuilder\Rule\MinRule;
+use Megio\Collection\WriteBuilder\Rule\NullableRule;
+use Megio\Collection\WriteBuilder\Rule\RegexRule;
+use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
-use Megio\Collection\FieldBuilder\Rule\UniqueRule;
+use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Database\Entity\Admin;
 
 class FieldRuleTestRecipe extends CollectionRecipe
@@ -48,17 +48,17 @@ class FieldRuleTestRecipe extends CollectionRecipe
         return 'field-rule-test';
     }
     
-    public function readOne(): array
+    public function showOne(): array
     {
         return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     }
     
-    public function readAll(): array
+    public function showAll(): array
     {
         return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     }
     
-    public function create(FieldBuilder $builder): FieldBuilder
+    public function create(WriteBuilder $builder): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),
@@ -136,7 +136,7 @@ class FieldRuleTestRecipe extends CollectionRecipe
             ->add(new DecimalField('decimal_required', '', [new RequiredRule()], [], false, false));
     }
     
-    public function update(FieldBuilder $builder): FieldBuilder
+    public function update(WriteBuilder $builder): WriteBuilder
     {
         return $builder
             ->add(new TextField('email', '', [

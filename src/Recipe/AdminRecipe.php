@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
-use Megio\Collection\FieldBuilder\FieldBuilder;
-use Megio\Collection\FieldBuilder\Field\EmailField;
-use Megio\Collection\FieldBuilder\Field\PasswordField;
-use Megio\Collection\FieldBuilder\Rule\RequiredRule;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\WriteBuilder\Field\EmailField;
+use Megio\Collection\WriteBuilder\Field\PasswordField;
+use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
 
@@ -22,24 +22,24 @@ class AdminRecipe extends CollectionRecipe
         return 'admin';
     }
     
-    public function readOne(): array
+    public function showOne(): array
     {
         return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     }
     
-    public function readAll(): array
+    public function showAll(): array
     {
         return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
     }
     
-    public function create(FieldBuilder $builder): FieldBuilder
+    public function create(WriteBuilder $builder): WriteBuilder
     {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
             ->add(new PasswordField('password', 'Password', [new RequiredRule()]));
     }
     
-    public function update(FieldBuilder $builder): FieldBuilder
+    public function update(WriteBuilder $builder): WriteBuilder
     {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))

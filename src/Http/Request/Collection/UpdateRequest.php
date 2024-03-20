@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Megio\Collection\FieldBuilder\FieldBuilder;
-use Megio\Collection\FieldBuilder\FieldBuilderEvent;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\CollectionException;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\Mapping\ArrayToEntity;
@@ -26,7 +26,7 @@ class UpdateRequest extends Request
     public function __construct(
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
-        protected readonly FieldBuilder  $builder,
+        protected readonly WriteBuilder  $builder,
     )
     {
     }
@@ -89,7 +89,7 @@ class UpdateRequest extends Request
                 return $dispatcher->getResponse();
             }
             
-            $builder = $recipe->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row['data'], $row['id']))
+            $builder = $recipe->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']))
                 ->build()
                 ->validate();
             

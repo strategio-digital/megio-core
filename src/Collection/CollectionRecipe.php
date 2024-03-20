@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Table;
-use Megio\Collection\FieldBuilder\FieldBuilder;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Database\Interface\ICrudable;
 
 abstract class CollectionRecipe implements ICollectionRecipe
@@ -14,12 +15,17 @@ abstract class CollectionRecipe implements ICollectionRecipe
         return ['id', 'updatedAt'];
     }
     
-    public function create(FieldBuilder $builder): FieldBuilder
+    public function readOne(ReadBuilder $builder): ReadBuilder
     {
         return $builder;
     }
     
-    public function update(FieldBuilder $builder): FieldBuilder
+    public function create(WriteBuilder $builder): WriteBuilder
+    {
+        return $builder;
+    }
+    
+    public function update(WriteBuilder $builder): WriteBuilder
     {
         return $builder;
     }

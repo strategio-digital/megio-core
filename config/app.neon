@@ -21,7 +21,8 @@ services:
 
     - Megio\Database\EntityFinder
     - Megio\Collection\RecipeFinder
-    - Megio\Collection\FieldBuilder\FieldBuilder
+    - Megio\Collection\ReadBuilder\ReadBuilder
+    - Megio\Collection\WriteBuilder\WriteBuilder
 
     - Megio\Security\JWT\JWTResolver
     - Megio\Security\JWT\ClaimsFormatter

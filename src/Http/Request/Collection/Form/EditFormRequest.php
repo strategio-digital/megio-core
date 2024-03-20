@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
-use Megio\Collection\FieldBuilder\FieldBuilder;
-use Megio\Collection\FieldBuilder\FieldBuilderEvent;
+use Megio\Collection\WriteBuilder\WriteBuilder;
+use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
 use Megio\Database\EntityManager;
 use Megio\Http\Request\Request;
@@ -17,7 +17,7 @@ class EditFormRequest extends Request
     public function __construct(
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
-        protected readonly FieldBuilder  $builder,
+        protected readonly WriteBuilder  $builder,
     )
     {
     }
@@ -58,7 +58,7 @@ class EditFormRequest extends Request
         $rowId = $row['id'];
         
         $builder = $recipe
-            ->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row, $rowId))
+            ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId))
             ->build();
         
         if ($builder->countFields() === 0) {
