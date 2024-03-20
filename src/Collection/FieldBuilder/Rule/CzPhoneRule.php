@@ -7,6 +7,14 @@ use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class CzPhoneRule extends BaseRule
 {
+    public function __construct(
+        protected string|null $message = null,
+        protected bool        $normalize = true
+    )
+    {
+        parent::__construct($message);
+    }
+    
     public function name(): string
     {
         return 'czPhone';
@@ -56,7 +64,9 @@ class CzPhoneRule extends BaseRule
         
         // Validace celého čísla a normalizace
         if (preg_match('/^\+420\d{9}$/', $value)) {
-            $this->field->setValue($value);
+            if ($this->normalize) {
+                $this->field->setValue($value);
+            }
             return true;
         }
         

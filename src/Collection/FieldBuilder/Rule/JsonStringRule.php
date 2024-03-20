@@ -11,7 +11,7 @@ class JsonStringRule extends BaseRule
 {
     public function name(): string
     {
-        return 'json-string';
+        return 'jsonString';
     }
     
     public function message(): string
