@@ -32,7 +32,6 @@ class Email extends BaseField
         protected FieldNativeType            $type = FieldNativeType::EMAIL
     )
     {
-        $rules[] = new StringRule();
         $rules[] = new EmailRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
