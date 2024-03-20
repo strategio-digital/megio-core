@@ -5,20 +5,20 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\EmailRule;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class Email extends BaseField
+class TextAreaField extends BaseField
 {
     public function renderer(): string
     {
-        return 'email-renderer';
+        return 'textarea-renderer';
     }
     
     /**
      * @param string $name
      * @param string $label
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|bool|null> $attrs
+     * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity
      * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
@@ -28,10 +28,10 @@ class Email extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::EMAIL
+        protected FieldNativeType $type = FieldNativeType::TEXTAREA
     )
     {
-        $rules[] = new EmailRule();
+        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

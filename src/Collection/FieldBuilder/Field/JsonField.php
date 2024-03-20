@@ -5,13 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\IntegerRule;
+use Megio\Collection\FieldBuilder\Rule\JsonRule;
 
-class Integer extends BaseField
+class JsonField extends BaseField
 {
     public function renderer(): string
     {
-        return 'integer-renderer';
+        return 'json-renderer';
     }
     
     /**
@@ -31,7 +31,7 @@ class Integer extends BaseField
         protected FieldNativeType $type = FieldNativeType::NUMBER
     )
     {
-        $rules[] = new IntegerRule();
+        $rules[] = new JsonRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

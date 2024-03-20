@@ -5,13 +5,12 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class RichText extends BaseField
+class HiddenField extends BaseField
 {
     public function renderer(): string
     {
-        return 'rich-text-renderer';
+        return 'hidden-renderer';
     }
     
     /**
@@ -28,10 +27,9 @@ class RichText extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::TEXT
+        protected FieldNativeType $type = FieldNativeType::HIDDEN
     )
     {
-        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

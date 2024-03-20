@@ -5,13 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\StringRule;
+use Megio\Collection\FieldBuilder\Rule\DecimalRule;
 
-class Password extends BaseField
+class DecimalField extends BaseField
 {
     public function renderer(): string
     {
-        return 'password-renderer';
+        return 'decimal-renderer';
     }
     
     /**
@@ -28,10 +28,10 @@ class Password extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::PASSWORD
+        protected FieldNativeType $type = FieldNativeType::NUMBER
     )
     {
-        $rules[] = new StringRule();
+        $rules[] = new DecimalRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

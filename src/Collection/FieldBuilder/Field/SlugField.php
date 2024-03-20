@@ -5,20 +5,20 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\BooleanRule;
+use Megio\Collection\FieldBuilder\Rule\SlugRule;
 
-class ToggleSwitch extends BaseField
+class SlugField extends BaseField
 {
     public function renderer(): string
     {
-        return 'toggle-switch-renderer';
+        return 'slug-renderer';
     }
     
     /**
      * @param string $name
      * @param string $label
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|bool|null> $attrs
+     * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity
      * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
@@ -28,10 +28,10 @@ class ToggleSwitch extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::CHECKBOX
+        protected FieldNativeType $type = FieldNativeType::TEXT
     )
     {
-        $rules[] = new BooleanRule();
+        $rules[] = new SlugRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

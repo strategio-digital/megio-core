@@ -5,13 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\JsonRule;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class Json extends BaseField
+class PasswordField extends BaseField
 {
     public function renderer(): string
     {
-        return 'json-renderer';
+        return 'password-renderer';
     }
     
     /**
@@ -28,10 +28,10 @@ class Json extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::NUMBER
+        protected FieldNativeType $type = FieldNativeType::PASSWORD
     )
     {
-        $rules[] = new JsonRule();
+        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

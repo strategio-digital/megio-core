@@ -5,12 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
+use Megio\Collection\FieldBuilder\Rule\NumericRule;
 
-class FreshField extends BaseField
+class NumericField extends BaseField
 {
     public function renderer(): string
     {
-        return 'fresh-field-renderer';
+        return 'numeric-renderer';
     }
     
     /**
@@ -27,9 +28,10 @@ class FreshField extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::TEXT
+        protected FieldNativeType $type = FieldNativeType::NUMBER
     )
     {
+        $rules[] = new NumericRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

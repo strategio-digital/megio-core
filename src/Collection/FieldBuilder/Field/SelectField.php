@@ -6,7 +6,7 @@ namespace Megio\Collection\FieldBuilder\Field;
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
 
-class Select extends BaseField
+class SelectField extends BaseField
 {
     public function renderer(): string
     {
@@ -16,7 +16,7 @@ class Select extends BaseField
     /**
      * @param string $name
      * @param string $label
-     * @param \Megio\Collection\FieldBuilder\Field\Select\Item[] $items
+     * @param \Megio\Collection\FieldBuilder\Field\SelectField\Item[] $items
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
      * @param bool $mapToEntity

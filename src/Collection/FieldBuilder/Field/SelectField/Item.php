@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\FieldBuilder\Field\Select;
+namespace Megio\Collection\FieldBuilder\Field\SelectField;
 
 class Item
 {

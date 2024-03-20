@@ -5,13 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\StringRule;
+use Megio\Collection\FieldBuilder\Rule\IntegerRule;
 
-class Text extends BaseField
+class IntegerField extends BaseField
 {
     public function renderer(): string
     {
-        return 'text-renderer';
+        return 'integer-renderer';
     }
     
     /**
@@ -28,10 +28,10 @@ class Text extends BaseField
         protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
-        protected FieldNativeType $type = FieldNativeType::TEXT
+        protected FieldNativeType $type = FieldNativeType::NUMBER
     )
     {
-        $rules[] = new StringRule();
+        $rules[] = new IntegerRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

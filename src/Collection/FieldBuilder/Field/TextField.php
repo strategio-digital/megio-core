@@ -5,13 +5,13 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\SlugRule;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class Slug extends BaseField
+class TextField extends BaseField
 {
     public function renderer(): string
     {
-        return 'slug-renderer';
+        return 'text-renderer';
     }
     
     /**
@@ -31,7 +31,7 @@ class Slug extends BaseField
         protected FieldNativeType $type = FieldNativeType::TEXT
     )
     {
-        $rules[] = new SlugRule();
+        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }
