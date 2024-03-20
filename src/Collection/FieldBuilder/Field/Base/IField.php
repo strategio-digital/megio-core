@@ -17,6 +17,8 @@ interface IField
     
     public function getLabel(): string;
     
+    public function isDisabled(): bool;
+    
     public function addRule(IRule $rule): void;
     
     /** @return \Megio\Collection\FieldBuilder\Rule\Base\IRule[] */

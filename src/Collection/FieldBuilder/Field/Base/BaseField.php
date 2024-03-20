@@ -19,17 +19,15 @@ abstract class BaseField implements IField
     protected array $errors = [];
     
     /**
-     * @param string $name
-     * @param string $label
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
-     * @param bool $mapToEntity
      */
     public function __construct(
         protected string $name,
         protected string $label,
         protected array  $rules = [],
         protected array  $attrs = [],
+        protected bool   $disabled = false,
         protected bool   $mapToEntity = true
     )
     {
@@ -44,6 +42,11 @@ abstract class BaseField implements IField
     public function getLabel(): string
     {
         return $this->label;
+    }
+    
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
     }
     
     public function addRule(IRule $rule): void
@@ -111,6 +114,7 @@ abstract class BaseField implements IField
     {
         return [
             'renderer' => $this->renderer(),
+            'disabled' => $this->isDisabled(),
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'rules' => array_map(fn($rule) => $rule->toArray(), $this->getRules()),

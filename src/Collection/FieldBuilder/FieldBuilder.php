@@ -131,14 +131,16 @@ class FieldBuilder
                 ? $this->ignoredRules[$field->getName()]
                 : [];
             
-            $nullable = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'nullable')) !== 0;
-            $required = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'required')) !== 0;
-            $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
-            
-            foreach ($field->getRules() as $rule) {
-                if (!$ignore && !in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
-                    $field->addError($rule->message());
-                    $this->errors[$field->getName()][] = $rule->message();
+            if ($field->isDisabled() === false) {
+                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'nullable')) !== 0;
+                $required = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'required')) !== 0;
+                $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
+                
+                foreach ($field->getRules() as $rule) {
+                    if (!$ignore && !in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
+                        $field->addError($rule->message());
+                        $this->errors[$field->getName()][] = $rule->message();
+                    }
                 }
             }
         }
@@ -228,7 +230,7 @@ class FieldBuilder
         $values = [];
         
         foreach ($this->fields as $field) {
-            if ($field->mappedToEntity() === true) {
+            if ($field->mappedToEntity() === true && $field->isDisabled() === false) {
                 if ($field->getValue() instanceof UndefinedValue === false) {
                     $values[$field->getName()] = $field->getValue();
                 }

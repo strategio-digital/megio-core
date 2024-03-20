@@ -13,12 +13,9 @@ class SelectField extends BaseField
     }
     
     /**
-     * @param string $name
-     * @param string $label
      * @param \Megio\Collection\FieldBuilder\Field\SelectField\Item[] $items
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
      * @param array<string, string|int|float|bool|null> $attrs
-     * @param bool $mapToEntity
      */
     public function __construct(
         protected string $name,
@@ -26,10 +23,11 @@ class SelectField extends BaseField
         protected array  $items = [],
         protected array  $rules = [],
         protected array  $attrs = [],
+        protected bool   $disabled = false,
         protected bool   $mapToEntity = true
     )
     {
-        parent::__construct($name, $label, $rules, $attrs, $mapToEntity);
+        parent::__construct($name, $label, $rules, $attrs, $disabled, $mapToEntity);
     }
     
     /** @return array<string, mixed> */

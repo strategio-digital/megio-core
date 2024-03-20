@@ -14,21 +14,19 @@ class TextField extends BaseField
     }
     
     /**
-     * @param string $name
-     * @param string $label
      * @param \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|int|float|bool|null> $attrs
-     * @param bool $mapToEntity
+     * @param array<string, string|bool|null> $attrs
      */
     public function __construct(
         protected string $name,
         protected string $label,
         protected array  $rules = [],
         protected array  $attrs = [],
-        protected bool   $mapToEntity = true,
+        protected bool   $disabled = false,
+        protected bool   $mapToEntity = true
     )
     {
         $rules[] = new StringRule();
-        parent::__construct($name, $label, $rules, $attrs, $mapToEntity);
+        parent::__construct($name, $label, $rules, $attrs, $disabled, $mapToEntity);
     }
 }
