@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\FieldBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
+use Megio\Collection\CollectionException;
 use Megio\Collection\FieldBuilder\FieldBuilderEvent;
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
@@ -17,6 +18,7 @@ class UniqueRule extends BaseRule
     public function __construct(
         protected string      $entityClassName,
         protected string      $columnName,
+        protected string      $primaryKey = 'id',
         protected string|null $message = null
     )
     {
@@ -37,6 +39,7 @@ class UniqueRule extends BaseRule
      * Return true if validation is passed
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Megio\Collection\CollectionException
      */
     public function validate(): bool
     {
@@ -47,16 +50,21 @@ class UniqueRule extends BaseRule
             ->where("e.{$this->columnName} = :value")
             ->setParameter('value', $this->getValue())
             ->getQuery()
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
         if ($row === null) {
             return true;
         }
         
-        $updating = $this->getBuilder()->getEvent() === FieldBuilderEvent::UPDATE;
+        if (!array_key_exists($this->primaryKey, $row)) {
+            throw new CollectionException("Property '{$this->primaryKey}' not found in entity '{$this->entityClassName}'");
+        }
         
-        if ($row && $updating && $row[$this->columnName] === $this->getValue()) {
+        if (
+            $row
+            && $row[$this->columnName] === $this->getValue()
+            && $row[$this->primaryKey] === $this->getBuilder()->getRowId()
+        ) {
             return true;
         }
         

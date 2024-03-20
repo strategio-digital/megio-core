@@ -6,8 +6,13 @@ namespace Megio\Collection\FieldBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\FieldBuilder\Field\Base\IField;
 use Megio\Collection\FieldBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\FieldBuilder\Rule\BooleanRule;
+use Megio\Collection\FieldBuilder\Rule\DateTimeCzRule;
+use Megio\Collection\FieldBuilder\Rule\DecimalRule;
+use Megio\Collection\FieldBuilder\Rule\IntegerRule;
 use Megio\Collection\FieldBuilder\Rule\MaxRule;
 use Megio\Collection\FieldBuilder\Rule\NullableRule;
+use Megio\Collection\FieldBuilder\Rule\StringRule;
 use Megio\Collection\FieldBuilder\Rule\UniqueRule;
 use Megio\Collection\CollectionPropType;
 use Megio\Collection\ICollectionRecipe;
@@ -32,6 +37,8 @@ class FieldBuilder
     
     protected ICollectionRecipe $recipe;
     
+    protected string|null $rowId = null;
+    
     /** @var array<string, string|int|float|bool|null> */
     protected array $values = [];
     
@@ -52,13 +59,15 @@ class FieldBuilder
      * @param \Megio\Collection\ICollectionRecipe $recipe
      * @param \Megio\Collection\FieldBuilder\FieldBuilderEvent $event
      * @param array<string, string|int|float|bool|null> $values
+     * @param string|null $rowId
      * @return $this
      */
-    public function create(ICollectionRecipe $recipe, FieldBuilderEvent $event, array $values = []): self
+    public function create(ICollectionRecipe $recipe, FieldBuilderEvent $event, array $values = [], string|null $rowId = null): self
     {
         $this->recipe = $recipe;
         $this->values = $values;
         $this->event = $event;
+        $this->rowId = $rowId;
         return $this;
     }
     
@@ -190,6 +199,11 @@ class FieldBuilder
         return $this->metadata;
     }
     
+    public function getRowId(): string|null
+    {
+        return $this->rowId;
+    }
+    
     /**
      * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[]
      */
@@ -232,6 +246,21 @@ class FieldBuilder
     protected function createRulesByDbSchema(IField $field, array $columnSchema): IField
     {
         $ruleNames = array_map(fn($rule) => $rule->name(), $field->getRules());
+        
+        /** @var \Megio\Collection\FieldBuilder\Rule\Base\IRule[] $typeMap */
+        $typeMap = [
+            'string' => new StringRule(),
+            'integer' => new IntegerRule(),
+            'float' => new DecimalRule(),
+            'boolean' => new BooleanRule(),
+            'datetime' => new DateTimeCzRule(),
+        ];
+        
+        foreach ($typeMap as $type => $value) {
+            if (!in_array($value->name(), $ruleNames) && $columnSchema['type'] === $type) {
+                $field->addRule($value);
+            }
+        }
         
         if (!in_array('nullable', $ruleNames) && $columnSchema['nullable'] === true) {
             $field->addRule(new NullableRule());

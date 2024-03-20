@@ -64,7 +64,7 @@ class FieldRuleTestRecipe extends CollectionRecipe
             // Email and Password
             ->add(new Email('email', '', [
                 new RequiredRule(),
-                //new UniqueRule($this->source(), 'email')
+                new UniqueRule($this->source(), 'email')
             ]))
             ->add(new Password('password', '', [
                 new RequiredRule(),
@@ -140,19 +140,16 @@ class FieldRuleTestRecipe extends CollectionRecipe
                 new NullableRule(),
                 new DateTimeCzRule()
             ], [], false))
-            
             ->add(new Text('date', '', [
                 new RequiredRule(),
                 new NullableRule(),
                 new DateCzRule()
             ], [], false))
-            
             ->add(new Text('time', '', [
                 new RequiredRule(),
                 new NullableRule(),
                 new TimeCzRule()
             ], [], false))
-            
             ->add(new Text('hour_minute', '', [
                 new RequiredRule(),
                 new NullableRule(),
@@ -198,6 +195,10 @@ class FieldRuleTestRecipe extends CollectionRecipe
     
     public function update(FieldBuilder $builder): FieldBuilder
     {
-        return $builder;
+        return $builder
+            ->add(new Text('email', '', [
+                new RequiredRule(),
+                new UniqueRule($this->source(), 'email')
+            ], [], true));
     }
 }

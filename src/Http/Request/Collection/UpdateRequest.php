@@ -89,7 +89,7 @@ class UpdateRequest extends Request
                 return $dispatcher->getResponse();
             }
             
-            $builder = $recipe->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row['data']))
+            $builder = $recipe->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row['data'], $row['id']))
                 ->build()
                 ->validate();
             

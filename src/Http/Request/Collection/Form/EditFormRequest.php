@@ -54,7 +54,12 @@ class EditFormRequest extends Request
             return $this->error(["Item '{$data['id']}' not found"], 404);
         }
         
-        $builder = $recipe->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row))->build();
+        /** @var string $rowId */
+        $rowId = $row['id'];
+        
+        $builder = $recipe
+            ->update($this->builder->create($recipe, FieldBuilderEvent::UPDATE, $row, $rowId))
+            ->build();
         
         if ($builder->countFields() === 0) {
             return $this->error(["Collection '{$data['recipe']}' has no editable fields"]);
