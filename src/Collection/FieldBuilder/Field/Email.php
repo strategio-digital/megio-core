@@ -24,15 +24,14 @@ class Email extends BaseField
      * @param \Megio\Collection\FieldBuilder\Field\Base\FieldNativeType $type
      */
     public function __construct(
-        protected string                     $name,
-        protected string                     $label,
-        protected array                      $rules = [],
-        protected array                      $attrs = [],
-        protected bool                       $mapToEntity = true,
-        protected FieldNativeType            $type = FieldNativeType::EMAIL
+        protected string          $name,
+        protected string          $label,
+        protected array           $rules = [new EmailRule()],
+        protected array           $attrs = [],
+        protected bool            $mapToEntity = true,
+        protected FieldNativeType $type = FieldNativeType::EMAIL
     )
     {
-        $rules[] = new EmailRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

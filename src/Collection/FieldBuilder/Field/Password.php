@@ -25,13 +25,12 @@ class Password extends BaseField
     public function __construct(
         protected string          $name,
         protected string          $label,
-        protected array           $rules = [],
+        protected array           $rules = [new StringRule()],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
         protected FieldNativeType $type = FieldNativeType::PASSWORD
     )
     {
-        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }
