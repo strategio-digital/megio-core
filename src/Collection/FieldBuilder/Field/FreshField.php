@@ -5,13 +5,12 @@ namespace Megio\Collection\FieldBuilder\Field;
 
 use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
-use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class Text extends BaseField
+class FreshField extends BaseField
 {
     public function renderer(): string
     {
-        return 'text-renderer';
+        return 'fresh-field-renderer';
     }
     
     /**
@@ -31,7 +30,6 @@ class Text extends BaseField
         protected FieldNativeType $type = FieldNativeType::TEXT
     )
     {
-        $rules[] = new StringRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }

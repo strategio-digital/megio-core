@@ -5,7 +5,7 @@ namespace Megio\Collection\FieldBuilder\Rule;
 
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
-class CzPhoneRule extends BaseRule
+class PhoneCzRule extends BaseRule
 {
     public function __construct(
         protected string|null $message = null,
@@ -17,7 +17,7 @@ class CzPhoneRule extends BaseRule
     
     public function name(): string
     {
-        return 'czPhone';
+        return 'phoneCZ';
     }
     
     public function message(): string

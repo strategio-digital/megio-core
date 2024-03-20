@@ -7,11 +7,11 @@ use Megio\Collection\FieldBuilder\Field\Base\BaseField;
 use Megio\Collection\FieldBuilder\Field\Base\FieldNativeType;
 use Megio\Collection\FieldBuilder\Rule\StringRule;
 
-class Text extends BaseField
+class RichText extends BaseField
 {
     public function renderer(): string
     {
-        return 'text-renderer';
+        return 'rich-text-renderer';
     }
     
     /**

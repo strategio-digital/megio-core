@@ -5,14 +5,14 @@ namespace Megio\Collection\FieldBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
 use Megio\Collection\CollectionException;
-use Megio\Collection\FieldBuilder\FieldBuilderEvent;
 use Megio\Collection\FieldBuilder\Rule\Base\BaseRule;
 
 class UniqueRule extends BaseRule
 {
     /**
-     * @param string $columnName
      * @param class-string $entityClassName
+     * @param string $columnName
+     * @param string $primaryKey
      * @param string|null $message
      */
     public function __construct(

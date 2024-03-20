@@ -25,12 +25,13 @@ class ToggleSwitch extends BaseField
     public function __construct(
         protected string          $name,
         protected string          $label,
-        protected array           $rules = [new BooleanRule()],
+        protected array           $rules = [],
         protected array           $attrs = [],
         protected bool            $mapToEntity = true,
         protected FieldNativeType $type = FieldNativeType::CHECKBOX
     )
     {
+        $rules[] = new BooleanRule();
         parent::__construct($name, $label, $rules, $attrs, $mapToEntity, $type);
     }
 }
