@@ -10,7 +10,7 @@ class ToggleBtnField extends BaseField
 {
     public function renderer(): string
     {
-        return 'toggle-switch-renderer';
+        return 'toggle-switch-field-renderer';
     }
     
     /**

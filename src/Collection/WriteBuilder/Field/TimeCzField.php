@@ -10,7 +10,7 @@ class TimeCzField extends BaseField
 {
     public function renderer(): string
     {
-        return 'time-cz-renderer';
+        return 'time-cz-field-renderer';
     }
     
     /**

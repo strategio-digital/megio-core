@@ -10,7 +10,7 @@ class DateCzField extends BaseField
 {
     public function renderer(): string
     {
-        return 'date-cz-renderer';
+        return 'date-cz-field-renderer';
     }
     
     /**

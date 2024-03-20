@@ -10,7 +10,7 @@ class NumericField extends BaseField
 {
     public function renderer(): string
     {
-        return 'numeric-renderer';
+        return 'numeric-field-renderer';
     }
     
     /**

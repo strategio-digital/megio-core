@@ -9,7 +9,7 @@ class SelectField extends BaseField
 {
     public function renderer(): string
     {
-        return 'select-renderer';
+        return 'select-field-renderer';
     }
     
     /**

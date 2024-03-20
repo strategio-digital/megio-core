@@ -10,7 +10,7 @@ class PhoneCzField extends BaseField
 {
     public function renderer(): string
     {
-        return 'phone-cz-renderer';
+        return 'phone-cz-field-renderer';
     }
     
     /**

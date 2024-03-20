@@ -10,7 +10,7 @@ class PasswordField extends BaseField
 {
     public function renderer(): string
     {
-        return 'password-renderer';
+        return 'password-field-renderer';
     }
     
     /**

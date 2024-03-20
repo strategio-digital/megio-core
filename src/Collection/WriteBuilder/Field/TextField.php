@@ -10,7 +10,7 @@ class TextField extends BaseField
 {
     public function renderer(): string
     {
-        return 'text-renderer';
+        return 'text-field-renderer';
     }
     
     /**

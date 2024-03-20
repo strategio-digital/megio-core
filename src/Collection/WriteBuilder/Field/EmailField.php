@@ -10,7 +10,7 @@ class EmailField extends BaseField
 {
     public function renderer(): string
     {
-        return 'email-renderer';
+        return 'email-field-renderer';
     }
     
     /**

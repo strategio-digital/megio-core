@@ -10,7 +10,7 @@ class UrlField extends BaseField
 {
     public function renderer(): string
     {
-        return 'url-renderer';
+        return 'url-field-renderer';
     }
     
     /**

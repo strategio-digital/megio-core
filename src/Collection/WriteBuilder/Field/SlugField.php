@@ -10,7 +10,7 @@ class SlugField extends BaseField
 {
     public function renderer(): string
     {
-        return 'slug-renderer';
+        return 'slug-field-renderer';
     }
     
     /**

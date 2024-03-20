@@ -10,7 +10,7 @@ class DecimalField extends BaseField
 {
     public function renderer(): string
     {
-        return 'decimal-renderer';
+        return 'decimal-field-renderer';
     }
     
     /**

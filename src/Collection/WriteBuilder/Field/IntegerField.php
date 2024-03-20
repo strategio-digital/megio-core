@@ -10,7 +10,7 @@ class IntegerField extends BaseField
 {
     public function renderer(): string
     {
-        return 'integer-renderer';
+        return 'integer-field-renderer';
     }
     
     /**

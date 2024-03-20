@@ -10,7 +10,7 @@ class RichTextField extends BaseField
 {
     public function renderer(): string
     {
-        return 'rich-text-renderer';
+        return 'rich-text-field-renderer';
     }
     
     /**

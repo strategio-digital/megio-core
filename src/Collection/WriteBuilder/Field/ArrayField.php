@@ -10,7 +10,7 @@ class ArrayField extends BaseField
 {
     public function renderer(): string
     {
-        return 'array-renderer';
+        return 'array-field-renderer';
     }
     
     /**

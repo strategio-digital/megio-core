@@ -9,7 +9,7 @@ class HiddenField extends BaseField
 {
     public function renderer(): string
     {
-        return 'hidden-renderer';
+        return 'hidden-field-renderer';
     }
     
     /**

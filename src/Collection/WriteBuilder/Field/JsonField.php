@@ -10,7 +10,7 @@ class JsonField extends BaseField
 {
     public function renderer(): string
     {
-        return 'json-renderer';
+        return 'json-field-renderer';
     }
     
     /**

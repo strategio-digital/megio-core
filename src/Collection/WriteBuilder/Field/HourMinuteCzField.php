@@ -10,7 +10,7 @@ class HourMinuteCzField extends BaseField
 {
     public function renderer(): string
     {
-        return 'hour-minute-cz-renderer';
+        return 'hour-minute-cz-field-renderer';
     }
     
     /**

@@ -10,7 +10,7 @@ class VideoLinkField extends BaseField
 {
     public function renderer(): string
     {
-        return 'video-link-renderer';
+        return 'video-link-field-renderer';
     }
     
     /**
