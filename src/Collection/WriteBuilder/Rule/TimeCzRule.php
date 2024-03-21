@@ -7,14 +7,6 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class TimeCzRule extends BaseRule
 {
-    public function __construct(
-        protected string|null $message = null,
-        protected bool        $normalize = true
-    )
-    {
-        parent::__construct(message: $message);
-    }
-    
     public function name(): string
     {
         return 'timeCz';
@@ -49,10 +41,8 @@ class TimeCzRule extends BaseRule
         $date = \DateTime::createFromFormat('H:i:s', $value);
         
         if ($date instanceof \DateTime) {
-            if ($this->normalize) {
-                $date->setDate(1970, 1, 1);
-                $this->field->setValue($date->format('Y-m-d H:i:s'));
-            }
+            $date->setDate(1970, 1, 1);
+            $this->field->setValue($date->format('Y-m-d H:i:s'));
             return true;
         }
         
