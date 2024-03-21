@@ -5,9 +5,12 @@ namespace Megio\Recipe;
 
 use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\DateCzField;
+use Megio\Collection\WriteBuilder\Field\DateField;
 use Megio\Collection\WriteBuilder\Field\DateTimeCzField;
+use Megio\Collection\WriteBuilder\Field\DateTimeField;
 use Megio\Collection\WriteBuilder\Field\DecimalField;
 use Megio\Collection\WriteBuilder\Field\HourMinuteCzField;
+use Megio\Collection\WriteBuilder\Field\HourMinuteField;
 use Megio\Collection\WriteBuilder\Field\IntegerField;
 use Megio\Collection\WriteBuilder\Field\JsonField;
 use Megio\Collection\WriteBuilder\Field\NumericField;
@@ -16,6 +19,7 @@ use Megio\Collection\WriteBuilder\Field\SelectField;
 use Megio\Collection\WriteBuilder\Field\SlugField;
 use Megio\Collection\WriteBuilder\Field\TextAreaField;
 use Megio\Collection\WriteBuilder\Field\TimeCzField;
+use Megio\Collection\WriteBuilder\Field\TimeField;
 use Megio\Collection\WriteBuilder\Field\ToggleBtnField;
 use Megio\Collection\WriteBuilder\Field\TextField;
 use Megio\Collection\WriteBuilder\Field\UrlField;
@@ -77,11 +81,17 @@ class FieldRuleTestRecipe extends CollectionRecipe
             ->add(new SlugField(name: 'slug', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             ->add(new TextField(name: 'regex', label: '', rules: [new RequiredRule(), new NullableRule(), new RegexRule('/^[a-z]+/')], mapToEntity: false))
             
-            // Date, Time, Datetime
-            ->add(new DateTimeCzField(name: 'date_time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new DateCzField(name: 'date', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TimeCzField(name: 'time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new HourMinuteCzField(name: 'hour_minute', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            // Date, Time, DateTime, HourMinute
+            ->add(new DateTimeField(name: 'date_time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new DateField(name: 'date', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new TimeField(name: 'time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new HourMinuteField(name: 'hour_minute', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            
+            // Date, Time, Datetime, HourMinute (CZ)
+            ->add(new DateTimeCzField(name: 'date_time_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new DateCzField(name: 'date_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new TimeCzField(name: 'time_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new HourMinuteCzField(name: 'hour_minute_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             
             // Toggle switch (boolean)
             ->add(new ToggleBtnField(name: 'bool_true', label: '', mapToEntity: false))

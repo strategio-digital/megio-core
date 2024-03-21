@@ -5,16 +5,24 @@ namespace Megio\Collection\WriteBuilder\Rule;
 
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
-class DateCzRule extends BaseRule
+class HourMinuteRule extends BaseRule
 {
+    public function __construct(
+        protected string|null $message = null,
+        protected bool        $normalize = true
+    )
+    {
+        parent::__construct(message: $message);
+    }
+    
     public function name(): string
     {
-        return 'dateCz';
+        return 'hourMinute';
     }
     
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be a valid date in Czech format. Example: 1.1.2024";
+        return $this->message ?: "Field '{$this->field->getName()}' must be a valid hour and minute in ISO format. Example: 07:00";
     }
     
     /**
@@ -34,23 +42,18 @@ class DateCzRule extends BaseRule
             return false;
         }
         
-        /** @var string $value */
-        $value = str_replace('. ', '.', $value);
-        
-        if (!preg_match('/^([1-9]|1[0-9]|2[0-9]|3[0-1])\.([1-9]|1[0-2])\.([0-2]{1}[0-9]{3})$/', $value)) {
+        if (!preg_match('/^([01][0-9]|2[0-3]):([0-5][0-9])$/', $value)) {
             return false;
         }
         
-        $date = \DateTime::createFromFormat('d.m.Y', $value);
-        $errors = \DateTime::getLastErrors();
-        
-        if ($errors && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {
-            return false;
-        }
+        $date = \DateTime::createFromFormat('H:i', $value);
         
         if ($date instanceof \DateTime) {
-            $date->setTime(0, 0);
-            $this->field->setValue($date->format('Y-m-d H:i:s'));
+            if ($this->normalize) {
+                $date->setDate(1970, 1, 1);
+                $date->setTime((int)$date->format('H'), (int)$date->format('i'));
+                $this->field->setValue($date->format('Y-m-d H:i:s'));
+            }
             return true;
         }
         
