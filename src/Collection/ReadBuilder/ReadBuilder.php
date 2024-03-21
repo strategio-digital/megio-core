@@ -126,8 +126,11 @@ class ReadBuilder implements IRecipeBuilder
     
     protected function createColumnInstance(string $type, string $key, bool $visible): IColumn
     {
-        // Doctrine mapping:
-        // https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
+        /**
+         * Doctrine mapping:
+         * https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
+         * @see \Megio\Collection\RecipeEntityMetadata::getColumnMetadata()
+         */
         
         return match ($type) {
             Types::ASCII_STRING,
