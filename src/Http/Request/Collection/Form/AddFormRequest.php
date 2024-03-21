@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection\Form;
 
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -36,7 +37,11 @@ class AddFormRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE))->build();
+        try {
+            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE))->build();
+        } catch (CollectionException $e) {
+            return $this->error([$e->getMessage()]);
+        }
         
         if ($builder->countFields() === 0) {
             return $this->error(["Collection '{$data['recipe']}' has no creatable fields"]);

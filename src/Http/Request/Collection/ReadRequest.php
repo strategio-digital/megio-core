@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\ORM\AbstractQuery;
-use Megio\Collection\CollectionException;
-use Megio\Collection\CollectionPropType;
+use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\ReadBuilder;
+use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
+use Megio\Collection\SchemaFormatter;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
 use Megio\Database\EntityManager;
@@ -17,11 +19,12 @@ use Megio\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ShowOneRequest extends Request
+class ReadRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder
+        protected readonly RecipeFinder  $recipeFinder,
+        protected readonly ReadBuilder   $readBuilder,
     )
     {
     }
@@ -37,6 +40,10 @@ class ShowOneRequest extends Request
         ];
     }
     
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\Exception\NotSupported
+     */
     public function process(array $data): Response
     {
         $recipe = $this->recipeFinder->findByName($data['recipe']);
@@ -46,12 +53,12 @@ class ShowOneRequest extends Request
         }
         
         try {
-            $metadata = $recipe->getEntityMetadata(CollectionPropType::READ_ONE);
+            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE))->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
+        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -61,29 +68,31 @@ class ShowOneRequest extends Request
         $repo = $this->em->getRepository($recipe->source());
         
         $qb = $repo->createQueryBuilder('entity')
-            ->select($metadata->getQbSelect('entity'))
+            ->select($builder->getQbSelect('entity'))
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
         $item = $qb->getQuery()->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
         
+        /** @noinspection DuplicatedCode */
         if (!$item) {
             $e = new NotFoundHttpException("Item '{$data['id']}' not found");
             $response = $this->error([$e->getMessage()], 404);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
             $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
             return $dispatcher->getResponse();
         }
         
         $result = ['item' => $item];
         
+        /** @noinspection DuplicatedCode */
         if ($data['schema']) {
-            $result['schema'] = $metadata->getSchema();
+            $result['schema'] = SchemaFormatter::format($recipe, $builder);
         }
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();

@@ -55,8 +55,8 @@ return static function (RoutingConfigurator $routes): void {
     
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/megio/collections');
-    $collection->add('show', '/show')->methods(['POST'])->controller(Collection\ShowRequest::class);
-    $collection->add('show-one', '/show-one')->methods(['POST'])->controller(Collection\ShowOneRequest::class);
+    $collection->add('read', '/read')->methods(['POST'])->controller(Collection\ReadRequest::class);
+    $collection->add('read-all', '/read-all')->methods(['POST'])->controller(Collection\ReadAllRequest::class);
     $collection->add('create', '/create')->methods(['POST'])->controller(Collection\CreateRequest::class);
     $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Collection\DeleteRequest::class);
     $collection->add('update', '/update')->methods(['PATCH'])->controller(Collection\UpdateRequest::class);
@@ -74,9 +74,9 @@ return static function (RoutingConfigurator $routes): void {
     // Resources
     $resources = $routes->collection('megio.resources.')->prefix('/megio/resources');
     
-    $resources->add('show', '/show')
+    $resources->add('read-all', '/read-all')
         ->methods(['POST'])
-        ->controller(Resource\ShowAllRequest::class)
+        ->controller(Resource\ReadAllRequest::class)
         ->options(['inResources' => false]);
     
     $resources->add('update', '/update')

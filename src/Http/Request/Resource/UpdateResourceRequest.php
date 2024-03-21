@@ -6,7 +6,7 @@ namespace Megio\Http\Request\Resource;
 use Megio\Database\Enum\ResourceType;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateResourceRequest extends ShowAllRequest
+class UpdateResourceRequest extends ReadAllRequest
 {
     public function process(array $data): Response
     {

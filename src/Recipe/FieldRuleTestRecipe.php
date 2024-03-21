@@ -48,16 +48,6 @@ class FieldRuleTestRecipe extends CollectionRecipe
         return 'field-rule-test';
     }
     
-    public function showOne(): array
-    {
-        return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
-    }
-    
-    public function showAll(): array
-    {
-        return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
-    }
-    
     public function create(WriteBuilder $builder): WriteBuilder
     {
         $items = [

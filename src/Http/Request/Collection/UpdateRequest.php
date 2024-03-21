@@ -6,8 +6,7 @@ namespace Megio\Http\Request\Collection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
-use Megio\Collection\CollectionException;
-use Megio\Collection\CollectionPropType;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Mapping\ArrayToEntity;
 use Megio\Collection\RecipeFinder;
 use Megio\Http\Request\Request;
@@ -46,21 +45,20 @@ class UpdateRequest extends Request
         ];
     }
     
+    /**
+     * @throws \Doctrine\ORM\Exception\NotSupported
+     * @throws \Exception
+     */
     public function process(array $data): Response
     {
+        /** @noinspection DuplicatedCode */
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        try {
-            $metadata = $recipe->getEntityMetadata(CollectionPropType::NONE);
-        } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
-        }
-        
-        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
+        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -81,35 +79,47 @@ class UpdateRequest extends Request
         foreach ($data['rows'] as $row) {
             $item = current(array_filter($rows, fn($db) => $db->getId() === $row['id']));
             
+            /** @noinspection DuplicatedCode */
             if (!$item) {
                 $e = new NotFoundHttpException("Item '{$row['id']}' not found");
                 $response = $this->error([$e->getMessage()], 404);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
-                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
-                return $dispatcher->getResponse();
-            }
-            
-            $builder = $recipe->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']))
-                ->build()
-                ->validate();
-            
-            if (!$builder->isValid()) {
-                $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, new CollectionException('Invalid data'), $response);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
                 return $dispatcher->getResponse();
             }
             
             try {
-                ArrayToEntity::update($metadata, $item, $builder->toClearValues());
+                $builder = $recipe
+                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']))
+                    ->build();
+            } catch (CollectionException $e) {
+                $response = $this->error([$e->getMessage()], 406);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
+            }
+            
+            /** @noinspection DuplicatedCode */
+            $builder->validate();
+            
+            if (!$builder->isValid()) {
+                $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, new CollectionException('Invalid data'), $response);
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
+            }
+            
+            try {
+                ArrayToEntity::update($builder->getMetadata(), $item, $builder->toClearValues());
             } catch (CollectionException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
                 return $dispatcher->getResponse();
             }
         }
         
+        /** @noinspection DuplicatedCode */
         $this->em->beginTransaction();
         
         try {
@@ -118,7 +128,7 @@ class UpdateRequest extends Request
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
             $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
             return $dispatcher->getResponse();
         } catch (\Exception $e) {
@@ -133,7 +143,7 @@ class UpdateRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();

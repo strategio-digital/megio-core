@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -57,9 +58,13 @@ class EditFormRequest extends Request
         /** @var string $rowId */
         $rowId = $row['id'];
         
-        $builder = $recipe
-            ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId))
-            ->build();
+        try {
+            $builder = $recipe
+                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId))
+                ->build();
+        } catch (CollectionException $e) {
+            return $this->error([$e->getMessage()]);
+        }
         
         if ($builder->countFields() === 0) {
             return $this->error(["Collection '{$data['recipe']}' has no editable fields"]);

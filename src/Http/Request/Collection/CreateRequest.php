@@ -7,8 +7,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\Exception\ORMException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
-use Megio\Collection\CollectionException;
-use Megio\Collection\CollectionPropType;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Mapping\ArrayToEntity;
 use Megio\Collection\RecipeFinder;
 use Megio\Http\Request\Request;
@@ -44,19 +43,14 @@ class CreateRequest extends Request
     
     public function process(array $data): Response
     {
+        /** @noinspection DuplicatedCode */
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        try {
-            $metadata = $recipe->getEntityMetadata(CollectionPropType::NONE);
-        } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
-        }
-        
-        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
+        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -66,29 +60,38 @@ class CreateRequest extends Request
         $ids = [];
         
         foreach ($data['rows'] as $row) {
-            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, $row))
-                ->build()
-                ->validate();
+            try {
+                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, $row))->build();
+            } catch (CollectionException $e) {
+                $response = $this->error([$e->getMessage()], 406);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                return $dispatcher->getResponse();
+            }
+            
+            /** @noinspection DuplicatedCode */
+            $builder->validate();
             
             if (!$builder->isValid()) {
                 $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, new CollectionException('Invalid data'), $response);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, new CollectionException('Invalid data'), $response);
                 $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
                 return $dispatcher->getResponse();
             }
             
             try {
-                $entity = ArrayToEntity::create($recipe, $metadata, $builder->toClearValues());
+                $entity = ArrayToEntity::create($recipe, $builder->getMetadata(), $builder->toClearValues());
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
             } catch (CollectionException|ORMException $e) {
                 $response = $this->error([$e->getMessage()], 406);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
                 return $dispatcher->getResponse();
             }
         }
         
+        /** @noinspection DuplicatedCode */
         $this->em->beginTransaction();
         
         try {
@@ -97,7 +100,7 @@ class CreateRequest extends Request
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
             $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
             return $dispatcher->getResponse();
         } catch (\Exception $e) {
@@ -112,7 +115,7 @@ class CreateRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();

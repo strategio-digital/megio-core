@@ -13,7 +13,7 @@ use Megio\Http\Request\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 
-class ShowAllRequest extends Request
+class ReadAllRequest extends Request
 {
     public function __construct(
         protected EntityManager       $em,

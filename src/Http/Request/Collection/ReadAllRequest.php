@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection;
 
-use Megio\Collection\CollectionException;
-use Megio\Collection\CollectionPropType;
+use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\ReadBuilder;
+use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
+use Megio\Collection\SchemaFormatter;
 use Megio\Database\EntityManager;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
@@ -14,11 +16,12 @@ use Megio\Event\Collection\OnProcessingStartEvent;
 use Megio\Event\Collection\OnProcessingFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShowRequest extends Request
+class ReadAllRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
+        protected readonly ReadBuilder   $readBuilder,
     )
     {
     }
@@ -39,6 +42,11 @@ class ShowRequest extends Request
         ];
     }
     
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\Exception\NotSupported
+     * @throws \Doctrine\ORM\NoResultException
+     */
     public function process(array $data): Response
     {
         $recipe = $this->recipeFinder->findByName($data['recipe']);
@@ -48,12 +56,12 @@ class ShowRequest extends Request
         }
         
         try {
-            $metadata = $recipe->getEntityMetadata( CollectionPropType::READ_ALL);
+            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE))->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
+        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -63,7 +71,7 @@ class ShowRequest extends Request
         $repo = $this->em->getRepository($recipe->source());
         
         $qb = $repo->createQueryBuilder('entity')
-            ->select($metadata->getQbSelect('entity'));
+            ->select($builder->getQbSelect('entity'));
         
         $count = (clone $qb)->select('count(entity.id)')->getQuery()->getSingleScalarResult();
         
@@ -84,13 +92,15 @@ class ShowRequest extends Request
             'items' => $qb->getQuery()->getArrayResult()
         ];
         
+        
+        /** @noinspection DuplicatedCode */
         if ($data['schema']) {
-            $result['schema'] = $metadata->getSchema();
+            $result['schema'] = SchemaFormatter::format($recipe, $builder);
         }
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Mapping;
 
-use Megio\Collection\CollectionException;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
 use Megio\Database\Interface\ICrudable;
@@ -15,7 +15,7 @@ class ArrayToEntity
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
      * @param array<string, string|int|float|bool|null|array<string,mixed>> $data
      * @return \Megio\Database\Interface\ICrudable
-     * @throws \Megio\Collection\CollectionException
+     * @throws \Megio\Collection\Exception\CollectionException
      */
     public static function create(ICollectionRecipe $recipe, RecipeEntityMetadata $metadata, array $data): ICrudable
     {
@@ -32,7 +32,7 @@ class ArrayToEntity
      * @param \Megio\Database\Interface\ICrudable $entity
      * @param array<string, string|int|float|bool|null|array<string,mixed>> $data
      * @return \Megio\Database\Interface\ICrudable
-     * @throws \Megio\Collection\CollectionException
+     * @throws \Megio\Collection\Exception\CollectionException
      */
     public static function update(RecipeEntityMetadata $metadata, ICrudable $entity, array $data): ICrudable
     {

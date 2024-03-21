@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\BooleanRule;
@@ -14,11 +15,10 @@ use Megio\Collection\WriteBuilder\Rule\MaxRule;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Rule\StringRule;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
-use Megio\Collection\CollectionPropType;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
 
-class WriteBuilder
+class WriteBuilder implements IRecipeBuilder
 {
     /** @var IField[] */
     protected array $fields = [];
@@ -83,9 +83,12 @@ class WriteBuilder
         return $this;
     }
     
+    /**
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
     public function build(): self
     {
-        $this->metadata = $this->recipe->getEntityMetadata(CollectionPropType::NONE);
+        $this->metadata = $this->recipe->getEntityMetadata();
         $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
         
         foreach ($this->fields as $field) {

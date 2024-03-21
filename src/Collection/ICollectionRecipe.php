@@ -14,24 +14,22 @@ interface ICollectionRecipe
     /** @return string */
     public function name(): string;
     
-    /** @return string[] */
-    public function invisible(): array;
+    /**
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
+    public function read(ReadBuilder $builder): ReadBuilder;
     
-    /** @return string[] */
-    public function showOne(): array;
-    
-    /** @return string[] */
-    public function showAll(): array;
-    
-    public function readOne(ReadBuilder $builder): ReadBuilder;
+    /**
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
+    public function readAll(ReadBuilder $builder): ReadBuilder;
     
     public function create(WriteBuilder $builder): WriteBuilder;
     
     public function update(WriteBuilder $builder): WriteBuilder;
     
     /**
-     * @throws \Megio\Collection\CollectionException
-     * @throws \ReflectionException
+     * @throws \Megio\Collection\Exception\CollectionException
      */
-    public function getEntityMetadata(CollectionPropType $type): RecipeEntityMetadata;
+    public function getEntityMetadata(): RecipeEntityMetadata;
 }

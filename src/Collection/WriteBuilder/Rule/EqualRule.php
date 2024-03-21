@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Rule;
 
-use Megio\Collection\CollectionException;
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class EqualRule extends BaseRule

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Event\Collection;
 
-use Megio\Collection\RecipeEntityMetadata;
+use Megio\Collection\ICollectionRecipe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -11,11 +11,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 class OnProcessingFinishEvent extends Event
 {
     public function __construct(
-        private mixed                         $data,
-        private readonly Request              $request,
-        private readonly RecipeEntityMetadata $metadata,
-        private mixed                         $result,
-        private Response                      $response,
+        private mixed                      $data,
+        private readonly Request           $request,
+        private readonly ICollectionRecipe $recipe,
+        private mixed                      $result,
+        private Response                   $response,
     )
     {
     }
@@ -37,11 +37,11 @@ class OnProcessingFinishEvent extends Event
     }
     
     /**
-     * @return \Megio\Collection\RecipeEntityMetadata
+     * @return \Megio\Collection\ICollectionRecipe
      */
-    public function getMetadata(): RecipeEntityMetadata
+    public function getRecipe(): ICollectionRecipe
     {
-        return $this->metadata;
+        return $this->recipe;
     }
     
     /**

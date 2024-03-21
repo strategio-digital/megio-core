@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
-use Megio\Collection\CollectionException;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class UniqueRule extends BaseRule
@@ -39,7 +39,7 @@ class UniqueRule extends BaseRule
      * Return true if validation is passed
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Megio\Collection\CollectionException
+     * @throws \Megio\Collection\Exception\CollectionException
      */
     public function validate(): bool
     {

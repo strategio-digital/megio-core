@@ -4,20 +4,21 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Table;
+use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Database\Interface\ICrudable;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
-    public function invisible(): array
+    public function read(ReadBuilder $builder): ReadBuilder
     {
-        return ['id', 'updatedAt'];
+        return $builder->buildByDbSchema();
     }
     
-    public function readOne(ReadBuilder $builder): ReadBuilder
+    public function readAll(ReadBuilder $builder): ReadBuilder
     {
-        return $builder;
+        return $builder->buildByDbSchema();
     }
     
     public function create(WriteBuilder $builder): WriteBuilder
@@ -31,12 +32,9 @@ abstract class CollectionRecipe implements ICollectionRecipe
     }
     
     /**
-     * @param \Megio\Collection\CollectionPropType $type
-     * @return \Megio\Collection\RecipeEntityMetadata
-     * @throws \Megio\Collection\CollectionException
-     * @throws \ReflectionException
+     * @throws \Megio\Collection\Exception\CollectionException
      */
-    public final function getEntityMetadata(CollectionPropType $type): RecipeEntityMetadata
+    public final function getEntityMetadata(): RecipeEntityMetadata
     {
         if (!is_subclass_of($this->source(), ICrudable::class)) {
             throw new CollectionException("Entity '{$this->source()}' does not implement ICrudable");
@@ -57,12 +55,7 @@ abstract class CollectionRecipe implements ICollectionRecipe
         }
         
         $tableName = str_replace('`', '', $attrInstance->name);
-        $metadata = new RecipeEntityMetadata($this, $rf, $type, $tableName);
         
-        if (count($metadata->getSchema()['props']) === 1) {
-            throw new CollectionException("Collection '{$this->name()}' has no visible columns");
-        }
-        
-        return $metadata;
+        return new RecipeEntityMetadata($this, $rf, $tableName);
     }
 }

@@ -50,7 +50,7 @@ class AuthCollectionRequest implements EventSubscriberInterface
             return;
         }
         
-        $recipeName = $event->getMetadata()->getRecipe()->name();
+        $recipeName = $event->getRecipe()->name();
         $resourceName = $routeName . '.' . $recipeName;
         
         if (!in_array($resourceName, $this->authUser->getResources())) {

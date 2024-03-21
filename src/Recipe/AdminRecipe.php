@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\Field\EmailField;
 use Megio\Collection\WriteBuilder\Field\PasswordField;
@@ -22,14 +23,14 @@ class AdminRecipe extends CollectionRecipe
         return 'admin';
     }
     
-    public function showOne(): array
+    public function read(ReadBuilder $builder): ReadBuilder
     {
-        return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
+        return $builder->buildByDbSchema(['password']);
     }
     
-    public function showAll(): array
+    public function readAll(ReadBuilder $builder): ReadBuilder
     {
-        return ['email', 'lastLogin', 'createdAt', 'updatedAt'];
+        return $builder->buildByDbSchema(['password']);
     }
     
     public function create(WriteBuilder $builder): WriteBuilder

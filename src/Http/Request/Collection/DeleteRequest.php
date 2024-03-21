@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection;
 
-use Megio\Collection\CollectionException;
-use Megio\Collection\CollectionPropType;
 use Megio\Collection\RecipeFinder;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
@@ -35,21 +33,22 @@ class DeleteRequest extends Request
         ];
     }
     
+    /**
+     * @throws \Doctrine\ORM\Exception\NotSupported
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
     public function process(array $data): Response
     {
+        
+        /** @noinspection DuplicatedCode */
         $recipe = $this->recipeFinder->findByName($data['recipe']);
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        try {
-            $metadata = $recipe->getEntityMetadata(CollectionPropType::NONE);
-        } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
-        }
-        
-        $event = new OnProcessingStartEvent($data, $this->request, $metadata);
+        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
         
         if ($dispatcher->getResponse()) {
@@ -69,7 +68,7 @@ class DeleteRequest extends Request
         if ($diff !== 0) {
             $e = new NotFoundHttpException("{$diff} of {$countItems} items you want to delete already does not exist");
             $response = $this->error([$e->getMessage()], 404);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $metadata, $e, $response);
+            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
             $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
             return $dispatcher->getResponse();
         }
@@ -83,7 +82,7 @@ class DeleteRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $metadata, $result, $response);
+        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
         $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
         
         return $dispatcher->getResponse();
