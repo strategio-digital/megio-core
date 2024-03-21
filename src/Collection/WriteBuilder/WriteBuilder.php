@@ -73,12 +73,6 @@ class WriteBuilder implements IRecipeBuilder
     
     public function add(IField $field): self
     {
-        $this->override($field);
-        return $this;
-    }
-    
-    public function override(IField $field): self
-    {
         $this->fields[$field->getName()] = $field;
         return $this;
     }
