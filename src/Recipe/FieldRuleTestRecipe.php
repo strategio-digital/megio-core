@@ -8,6 +8,7 @@ use Megio\Collection\WriteBuilder\Field\DateCzField;
 use Megio\Collection\WriteBuilder\Field\DateField;
 use Megio\Collection\WriteBuilder\Field\DateTimeCzField;
 use Megio\Collection\WriteBuilder\Field\DateTimeField;
+use Megio\Collection\WriteBuilder\Field\DateTimeIntervalField;
 use Megio\Collection\WriteBuilder\Field\DecimalField;
 use Megio\Collection\WriteBuilder\Field\HourMinuteCzField;
 use Megio\Collection\WriteBuilder\Field\HourMinuteField;
@@ -60,7 +61,7 @@ class FieldRuleTestRecipe extends CollectionRecipe
         ];
         
         return $builder
-            ->ignoreDoctrineRules()
+            ->ignoreSchemaRules()
             
             // Email and Password
             ->add(new EmailField(name: 'email', label: '', rules: [new RequiredRule(), new UniqueRule($this->source(), 'email')]))
@@ -80,6 +81,9 @@ class FieldRuleTestRecipe extends CollectionRecipe
             ->add(new SelectField(name: 'any_of', label: '', items: $items, rules: [new NullableRule(), new IntegerRule(), new AnyOfRule([1, 2, 3])], mapToEntity: false))
             ->add(new SlugField(name: 'slug', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             ->add(new TextField(name: 'regex', label: '', rules: [new RequiredRule(), new NullableRule(), new RegexRule('/^[a-z]+/')], mapToEntity: false))
+            
+            // DateTime Interval
+            ->add(new DateTimeIntervalField(name: 'date_time_interval', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             
             // Date, Time, DateTime, HourMinute
             ->add(new DateTimeField(name: 'date_time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))

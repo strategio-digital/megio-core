@@ -8,6 +8,7 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\ArrayColumn;
 use Megio\Collection\ReadBuilder\Column\BlobColumn;
+use Megio\Collection\ReadBuilder\Column\DateTimeIntervalColumn;
 use Megio\Collection\ReadBuilder\Column\JsonColumn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
 use Megio\Collection\ReadBuilder\Column\BooleanColumn;
@@ -126,12 +127,6 @@ class ReadBuilder implements IRecipeBuilder
     
     protected function createColumnInstance(string $type, string $key, bool $visible): IColumn
     {
-        /**
-         * Doctrine mapping:
-         * https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
-         * @see \Megio\Collection\RecipeEntityMetadata::getColumnMetadata()
-         */
-        
         return match ($type) {
             Types::ASCII_STRING,
             Types::BIGINT,
@@ -146,8 +141,8 @@ class ReadBuilder implements IRecipeBuilder
             Types::BOOLEAN => new BooleanColumn(key: $key, name: $key, visible: $visible),
             
             Types::DATE_MUTABLE,
-            Types::DATE_IMMUTABLE,
-            Types::DATEINTERVAL => new DateColumn(key: $key, name: $key, visible: $visible),
+            Types::DATE_IMMUTABLE => new DateColumn(key: $key, name: $key, visible: $visible),
+            Types::DATEINTERVAL => new DateTimeIntervalColumn(key: $key, name: $key, visible: $visible),
             
             Types::DATETIME_MUTABLE,
             Types::DATETIME_IMMUTABLE,

@@ -73,7 +73,15 @@ class RecipeEntityMetadata
         $propType = $prop->getType();
         $nullable = $attr->nullable;
         
+        /**
+         * Doctrine mapping:
+         * https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
+         * @see \Megio\Collection\ReadBuilder\ReadBuilder::createColumnInstance()
+         * @see \Megio\Collection\WriteBuilder\WriteBuilder::createRuleInstance()
+         */
         $type = $attr->type;
+        
+        // Fallback to union types
         if ($type === null) {
             $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? '@unknown';
         }

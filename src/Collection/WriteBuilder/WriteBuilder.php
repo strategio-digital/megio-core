@@ -3,23 +3,38 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\WriteBuilder\Rule\ArrayRule;
+use Megio\Collection\WriteBuilder\Rule\Base\IRule;
 use Megio\Collection\WriteBuilder\Rule\BooleanRule;
-use Megio\Collection\WriteBuilder\Rule\DateTimeCzRule;
+use Megio\Collection\WriteBuilder\Rule\DateRule;
+use Megio\Collection\WriteBuilder\Rule\DateTimeIntervalRule;
+use Megio\Collection\WriteBuilder\Rule\DateTimeRule;
 use Megio\Collection\WriteBuilder\Rule\DecimalRule;
 use Megio\Collection\WriteBuilder\Rule\IntegerRule;
+use Megio\Collection\WriteBuilder\Rule\JsonRule;
 use Megio\Collection\WriteBuilder\Rule\MaxRule;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Rule\StringRule;
+use Megio\Collection\WriteBuilder\Rule\TimeRule;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
 
 class WriteBuilder implements IRecipeBuilder
 {
+    protected WriteBuilderEvent $event;
+    
+    protected ICollectionRecipe $recipe;
+    
+    protected RecipeEntityMetadata $metadata;
+    
+    protected string|null $rowId = null;
+    
     /** @var IField[] */
     protected array $fields = [];
     
@@ -29,15 +44,8 @@ class WriteBuilder implements IRecipeBuilder
     /** @var array<string, string[]> */
     protected array $errors = [];
     
-    protected RecipeEntityMetadata $metadata;
-    
     /** @var array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[] */
     protected array $dbSchema = [];
-    
-    
-    protected ICollectionRecipe $recipe;
-    
-    protected string|null $rowId = null;
     
     /** @var array<string, string|int|float|bool|null> */
     protected array $values = [];
@@ -45,9 +53,7 @@ class WriteBuilder implements IRecipeBuilder
     /** @var array<string, string[]> */
     protected array $ignoredRules = [];
     
-    protected bool $ignoreDoctrineRules = false;
-    
-    protected WriteBuilderEvent $event;
+    protected bool $ignoreSchemaRules = false;
     
     public function __construct(
         protected readonly EntityManagerInterface $em
@@ -90,7 +96,7 @@ class WriteBuilder implements IRecipeBuilder
             
             $columnSchema = current(array_filter($this->dbSchema, fn($f) => $f['name'] === $field->getName()));
             
-            if (!$this->ignoreDoctrineRules && $columnSchema) {
+            if (!$this->ignoreSchemaRules && $columnSchema) {
                 $field = $this->createRulesByDbSchema($field, $columnSchema);
             }
             
@@ -154,9 +160,9 @@ class WriteBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function ignoreDoctrineRules(): self
+    public function ignoreSchemaRules(): self
     {
-        $this->ignoreDoctrineRules = true;
+        $this->ignoreSchemaRules = true;
         return $this;
     }
     
@@ -246,19 +252,9 @@ class WriteBuilder implements IRecipeBuilder
     {
         $ruleNames = array_map(fn($rule) => $rule->name(), $field->getRules());
         
-        /** @var \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $typeMap */
-        $typeMap = [
-            'string' => new StringRule(),
-            'integer' => new IntegerRule(),
-            'float' => new DecimalRule(),
-            'boolean' => new BooleanRule(),
-            'datetime' => new DateTimeCzRule(),
-        ];
-        
-        foreach ($typeMap as $type => $value) {
-            if (!in_array($value->name(), $ruleNames) && $columnSchema['type'] === $type) {
-                $field->addRule($value);
-            }
+        $rule = $this->createRuleInstance($columnSchema['type']);
+        if ($rule !== null && !in_array($rule->name(), $ruleNames)) {
+            $field->addRule($rule);
         }
         
         if (!in_array('nullable', $ruleNames) && $columnSchema['nullable'] === true) {
@@ -274,5 +270,43 @@ class WriteBuilder implements IRecipeBuilder
         }
         
         return $field;
+    }
+    
+    protected function createRuleInstance(string $type): ?IRule
+    {
+        return match ($type) {
+            Types::ASCII_STRING,
+            Types::BIGINT,
+            Types::BINARY,
+            Types::GUID,
+            Types::STRING,
+            Types::BLOB,
+            Types::TEXT => new StringRule(),
+            
+            Types::DECIMAL,
+            Types::FLOAT => new DecimalRule(),
+            
+            Types::BOOLEAN => new BooleanRule(),
+            
+            Types::DATE_MUTABLE,
+            Types::DATE_IMMUTABLE => new DateRule(),
+            Types::DATEINTERVAL => new DateTimeIntervalRule(),
+            
+            Types::DATETIME_MUTABLE,
+            Types::DATETIME_IMMUTABLE,
+            Types::DATETIMETZ_MUTABLE,
+            Types::DATETIMETZ_IMMUTABLE => new DateTimeRule(),
+            
+            Types::INTEGER,
+            Types::SMALLINT => new IntegerRule(),
+            
+            Types::JSON => new JsonRule(),
+            Types::SIMPLE_ARRAY => new ArrayRule(),
+            
+            Types::TIME_MUTABLE,
+            Types::TIME_IMMUTABLE => new TimeRule(),
+            
+            default => null,
+        };
     }
 }
