@@ -17,7 +17,7 @@ class AnyOfRule extends BaseRule
         protected string|null $message = null
     )
     {
-        parent::__construct($this->message);
+        parent::__construct(message: $message);
     }
     
     public function name(): string

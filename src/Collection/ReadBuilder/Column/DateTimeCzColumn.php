@@ -5,10 +5,10 @@ namespace Megio\Collection\ReadBuilder\Column;
 
 use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
 
-class TextColumn extends BaseColumn
+class DateTimeCzColumn extends BaseColumn
 {
     public function renderer(): string
     {
-        return 'text-column-renderer';
+        return 'date-time-cz-column-renderer';
     }
 }

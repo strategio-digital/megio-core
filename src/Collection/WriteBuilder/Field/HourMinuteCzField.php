@@ -27,6 +27,13 @@ class HourMinuteCzField extends BaseField
     )
     {
         $rules[] = new HourMinuteCzRule();
-        parent::__construct($name, $label, $rules, $attrs, $disabled, $mapToEntity);
+        parent::__construct(
+            name: $name,
+            label: $label,
+            rules: $rules,
+            attrs: $attrs,
+            disabled: $disabled,
+            mapToEntity: $mapToEntity
+        );
     }
 }

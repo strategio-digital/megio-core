@@ -9,8 +9,6 @@ interface IColumn
     public function getKey(): string;
     public function getName(): string;
     public function isSortable() : bool;
-    public function isFilterable() : bool;
-    public function isSearchable() : bool;
     public function isVisible() : bool;
     
     /** @return array{
@@ -18,8 +16,6 @@ interface IColumn
      *     key: string,
      *     name: string,
      *     sortable: bool,
-     *     filterable: bool,
-     *     searchable: bool,
      *     visible: bool
      * }
      */

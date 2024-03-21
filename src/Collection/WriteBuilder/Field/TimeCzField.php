@@ -27,6 +27,13 @@ class TimeCzField extends BaseField
     )
     {
         $rules[] = new TimeCzRule();
-        parent::__construct($name, $label, $rules, $attrs, $disabled, $mapToEntity);
+        parent::__construct(
+            name: $name,
+            label: $label,
+            rules: $rules,
+            attrs: $attrs,
+            disabled: $disabled,
+            mapToEntity: $mapToEntity
+        );
     }
 }

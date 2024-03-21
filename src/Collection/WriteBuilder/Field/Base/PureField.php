@@ -25,6 +25,13 @@ class PureField extends BaseField
         protected bool   $mapToEntity = true
     )
     {
-        parent::__construct($name, $label, $rules, $attrs, $disabled, $mapToEntity);
+        parent::__construct(
+            name: $name,
+            label: $label,
+            rules: $rules,
+            attrs: $attrs,
+            disabled: $disabled,
+            mapToEntity: $mapToEntity
+        );
     }
 }

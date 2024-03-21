@@ -22,7 +22,7 @@ class UniqueRule extends BaseRule
         protected string|null $message = null
     )
     {
-        parent::__construct($message);
+        parent::__construct(message: $message);
     }
     
     public function name(): string

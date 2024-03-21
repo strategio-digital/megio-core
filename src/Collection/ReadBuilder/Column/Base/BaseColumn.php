@@ -9,8 +9,6 @@ abstract class BaseColumn implements IColumn
         protected string $key,
         protected string $name,
         protected bool   $sortable = false,
-        protected bool   $filterable = false,
-        protected bool   $searchable = false,
         protected bool   $visible = true,
     )
     {
@@ -31,16 +29,6 @@ abstract class BaseColumn implements IColumn
         return $this->sortable;
     }
     
-    public function isFilterable(): bool
-    {
-        return $this->filterable;
-    }
-    
-    public function isSearchable(): bool
-    {
-        return $this->searchable;
-    }
-    
     public function isVisible(): bool
     {
         return $this->visible;
@@ -51,8 +39,6 @@ abstract class BaseColumn implements IColumn
      *     key: string,
      *     name: string,
      *     sortable: bool,
-     *     filterable: bool,
-     *     searchable: bool,
      *     visible: bool
      * }
      */
@@ -63,8 +49,6 @@ abstract class BaseColumn implements IColumn
             'key' => $this->getKey(),
             'name' => $this->getName(),
             'sortable' => $this->isSortable(),
-            'filterable' => $this->isFilterable(),
-            'searchable' => $this->isSearchable(),
             'visible' => $this->isVisible(),
         ];
     }
