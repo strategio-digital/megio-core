@@ -3,13 +3,19 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column\Base;
 
+use Megio\Collection\ReadBuilder\Transformer\Base\ITransformer;
+
 abstract class BaseColumn implements IColumn
 {
+    /**
+     * @param ITransformer[] $transformers
+     */
     public function __construct(
         protected string $key,
         protected string $name,
         protected bool   $sortable = false,
         protected bool   $visible = true,
+        protected array  $transformers = []
     )
     {
     }
@@ -32,6 +38,12 @@ abstract class BaseColumn implements IColumn
     public function isVisible(): bool
     {
         return $this->visible;
+    }
+    
+    /** @return ITransformer[] */
+    public function getTransformers(): array
+    {
+        return $this->transformers;
     }
     
     /** @return array{

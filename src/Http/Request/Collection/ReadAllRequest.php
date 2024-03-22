@@ -33,6 +33,7 @@ class ReadAllRequest extends Request
         return [
             'recipe' => Expect::anyOf(...$names)->required(),
             'schema' => Expect::bool(false),
+            'adminPanel' => Expect::bool(false),
             'currentPage' => Expect::int(1)->min(1)->required(),
             'itemsPerPage' => Expect::int(10)->max(1000)->required(),
             'orderBy' => Expect::arrayOf(Expect::structure([
@@ -82,6 +83,11 @@ class ReadAllRequest extends Request
             $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
+        $items = $qb->getQuery()->getArrayResult();
+        foreach ($items as $key => $item) {
+            $items[$key] = $builder->transform($item, $data['adminPanel']);
+        }
+        
         $result = [
             'pagination' => [
                 'currentPage' => $data['currentPage'],
@@ -89,7 +95,7 @@ class ReadAllRequest extends Request
                 'itemsPerPage' => $data['itemsPerPage'],
                 'itemsCountAll' => $count,
             ],
-            'items' => $qb->getQuery()->getArrayResult()
+            'items' => $items
         ];
         
         

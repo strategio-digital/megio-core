@@ -35,8 +35,9 @@ class ReadRequest extends Request
         
         return [
             'recipe' => Expect::anyOf(...$names)->required(),
-            'schema' => Expect::bool(false),
             'id' => Expect::string()->required(),
+            'schema' => Expect::bool(false),
+            'adminPanel' => Expect::bool(false),
         ];
     }
     
@@ -83,7 +84,7 @@ class ReadRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $result = ['item' => $item];
+        $result = ['item' => $builder->transform($item, $data['adminPanel'])];
         
         /** @noinspection DuplicatedCode */
         if ($data['schema']) {

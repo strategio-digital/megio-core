@@ -89,6 +89,26 @@ class ReadBuilder implements IRecipeBuilder
         return $this;
     }
     
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
+    public function transform(array $values, bool $isAdminPanel): array
+    {
+        foreach ($this->columns as $col) {
+            $key = $col->getKey();
+            $transformers = $col->getTransformers();
+            foreach ($transformers as $transformer) {
+                if ($isAdminPanel || $transformer->adminPanelOnly() === false) {
+                    $values[$key] = $transformer->transform($values[$key]);
+                }
+                unset($transformer);
+            }
+        }
+        
+        return $values;
+    }
+    
     public function countFields(): int
     {
         return count($this->columns);
