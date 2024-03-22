@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace Megio\Collection\ReadBuilder\Transformer;
 
 use Megio\Collection\ReadBuilder\Transformer\Base\BaseTransformer;
-use Nette\Utils\Arrays;
-use Nette\Utils\Strings;
 
 class CallableTransformer extends BaseTransformer
 {
+    public function name(): string
+    {
+        return 'callable';
+    }
+    
     /**
      * @var array<int, callable> $callback
      */

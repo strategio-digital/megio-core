@@ -19,6 +19,11 @@ class RichTextTransformer extends BaseTransformer
         parent::__construct($adminPanelOnly);
     }
     
+    public function name(): string
+    {
+        return 'rich-text';
+    }
+    
     public function transform(mixed $value): mixed
     {
         if (!is_string($value)) {

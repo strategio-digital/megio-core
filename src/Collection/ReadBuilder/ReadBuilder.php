@@ -28,6 +28,9 @@ class ReadBuilder implements IRecipeBuilder
     /** @var array<string, IColumn> */
     protected array $columns = [];
     
+    /** @var array<string, string[]> */
+    protected array $ignoredTransformers = [];
+    
     private bool $keepDbSchema = true;
     
     public function create(ICollectionRecipe $recipe, ReadBuilderEvent $event): self
@@ -98,8 +101,15 @@ class ReadBuilder implements IRecipeBuilder
         foreach ($this->columns as $col) {
             $key = $col->getKey();
             $transformers = $col->getTransformers();
+            
+            $ignoredTransformers = array_key_exists($key, $this->ignoredTransformers)
+                ? $this->ignoredTransformers[$key]
+                : [];
+            
             foreach ($transformers as $transformer) {
-                if ($isAdminPanel || $transformer->adminPanelOnly() === false) {
+                $isNotIgnored = !in_array($transformer->name(), $ignoredTransformers);
+                
+                if ($isNotIgnored && ($isAdminPanel || $transformer->adminPanelOnly() === false)) {
                     $values[$key] = $transformer->transform($values[$key]);
                 }
                 unset($transformer);
@@ -107,6 +117,15 @@ class ReadBuilder implements IRecipeBuilder
         }
         
         return $values;
+    }
+    
+    /**
+     * @param array<string, string[]> $transformers
+     */
+    public function ignoreTransformers(array $transformers): self
+    {
+        $this->ignoredTransformers = $transformers;
+        return $this;
     }
     
     public function countFields(): int
