@@ -12,7 +12,9 @@ class DateTimeZoneFormatter extends BaseFormatter
         if ($value instanceof \DateTime || $value instanceof \DateTimeImmutable) {
             return [
                 'value' => $value->format('Y-m-d H:i:s'),
-                'zone_name' => $value->format('e'), // 'Europe/Prague'
+                'iso_8601' => $value->format('c'), // '2021-08-26T14:00:00+02:00
+                'zone_id' => $value->format('e'), // 'Europe/Prague'
+                'utc_offset' => $value->format('P'), // '+02:00'
             ];
         }
         
