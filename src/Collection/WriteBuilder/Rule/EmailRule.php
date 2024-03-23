@@ -8,14 +8,9 @@ use Nette\Utils\Validators;
 
 class EmailRule extends BaseRule
 {
-    public function name(): string
-    {
-        return 'email';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be a valid email address";
+        return $this->message ?: "Field must be a valid email address";
     }
     
     /**
@@ -25,7 +20,7 @@ class EmailRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

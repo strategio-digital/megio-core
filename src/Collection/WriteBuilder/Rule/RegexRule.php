@@ -19,14 +19,9 @@ class RegexRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'regex';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' does not match the pattern '{$this->expression}'";
+        return $this->message ?: "Field does not match the pattern '{$this->expression}'";
     }
     
     /**
@@ -36,7 +31,7 @@ class RegexRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

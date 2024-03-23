@@ -19,6 +19,7 @@ use Megio\Collection\WriteBuilder\Rule\IntegerRule;
 use Megio\Collection\WriteBuilder\Rule\JsonRule;
 use Megio\Collection\WriteBuilder\Rule\MaxRule;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
+use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\WriteBuilder\Rule\StringRule;
 use Megio\Collection\WriteBuilder\Rule\TimeRule;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
@@ -50,7 +51,7 @@ class WriteBuilder implements IRecipeBuilder
     /** @var array<string, string|int|float|bool|null> */
     protected array $values = [];
     
-    /** @var array<string, string[]> */
+    /** @var array<string, class-string[]> */
     protected array $ignoredRules = [];
     
     protected bool $ignoreSchemaRules = false;
@@ -135,12 +136,12 @@ class WriteBuilder implements IRecipeBuilder
                 : [];
             
             if ($field->isDisabled() === false) {
-                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'nullable')) !== 0;
-                $required = count(array_filter($field->getRules(), fn($rule) => $rule->name() === 'required')) !== 0;
+                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
+                $required = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
                 $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
                 
                 foreach ($field->getRules() as $rule) {
-                    if (!$ignore && !in_array($rule->name(), $ignoredFieldRules) && $rule->validate() === false) {
+                    if (!$ignore && !in_array($rule::class, $ignoredFieldRules) && $rule->validate() === false) {
                         $field->addError($rule->message());
                         $this->errors[$field->getName()][] = $rule->message();
                     }
@@ -152,7 +153,7 @@ class WriteBuilder implements IRecipeBuilder
     }
     
     /**
-     * @param array<string, string[]> $rules
+     * @param array<string, class-string[]> $rules
      */
     public function ignoreRules(array $rules): self
     {
@@ -250,22 +251,22 @@ class WriteBuilder implements IRecipeBuilder
      */
     protected function createRulesByDbSchema(IField $field, array $columnSchema): IField
     {
-        $ruleNames = array_map(fn($rule) => $rule->name(), $field->getRules());
+        $ruleClassNames = array_map(fn($rule) => $rule::class, $field->getRules());
         
         $rule = $this->createRuleInstance($columnSchema['type']);
-        if ($rule !== null && !in_array($rule->name(), $ruleNames)) {
+        if ($rule !== null && !in_array($rule::class, $ruleClassNames)) {
             $field->addRule($rule);
         }
         
-        if (!in_array('nullable', $ruleNames) && $columnSchema['nullable'] === true) {
+        if (!in_array(NullableRule::class, $ruleClassNames) && $columnSchema['nullable'] === true) {
             $field->addRule(new NullableRule());
         }
         
-        if (!in_array('max', $ruleNames) && $columnSchema['maxLength'] !== null) {
+        if (!in_array(MaxRule::class, $ruleClassNames) && $columnSchema['maxLength'] !== null) {
             $field->addRule(new MaxRule($columnSchema['maxLength']));
         }
         
-        if (!in_array('unique', $ruleNames) && $columnSchema['unique'] === true) {
+        if (!in_array(UniqueRule::class, $ruleClassNames) && $columnSchema['unique'] === true) {
             $field->addRule(new UniqueRule($this->recipe->source(), $field->getName()));
         }
         

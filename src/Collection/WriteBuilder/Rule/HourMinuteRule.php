@@ -15,14 +15,9 @@ class HourMinuteRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'hourMinute';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be a valid hour and minute in ISO format. Example: 07:00";
+        return $this->message ?: "Field must be a valid hour and minute in ISO format. Example: 07:00";
     }
     
     /**
@@ -32,7 +27,7 @@ class HourMinuteRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

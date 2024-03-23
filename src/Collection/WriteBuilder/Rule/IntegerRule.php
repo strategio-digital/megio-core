@@ -8,14 +8,9 @@ use Nette\Utils\Validators;
 
 class IntegerRule extends BaseRule
 {
-    public function name(): string
-    {
-        return 'integer';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be an integer number";
+        return $this->message ?: "Field must be an integer number";
     }
     
     /**
@@ -25,7 +20,7 @@ class IntegerRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

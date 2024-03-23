@@ -15,24 +15,19 @@ class MinRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'min';
-    }
-    
     public function message(): string
     {
         $value = $this->field->getValue();
         
         if (is_string($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must contain at least {$this->min} characters";
+            return $this->message ?: "Field must contain at least {$this->min} characters";
         }
         
         if (is_array($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must contain at least {$this->min} items";
+            return $this->message ?: "Field must contain at least {$this->min} items";
         }
         
-        return $this->message ?: "Field '{$this->field->getName()}' must be equal or greater then {$this->min}";
+        return $this->message ?: "Field must be equal or greater then {$this->min}";
     }
     
     /**
@@ -42,7 +37,7 @@ class MinRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

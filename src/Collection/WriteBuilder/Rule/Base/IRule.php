@@ -7,8 +7,6 @@ use Megio\Collection\WriteBuilder\Field\Base\IField;
 
 interface IRule
 {
-    public function name(): string;
-    
     public function message(): string;
     
     /**

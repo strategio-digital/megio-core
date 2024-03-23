@@ -15,14 +15,9 @@ class VideoLinkRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'videoLink';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' is not valid youtube or vimeo video link.";
+        return $this->message ?: "Field is not valid YouTube or Vimeo video link";
     }
     
     /**
@@ -32,7 +27,7 @@ class VideoLinkRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

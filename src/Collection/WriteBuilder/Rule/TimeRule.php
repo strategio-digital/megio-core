@@ -7,14 +7,9 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class TimeRule extends BaseRule
 {
-    public function name(): string
-    {
-        return 'time';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be a valid time in ISO. Example: 07:00:00";
+        return $this->message ?: "Field must be a valid time in ISO. Example: 07:00:00";
     }
     
     /**
@@ -24,7 +19,7 @@ class TimeRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

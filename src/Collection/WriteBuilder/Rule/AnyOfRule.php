@@ -20,15 +20,10 @@ class AnyOfRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'anyOf';
-    }
-    
     public function message(): string
     {
         $keys = implode(', ', $this->keys);
-        return $this->message ?: "Field '{$this->field->getName()}' must be any of '{$keys}'";
+        return $this->message ?: "Field must be any of '{$keys}'";
     }
     
     /**
@@ -38,7 +33,7 @@ class AnyOfRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

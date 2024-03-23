@@ -15,14 +15,9 @@ class EqualRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'equal';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be equal to '{$this->targetField}'";
+        return $this->message ?: "Field must be equal to '{$this->targetField}' field";
     }
     
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
-use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class UniqueRule extends BaseRule
@@ -25,21 +24,15 @@ class UniqueRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'unique';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Value of '{$this->getField()->getName()}' must be unique";
+        return $this->message ?: "Value must be unique";
     }
     
     /**
      * Return true if validation is passed
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Megio\Collection\Exception\CollectionException
      */
     public function validate(): bool
     {
@@ -57,7 +50,7 @@ class UniqueRule extends BaseRule
         }
         
         if (!array_key_exists($this->primaryKey, $row)) {
-            throw new CollectionException("Property '{$this->primaryKey}' not found in entity '{$this->entityClassName}'");
+            throw new \Exception("Property '{$this->primaryKey}' not found in entity '{$this->entityClassName}'");
         }
         
         if (

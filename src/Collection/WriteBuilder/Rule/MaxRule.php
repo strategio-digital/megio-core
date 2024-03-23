@@ -15,24 +15,19 @@ class MaxRule extends BaseRule
         parent::__construct(message: $message);
     }
     
-    public function name(): string
-    {
-        return 'max';
-    }
-    
     public function message(): string
     {
         $value = $this->field->getValue();
         
         if (is_string($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must be maximum of {$this->max} characters long";
+            return $this->message ?: "Field must be maximum of {$this->max} characters long";
         }
         
         if (is_array($value)) {
-            return $this->message ?: "Field '{$this->field->getName()}' must have maximum of {$this->max} items";
+            return $this->message ?: "Field must have maximum of {$this->max} items";
         }
         
-        return $this->message ?: "Field '{$this->field->getName()}' must be equal or less than {$this->max}";
+        return $this->message ?: "Field must be equal or less than {$this->max}";
     }
     
     /**
@@ -42,7 +37,7 @@ class MaxRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

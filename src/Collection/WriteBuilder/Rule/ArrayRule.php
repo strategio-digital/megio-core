@@ -7,14 +7,9 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class ArrayRule extends BaseRule
 {
-    public function name(): string
-    {
-        return 'array';
-    }
-    
     public function message(): string
     {
-        return $this->message ?: "Field '{$this->field->getName()}' must be an array";
+        return $this->message ?: "Field must be an array";
     }
     
     /**
@@ -24,7 +19,7 @@ class ArrayRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule->name() === 'nullable');
+        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
         
         if (count($nullable) !== 0 && $value === null) {
             return true;

@@ -67,6 +67,16 @@ abstract class BaseRule implements IRule
         return $this->field->getValue();
     }
     
+    public function name(): string
+    {
+        $namespace = explode('\\', $this::class);
+        
+        /** @var string $className */
+        $className = end($namespace);
+        
+        return $className;
+    }
+    
     /**
      * Structured description for usage in front-end form
      * @return array{name: string, message: string, params: array<string,mixed>}
@@ -74,7 +84,7 @@ abstract class BaseRule implements IRule
     public function toArray(): array
     {
         return [
-            'name' => $this->name(),
+            'name' =>  $this->name(),
             'message' => $this->message(),
             'params' => [],
         ];
