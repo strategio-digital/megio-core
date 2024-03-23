@@ -16,7 +16,7 @@ class MaxFormatter extends BaseFormatter
         parent::__construct($adminPanelOnly);
     }
     
-    public function transform(mixed $value): mixed
+    public function format(mixed $value): mixed
     {
         if (!is_string($value) && !is_array($value)) {
             return $value;
@@ -29,6 +29,7 @@ class MaxFormatter extends BaseFormatter
             }
             return $newArray;
         }
+        
         if (is_string($value) && Strings::length($value) > $this->max) {
             return Strings::substring($value, 0, $this->max);
         }

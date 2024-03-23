@@ -85,7 +85,7 @@ class ReadAllRequest extends Request
         
         $items = $qb->getQuery()->getArrayResult();
         foreach ($items as $key => $item) {
-            $items[$key] = $builder->transform($item, $data['adminPanel']);
+            $items[$key] = $builder->format($item, $data['adminPanel']);
         }
         
         $result = [

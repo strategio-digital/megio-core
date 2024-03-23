@@ -19,7 +19,7 @@ class RichTextFormatter extends BaseFormatter
         parent::__construct($adminPanelOnly);
     }
     
-    public function transform(mixed $value): mixed
+    public function format(mixed $value): mixed
     {
         if (!is_string($value)) {
             return $value;

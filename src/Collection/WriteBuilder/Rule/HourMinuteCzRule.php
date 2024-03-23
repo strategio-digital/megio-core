@@ -33,7 +33,7 @@ class HourMinuteCzRule extends BaseRule
             return false;
         }
         
-        $date = \DateTime::createFromFormat('H:i', $value);
+        $date = \DateTime::createFromFormat('G:i', $value);
         
         if ($date instanceof \DateTime) {
             $date->setDate(1970, 1, 1);

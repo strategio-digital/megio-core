@@ -36,7 +36,7 @@ class DateCzRule extends BaseRule
             return false;
         }
         
-        $date = \DateTime::createFromFormat('d.m.Y', $value);
+        $date = \DateTime::createFromFormat('j.n.Y', $value);
         $errors = \DateTime::getLastErrors();
         
         if ($errors && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {

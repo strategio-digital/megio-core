@@ -84,7 +84,7 @@ class ReadRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $result = ['item' => $builder->transform($item, $data['adminPanel'])];
+        $result = ['item' => $builder->format($item, $data['adminPanel'])];
         
         /** @noinspection DuplicatedCode */
         if ($data['schema']) {

@@ -33,7 +33,7 @@ class TimeCzRule extends BaseRule
             return false;
         }
         
-        $date = \DateTime::createFromFormat('H:i:s', $value);
+        $date = \DateTime::createFromFormat('G:i:s', $value);
         
         if ($date instanceof \DateTime) {
             $date->setDate(1970, 1, 1);

@@ -5,7 +5,7 @@ namespace Megio\Collection\ReadBuilder\Formatter\Base;
 
 interface IFormatter
 {
-    public function transform(mixed $value): mixed;
+    public function format(mixed $value): mixed;
     
     public function adminPanelOnly(): bool;
 }

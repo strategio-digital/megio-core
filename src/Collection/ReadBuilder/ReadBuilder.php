@@ -106,7 +106,7 @@ class ReadBuilder implements IRecipeBuilder
      * @param array<string, mixed> $values
      * @return array<string, mixed>
      */
-    public function transform(array $values, bool $isAdminPanel): array
+    public function format(array $values, bool $isAdminPanel): array
     {
         foreach ($this->columns as $col) {
             $key = $col->getKey();
@@ -120,7 +120,7 @@ class ReadBuilder implements IRecipeBuilder
                 $isNotIgnored = !in_array($formatter::class, $ignoredFormatters);
                 
                 if ($isNotIgnored && ($isAdminPanel || $formatter->adminPanelOnly() === false)) {
-                    $values[$key] = $formatter->transform($values[$key]);
+                    $values[$key] = $formatter->format($values[$key]);
                 }
                 unset($formatter);
             }

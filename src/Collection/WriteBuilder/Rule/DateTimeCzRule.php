@@ -32,12 +32,12 @@ class DateTimeCzRule extends BaseRule
         /** @var string $value */
         $value = str_replace('. ', '.', $value);
         $pattern = '/^([1-9]|1[0-9]|2[0-9]|3[0-1])\.([1-9]|1[0-2])\.([0-2]{1}[0-9]{3})\040([0-9]|1[0-9]|2[0-3])(\:(0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])){2}$/';
-        
+
         if (!preg_match($pattern, $value)) {
             return false;
         }
         
-        $date = \DateTime::createFromFormat('d.m.Y H:i:s', $value);
+        $date = \DateTime::createFromFormat('j.n.Y G:i:s', $value);
         $errors = \DateTime::getLastErrors();
         
         if ($errors && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) {

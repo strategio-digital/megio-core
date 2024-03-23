@@ -22,7 +22,7 @@ class CallableFormatter extends BaseFormatter
         parent::__construct($adminPanelOnly);
     }
     
-    public function transform(mixed $value): mixed
+    public function format(mixed $value): mixed
     {
         return $this->callback[0]($value, $this);
     }
