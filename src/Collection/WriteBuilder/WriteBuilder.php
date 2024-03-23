@@ -25,6 +25,7 @@ use Megio\Collection\WriteBuilder\Rule\TimeRule;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
+use Megio\Helper\ArrayMove;
 
 class WriteBuilder implements IRecipeBuilder
 {
@@ -78,9 +79,18 @@ class WriteBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function add(IField $field): self
+    public function add(IField $field, string $moveBeforeName = null, string $moveAfterName = null): self
     {
         $this->fields[$field->getName()] = $field;
+        
+        if ($moveBeforeName !== null) {
+            $this->fields = ArrayMove::moveBefore($this->fields, $field->getName(), $moveBeforeName);
+        }
+        
+        if ($moveAfterName !== null) {
+            $this->fields = ArrayMove::moveAfter($this->fields, $field->getName(), $moveAfterName);
+        }
+        
         return $this;
     }
     

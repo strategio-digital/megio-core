@@ -40,8 +40,10 @@ class ReadBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function add(IColumn $col): self
+    public function add(IColumn $col, string $moveBeforeKey = null, string $moveAfterKey = null): self
     {
+        $this->addIdColumnIfNotExists();
+        
         // Pokud bylo schéma vygenerováno automaticky a uživatel chce
         // přidat vlastní sloupec, tak se celé původní schéma vymaže
         if ($this->keepDbSchema === false) {
@@ -50,12 +52,21 @@ class ReadBuilder implements IRecipeBuilder
         }
         
         $this->columns[$col->getKey()] = $col;
+        
+        if ($moveBeforeKey !== null) {
+            $this->columns = ArrayMove::moveBefore($this->columns, $col->getKey(), $moveBeforeKey);
+        }
+        
+        if ($moveAfterKey !== null) {
+            $this->columns = ArrayMove::moveAfter($this->columns, $col->getKey(), $moveAfterKey);
+        }
+        
         return $this;
     }
     
     public function build(): self
     {
-        $this->appendIdColumn();
+        $this->addIdColumnIfNotExists();
         
         return $this;
     }
@@ -69,9 +80,10 @@ class ReadBuilder implements IRecipeBuilder
         $metadata = $this->recipe->getEntityMetadata();
         $dbSchema = $metadata->getFullSchemaReflectedByDoctrine();
         
+        $this->addIdColumnIfNotExists();
+        
         $invisibleCols = ['id', 'createdAt', 'updatedAt'];
         $ignored = array_merge($exclude, ['id']);
-        
         
         foreach ($dbSchema as $field) {
             if (!in_array($field['name'], $ignored)) {
@@ -80,8 +92,6 @@ class ReadBuilder implements IRecipeBuilder
                 $this->columns[$col->getKey()] = $col;
             }
         }
-        
-        $this->appendIdColumn();
         
         $this->columns = ArrayMove::moveToStart($this->columns, 'id');
         $this->columns = ArrayMove::moveToEnd($this->columns, 'createdAt');
@@ -157,11 +167,13 @@ class ReadBuilder implements IRecipeBuilder
         return array_values($cols);
     }
     
-    protected function appendIdColumn(): void
+    protected function addIdColumnIfNotExists(): void
     {
-        $this->columns = array_merge([
-            'id' => new StringColumn(key: 'id', name: 'ID', visible: false),
-        ], $this->columns);
+        if (!array_key_exists('id', $this->columns)) {
+            $this->columns = array_merge([
+                'id' => new StringColumn(key: 'id', name: 'ID', visible: false),
+            ], $this->columns);
+        }
     }
     
     protected function createColumnInstance(string $type, string $key, bool $visible): IColumn
