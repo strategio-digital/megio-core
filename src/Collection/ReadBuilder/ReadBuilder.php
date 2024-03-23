@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\ArrayColumn;
+use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\BlobColumn;
 use Megio\Collection\ReadBuilder\Column\DateTimeIntervalColumn;
 use Megio\Collection\ReadBuilder\Column\JsonColumn;
@@ -117,9 +118,14 @@ class ReadBuilder implements IRecipeBuilder
                 : [];
             
             foreach ($formatters as $formatter) {
-                $isNotIgnored = !in_array($formatter::class, $ignoredFormatters);
-                
-                if ($isNotIgnored && ($isAdminPanel || $formatter->adminPanelOnly() === false)) {
+                if (
+                    !in_array($formatter::class, $ignoredFormatters)
+                    && (
+                        $formatter->showOnlyOn() === null
+                        || ($isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::ADMIN_PANEL)
+                        || (!$isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::API)
+                    )
+                ) {
                     $values[$key] = $formatter->format($values[$key]);
                 }
                 unset($formatter);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Formatter;
 
+use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
 
 class CallableFormatter extends BaseFormatter
@@ -14,12 +15,12 @@ class CallableFormatter extends BaseFormatter
     
     /**
      * @param callable $callback
-     * @param bool $adminPanelOnly
+     * @param \Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn|null $showOnlyOn
      */
-    public function __construct(callable $callback, bool $adminPanelOnly = false)
+    public function __construct(callable $callback, protected ?ShowOnlyOn $showOnlyOn = null)
     {
         $this->callback = [$callback];
-        parent::__construct($adminPanelOnly);
+        parent::__construct($showOnlyOn);
     }
     
     public function format(mixed $value): mixed

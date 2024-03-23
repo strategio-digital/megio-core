@@ -3,20 +3,21 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Formatter;
 
+use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
 use Nette\Utils\Strings;
 
 class RichTextFormatter extends BaseFormatter
 {
     public function __construct(
-        protected int    $max = 100,
-        protected bool   $truncate = false,
-        protected string $suffix = '...',
-        protected bool   $stripTags = true,
-        protected bool   $adminPanelOnly = false
+        protected int         $max = 100,
+        protected bool        $truncate = false,
+        protected string      $suffix = '...',
+        protected bool        $stripTags = true,
+        protected ?ShowOnlyOn $showOnlyOn = null
     )
     {
-        parent::__construct($adminPanelOnly);
+        parent::__construct($showOnlyOn);
     }
     
     public function format(mixed $value): mixed

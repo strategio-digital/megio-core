@@ -3,17 +3,15 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Formatter;
 
+use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
 use Nette\Utils\Strings;
 
 class MaxFormatter extends BaseFormatter
 {
-    public function __construct(
-        protected int  $max,
-        protected bool $adminPanelOnly = false
-    )
+    public function __construct(protected int $max, protected ?ShowOnlyOn $showOnlyOn = null)
     {
-        parent::__construct($adminPanelOnly);
+        parent::__construct($showOnlyOn);
     }
     
     public function format(mixed $value): mixed
