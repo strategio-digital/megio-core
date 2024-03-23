@@ -28,7 +28,7 @@ class ReadBuilder implements IRecipeBuilder
     /** @var array<string, IColumn> */
     protected array $columns = [];
     
-    /** @var array<string, string[]> */
+    /** @var array<string, class-string[]> */
     protected array $ignoredTransformers = [];
     
     private bool $keepDbSchema = true;
@@ -107,7 +107,7 @@ class ReadBuilder implements IRecipeBuilder
                 : [];
             
             foreach ($transformers as $transformer) {
-                $isNotIgnored = !in_array($transformer->name(), $ignoredTransformers);
+                $isNotIgnored = !in_array($transformer::class, $ignoredTransformers);
                 
                 if ($isNotIgnored && ($isAdminPanel || $transformer->adminPanelOnly() === false)) {
                     $values[$key] = $transformer->transform($values[$key]);
@@ -120,7 +120,7 @@ class ReadBuilder implements IRecipeBuilder
     }
     
     /**
-     * @param array<string, string[]> $transformers
+     * @param array<string, class-string[]> $transformers
      */
     public function ignoreTransformers(array $transformers): self
     {

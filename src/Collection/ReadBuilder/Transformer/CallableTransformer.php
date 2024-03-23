@@ -7,11 +7,6 @@ use Megio\Collection\ReadBuilder\Transformer\Base\BaseTransformer;
 
 class CallableTransformer extends BaseTransformer
 {
-    public function name(): string
-    {
-        return 'callable';
-    }
-    
     /**
      * @var array<int, callable> $callback
      */

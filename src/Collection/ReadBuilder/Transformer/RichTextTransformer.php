@@ -10,18 +10,13 @@ class RichTextTransformer extends BaseTransformer
 {
     public function __construct(
         protected int    $max = 100,
-        protected bool   $truncate = true,
+        protected bool   $truncate = false,
         protected string $suffix = '...',
         protected bool   $stripTags = true,
         protected bool   $adminPanelOnly = false
     )
     {
         parent::__construct($adminPanelOnly);
-    }
-    
-    public function name(): string
-    {
-        return 'rich-text';
     }
     
     public function transform(mixed $value): mixed

@@ -16,11 +16,6 @@ class MaxTransformer extends BaseTransformer
         parent::__construct($adminPanelOnly);
     }
     
-    public function name(): string
-    {
-        return 'max';
-    }
-    
     public function transform(mixed $value): mixed
     {
         if (!is_string($value) && !is_array($value)) {
