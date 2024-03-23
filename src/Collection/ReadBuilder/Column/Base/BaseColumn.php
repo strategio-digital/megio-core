@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column\Base;
 
-use Megio\Collection\ReadBuilder\Transformer\Base\ITransformer;
+use Megio\Collection\ReadBuilder\Formatter\Base\IFormatter;
 
 abstract class BaseColumn implements IColumn
 {
     /**
-     * @param ITransformer[] $transformers
+     * @param IFormatter[] $formatters
      */
     public function __construct(
         protected string $key,
         protected string $name,
         protected bool   $sortable = false,
         protected bool   $visible = true,
-        protected array  $transformers = []
+        protected array  $formatters = []
     )
     {
     }
@@ -40,10 +40,10 @@ abstract class BaseColumn implements IColumn
         return $this->visible;
     }
     
-    /** @return ITransformer[] */
-    public function getTransformers(): array
+    /** @return IFormatter[] */
+    public function getFormatters(): array
     {
-        return $this->transformers;
+        return $this->formatters;
     }
     
     /** @return array{

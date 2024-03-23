@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Transformer;
+namespace Megio\Collection\ReadBuilder\Formatter;
 
-use Megio\Collection\ReadBuilder\Transformer\Base\BaseTransformer;
+use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
 use Nette\Utils\Strings;
 
-class MaxTransformer extends BaseTransformer
+class MaxFormatter extends BaseFormatter
 {
     public function __construct(
         protected int  $max,

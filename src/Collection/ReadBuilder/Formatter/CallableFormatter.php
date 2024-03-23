@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Transformer;
+namespace Megio\Collection\ReadBuilder\Formatter;
 
-use Megio\Collection\ReadBuilder\Transformer\Base\BaseTransformer;
+use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
 
-class CallableTransformer extends BaseTransformer
+class CallableFormatter extends BaseFormatter
 {
     /**
      * @var array<int, callable> $callback

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column\Base;
 
-use Megio\Collection\ReadBuilder\Transformer\Base\ITransformer;
+use Megio\Collection\ReadBuilder\Formatter\Base\IFormatter;
 
 interface IColumn
 {
@@ -17,8 +17,8 @@ interface IColumn
     
     public function isVisible(): bool;
     
-    /** @return ITransformer[] */
-    public function getTransformers(): array;
+    /** @return IFormatter[] */
+    public function getFormatters(): array;
     
     /** @return array{
      *     renderer: string,

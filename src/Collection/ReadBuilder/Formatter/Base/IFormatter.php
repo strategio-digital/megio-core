@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Transformer\Base;
+namespace Megio\Collection\ReadBuilder\Formatter\Base;
 
-interface ITransformer
+interface IFormatter
 {
     public function transform(mixed $value): mixed;
     

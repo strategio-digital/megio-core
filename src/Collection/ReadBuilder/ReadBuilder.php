@@ -29,7 +29,7 @@ class ReadBuilder implements IRecipeBuilder
     protected array $columns = [];
     
     /** @var array<string, class-string[]> */
-    protected array $ignoredTransformers = [];
+    protected array $ignoredFormatters = [];
     
     private bool $keepDbSchema = true;
     
@@ -110,19 +110,19 @@ class ReadBuilder implements IRecipeBuilder
     {
         foreach ($this->columns as $col) {
             $key = $col->getKey();
-            $transformers = $col->getTransformers();
+            $formatters = $col->getFormatters();
             
-            $ignoredTransformers = array_key_exists($key, $this->ignoredTransformers)
-                ? $this->ignoredTransformers[$key]
+            $ignoredFormatters = array_key_exists($key, $this->ignoredFormatters)
+                ? $this->ignoredFormatters[$key]
                 : [];
             
-            foreach ($transformers as $transformer) {
-                $isNotIgnored = !in_array($transformer::class, $ignoredTransformers);
+            foreach ($formatters as $formatter) {
+                $isNotIgnored = !in_array($formatter::class, $ignoredFormatters);
                 
-                if ($isNotIgnored && ($isAdminPanel || $transformer->adminPanelOnly() === false)) {
-                    $values[$key] = $transformer->transform($values[$key]);
+                if ($isNotIgnored && ($isAdminPanel || $formatter->adminPanelOnly() === false)) {
+                    $values[$key] = $formatter->transform($values[$key]);
                 }
-                unset($transformer);
+                unset($formatter);
             }
         }
         
@@ -130,11 +130,11 @@ class ReadBuilder implements IRecipeBuilder
     }
     
     /**
-     * @param array<string, class-string[]> $transformers
+     * @param array<string, class-string[]> $formatters
      */
-    public function ignoreTransformers(array $transformers): self
+    public function ignoreFormatters(array $formatters): self
     {
-        $this->ignoredTransformers = $transformers;
+        $this->ignoredFormatters = $formatters;
         return $this;
     }
     
