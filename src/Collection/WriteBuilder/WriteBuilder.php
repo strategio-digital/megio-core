@@ -6,9 +6,25 @@ namespace Megio\Collection\WriteBuilder;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\IRecipeBuilder;
+use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\PureField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\WriteBuilder\Field\DateField;
+use Megio\Collection\WriteBuilder\Field\DateTimeField;
+use Megio\Collection\WriteBuilder\Field\DateTimeIntervalField;
+use Megio\Collection\WriteBuilder\Field\DecimalField;
+use Megio\Collection\WriteBuilder\Field\EmailField;
+use Megio\Collection\WriteBuilder\Field\IntegerField;
+use Megio\Collection\WriteBuilder\Field\JsonField;
+use Megio\Collection\WriteBuilder\Field\PasswordField;
+use Megio\Collection\WriteBuilder\Field\PhoneCzField;
+use Megio\Collection\WriteBuilder\Field\SlugField;
+use Megio\Collection\WriteBuilder\Field\TextField;
+use Megio\Collection\WriteBuilder\Field\TimeField;
+use Megio\Collection\WriteBuilder\Field\ToggleBtnField;
+use Megio\Collection\WriteBuilder\Field\UrlField;
+use Megio\Collection\WriteBuilder\Field\VideoLinkField;
 use Megio\Collection\WriteBuilder\Rule\ArrayRule;
 use Megio\Collection\WriteBuilder\Rule\Base\IRule;
 use Megio\Collection\WriteBuilder\Rule\BooleanRule;
@@ -27,6 +43,7 @@ use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeEntityMetadata;
 use Megio\Helper\ArrayMove;
+use Nette\Utils\Strings;
 
 class WriteBuilder implements IRecipeBuilder
 {
@@ -104,12 +121,7 @@ class WriteBuilder implements IRecipeBuilder
         $this->metadata = $this->recipe->getEntityMetadata();
         $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
         
-        foreach ($this->fields as $key => $field) {
-            $this->fields[$key] = $this->recreateRules($field);
-            if (array_key_exists($field->getName(), $this->values)) {
-                $field->setValue($this->values[$field->getName()]);
-            }
-        }
+        $this->createValues();
         
         return $this;
     }
@@ -127,8 +139,7 @@ class WriteBuilder implements IRecipeBuilder
         
         foreach ($this->dbSchema as $columnSchema) {
             if (!in_array($columnSchema['name'], $ignored)) {
-                // TODO: create field by type
-                $field = new PureField($columnSchema['name'], $columnSchema['name']);
+                $field = $this->createFieldInstanceByColumnType($columnSchema['type'], $columnSchema['name']);
                 $field->setBuilder($this);
                 
                 $field = $this->createRulesByDbSchema($field, $columnSchema);
@@ -140,12 +151,7 @@ class WriteBuilder implements IRecipeBuilder
         $this->fields = ArrayMove::moveToEnd($this->fields, 'createdAt');
         $this->fields = ArrayMove::moveToEnd($this->fields, 'updatedAt');
         
-        foreach ($this->fields as $key => $field) {
-            $this->fields[$key] = $this->recreateRules($field);
-            if (array_key_exists($field->getName(), $this->values)) {
-                $field->setValue($this->values[$field->getName()]);
-            }
-        }
+        $this->createValues();
         
         $this->keepDbSchema = $persist;
         
@@ -308,6 +314,40 @@ class WriteBuilder implements IRecipeBuilder
         return $field;
     }
     
+    public function recreateRules(IField $field): IField
+    {
+        $rules = $field->getRules();
+        
+        $ignoredRules = array_key_exists($field->getName(), $this->ignoredRules)
+            ? $this->ignoredRules[$field->getName()]
+            : [];
+        
+        foreach ($rules as $rule) {
+            if (in_array($rule::class, $ignoredRules)) {
+                $field->removeRule($rule);
+            }
+            
+            $rule->setField($field);
+            $rule->setRelatedFields($this->fields);
+            $rule->setRelatedRules($rules);
+        }
+        
+        return $field;
+    }
+    
+    /**
+     * @return void
+     */
+    public function createValues(): void
+    {
+        foreach ($this->fields as $key => $field) {
+            $this->fields[$key] = $this->recreateRules($field);
+            if (array_key_exists($field->getName(), $this->values)) {
+                $field->setValue($this->values[$field->getName()]);
+            }
+        }
+    }
+    
     protected function createRuleInstanceByColumnType(string $type): ?IRule
     {
         return match ($type) {
@@ -346,25 +386,57 @@ class WriteBuilder implements IRecipeBuilder
         };
     }
     
-    
-    public function recreateRules(IField $field): IField
+    protected function createFieldInstanceByColumnType(string $type, string $name): IField
     {
-        $rules = $field->getRules();
+        $namesMap = [
+            'password' => new PasswordField($name, $name),
+            'email' => new EmailField($name, $name),
+            'phone_cz' => new PhoneCzField($name, $name),
+            'slug' => new SlugField($name, $name),
+            'url' => new UrlField($name, $name),
+            'video' => new VideoLinkField($name, $name),
+        ];
         
-        $ignoredRules = array_key_exists($field->getName(), $this->ignoredRules)
-            ? $this->ignoredRules[$field->getName()]
-            : [];
-        
-        foreach ($rules as $rule) {
-            if (in_array($rule::class, $ignoredRules)) {
-                $field->removeRule($rule);
+        $fieldByName = null;
+        foreach ($namesMap as $key => $field) {
+            if (Strings::contains($name, $key)) {
+                $fieldByName = $field;
             }
-            
-            $rule->setField($field);
-            $rule->setRelatedFields($this->fields);
-            $rule->setRelatedRules($rules);
         }
         
-        return $field;
+        return match ($type) {
+            Types::ASCII_STRING,
+            Types::BIGINT,
+            Types::BINARY,
+            Types::GUID,
+            Types::STRING,
+            Types::BLOB,
+            Types::TEXT => $fieldByName ?: new TextField($name, $name),
+            
+            Types::DECIMAL,
+            Types::FLOAT => new DecimalField($name, $name),
+            
+            Types::INTEGER,
+            Types::SMALLINT => new IntegerField($name, $name),
+            
+            Types::BOOLEAN => new ToggleBtnField($name, $name),
+            
+            Types::DATE_MUTABLE,
+            Types::DATE_IMMUTABLE => new DateField($name, $name),
+            Types::DATEINTERVAL => new DateTimeIntervalField($name, $name),
+            
+            Types::DATETIME_MUTABLE,
+            Types::DATETIME_IMMUTABLE,
+            Types::DATETIMETZ_MUTABLE,
+            Types::DATETIMETZ_IMMUTABLE => new DateTimeField($name, $name),
+            
+            Types::JSON => new JsonField($name, $name),
+            Types::SIMPLE_ARRAY => new ArrayField($name, $name),
+            
+            Types::TIME_MUTABLE,
+            Types::TIME_IMMUTABLE => new TimeField($name, $name),
+            
+            default => new PureField($name, $name),
+        };
     }
 }
