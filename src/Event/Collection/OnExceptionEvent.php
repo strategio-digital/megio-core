@@ -8,16 +8,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OnProcessingExceptionEvent extends Event
+class OnExceptionEvent extends Event
 {
     public function __construct(
-        private mixed                      $data,
-        private readonly Request           $request,
-        private readonly ICollectionRecipe $recipe,
-        private readonly \Throwable        $exception,
-        private Response                   $response,
+        protected EventType         $eventType,
+        protected mixed             $data,
+        protected ICollectionRecipe $recipe,
+        protected \Throwable        $exception,
+        protected Request           $request,
+        private Response            $response,
     )
     {
+    }
+    
+    public function getEventType(): EventType
+    {
+        return $this->eventType;
     }
     
     /**

@@ -10,7 +10,7 @@ use Megio\Event\Request\AfterProcessEvent;
 use Megio\Event\Request\BeforeProcessEvent;
 use Megio\Event\Request\BeforeValidationEvent;
 use Megio\Event\Request\OnValidationExceptionEvent;
-use Megio\Event\Request\RequestEvent;
+use Megio\Event\Request\Events;
 use Megio\Http\Controller\Base\Controller;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,25 +50,25 @@ abstract class Request extends Controller implements IRequest
         if (count($schema) !== 0) {
             try {
                 $event = new BeforeValidationEvent($data, $schema, $this->request);
-                $this->dispatcher->dispatch($event, RequestEvent::BEFORE_VALIDATION);
+                $this->dispatcher->dispatch($event, Events::BEFORE_VALIDATION->value);
                 $vData = $this->validate($data, $schema);
                 $data = $vData === false ? [] : $vData;
                 
             } catch (ValidationException $exception) {
                 $event = new OnValidationExceptionEvent($data, $schema, $this->request, $exception);
-                $this->dispatcher->dispatch($event, RequestEvent::ON_VALIDATION_EXCEPTION);
+                $this->dispatcher->dispatch($event, Events::ON_VALIDATION_EXCEPTION->value);
                 
                 return $this->error($exception->getMessages());
             }
         }
         
         $event = new BeforeProcessEvent($data, $schema, $this->request);
-        $this->dispatcher->dispatch($event, RequestEvent::BEFORE_PROCESSING_DATA);
+        $this->dispatcher->dispatch($event, Events::BEFORE_PROCESSING_DATA->value);
         
         $response = $this->process($data);
         
         $event = new AfterProcessEvent($data, $schema, $response);
-        $this->dispatcher->dispatch($event, RequestEvent::AFTER_PROCESSING_DATA);
+        $this->dispatcher->dispatch($event, Events::AFTER_PROCESSING_DATA->value);
         
         return $response;
     }

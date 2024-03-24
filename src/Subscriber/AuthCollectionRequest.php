@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Megio\Subscriber;
 
 use Megio\Database\Entity\Admin;
-use Megio\Event\Collection\CollectionEvent;
-use Megio\Event\Collection\OnProcessingStartEvent;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnStartEvent;
 use Megio\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class AuthCollectionRequest implements EventSubscriberInterface
 {
-    protected OnProcessingStartEvent $event;
+    protected OnStartEvent $event;
     
     protected Request $request;
     
@@ -28,11 +28,11 @@ class AuthCollectionRequest implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            CollectionEvent::ON_PROCESSING_START => ['onProcess'],
+            Events::ON_START->value => ['onStart'],
         ];
     }
     
-    public function onProcess(OnProcessingStartEvent $event): void
+    public function onStart(OnStartEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();

@@ -9,11 +9,12 @@ use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
 use Megio\Collection\SchemaFormatter;
 use Megio\Database\EntityManager;
+use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
-use Megio\Event\Collection\CollectionEvent;
-use Megio\Event\Collection\OnProcessingStartEvent;
-use Megio\Event\Collection\OnProcessingFinishEvent;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnStartEvent;
+use Megio\Event\Collection\OnFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReadAllRequest extends Request
@@ -62,8 +63,8 @@ class ReadAllRequest extends Request
             return $this->error([$e->getMessage()]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $event = new OnStartEvent(EventType::READ_ALL, $data, $recipe, $this->request);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_START->value);
         
         if ($dispatcher->getResponse()) {
             return $dispatcher->getResponse();
@@ -106,8 +107,8 @@ class ReadAllRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $event = new OnFinishEvent(EventType::READ_ALL, $data, $recipe, $result, $this->request, $response);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FINISH->value);
         
         return $dispatcher->getResponse();
     }

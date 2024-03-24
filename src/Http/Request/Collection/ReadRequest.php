@@ -9,13 +9,14 @@ use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
 use Megio\Collection\SchemaFormatter;
+use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
 use Megio\Database\EntityManager;
-use Megio\Event\Collection\CollectionEvent;
-use Megio\Event\Collection\OnProcessingExceptionEvent;
-use Megio\Event\Collection\OnProcessingStartEvent;
-use Megio\Event\Collection\OnProcessingFinishEvent;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnExceptionEvent;
+use Megio\Event\Collection\OnStartEvent;
+use Megio\Event\Collection\OnFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -59,8 +60,8 @@ class ReadRequest extends Request
             return $this->error([$e->getMessage()]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $event = new OnStartEvent(EventType::READ, $data, $recipe, $this->request);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_START->value);
         
         if ($dispatcher->getResponse()) {
             return $dispatcher->getResponse();
@@ -79,8 +80,8 @@ class ReadRequest extends Request
         if (!$item) {
             $e = new NotFoundHttpException("Item '{$data['id']}' not found");
             $response = $this->error([$e->getMessage()], 404);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
-            $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            $event = new OnExceptionEvent(EventType::READ, $data, $recipe, $e, $this->request, $response);
+            $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();
         }
         
@@ -93,8 +94,8 @@ class ReadRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $event = new OnFinishEvent(EventType::READ, $data, $recipe, $result, $this->request, $response);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FINISH->value);
         
         return $dispatcher->getResponse();
     }

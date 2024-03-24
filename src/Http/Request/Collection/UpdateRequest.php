@@ -9,14 +9,15 @@ use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Mapping\ArrayToEntity;
 use Megio\Collection\RecipeFinder;
+use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
 use Megio\Database\Entity\EntityException;
 use Megio\Database\EntityManager;
-use Megio\Event\Collection\CollectionEvent;
-use Megio\Event\Collection\OnProcessingFinishEvent;
-use Megio\Event\Collection\OnProcessingStartEvent;
-use Megio\Event\Collection\OnProcessingExceptionEvent;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnFinishEvent;
+use Megio\Event\Collection\OnStartEvent;
+use Megio\Event\Collection\OnExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -58,8 +59,8 @@ class UpdateRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        $event = new OnProcessingStartEvent($data, $this->request, $recipe);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_START);
+        $event = new OnStartEvent(EventType::UPDATE, $data, $recipe, $this->request);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_START->value);
         
         if ($dispatcher->getResponse()) {
             return $dispatcher->getResponse();
@@ -83,8 +84,8 @@ class UpdateRequest extends Request
             if (!$item) {
                 $e = new NotFoundHttpException("Item '{$row['id']}' not found");
                 $response = $this->error([$e->getMessage()], 404);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
-                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
             }
             
@@ -94,8 +95,8 @@ class UpdateRequest extends Request
                     ->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
-                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
             }
             
@@ -104,8 +105,9 @@ class UpdateRequest extends Request
             
             if (!$builder->isValid()) {
                 $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, new CollectionException('Invalid data'), $response);
-                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                $e = new CollectionException('Invalid data');
+                $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
             }
             
@@ -113,8 +115,8 @@ class UpdateRequest extends Request
                 ArrayToEntity::update($builder->getMetadata(), $item, $builder->toClearValues());
             } catch (CollectionException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
-                $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
-                $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+                $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
+                $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
             }
         }
@@ -128,8 +130,8 @@ class UpdateRequest extends Request
         } catch (UniqueConstraintViolationException $e) {
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
-            $event = new OnProcessingExceptionEvent($data, $this->request, $recipe, $e, $response);
-            $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_EXCEPTION);
+            $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
+            $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();
         } catch (\Exception $e) {
             $this->em->rollback();
@@ -143,8 +145,8 @@ class UpdateRequest extends Request
         
         $response = $this->json($result);
         
-        $event = new OnProcessingFinishEvent($data, $this->request, $recipe, $result, $response);
-        $dispatcher = $this->dispatcher->dispatch($event, CollectionEvent::ON_PROCESSING_FINISH);
+        $event = new OnFinishEvent(EventType::UPDATE, $data, $recipe, $result, $this->request, $response);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FINISH->value);
         
         return $dispatcher->getResponse();
     }

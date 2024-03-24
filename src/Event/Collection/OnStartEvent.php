@@ -8,16 +8,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OnProcessingStartEvent extends Event
+class OnStartEvent extends Event
 {
     protected ?Response $response = null;
     
     public function __construct(
-        private mixed                      $data,
-        private readonly Request           $request,
-        private readonly ICollectionRecipe $recipe,
+        protected EventType         $eventType,
+        protected mixed             $data,
+        protected ICollectionRecipe $recipe,
+        protected Request           $request,
     )
     {
+    }
+    
+    public function getEventType(): EventType
+    {
+        return $this->eventType;
     }
     
     /**
