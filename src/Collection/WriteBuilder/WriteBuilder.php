@@ -127,6 +127,7 @@ class WriteBuilder implements IRecipeBuilder
         
         foreach ($this->dbSchema as $columnSchema) {
             if (!in_array($columnSchema['name'], $ignored)) {
+                // TODO: create field by type
                 $field = new PureField($columnSchema['name'], $columnSchema['name']);
                 $field->setBuilder($this);
                 
@@ -164,12 +165,26 @@ class WriteBuilder implements IRecipeBuilder
         
         foreach ($this->fields as $field) {
             if ($field->isDisabled() === false) {
-                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
+                $valueIsUndefined = $field->getValue() instanceof UndefinedValue;
                 $required = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
-                $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
+                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
+                
+                $validate = false;
+                
+                if (!$valueIsUndefined) {
+                    $validate = true;
+                }
+                
+                if ($valueIsUndefined && $required) {
+                    $validate = true;
+                }
+                
+                if ($nullable && $field->getValue() === null) {
+                    $validate = false;
+                }
                 
                 foreach ($field->getRules() as $rule) {
-                    if (!$ignore && $rule->validate() === false) {
+                    if ($validate && $rule->validate() === false) {
                         $field->addError($rule->message());
                         $this->errors[$field->getName()][] = $rule->message();
                     }
