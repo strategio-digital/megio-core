@@ -23,14 +23,15 @@ use Megio\Helper\ArrayMove;
 
 class ReadBuilder implements IRecipeBuilder
 {
-    protected ICollectionRecipe $recipe;
-    protected ReadBuilderEvent $event;
+    private ICollectionRecipe $recipe;
+    
+    private ReadBuilderEvent $event;
     
     /** @var array<string, IColumn> */
-    protected array $columns = [];
+    private array $columns = [];
     
     /** @var array<string, class-string[]> */
-    protected array $ignoredFormatters = [];
+    private array $ignoredFormatters = [];
     
     private bool $keepDbSchema = true;
     
@@ -45,8 +46,6 @@ class ReadBuilder implements IRecipeBuilder
     {
         $this->addIdColumnIfNotExists();
         
-        // Pokud bylo schéma vygenerováno automaticky a uživatel chce
-        // přidat vlastní sloupec, tak se celé původní schéma vymaže
         if ($this->keepDbSchema === false) {
             $this->columns = [];
             $this->keepDbSchema = true;
@@ -157,6 +156,11 @@ class ReadBuilder implements IRecipeBuilder
     public function getRecipe(): ICollectionRecipe
     {
         return $this->recipe;
+    }
+    
+    public function getEvent(): ReadBuilderEvent
+    {
+        return $this->event;
     }
     
     /** @return array{

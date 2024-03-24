@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\WriteBuilder\Field;
-
-use Megio\Collection\WriteBuilder\Field\Base\BaseField;
+namespace Megio\Collection\WriteBuilder\Field\Base;
 
 class PureField extends BaseField
 {

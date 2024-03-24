@@ -61,7 +61,6 @@ class FieldRuleTestRecipe extends CollectionRecipe
         ];
         
         return $builder
-            ->ignoreSchemaRules()
             
             // Email and Password
             ->add(new EmailField(name: 'email', label: '', rules: [new RequiredRule(), new UniqueRule($this->source(), 'email')]))

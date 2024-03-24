@@ -23,12 +23,12 @@ abstract class CollectionRecipe implements ICollectionRecipe
     
     public function create(WriteBuilder $builder): WriteBuilder
     {
-        return $builder;
+        return $builder->buildByDbSchema();
     }
     
     public function update(WriteBuilder $builder): WriteBuilder
     {
-        return $builder;
+        return $builder->buildByDbSchema();
     }
     
     /**

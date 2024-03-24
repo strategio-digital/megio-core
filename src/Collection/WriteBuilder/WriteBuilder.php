@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
+use Megio\Collection\WriteBuilder\Field\Base\PureField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\ArrayRule;
 use Megio\Collection\WriteBuilder\Rule\Base\IRule;
@@ -29,37 +30,32 @@ use Megio\Helper\ArrayMove;
 
 class WriteBuilder implements IRecipeBuilder
 {
-    protected WriteBuilderEvent $event;
+    private WriteBuilderEvent $event;
     
-    protected ICollectionRecipe $recipe;
+    private ICollectionRecipe $recipe;
     
-    protected RecipeEntityMetadata $metadata;
+    private RecipeEntityMetadata $metadata;
     
-    protected string|null $rowId = null;
+    private ?string $rowId = null;
     
-    /** @var IField[] */
-    protected array $fields = [];
-    
-    /** @var array<string, mixed> */
-    protected array $buildFields = [];
+    /** @var array<string, IField> */
+    private array $fields = [];
     
     /** @var array<string, string[]> */
-    protected array $errors = [];
+    private array $errors = [];
     
     /** @var array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[] */
-    protected array $dbSchema = [];
+    private array $dbSchema = [];
     
     /** @var array<string, string|int|float|bool|null> */
-    protected array $values = [];
+    private array $values = [];
     
     /** @var array<string, class-string[]> */
-    protected array $ignoredRules = [];
+    private array $ignoredRules = [];
     
-    protected bool $ignoreSchemaRules = false;
+    private bool $keepDbSchema = true;
     
-    public function __construct(
-        protected readonly EntityManagerInterface $em
-    )
+    public function __construct(protected readonly EntityManagerInterface $em)
     {
     }
     
@@ -70,7 +66,7 @@ class WriteBuilder implements IRecipeBuilder
      * @param string|null $rowId
      * @return $this
      */
-    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, array $values = [], string|null $rowId = null): self
+    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, array $values = [], string $rowId = null): self
     {
         $this->recipe = $recipe;
         $this->values = $values;
@@ -81,6 +77,12 @@ class WriteBuilder implements IRecipeBuilder
     
     public function add(IField $field, string $moveBeforeName = null, string $moveAfterName = null): self
     {
+        if ($this->keepDbSchema === false) {
+            $this->fields = [];
+            $this->keepDbSchema = true;
+        }
+        
+        $field->setBuilder($this);
         $this->fields[$field->getName()] = $field;
         
         if ($moveBeforeName !== null) {
@@ -102,36 +104,56 @@ class WriteBuilder implements IRecipeBuilder
         $this->metadata = $this->recipe->getEntityMetadata();
         $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
         
-        foreach ($this->fields as $field) {
-            $field->setBuilder($this);
-            
-            $columnSchema = current(array_filter($this->dbSchema, fn($f) => $f['name'] === $field->getName()));
-            
-            if (!$this->ignoreSchemaRules && $columnSchema) {
-                $field = $this->createRulesByDbSchema($field, $columnSchema);
-            }
-            
-            $rules = $field->getRules();
-            
-            foreach ($rules as $rule) {
-                $rule->setField($field);
-                $rule->setRelatedFields($this->fields);
-                $rule->setRelatedRules($rules);
-            }
-            
+        foreach ($this->fields as $key => $field) {
+            $this->fields[$key] = $this->recreateRules($field);
             if (array_key_exists($field->getName(), $this->values)) {
                 $field->setValue($this->values[$field->getName()]);
             }
-            
-            $this->buildFields[$field->getName()] = $field->toArray();
         }
+        
+        return $this;
+    }
+    
+    /**
+     * @param string[] $exclude
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
+    public function buildByDbSchema(array $exclude = [], bool $persist = false): self
+    {
+        $this->metadata = $this->recipe->getEntityMetadata();
+        $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
+        
+        $ignored = array_merge($exclude, ['id']);
+        
+        foreach ($this->dbSchema as $columnSchema) {
+            if (!in_array($columnSchema['name'], $ignored)) {
+                $field = new PureField($columnSchema['name'], $columnSchema['name']);
+                $field->setBuilder($this);
+                
+                $field = $this->createRulesByDbSchema($field, $columnSchema);
+                $this->fields[$field->getName()] = $field;
+            }
+        }
+        
+        $this->fields = ArrayMove::moveToStart($this->fields, 'id');
+        $this->fields = ArrayMove::moveToEnd($this->fields, 'createdAt');
+        $this->fields = ArrayMove::moveToEnd($this->fields, 'updatedAt');
+        
+        foreach ($this->fields as $key => $field) {
+            $this->fields[$key] = $this->recreateRules($field);
+            if (array_key_exists($field->getName(), $this->values)) {
+                $field->setValue($this->values[$field->getName()]);
+            }
+        }
+        
+        $this->keepDbSchema = $persist;
         
         return $this;
     }
     
     public function validate(): self
     {
-        $fieldNames = array_keys($this->buildFields);
+        $fieldNames = array_keys($this->fields);
         $valueNames = array_keys($this->values);
         
         foreach ($valueNames as $valueName) {
@@ -141,17 +163,13 @@ class WriteBuilder implements IRecipeBuilder
         }
         
         foreach ($this->fields as $field) {
-            $ignoredFieldRules = array_key_exists($field->getName(), $this->ignoredRules)
-                ? $this->ignoredRules[$field->getName()]
-                : [];
-            
             if ($field->isDisabled() === false) {
                 $nullable = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
                 $required = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
                 $ignore = $field->getValue() instanceof UndefinedValue === true && $nullable === false && $required === false;
                 
                 foreach ($field->getRules() as $rule) {
-                    if (!$ignore && !in_array($rule::class, $ignoredFieldRules) && $rule->validate() === false) {
+                    if (!$ignore && $rule->validate() === false) {
                         $field->addError($rule->message());
                         $this->errors[$field->getName()][] = $rule->message();
                     }
@@ -171,15 +189,9 @@ class WriteBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function ignoreSchemaRules(): self
-    {
-        $this->ignoreSchemaRules = true;
-        return $this;
-    }
-    
     public function countFields(): int
     {
-        return count($this->buildFields);
+        return count($this->fields);
     }
     
     public function isValid(): bool
@@ -215,17 +227,9 @@ class WriteBuilder implements IRecipeBuilder
         return $this->metadata;
     }
     
-    public function getRowId(): string|null
+    public function getRowId(): ?string
     {
         return $this->rowId;
-    }
-    
-    /**
-     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[]
-     */
-    public function getDbSchema(): array
-    {
-        return $this->dbSchema;
     }
     
     /**
@@ -233,7 +237,7 @@ class WriteBuilder implements IRecipeBuilder
      */
     public function toArray(): array
     {
-        return array_values($this->buildFields);
+        return array_values(array_map(fn($field) => $field->toArray(), $this->fields));
     }
     
     /**
@@ -263,27 +267,28 @@ class WriteBuilder implements IRecipeBuilder
     {
         $ruleClassNames = array_map(fn($rule) => $rule::class, $field->getRules());
         
-        $rule = $this->createRuleInstance($columnSchema['type']);
+        $rule = $this->createRuleInstanceByColumnType($columnSchema['type']);
+        
         if ($rule !== null && !in_array($rule::class, $ruleClassNames)) {
             $field->addRule($rule);
         }
         
-        if (!in_array(NullableRule::class, $ruleClassNames) && $columnSchema['nullable'] === true) {
+        if ($columnSchema['nullable'] === true && !in_array(NullableRule::class, $ruleClassNames)) {
             $field->addRule(new NullableRule());
         }
         
-        if (!in_array(MaxRule::class, $ruleClassNames) && $columnSchema['maxLength'] !== null) {
+        if ($columnSchema['maxLength'] !== null && !in_array(MaxRule::class, $ruleClassNames)) {
             $field->addRule(new MaxRule($columnSchema['maxLength']));
         }
         
-        if (!in_array(UniqueRule::class, $ruleClassNames) && $columnSchema['unique'] === true) {
+        if ($columnSchema['unique'] === true && !in_array(UniqueRule::class, $ruleClassNames)) {
             $field->addRule(new UniqueRule($this->recipe->source(), $field->getName()));
         }
         
         return $field;
     }
     
-    protected function createRuleInstance(string $type): ?IRule
+    protected function createRuleInstanceByColumnType(string $type): ?IRule
     {
         return match ($type) {
             Types::ASCII_STRING,
@@ -319,5 +324,27 @@ class WriteBuilder implements IRecipeBuilder
             
             default => null,
         };
+    }
+    
+    
+    public function recreateRules(IField $field): IField
+    {
+        $rules = $field->getRules();
+        
+        $ignoredRules = array_key_exists($field->getName(), $this->ignoredRules)
+            ? $this->ignoredRules[$field->getName()]
+            : [];
+        
+        foreach ($rules as $rule) {
+            if (in_array($rule::class, $ignoredRules)) {
+                $field->removeRule($rule);
+            }
+            
+            $rule->setField($field);
+            $rule->setRelatedFields($this->fields);
+            $rule->setRelatedRules($rules);
+        }
+        
+        return $field;
     }
 }

@@ -24,6 +24,8 @@ interface IField
     /** @return \Megio\Collection\WriteBuilder\Rule\Base\IRule[] */
     public function getRules(): array;
     
+    public function removeRule(IRule $rule): void;
+    
     /** @return array<string, string|int|float|bool|null> */
     public function getAttrs(): array;
     

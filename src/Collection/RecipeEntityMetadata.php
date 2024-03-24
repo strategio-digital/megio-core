@@ -58,9 +58,7 @@ class RecipeEntityMetadata
             }
         }
         
-        // move array item with name "id" to first position
-        $idProp = array_filter($props, fn($prop) => $prop['name'] !== 'id');
-        return array_merge(array_values(array_filter($props, fn($prop) => $prop['name'] === 'id')), $idProp);
+        return $props;
     }
     
     /**
@@ -77,7 +75,7 @@ class RecipeEntityMetadata
          * Doctrine mapping:
          * https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
          * @see \Megio\Collection\ReadBuilder\ReadBuilder::createColumnInstance()
-         * @see \Megio\Collection\WriteBuilder\WriteBuilder::createRuleInstance()
+         * @see \Megio\Collection\WriteBuilder\WriteBuilder::createRuleInstanceByColumnType()
          */
         $type = $attr->type;
         
