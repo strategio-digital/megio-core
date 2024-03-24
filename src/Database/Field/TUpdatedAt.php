@@ -15,10 +15,15 @@ trait TUpdatedAt
         return $this->updatedAt;
     }
     
+    public function setUpdatedAt(\DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+    
     #[ORM\PreFlush]
-    public function setUpdatedAt(): self
+    public function onPreFlushUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();
-        return $this;
     }
 }

@@ -63,6 +63,12 @@ class ReadAllRequest extends Request
             return $this->error([$e->getMessage()]);
         }
         
+        
+        /** @noinspection DuplicatedCode */
+        if ($builder->countFields() === 1) {
+            return $this->error(["Collection '{$data['recipe']}' has no readable fields"]);
+        }
+        
         $event = new OnStartEvent(EventType::READ_ALL, $data, $recipe, $this->request);
         $dispatcher = $this->dispatcher->dispatch($event, Events::ON_START->value);
         

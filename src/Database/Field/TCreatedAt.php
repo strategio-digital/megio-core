@@ -15,10 +15,15 @@ trait TCreatedAt
         return $this->createdAt;
     }
     
+    public function setCreatedAt(\DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+    
     #[ORM\PrePersist]
-    public function setCreatedAt(): self
+    public function onPrePersistCreatedAt(): void
     {
         $this->createdAt = new \DateTime();
-        return $this;
     }
 }
