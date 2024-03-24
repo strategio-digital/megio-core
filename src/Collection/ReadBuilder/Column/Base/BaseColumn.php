@@ -51,7 +51,8 @@ abstract class BaseColumn implements IColumn
      *     key: string,
      *     name: string,
      *     sortable: bool,
-     *     visible: bool
+     *     visible: bool,
+     *     formatters: class-string[]
      * }
      */
     public function toArray(): array
@@ -62,6 +63,7 @@ abstract class BaseColumn implements IColumn
             'name' => $this->getName(),
             'sortable' => $this->isSortable(),
             'visible' => $this->isVisible(),
+            'formatters' => array_map(fn($f) => $f::class, $this->getFormatters()),
         ];
     }
 }

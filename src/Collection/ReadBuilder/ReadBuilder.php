@@ -168,13 +168,19 @@ class ReadBuilder implements IRecipeBuilder
      *     key: string,
      *     name: string,
      *     sortable: bool,
-     *     visible: bool
+     *     visible: bool,
+     *     formatters: class-string[]
      * }[]
      */
     public function toArray(): array
     {
         $cols = array_map(fn($col) => $col->toArray(), $this->columns);
         return array_values($cols);
+    }
+    
+    public function dump(): void
+    {
+        dumpe($this->build()->toArray());
     }
     
     protected function addIdColumnIfNotExists(): void

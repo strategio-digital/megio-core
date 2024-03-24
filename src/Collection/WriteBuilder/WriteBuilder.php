@@ -240,6 +240,11 @@ class WriteBuilder implements IRecipeBuilder
         return array_values(array_map(fn($field) => $field->toArray(), $this->fields));
     }
     
+    public function dump(): void
+    {
+        dumpe($this->build()->toArray());
+    }
+    
     /**
      * @return array<string, string|int|float|bool|null|array<string,mixed>>
      */

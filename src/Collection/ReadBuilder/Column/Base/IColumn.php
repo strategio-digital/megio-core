@@ -25,7 +25,8 @@ interface IColumn
      *     key: string,
      *     name: string,
      *     sortable: bool,
-     *     visible: bool
+     *     visible: bool,
+     *     formatters: class-string[]
      * }
      */
     public function toArray(): array;
