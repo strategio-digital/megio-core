@@ -50,8 +50,8 @@ class AuthCollectionRequest implements EventSubscriberInterface
             return;
         }
         
-        $recipeName = $event->getRecipe()->name();
-        $resourceName = $routeName . '.' . $recipeName;
+        $recipeKey = $event->getRecipe()->key();
+        $resourceName = $routeName . '.' . $recipeKey;
         
         if (!in_array($resourceName, $this->authUser->getResources())) {
             $message = "This collection-resource '{$resourceName}' is not allowed for current user";

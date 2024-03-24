@@ -56,9 +56,9 @@ class RecipeFinder
         return $this->recipes;
     }
     
-    public function findByName(string $name): ?ICollectionRecipe
+    public function findByKey(string $key): ?ICollectionRecipe
     {
-        $recipe = current(array_filter($this->recipes, fn($r) => $r->name() === $name));
+        $recipe = current(array_filter($this->recipes, fn($r) => $r->key() === $key));
         return $recipe ?: null;
     }
 }

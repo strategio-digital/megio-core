@@ -128,15 +128,15 @@ readonly class AuthResourceManager
         
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
         $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
-        $recipeNames = array_map(fn($recipe) => $recipe->name(), $recipes);
+        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
         
         $resourceNames = array_keys($this->routes->all());
         $collectionRouteNames = array_filter($resourceNames, fn($name) => Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX));
         
         $names = [];
-        foreach ($recipeNames as $recipeName) {
+        foreach ($recipeKeys as $recipeKey) {
             foreach ($collectionRouteNames as $routeName) {
-                $names[] = $routeName . '.' . $recipeName;
+                $names[] = $routeName . '.' . $recipeKey;
             }
         }
         
@@ -153,11 +153,11 @@ readonly class AuthResourceManager
         
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
         $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
-        $recipeNames = array_map(fn($recipe) => $recipe->name(), $recipes);
+        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
         
         $names = [];
-        foreach ($recipeNames as $recipeName) {
-            $names[] = Router::ROUTE_META_NAVBAR . '.' . $recipeName;
+        foreach ($recipeKeys as $recipeKey) {
+            $names[] = Router::ROUTE_META_NAVBAR . '.' . $recipeKey;
         }
         
         return $names;

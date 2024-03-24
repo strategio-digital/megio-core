@@ -12,7 +12,7 @@ interface ICollectionRecipe
     public function source(): string;
     
     /** @return string */
-    public function name(): string;
+    public function key(): string;
     
     /**
      * @throws \Megio\Collection\Exception\CollectionException

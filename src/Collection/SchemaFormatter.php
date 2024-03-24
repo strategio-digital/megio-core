@@ -12,7 +12,7 @@ class SchemaFormatter
     {
         return [
             'meta' => [
-                'recipe' => $recipe->name()
+                'recipe' => $recipe->key()
             ],
             'props' => $builder->toArray()
         ];

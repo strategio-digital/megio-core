@@ -136,7 +136,7 @@ class WriteBuilder implements IRecipeBuilder
         
         foreach ($valueNames as $valueName) {
             if (!in_array($valueName, $fieldNames)) {
-                $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->name()}' recipe for '{$this->event->name}' action";
+                $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->key()}' recipe for '{$this->event->name}' action";
             }
         }
         

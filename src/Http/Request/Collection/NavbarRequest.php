@@ -28,15 +28,16 @@ class NavbarRequest extends Request
     {
         $recipes = $this->recipeFinder->load()->getAll();
         $recipes = array_filter($recipes, fn($recipe) => $recipe->source() !== Admin::class);
-        $recipeNames = array_map(fn($recipe) => $recipe->name(), $recipes);
+        /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
+        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
         
         if (!$this->authUser->get() instanceof Admin) {
             $resources = $this->authUser->getResources();
-            $recipeNames = array_filter($recipeNames, fn($endpoint) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources));
+            $recipeKeys = array_filter($recipeKeys, fn($endpoint) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources));
         }
         
-        sort($recipeNames);
+        sort($recipeKeys);
         
-        return $this->json(['items' => $recipeNames]);
+        return $this->json(['items' => $recipeKeys]);
     }
 }

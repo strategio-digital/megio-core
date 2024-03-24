@@ -29,10 +29,10 @@ class ReadAllRequest extends Request
     
     public function schema(): array
     {
-        $names = array_map(fn($r) => $r->name(), $this->recipeFinder->load()->getAll());
+        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         
         return [
-            'recipe' => Expect::anyOf(...$names)->required(),
+            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
             'schema' => Expect::bool(false),
             'adminPanel' => Expect::bool(false),
             'currentPage' => Expect::int(1)->min(1)->required(),
@@ -51,7 +51,7 @@ class ReadAllRequest extends Request
      */
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByName($data['recipe']);
+        $recipe = $this->recipeFinder->findByKey($data['recipe']);
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);

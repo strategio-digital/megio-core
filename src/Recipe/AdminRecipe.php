@@ -18,7 +18,7 @@ class AdminRecipe extends CollectionRecipe
         return Admin::class;
     }
     
-    public function name(): string
+    public function key(): string
     {
         return 'admin';
     }
