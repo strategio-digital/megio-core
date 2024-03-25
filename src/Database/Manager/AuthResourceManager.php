@@ -38,7 +38,7 @@ readonly class AuthResourceManager
         foreach ($types as $type) {
             $methodName = $type->getResourcesMethodName();
             
-            if ($type === ResourceType::ROUTER_VIEW) {
+            if ($type === ResourceType::VUE_ROUTER) {
                 $sourceNames = $this->$methodName($viewResources);
             } else {
                 $sourceNames = $this->$methodName();

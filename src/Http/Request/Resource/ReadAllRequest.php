@@ -46,7 +46,7 @@ class ReadAllRequest extends Request
         $groups = $this->groupResources($resources, $roles);
         $groups = $this->sortCollectionDataResources($groups);
         
-        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::ROUTER_VIEW);
+        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::VUE_ROUTER);
         
         if ($data['make_view_diff']) {
             $types = ResourceType::cases();
@@ -114,7 +114,7 @@ class ReadAllRequest extends Request
      */
     private function sortCollectionDataResources(array $resources): array
     {
-        $key = ResourceType::COLLECTION_RECIPE->value;
+        $key = ResourceType::COLLECTION_DATA->value;
         if (array_key_exists($key, $resources)) {
             $groups = [];
             foreach ($resources[$key] as $value) {
@@ -135,11 +135,11 @@ class ReadAllRequest extends Request
     
     private function createHint(ResourceType $type, string $name): string|null
     {
-        if ($type === ResourceType::ROUTER_VIEW) {
+        if ($type === ResourceType::VUE_ROUTER) {
             return null;
         }
         
-        if ($type === ResourceType::COLLECTION_NAV || $type === ResourceType::COLLECTION_RECIPE) {
+        if ($type === ResourceType::COLLECTION_NAV || $type === ResourceType::COLLECTION_DATA) {
             $last = pathinfo($name, PATHINFO_EXTENSION);
             $name = substr_replace($name, '', -strlen($last) - 1, strlen($last) + 1);
         }
