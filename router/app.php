@@ -53,6 +53,16 @@ return static function (RoutingConfigurator $routes): void {
         ->methods(['POST'])
         ->controller(Collection\NavbarRequest::class);
     
+    // Collection Forms
+    $form = $routes->collection('megio.collections.form')->prefix('/megio/collections/form');
+    $form->add('creating', '/creating')
+        ->methods(['POST'])
+        ->controller(Collection\Form\AddFormRequest::class);
+    
+    $form->add('updating', '/updating')
+        ->methods(['PATCH'])
+        ->controller(Collection\Form\EditFormRequest::class);
+    
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/megio/collections');
     $collection->add('read', '/read')->methods(['POST'])->controller(Collection\ReadRequest::class);
@@ -60,16 +70,6 @@ return static function (RoutingConfigurator $routes): void {
     $collection->add('create', '/create')->methods(['POST'])->controller(Collection\CreateRequest::class);
     $collection->add('delete', '/delete')->methods(['DELETE'])->controller(Collection\DeleteRequest::class);
     $collection->add('update', '/update')->methods(['PATCH'])->controller(Collection\UpdateRequest::class);
-    
-    // Forms
-    $form = $routes->collection('megio.form.')->prefix('/megio/form');
-    $form->add('collection.create', '/collection/create')
-        ->methods(['POST'])
-        ->controller(Collection\Form\AddFormRequest::class);
-    
-    $form->add('collection.update', '/collection/update')
-        ->methods(['PATCH'])
-        ->controller(Collection\Form\EditFormRequest::class);
     
     // Resources
     $resources = $routes->collection('megio.resources.')->prefix('/megio/resources');
