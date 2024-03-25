@@ -10,16 +10,21 @@ use Megio\Collection\ReadBuilder\Column\ArrayColumn;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\BlobColumn;
 use Megio\Collection\ReadBuilder\Column\DateTimeIntervalColumn;
+use Megio\Collection\ReadBuilder\Column\EmailColumn;
 use Megio\Collection\ReadBuilder\Column\JsonColumn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
 use Megio\Collection\ReadBuilder\Column\BooleanColumn;
 use Megio\Collection\ReadBuilder\Column\DateColumn;
 use Megio\Collection\ReadBuilder\Column\DateTimeColumn;
 use Megio\Collection\ReadBuilder\Column\NumericColumn;
+use Megio\Collection\ReadBuilder\Column\PhoneColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
 use Megio\Collection\ReadBuilder\Column\TimeColumn;
 use Megio\Collection\ReadBuilder\Column\UnknownColumn;
+use Megio\Collection\ReadBuilder\Column\UrlColumn;
+use Megio\Collection\ReadBuilder\Column\VideoLinkColumn;
 use Megio\Helper\ArrayMove;
+use Nette\Utils\Strings;
 
 class ReadBuilder implements IRecipeBuilder
 {
@@ -194,6 +199,20 @@ class ReadBuilder implements IRecipeBuilder
     
     protected function createColumnInstance(string $type, string $key, bool $visible): IColumn
     {
+        $keysMap = [
+            'email' => new EmailColumn(key: $key, name: $key, visible: $visible),
+            'phone' => new PhoneColumn(key: $key, name: $key, visible: $visible),
+            'url' => new UrlColumn(key: $key, name: $key, visible: $visible),
+            'video' => new VideoLinkColumn(key: $key, name: $key, visible: $visible),
+        ];
+        
+        $columnByKey = null;
+        foreach ($keysMap as $colKey => $column) {
+            if (Strings::contains($key, $colKey)) {
+                $columnByKey = $column;
+            }
+        }
+        
         return match ($type) {
             Types::ASCII_STRING,
             Types::BIGINT,
@@ -201,7 +220,7 @@ class ReadBuilder implements IRecipeBuilder
             Types::DECIMAL,
             Types::GUID,
             Types::STRING,
-            Types::TEXT => new StringColumn(key: $key, name: $key, visible: $visible),
+            Types::TEXT => $columnByKey ?: new StringColumn(key: $key, name: $key, visible: $visible),
             
             Types::BLOB => new BlobColumn(key: $key, name: $key, visible: $visible),
             
