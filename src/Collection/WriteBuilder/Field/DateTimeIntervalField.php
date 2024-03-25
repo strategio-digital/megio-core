@@ -5,6 +5,7 @@ namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Rule\DateTimeIntervalRule;
+use Megio\Collection\WriteBuilder\Serializer\DateTimeIntervalSerializer;
 
 class DateTimeIntervalField extends BaseField
 {
@@ -21,16 +22,20 @@ class DateTimeIntervalField extends BaseField
         protected string $name,
         protected string $label,
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true
     )
     {
         $rules[] = new DateTimeIntervalRule();
+        $serializers[] = new DateTimeIntervalSerializer();
+        
         parent::__construct(
             name: $name,
             label: $label,
             rules: $rules,
+            serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
             mapToEntity: $mapToEntity

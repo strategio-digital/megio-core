@@ -22,6 +22,7 @@ class SelectField extends BaseField
         protected string $label,
         protected array  $items = [],
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true
@@ -31,6 +32,7 @@ class SelectField extends BaseField
             name: $name,
             label: $label,
             rules: $rules,
+            serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
             mapToEntity: $mapToEntity

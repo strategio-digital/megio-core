@@ -5,6 +5,7 @@ namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Rule\TimeCzRule;
+use Megio\Collection\WriteBuilder\Serializer\DateTimeSerializer;
 
 class TimeCzField extends BaseField
 {
@@ -21,16 +22,20 @@ class TimeCzField extends BaseField
         protected string $name,
         protected string $label,
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true
     )
     {
         $rules[] = new TimeCzRule();
+        $serializers[] = new DateTimeSerializer();
+        
         parent::__construct(
             name: $name,
             label: $label,
             rules: $rules,
+            serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
             mapToEntity: $mapToEntity

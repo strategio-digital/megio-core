@@ -10,6 +10,8 @@ trait TCreatedAt
     #[ORM\Column(nullable: false)]
     private \DateTime $createdAt;
     
+    private bool $setterCreatedAtCalled = false;
+    
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
@@ -17,6 +19,7 @@ trait TCreatedAt
     
     public function setCreatedAt(\DateTime $createdAt): self
     {
+        $this->setterCreatedAtCalled = true;
         $this->createdAt = $createdAt;
         return $this;
     }
@@ -24,6 +27,8 @@ trait TCreatedAt
     #[ORM\PrePersist]
     public function onPrePersistCreatedAt(): void
     {
-        $this->createdAt = new \DateTime();
+        if (!$this->setterCreatedAtCalled) {
+            $this->createdAt = new \DateTime();
+        }
     }
 }

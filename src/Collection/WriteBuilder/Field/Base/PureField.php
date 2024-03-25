@@ -18,6 +18,7 @@ class PureField extends BaseField
         protected string $name,
         protected string $label,
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true

@@ -112,7 +112,8 @@ class UpdateRequest extends Request
             }
             
             try {
-                ArrayToEntity::update($builder->getMetadata(), $item, $builder->toClearValues());
+                $values = $builder->getSerializedValues();
+                ArrayToEntity::update($builder->getMetadata(), $item, $values);
             } catch (CollectionException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);

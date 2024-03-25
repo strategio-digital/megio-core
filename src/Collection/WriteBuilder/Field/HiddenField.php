@@ -20,6 +20,7 @@ class HiddenField extends BaseField
         protected string $name,
         protected string $label,
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true
@@ -29,6 +30,7 @@ class HiddenField extends BaseField
             name: $name,
             label: $label,
             rules: $rules,
+            serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
             mapToEntity: $mapToEntity

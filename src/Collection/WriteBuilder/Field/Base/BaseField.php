@@ -11,21 +11,23 @@ abstract class BaseField implements IField
     protected WriteBuilder $builder;
     
     /**
-     * @var string|int|float|bool|null|array<string,mixed>|UndefinedValue
+     * @var mixed|UndefinedValue
      */
-    protected string|int|float|bool|null|array|UndefinedValue $value;
+    protected mixed $value;
     
     /** @var string[] */
     protected array $errors = [];
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
+     * @param \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] $serializers
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
         protected string $name,
         protected string $label,
         protected array  $rules = [],
+        protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true
@@ -65,23 +67,29 @@ abstract class BaseField implements IField
         return $this->attrs;
     }
     
+    /** @return \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] */
+    public function getSerializers(): array
+    {
+        return $this->serializers;
+    }
+    
     public function mappedToEntity(): bool
     {
         return $this->mapToEntity;
     }
     
     /**
-     * @return string|int|float|bool|null|array<string,mixed>|UndefinedValue
+     * @return mixed|UndefinedValue
      */
-    public function getValue(): string|int|float|bool|null|array|UndefinedValue
+    public function getValue(): mixed
     {
         return $this->value;
     }
     
     /**
-     * @param string|int|float|bool|null|array<string,mixed> $value
+     * @param mixed $value
      */
-    public function setValue(string|int|float|bool|null|array $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
@@ -123,6 +131,7 @@ abstract class BaseField implements IField
             'name' => $this->getName(),
             'label' => $this->getLabel(),
             'rules' => array_map(fn($rule) => $rule->toArray(), $this->getRules()),
+            'serializers' => array_map(fn($serializer) => $serializer::class, $this->getSerializers()),
             'attrs' => $this->getAttrs(),
             'value' => $this->getValue(),
             'errors' => $this->getErrors(),

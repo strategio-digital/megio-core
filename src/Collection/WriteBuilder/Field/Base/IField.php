@@ -12,7 +12,6 @@ interface IField
     
     public function mappedToEntity(): bool;
     
-    
     public function getName(): string;
     
     public function getLabel(): string;
@@ -26,16 +25,18 @@ interface IField
     
     public function removeRule(IRule $rule): void;
     
+    /** @return \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] */
+    public function getSerializers(): array;
+    
     /** @return array<string, string|int|float|bool|null> */
     public function getAttrs(): array;
     
-    /** @return string|int|float|bool|null|array<string,mixed>|UndefinedValue */
-    public function getValue(): string|int|float|bool|null|array|UndefinedValue;
+    /** @return mixed|UndefinedValue */
+    public function getValue(): mixed;
     
-    public function setValue(string|int|float|bool|null $value): void;
+    public function setValue(mixed $value): void;
     
     public function addError(string $message): void;
-    
     
     public function setBuilder(WriteBuilder $builder): void;
     

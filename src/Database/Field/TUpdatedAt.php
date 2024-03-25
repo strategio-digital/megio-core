@@ -10,6 +10,8 @@ trait TUpdatedAt
     #[ORM\Column(nullable: false)]
     private \DateTime $updatedAt;
     
+    private bool $setterUpdatedAtCalled = false;
+    
     public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
@@ -17,6 +19,7 @@ trait TUpdatedAt
     
     public function setUpdatedAt(\DateTime $updatedAt): self
     {
+        $this->setterUpdatedAtCalled = true;
         $this->updatedAt = $updatedAt;
         return $this;
     }
@@ -24,6 +27,8 @@ trait TUpdatedAt
     #[ORM\PreFlush]
     public function onPreFlushUpdatedAt(): void
     {
-        $this->updatedAt = new \DateTime();
+        if (!$this->setterUpdatedAtCalled) {
+            $this->updatedAt = new \DateTime();
+        }
     }
 }

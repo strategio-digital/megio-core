@@ -267,15 +267,19 @@ class WriteBuilder implements IRecipeBuilder
     }
     
     /**
-     * @return array<string, string|int|float|bool|null|array<string,mixed>>
+     * @return array<string, mixed>
+     * @throws \Megio\Collection\Exception\SerializerException
      */
-    public function toClearValues(): array
+    public function getSerializedValues(): array
     {
         $values = [];
         
         foreach ($this->fields as $field) {
             if ($field->mappedToEntity() === true && $field->isDisabled() === false) {
                 if ($field->getValue() instanceof UndefinedValue === false) {
+                    foreach ($field->getSerializers() as $serializer) {
+                        $field->setValue($serializer->serialize($field->getValue()));
+                    }
                     $values[$field->getName()] = $field->getValue();
                 }
             }

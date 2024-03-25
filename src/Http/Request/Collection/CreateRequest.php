@@ -10,6 +10,7 @@ use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Mapping\ArrayToEntity;
 use Megio\Collection\RecipeFinder;
+use Megio\Database\Entity\EntityException;
 use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
@@ -42,6 +43,10 @@ class CreateRequest extends Request
         ];
     }
     
+    /**
+     * @throws \Doctrine\ORM\Exception\ORMException
+     * @throws \Megio\Collection\Exception\SerializerException
+     */
     public function process(array $data): Response
     {
         /** @noinspection DuplicatedCode */
@@ -82,10 +87,11 @@ class CreateRequest extends Request
             }
             
             try {
-                $entity = ArrayToEntity::create($recipe, $builder->getMetadata(), $builder->toClearValues());
+                $values = $builder->getSerializedValues();
+                $entity = ArrayToEntity::create($recipe, $builder->getMetadata(), $values);
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
-            } catch (CollectionException|ORMException $e) {
+            } catch (CollectionException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);

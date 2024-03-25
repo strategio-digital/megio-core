@@ -105,7 +105,6 @@ class ReadAllRequest extends Request
             'items' => $items
         ];
         
-        
         /** @noinspection DuplicatedCode */
         if ($data['schema']) {
             $result['schema'] = SchemaFormatter::format($recipe, $builder);
