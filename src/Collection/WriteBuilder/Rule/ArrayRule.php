@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Rule;
 
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
+use Nette\Utils\Arrays;
 
 class ArrayRule extends BaseRule
 {
     public function message(): string
     {
-        return $this->message ?: "Field must be an array";
+        return $this->message ?: "Field must be an array. Example: [{\"a\": 1}, {\"b\": 2}]";
     }
     
     /**
@@ -20,7 +21,7 @@ class ArrayRule extends BaseRule
     {
         $value = $this->field->getValue();
         
-        if (is_array($value)) {
+        if (!is_object($value) && Arrays::isList($value)) {
             return true;
         }
         

@@ -8,8 +8,12 @@ use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 
 class DateTimeSerializer extends BaseSerializer
 {
-    public function serialize(mixed $value): \DateTime
+    public function serialize(mixed $value): ?\DateTime
     {
+        if ($value === null){
+            return null;
+        }
+        
         if (!is_string($value)) {
             throw new SerializerException('Invalid value for DateTimeSerializer');
         }

@@ -10,7 +10,7 @@ class ToggleBtnField extends BaseField
 {
     public function renderer(): string
     {
-        return 'toggle-switch-field-renderer';
+        return 'toggle-btn-field-renderer';
     }
     
     /**
@@ -24,7 +24,8 @@ class ToggleBtnField extends BaseField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = false
     )
     {
         $rules[] = new BooleanRule();
@@ -35,7 +36,8 @@ class ToggleBtnField extends BaseField
             serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
     }
 }

@@ -8,8 +8,12 @@ use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 
 class DateTimeImmutableSerializer extends BaseSerializer
 {
-    public function serialize(mixed $value): \DateTimeImmutable
+    public function serialize(mixed $value): ?\DateTimeImmutable
     {
+        if ($value === null){
+            return null;
+        }
+        
         if (!is_string($value)) {
             throw new SerializerException('Invalid value for DateTimeImmutableSerializer');
         }

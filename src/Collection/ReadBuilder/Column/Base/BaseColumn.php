@@ -57,13 +57,15 @@ abstract class BaseColumn implements IColumn
      */
     public function toArray(): array
     {
+        $formatters = array_map(fn($f) => $f::class, $this->getFormatters());
+        
         return [
             'renderer' => $this->renderer(),
             'key' => $this->getKey(),
             'name' => $this->getName(),
             'sortable' => $this->isSortable(),
             'visible' => $this->isVisible(),
-            'formatters' => array_map(fn($f) => $f::class, $this->getFormatters()),
+            'formatters' => array_values($formatters),
         ];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
+use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\SlugRule;
 
 class SlugField extends BaseField
@@ -18,13 +19,15 @@ class SlugField extends BaseField
      * @param array<string, string|bool|null> $attrs
      */
     public function __construct(
-        protected string $name,
-        protected string $label,
-        protected array  $rules = [],
-        protected array  $serializers = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected string  $name,
+        protected string  $label,
+        protected ?string $slugFrom = null,
+        protected array   $rules = [],
+        protected array   $serializers = [],
+        protected array   $attrs = [],
+        protected bool    $disabled = false,
+        protected bool    $mapToEntity = true,
+        protected mixed   $defaultValue = new UndefinedValue()
     )
     {
         $rules[] = new SlugRule();
@@ -35,7 +38,16 @@ class SlugField extends BaseField
             serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
+    }
+    
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['params']['slug_from'] = $this->slugFrom;
+        
+        return $data;
     }
 }

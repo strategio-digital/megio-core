@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
+use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 
 class HiddenField extends BaseField
 {
@@ -23,7 +24,8 @@ class HiddenField extends BaseField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = new UndefinedValue()
     )
     {
         parent::__construct(
@@ -33,7 +35,8 @@ class HiddenField extends BaseField
             serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
     }
 }

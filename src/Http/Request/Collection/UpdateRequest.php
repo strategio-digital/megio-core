@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection;
 
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Exception\ConstraintViolationException;
+use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\Exception\CollectionException;
@@ -104,7 +105,7 @@ class UpdateRequest extends Request
             $builder->validate();
             
             if (!$builder->isValid()) {
-                $response = $this->json(['validation_errors' => $builder->getErrors()], 400);
+                $response = $this->json(['errors' => [], 'validation_errors' => $builder->getErrors()], 400);
                 $e = new CollectionException('Invalid data');
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
@@ -114,7 +115,7 @@ class UpdateRequest extends Request
             try {
                 $values = $builder->getSerializedValues();
                 ArrayToEntity::update($builder->getMetadata(), $item, $values);
-            } catch (CollectionException|EntityException $e) {
+            } catch (CollectionException|SerializerException|EntityException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
@@ -128,7 +129,7 @@ class UpdateRequest extends Request
         try {
             $this->em->flush();
             $this->em->commit();
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (ConstraintViolationException $e) {
             $this->em->rollback();
             $response = $this->error([$e->getMessage()]);
             $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);

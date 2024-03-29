@@ -5,18 +5,21 @@ namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
-use Megio\Collection\WriteBuilder\Rule\StringRule;
+use Megio\Collection\WriteBuilder\Rule\DateTimeRule;
+use Megio\Collection\WriteBuilder\Rule\DateTimeZoneRule;
+use Megio\Collection\WriteBuilder\Serializer\DateTimeSerializer;
+use Megio\Collection\WriteBuilder\Serializer\DateTimeZoneSerializer;
 
-class TextAreaField extends BaseField
+class DateTimeZoneField extends BaseField
 {
     public function renderer(): string
     {
-        return 'textarea-field-renderer';
+        return 'date-time-zone-field-renderer';
     }
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|bool|null> $attrs
+     * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
         protected string $name,
@@ -29,7 +32,9 @@ class TextAreaField extends BaseField
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
-        $rules[] = new StringRule();
+        $rules[] = new DateTimeZoneRule();
+        $serializers[] = new DateTimeZoneSerializer();
+        
         parent::__construct(
             name: $name,
             label: $label,
@@ -40,5 +45,12 @@ class TextAreaField extends BaseField
             mapToEntity: $mapToEntity,
             defaultValue: $defaultValue
         );
+    }
+    
+    public function toArray(): array
+    {
+        $data = parent::toArray();
+        $data['params']['items'] = \DateTimeZone::listIdentifiers();
+        return $data;
     }
 }

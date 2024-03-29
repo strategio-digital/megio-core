@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
+use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\PhoneCzRule;
 
 class PhoneCzField extends BaseField
@@ -24,7 +25,8 @@ class PhoneCzField extends BaseField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = new UndefinedValue()
     )
     {
         $rules[] = new PhoneCzRule();
@@ -35,7 +37,8 @@ class PhoneCzField extends BaseField
             serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
     }
 }

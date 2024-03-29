@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
+use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 
 class SelectField extends BaseField
 {
@@ -25,7 +26,8 @@ class SelectField extends BaseField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = new UndefinedValue()
     )
     {
         parent::__construct(
@@ -35,15 +37,16 @@ class SelectField extends BaseField
             serializers: $serializers,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
     }
     
     /** @return array<string, mixed> */
     public function toArray(): array
     {
-        $validations = parent::toArray();
-        $validations['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
-        return $validations;
+        $data = parent::toArray();
+        $data['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
+        return $data;
     }
 }

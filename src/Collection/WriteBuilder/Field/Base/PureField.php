@@ -21,7 +21,8 @@ class PureField extends BaseField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = new UndefinedValue()
     )
     {
         parent::__construct(
@@ -30,7 +31,8 @@ class PureField extends BaseField
             rules: $rules,
             attrs: $attrs,
             disabled: $disabled,
-            mapToEntity: $mapToEntity
+            mapToEntity: $mapToEntity,
+            defaultValue: $defaultValue
         );
     }
 }

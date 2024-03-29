@@ -258,7 +258,19 @@ class WriteBuilder implements IRecipeBuilder
      */
     public function toArray(): array
     {
-        return array_values(array_map(fn($field) => $field->toArray(), $this->fields));
+        $fields = array_values(array_map(fn($field) => $field->toArray(), $this->fields));
+        
+        foreach ($fields as $key => $field) {
+            if ($field['default_value'] instanceof UndefinedValue) {
+                unset($fields[$key]['default_value']);
+            }
+            
+            if ($field['value'] instanceof UndefinedValue) {
+                unset($fields[$key]['value']);
+            }
+        }
+        
+        return $fields;
     }
     
     public function dump(): void

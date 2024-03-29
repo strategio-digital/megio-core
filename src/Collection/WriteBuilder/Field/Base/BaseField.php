@@ -30,7 +30,8 @@ abstract class BaseField implements IField
         protected array  $serializers = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
-        protected bool   $mapToEntity = true
+        protected bool   $mapToEntity = true,
+        protected mixed  $defaultValue = new UndefinedValue()
     )
     {
         $this->value = new UndefinedValue();
@@ -94,6 +95,12 @@ abstract class BaseField implements IField
         $this->value = $value;
     }
     
+    /** @return mixed|UndefinedValue */
+    public function getDefaultValue(): mixed
+    {
+        return $this->defaultValue;
+    }
+    
     public function addError(string $message): void
     {
         $this->errors[] = $message;
@@ -125,15 +132,19 @@ abstract class BaseField implements IField
     /** @return array<string, mixed> */
     public function toArray(): array
     {
+        $rules = array_map(fn($rule) => $rule->toArray(), $this->getRules());
+        $serializers = array_map(fn($serializer) => $serializer::class, $this->getSerializers());
+        
         return [
             'renderer' => $this->renderer(),
             'disabled' => $this->isDisabled(),
             'name' => $this->getName(),
             'label' => $this->getLabel(),
-            'rules' => array_map(fn($rule) => $rule->toArray(), $this->getRules()),
-            'serializers' => array_map(fn($serializer) => $serializer::class, $this->getSerializers()),
+            'rules' => array_values($rules),
+            'serializers' => array_values($serializers),
             'attrs' => $this->getAttrs(),
             'value' => $this->getValue(),
+            'default_value' => $this->getDefaultValue(),
             'errors' => $this->getErrors(),
         ];
     }

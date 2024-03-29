@@ -20,7 +20,7 @@ class DecimalRule extends BaseRule
     {
         $value = $this->field->getValue();
         
-        if (is_float($value)) {
+        if (is_float($value) || is_int($value)) {
             return true;
         }
         

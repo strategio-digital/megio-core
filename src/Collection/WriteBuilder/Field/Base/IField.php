@@ -34,6 +34,9 @@ interface IField
     /** @return mixed|UndefinedValue */
     public function getValue(): mixed;
     
+    /** @return mixed|UndefinedValue */
+    public function getDefaultValue(): mixed;
+    
     public function setValue(mixed $value): void;
     
     public function addError(string $message): void;

@@ -5,6 +5,7 @@ namespace Megio\Collection\WriteBuilder\Rule;
 
 use Doctrine\ORM\AbstractQuery;
 use Megio\Collection\Exception\InvalidArgumentException;
+use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class UniqueRule extends BaseRule
@@ -38,6 +39,12 @@ class UniqueRule extends BaseRule
      */
     public function validate(): bool
     {
+        $value = $this->getValue();
+        
+        if (!is_string($value) && !is_numeric($value) && !is_bool($value)) {
+            return false;
+        }
+        
         $repo = $this->getEntityManager()->getRepository($this->entityClassName);
         
         $row = $repo->createQueryBuilder('e')

@@ -9,6 +9,7 @@ use Megio\Collection\WriteBuilder\Field\DateField;
 use Megio\Collection\WriteBuilder\Field\DateTimeCzField;
 use Megio\Collection\WriteBuilder\Field\DateTimeField;
 use Megio\Collection\WriteBuilder\Field\DateTimeIntervalField;
+use Megio\Collection\WriteBuilder\Field\DateTimeZoneField;
 use Megio\Collection\WriteBuilder\Field\DecimalField;
 use Megio\Collection\WriteBuilder\Field\HourMinuteCzField;
 use Megio\Collection\WriteBuilder\Field\HourMinuteField;
@@ -41,7 +42,7 @@ use Megio\Collection\CollectionRecipe;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Database\Entity\Admin;
 
-class FieldRuleTestRecipe extends CollectionRecipe
+class TestRulesRecipe extends CollectionRecipe
 {
     public function source(): string
     {
@@ -50,7 +51,7 @@ class FieldRuleTestRecipe extends CollectionRecipe
     
     public function key(): string
     {
-        return 'field-rule-test';
+        return 'test-rules';
     }
     
     public function create(WriteBuilder $builder): WriteBuilder
@@ -83,6 +84,7 @@ class FieldRuleTestRecipe extends CollectionRecipe
             
             // DateTime Interval
             ->add(new DateTimeIntervalField(name: 'date_time_interval', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new DateTimeZoneField(name: 'date_time_zone', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             
             // Date, Time, DateTime, HourMinute
             ->add(new DateTimeField(name: 'date_time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
