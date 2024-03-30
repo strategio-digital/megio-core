@@ -5,6 +5,7 @@ namespace Megio\Collection;
 
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilder;
+use Symfony\Component\HttpFoundation\Request;
 
 interface ICollectionRecipe
 {
@@ -17,16 +18,16 @@ interface ICollectionRecipe
     /**
      * @throws \Megio\Collection\Exception\CollectionException
      */
-    public function read(ReadBuilder $builder): ReadBuilder;
+    public function read(ReadBuilder $builder, Request $request): ReadBuilder;
     
     /**
      * @throws \Megio\Collection\Exception\CollectionException
      */
-    public function readAll(ReadBuilder $builder): ReadBuilder;
+    public function readAll(ReadBuilder $builder, Request $request): ReadBuilder;
     
-    public function create(WriteBuilder $builder): WriteBuilder;
+    public function create(WriteBuilder $builder, Request $request): WriteBuilder;
     
-    public function update(WriteBuilder $builder): WriteBuilder;
+    public function update(WriteBuilder $builder, Request $request): WriteBuilder;
     
     /**
      * @throws \Megio\Collection\Exception\CollectionException

@@ -58,7 +58,7 @@ class ReadAllRequest extends Request
         }
         
         try {
-            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE))->build();
+            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $this->request)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

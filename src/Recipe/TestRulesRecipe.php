@@ -41,6 +41,7 @@ use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Database\Entity\Admin;
+use Symfony\Component\HttpFoundation\Request;
 
 class TestRulesRecipe extends CollectionRecipe
 {
@@ -54,7 +55,7 @@ class TestRulesRecipe extends CollectionRecipe
         return 'test-rules';
     }
     
-    public function create(WriteBuilder $builder): WriteBuilder
+    public function create(WriteBuilder $builder, Request $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),
@@ -141,7 +142,7 @@ class TestRulesRecipe extends CollectionRecipe
             ->add(new DecimalField(name: 'decimal_required', label: '', rules: [new RequiredRule()], mapToEntity: false));
     }
     
-    public function update(WriteBuilder $builder): WriteBuilder
+    public function update(WriteBuilder $builder, Request $request): WriteBuilder
     {
         return $builder
             ->add(new TextField(name: 'email', label: '', rules: [

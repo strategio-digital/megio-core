@@ -35,6 +35,7 @@ use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
+use Symfony\Component\HttpFoundation\Request;
 
 class TestFieldsRecipe extends CollectionRecipe
 {
@@ -48,7 +49,7 @@ class TestFieldsRecipe extends CollectionRecipe
         return 'test-fields';
     }
     
-    public function create(WriteBuilder $builder): WriteBuilder
+    public function create(WriteBuilder $builder, Request $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),

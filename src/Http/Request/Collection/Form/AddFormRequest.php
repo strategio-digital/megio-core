@@ -38,7 +38,7 @@ class AddFormRequest extends Request
         }
         
         try {
-            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE))->build();
+            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $this->request)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

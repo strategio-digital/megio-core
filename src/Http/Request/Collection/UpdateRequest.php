@@ -92,7 +92,7 @@ class UpdateRequest extends Request
             
             try {
                 $builder = $recipe
-                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']))
+                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']), $this->request)
                     ->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);

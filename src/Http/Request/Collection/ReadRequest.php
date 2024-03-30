@@ -55,7 +55,7 @@ class ReadRequest extends Request
         }
         
         try {
-            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE))->build();
+            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $this->request)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

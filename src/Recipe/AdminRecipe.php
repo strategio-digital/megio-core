@@ -10,6 +10,7 @@ use Megio\Collection\WriteBuilder\Field\PasswordField;
 use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminRecipe extends CollectionRecipe
 {
@@ -23,24 +24,24 @@ class AdminRecipe extends CollectionRecipe
         return 'admin';
     }
     
-    public function read(ReadBuilder $builder): ReadBuilder
+    public function read(ReadBuilder $builder, Request $request): ReadBuilder
     {
         return $builder->buildByDbSchema(['password']);
     }
     
-    public function readAll(ReadBuilder $builder): ReadBuilder
+    public function readAll(ReadBuilder $builder, Request $request): ReadBuilder
     {
         return $builder->buildByDbSchema(['password']);
     }
     
-    public function create(WriteBuilder $builder): WriteBuilder
+    public function create(WriteBuilder $builder, Request $request): WriteBuilder
     {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
             ->add(new PasswordField('password', 'Password', [new RequiredRule()]));
     }
     
-    public function update(WriteBuilder $builder): WriteBuilder
+    public function update(WriteBuilder $builder, Request $request): WriteBuilder
     {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))

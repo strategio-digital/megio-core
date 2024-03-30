@@ -67,7 +67,7 @@ class CreateRequest extends Request
         
         foreach ($data['rows'] as $row) {
             try {
-                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, $row))->build();
+                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, $row), $this->request)->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);

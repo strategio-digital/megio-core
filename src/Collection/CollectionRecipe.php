@@ -8,25 +8,26 @@ use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Database\Interface\ICrudable;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
-    public function read(ReadBuilder $builder): ReadBuilder
+    public function read(ReadBuilder $builder, Request $request): ReadBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function readAll(ReadBuilder $builder): ReadBuilder
+    public function readAll(ReadBuilder $builder, Request $request): ReadBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function create(WriteBuilder $builder): WriteBuilder
+    public function create(WriteBuilder $builder, Request $request): WriteBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function update(WriteBuilder $builder): WriteBuilder
+    public function update(WriteBuilder $builder, Request $request): WriteBuilder
     {
         return $builder->buildByDbSchema();
     }

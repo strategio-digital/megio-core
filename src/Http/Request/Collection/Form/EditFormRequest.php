@@ -60,7 +60,7 @@ class EditFormRequest extends Request
         
         try {
             $builder = $recipe
-                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId))
+                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId), $this->request)
                 ->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
