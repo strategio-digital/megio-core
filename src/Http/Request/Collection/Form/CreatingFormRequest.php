@@ -8,11 +8,13 @@ use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnFormStartEvent;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddFormRequest extends Request
+class CreatingFormRequest extends Request
 {
     public function __construct(
         protected readonly RecipeFinder $recipeFinder,
@@ -37,6 +39,13 @@ class AddFormRequest extends Request
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);
+        }
+        
+        $event = new OnFormStartEvent(true, $data, $recipe, $this->request);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FORM_START->value);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
         }
         
         $recipeRequest = new RecipeRequest($this->request, true, null, [], $data['custom_data']);

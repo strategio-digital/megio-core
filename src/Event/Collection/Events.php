@@ -10,4 +10,6 @@ enum Events: string
     case ON_EXCEPTION = 'megio.collection.exception';
     
     case ON_FINISH = 'megio.collection.finish';
+    
+    case ON_FORM_START = 'megio.collection.form.start';
 }

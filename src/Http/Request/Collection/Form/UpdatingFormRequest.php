@@ -10,11 +10,13 @@ use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
 use Megio\Database\EntityManager;
+use Megio\Event\Collection\Events;
+use Megio\Event\Collection\OnFormStartEvent;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\Response;
 
-class EditFormRequest extends Request
+class UpdatingFormRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
@@ -41,6 +43,13 @@ class EditFormRequest extends Request
         
         if ($recipe === null) {
             return $this->error(["Collection '{$data['recipe']}' not found"]);
+        }
+        
+        $event = new OnFormStartEvent(false, $data, $recipe, $this->request);
+        $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FORM_START->value);
+        
+        if ($dispatcher->getResponse()) {
+            return $dispatcher->getResponse();
         }
         
         // TODO: add relations mapping & joins

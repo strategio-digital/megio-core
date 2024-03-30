@@ -5,16 +5,17 @@ namespace Megio\Subscriber;
 
 use Megio\Database\Entity\Admin;
 use Megio\Event\Collection\Events;
-use Megio\Event\Collection\OnStartEvent;
+use Megio\Event\Collection\OnFormStartEvent;
+use Megio\Helper\Router;
 use Megio\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
-class AuthCollectionRequest implements EventSubscriberInterface
+class AuthCollectionFormRequest implements EventSubscriberInterface
 {
-    protected OnStartEvent $event;
+    protected OnFormStartEvent $event;
     
     protected Request $request;
     
@@ -28,11 +29,11 @@ class AuthCollectionRequest implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Events::ON_START->value => ['onStart'],
+            Events::ON_FORM_START->value => ['onFormStartEvent'],
         ];
     }
     
-    public function onStart(OnStartEvent $event): void
+    public function onFormStartEvent(OnFormStartEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
@@ -45,13 +46,15 @@ class AuthCollectionRequest implements EventSubscriberInterface
         if ($currentRoute->getOption('auth') === false) {
             return;
         }
-        
+
         if ($this->authUser->get() instanceof Admin) {
             return;
         }
         
         $recipeKey = $event->getRecipe()->key();
-        $resourceName = $routeName . '.' . $recipeKey;
+        $suffix = $this->event->isCreatingForm() ? 'create' : 'update';
+        
+        $resourceName = Router::ROUTE_COLLECTION_PREFIX . $suffix . '.' . $recipeKey;
         
         if (!in_array($resourceName, $this->authUser->getResources())) {
             $message = "Collection-resource '{$resourceName}' is not allowed for current user";

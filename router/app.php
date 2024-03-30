@@ -57,11 +57,11 @@ return static function (RoutingConfigurator $routes): void {
     $form = $routes->collection('megio.collections.form.')->prefix('/megio/collections/form');
     $form->add('creating', '/creating')
         ->methods(['POST'])
-        ->controller(Collection\Form\AddFormRequest::class);
+        ->controller(Collection\Form\CreatingFormRequest::class);
     
     $form->add('updating', '/updating')
         ->methods(['PATCH'])
-        ->controller(Collection\Form\EditFormRequest::class);
+        ->controller(Collection\Form\UpdatingFormRequest::class);
     
     // Collections
     $collection = $routes->collection(Router::ROUTE_COLLECTION_PREFIX)->prefix('/megio/collections');

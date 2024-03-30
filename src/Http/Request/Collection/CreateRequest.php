@@ -47,7 +47,6 @@ class CreateRequest extends Request
     
     /**
      * @throws \Doctrine\ORM\Exception\ORMException
-     * @throws \Megio\Collection\Exception\SerializerException
      */
     public function process(array $data): Response
     {
