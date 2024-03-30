@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Megio\Collection\ReadBuilder\Column;
 
 use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
-use Megio\Collection\ReadBuilder\Formatter\Base\IFormatter;
-use Megio\Collection\ReadBuilder\Formatter\DateTimeCzFormatter;
+use Megio\Collection\Formatter\Base\IFormatter;
+use Megio\Collection\Formatter\DateTimeCzFormatter;
 
 class DateTimeCzColumn extends BaseColumn
 {

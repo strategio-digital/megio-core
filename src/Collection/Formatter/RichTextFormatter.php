@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Formatter;
+namespace Megio\Collection\Formatter;
 
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
-use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
+use Megio\Collection\Formatter\Base\BaseFormatter;
 use Nette\Utils\Strings;
 
 class RichTextFormatter extends BaseFormatter

@@ -1,17 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Formatter;
+namespace Megio\Collection\Formatter;
 
-use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
+use Megio\Collection\Formatter\Base\BaseFormatter;
 
-class DateTimeZoneFormatter extends BaseFormatter
+class DateTimeZoneCzFormatter extends BaseFormatter
 {
     public function format(mixed $value): mixed
     {
         if ($value instanceof \DateTime || $value instanceof \DateTimeImmutable) {
             return [
-                'value' => $value->format('Y-m-d H:i:s'),
+                'value' => $value->format('j.n.Y H:i:s'),
                 'iso_8601' => $value->format('c'), // '2021-08-26T14:00:00+02:00
                 'zone_id' => $value->format('e'), // 'Europe/Prague'
                 'utc_offset' => $value->format('P'), // '+02:00'

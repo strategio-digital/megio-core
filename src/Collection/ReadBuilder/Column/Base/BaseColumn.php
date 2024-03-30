@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column\Base;
 
-use Megio\Collection\ReadBuilder\Formatter\Base\IFormatter;
+use Megio\Collection\Formatter\Base\IFormatter;
 
 abstract class BaseColumn implements IColumn
 {

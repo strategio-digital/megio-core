@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Field;
 
-use Megio\Collection\ReadBuilder\Formatter\HourMinuteFormatter;
+use Megio\Collection\Formatter\HourMinuteFormatter;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\HourMinuteRule;
@@ -18,7 +18,7 @@ class HourMinuteField extends BaseField
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
+     * @param \Megio\Collection\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(

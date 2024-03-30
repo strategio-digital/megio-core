@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Formatter;
+namespace Megio\Collection\Formatter;
 
-use Megio\Collection\ReadBuilder\Formatter\Base\BaseFormatter;
+use Megio\Collection\Formatter\Base\BaseFormatter;
 
-class DateTimeFormatter extends BaseFormatter
+class DateTimeCzFormatter extends BaseFormatter
 {
     public function format(mixed $value): mixed
     {
         if ($value instanceof \DateTime || $value instanceof \DateTimeImmutable) {
-            return $value->format('Y-m-d H:i:s');
+            return $value->format('j.n.Y H:i:s');
         }
         
         return $value;

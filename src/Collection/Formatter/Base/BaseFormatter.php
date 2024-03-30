@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Megio\Collection\ReadBuilder\Formatter\Base;
+namespace Megio\Collection\Formatter\Base;
 
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 

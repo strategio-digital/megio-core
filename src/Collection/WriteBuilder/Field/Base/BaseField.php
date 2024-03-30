@@ -21,7 +21,7 @@ abstract class BaseField implements IField
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
      * @param \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] $serializers
-     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
+     * @param \Megio\Collection\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
@@ -76,7 +76,7 @@ abstract class BaseField implements IField
         return $this->serializers;
     }
     
-    /** @return \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] */
+    /** @return \Megio\Collection\Formatter\Base\IFormatter[] */
     public function getFormatters(): array
     {
         return $this->formatters;

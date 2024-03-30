@@ -16,7 +16,7 @@ class ArrayField extends BaseField
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
+     * @param \Megio\Collection\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
