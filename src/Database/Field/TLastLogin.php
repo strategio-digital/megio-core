@@ -15,9 +15,9 @@ trait TLastLogin
         return $this->lastLogin;
     }
     
-    public function setLastLogin(): self
+    public function setLastLogin(?\DateTime $lastLogin): self
     {
-        $this->lastLogin = new \DateTime();
+        $this->lastLogin = $lastLogin;
         return $this;
     }
 }

@@ -71,7 +71,7 @@ class EmailAuthRequest extends Request
         
         $token->setExpiration($expiration);
         $token->setToken($jwt);
-        $user->setLastLogin();
+        $user->setLastLogin(new \DateTime());
         
         $this->em->flush($token);
         $this->em->flush($user);

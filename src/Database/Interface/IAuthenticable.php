@@ -23,7 +23,7 @@ interface IAuthenticable
     /** @return Collection<int, Resource> */
     public function getResources(): Collection;
     
-    public function setLastLogin(): IAuthenticable;
+    public function setLastLogin(?\DateTime $lastLogin): IAuthenticable;
     
     public function setPassword(string $password): IAuthenticable;
 }
