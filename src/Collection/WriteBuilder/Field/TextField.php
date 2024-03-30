@@ -16,29 +16,32 @@ class TextField extends BaseField
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|bool|null> $attrs
+     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
+     * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
         protected string $name,
         protected string $label,
         protected array  $rules = [],
         protected array  $serializers = [],
+        protected array  $formatters = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
-        $rules[] = new StringRule();
+        $this->rules[] = new StringRule();
         parent::__construct(
-            name: $name,
-            label: $label,
-            rules: $rules,
-            serializers: $serializers,
-            attrs: $attrs,
-            disabled: $disabled,
-            mapToEntity: $mapToEntity,
-            defaultValue: $defaultValue
+            $this->name,
+            $this->label,
+            $this->rules,
+            $this->serializers,
+            $this->formatters,
+            $this->attrs,
+            $this->disabled,
+            $this->mapToEntity,
+            $this->defaultValue
         );
     }
 }

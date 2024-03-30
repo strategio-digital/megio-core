@@ -258,6 +258,13 @@ class WriteBuilder implements IRecipeBuilder
      */
     public function toArray(): array
     {
+        foreach ($this->fields as $field) {
+            $formatters = $field->getFormatters();
+            foreach ($formatters as $formatter) {
+                $field->setValue($formatter->format($field->getValue()));
+            }
+        }
+        
         $fields = array_values(array_map(fn($field) => $field->toArray(), $this->fields));
         
         foreach ($fields as $key => $field) {

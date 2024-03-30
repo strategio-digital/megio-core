@@ -16,6 +16,7 @@ class DecimalField extends BaseField
     
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
+     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
@@ -23,22 +24,24 @@ class DecimalField extends BaseField
         protected string $label,
         protected array  $rules = [],
         protected array  $serializers = [],
+        protected array  $formatters = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
-        $rules[] = new DecimalRule();
+        $this->rules[] = new DecimalRule();
         parent::__construct(
-            name: $name,
-            label: $label,
-            rules: $rules,
-            serializers: $serializers,
-            attrs: $attrs,
-            disabled: $disabled,
-            mapToEntity: $mapToEntity,
-            defaultValue: $defaultValue
+            $this->name,
+            $this->label,
+            $this->rules,
+            $this->serializers,
+            $this->formatters,
+            $this->attrs,
+            $this->disabled,
+            $this->mapToEntity,
+            $this->defaultValue
         );
     }
 }

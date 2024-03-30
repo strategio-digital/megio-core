@@ -25,6 +25,9 @@ interface IField
     
     public function removeRule(IRule $rule): void;
     
+    /** @return \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] */
+    public function getFormatters(): array;
+    
     /** @return \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] */
     public function getSerializers(): array;
     

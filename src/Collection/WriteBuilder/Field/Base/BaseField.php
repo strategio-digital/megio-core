@@ -21,6 +21,7 @@ abstract class BaseField implements IField
     /**
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
      * @param \Megio\Collection\WriteBuilder\Serializer\Base\ISerializer[] $serializers
+     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
@@ -28,6 +29,7 @@ abstract class BaseField implements IField
         protected string $label,
         protected array  $rules = [],
         protected array  $serializers = [],
+        protected array  $formatters = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
@@ -72,6 +74,12 @@ abstract class BaseField implements IField
     public function getSerializers(): array
     {
         return $this->serializers;
+    }
+    
+    /** @return \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] */
+    public function getFormatters(): array
+    {
+        return $this->formatters;
     }
     
     public function mappedToEntity(): bool
@@ -134,6 +142,7 @@ abstract class BaseField implements IField
     {
         $rules = array_map(fn($rule) => $rule->toArray(), $this->getRules());
         $serializers = array_map(fn($serializer) => $serializer::class, $this->getSerializers());
+        $formatters = array_map(fn($formatter) => $formatter::class, $this->getFormatters());
         
         return [
             'renderer' => $this->renderer(),
@@ -142,6 +151,7 @@ abstract class BaseField implements IField
             'label' => $this->getLabel(),
             'rules' => array_values($rules),
             'serializers' => array_values($serializers),
+            'formatters' => array_values($formatters),
             'attrs' => $this->getAttrs(),
             'value' => $this->getValue(),
             'default_value' => $this->getDefaultValue(),

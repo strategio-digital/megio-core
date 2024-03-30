@@ -16,6 +16,7 @@ class SelectField extends BaseField
     /**
      * @param \Megio\Collection\WriteBuilder\Field\SelectField\Item[] $items
      * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
+     * @param \Megio\Collection\ReadBuilder\Formatter\Base\IFormatter[] $formatters
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
@@ -24,6 +25,7 @@ class SelectField extends BaseField
         protected array  $items = [],
         protected array  $rules = [],
         protected array  $serializers = [],
+        protected array  $formatters = [],
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
@@ -31,14 +33,15 @@ class SelectField extends BaseField
     )
     {
         parent::__construct(
-            name: $name,
-            label: $label,
-            rules: $rules,
-            serializers: $serializers,
-            attrs: $attrs,
-            disabled: $disabled,
-            mapToEntity: $mapToEntity,
-            defaultValue: $defaultValue
+            $this->name,
+            $this->label,
+            $this->rules,
+            $this->serializers,
+            $this->formatters,
+            $this->attrs,
+            $this->disabled,
+            $this->mapToEntity,
+            $this->defaultValue
         );
     }
     
