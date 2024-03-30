@@ -27,6 +27,7 @@ class HiddenField extends BaseField
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
+        protected mixed  $value = new UndefinedValue(),
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
@@ -39,6 +40,7 @@ class HiddenField extends BaseField
             $this->attrs,
             $this->disabled,
             $this->mapToEntity,
+            $this->value,
             $this->defaultValue
         );
     }

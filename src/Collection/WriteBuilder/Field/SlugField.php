@@ -29,6 +29,7 @@ class SlugField extends BaseField
         protected array   $attrs = [],
         protected bool    $disabled = false,
         protected bool    $mapToEntity = true,
+        protected mixed   $value = new UndefinedValue(),
         protected mixed   $defaultValue = new UndefinedValue()
     )
     {
@@ -42,6 +43,7 @@ class SlugField extends BaseField
             $this->attrs,
             $this->disabled,
             $this->mapToEntity,
+            $this->value,
             $this->defaultValue
         );
     }

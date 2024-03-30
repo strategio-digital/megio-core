@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\WriteBuilder\Field\ArrayField;
+use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\PureField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
@@ -272,9 +273,10 @@ class WriteBuilder implements IRecipeBuilder
                 unset($fields[$key]['default_value']);
             }
             
-            if ($field['value'] instanceof UndefinedValue) {
+            if ($field['value'] instanceof UndefinedValue || $field['value'] instanceof EmptyValue) {
                 unset($fields[$key]['value']);
             }
+            
         }
         
         return $fields;
@@ -295,7 +297,7 @@ class WriteBuilder implements IRecipeBuilder
         
         foreach ($this->fields as $field) {
             if ($field->mappedToEntity() === true && $field->isDisabled() === false) {
-                if ($field->getValue() instanceof UndefinedValue === false) {
+                if ($field->getValue() instanceof UndefinedValue === false && $field->getValue() instanceof EmptyValue === false) {
                     foreach ($field->getSerializers() as $serializer) {
                         $field->setValue($serializer->serialize($field->getValue()));
                     }
@@ -365,7 +367,7 @@ class WriteBuilder implements IRecipeBuilder
     {
         foreach ($this->fields as $key => $field) {
             $this->fields[$key] = $this->recreateRules($field);
-            if (array_key_exists($field->getName(), $this->values)) {
+            if (array_key_exists($field->getName(), $this->values) && $field->getValue() instanceof UndefinedValue) {
                 $field->setValue($this->values[$field->getName()]);
             }
         }

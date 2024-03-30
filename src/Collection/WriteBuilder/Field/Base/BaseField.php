@@ -10,11 +10,6 @@ abstract class BaseField implements IField
 {
     protected WriteBuilder $builder;
     
-    /**
-     * @var mixed|UndefinedValue
-     */
-    protected mixed $value;
-    
     /** @var string[] */
     protected array $errors = [];
     
@@ -33,10 +28,10 @@ abstract class BaseField implements IField
         protected array  $attrs = [],
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
+        protected mixed  $value = new UndefinedValue(),
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
-        $this->value = new UndefinedValue();
     }
     
     public function getName(): string
