@@ -54,7 +54,7 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Collection\NavbarRequest::class);
     
     // Collection Forms
-    $form = $routes->collection('megio.collections.form.')->prefix('/megio/collections/form');
+    $form = $routes->collection('megio.collection.form.')->prefix('/megio/collections/form');
     $form->add('creating', '/creating')
         ->methods(['POST'])
         ->controller(Collection\Form\CreatingFormRequest::class);
