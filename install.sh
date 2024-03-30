@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Repository info
-VERSION='0.8.1' #can be '0.0.1', 'master', 'develop', 'whatever'
+VERSION='0.8.2' #can be '0.0.1', 'master', 'develop', 'whatever'
 TAGS_OR_HEADS='tags' # 'heads' for branches, 'tags' for tag-releases
 REPOSITORY_OWNER='strategio-digital'
 REPOSITORY_NAME='megio-starter'
