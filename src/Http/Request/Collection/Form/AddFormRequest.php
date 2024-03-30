@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection\Form;
 
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -25,7 +26,8 @@ class AddFormRequest extends Request
         $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         
         return [
-            'recipe' => Expect::anyOf(...$recipeKeys)->required()
+            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
+            'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
@@ -37,8 +39,10 @@ class AddFormRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
+        $recipeRequest = new RecipeRequest($this->request, true, null, [], $data['custom_data']);
+        
         try {
-            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $this->request)->build();
+            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $recipeRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

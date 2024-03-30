@@ -8,6 +8,7 @@ use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\SchemaFormatter;
 use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
@@ -39,6 +40,7 @@ class ReadRequest extends Request
             'id' => Expect::string()->required(),
             'schema' => Expect::bool(false),
             'adminPanel' => Expect::bool(false),
+            'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
@@ -54,8 +56,10 @@ class ReadRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
+        $recipeRequest = new RecipeRequest($this->request, false, null, [], $data['custom_data']);
+        
         try {
-            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $this->request)->build();
+            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $recipeRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

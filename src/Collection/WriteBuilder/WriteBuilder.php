@@ -6,6 +6,7 @@ namespace Megio\Collection\WriteBuilder;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Megio\Collection\IRecipeBuilder;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
@@ -84,7 +85,7 @@ class WriteBuilder implements IRecipeBuilder
      * @param string|null $rowId
      * @return $this
      */
-    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, array $values = [], string $rowId = null): self
+    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, string $rowId = null, array $values = []): self
     {
         $this->recipe = $recipe;
         $this->values = $values;

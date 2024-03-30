@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\DateCzField;
 use Megio\Collection\WriteBuilder\Field\DateField;
@@ -55,7 +56,7 @@ class TestRulesRecipe extends CollectionRecipe
         return 'test-rules';
     }
     
-    public function create(WriteBuilder $builder, Request $request): WriteBuilder
+    public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),
@@ -142,7 +143,7 @@ class TestRulesRecipe extends CollectionRecipe
             ->add(new DecimalField(name: 'decimal_required', label: '', rules: [new RequiredRule()], mapToEntity: false));
     }
     
-    public function update(WriteBuilder $builder, Request $request): WriteBuilder
+    public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
     {
         return $builder
             ->add(new TextField(name: 'email', label: '', rules: [

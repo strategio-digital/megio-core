@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Megio\Collection\Exception\SerializerException;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\Exception\CollectionException;
@@ -43,7 +44,8 @@ class UpdateRequest extends Request
                     'id' => Expect::string()->required(),
                     'data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->min(1)->required()
                 ])->castTo('array')
-            )->min(1)->required()
+            )->min(1)->required(),
+            'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
@@ -90,9 +92,11 @@ class UpdateRequest extends Request
                 return $dispatcher->getResponse();
             }
             
+            $recipeRequest = new RecipeRequest($this->request, false, $row['id'], $row['data'], $data['custom_data']);
+            
             try {
                 $builder = $recipe
-                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['data'], $row['id']), $this->request)
+                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['id'], $row['data']), $recipeRequest)
                     ->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);

@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\ConstraintViolationException;
 use Megio\Collection\Exception\SerializerException;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\Exception\CollectionException;
@@ -39,7 +40,8 @@ class CreateRequest extends Request
             'recipe' => Expect::anyOf(...$recipeKeys)->required(),
             'rows' => Expect::arrayOf(
                 Expect::arrayOf('int|float|string|bool|null|array', 'string')->min(1)->required()
-            )->min(1)->max(1000)->required()
+            )->min(1)->max(1000)->required(),
+            'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
@@ -66,8 +68,10 @@ class CreateRequest extends Request
         $ids = [];
         
         foreach ($data['rows'] as $row) {
+            $recipeRequest = new RecipeRequest($this->request, false, null, $row, $data['custom_data']);
+            
             try {
-                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, $row), $this->request)->build();
+                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, null, $row), $recipeRequest)->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);

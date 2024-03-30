@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\DateCzField;
 use Megio\Collection\WriteBuilder\Field\DateField;
@@ -35,7 +36,6 @@ use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
-use Symfony\Component\HttpFoundation\Request;
 
 class TestFieldsRecipe extends CollectionRecipe
 {
@@ -49,7 +49,7 @@ class TestFieldsRecipe extends CollectionRecipe
         return 'test-fields';
     }
     
-    public function create(WriteBuilder $builder, Request $request): WriteBuilder
+    public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),

@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -30,6 +31,7 @@ class EditFormRequest extends Request
         return [
             'recipe' => Expect::anyOf(...$recipeKeys)->required(),
             'id' => Expect::string()->required(),
+            'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
@@ -57,10 +59,11 @@ class EditFormRequest extends Request
         
         /** @var string $rowId */
         $rowId = $row['id'];
+        $recipeRequest = new RecipeRequest($this->request, true, $rowId, $row, $data['custom_data']);
         
         try {
             $builder = $recipe
-                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row, $rowId), $this->request)
+                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $recipeRequest)
                 ->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
