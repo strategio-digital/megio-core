@@ -81,9 +81,7 @@ class ReadAllRequest extends Request
         }
         
         $repo = $this->em->getRepository($recipe->source());
-        
-        $qb = $repo->createQueryBuilder('entity')
-            ->select($builder->getQbSelect('entity'));
+        $qb = $builder->createQueryBuilder($repo, 'entity');
         
         $count = (clone $qb)->select('count(entity.id)')->getQuery()->getSingleScalarResult();
         
@@ -94,7 +92,11 @@ class ReadAllRequest extends Request
             $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $items = $qb->getQuery()->getArrayResult();
+        $items = $qb->getQuery()->getResult();
+
+//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+//        $array = $serializer->serialize($items, 'json');
+        
         foreach ($items as $key => $item) {
             $items[$key] = $builder->format($item, $data['adminPanel']);
         }

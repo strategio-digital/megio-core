@@ -20,29 +20,30 @@ class RecipeFinder
     {
         $this->recipes = [];
         
-        $appFiles = Finder::findFiles()->from(Path::appDir() . '/Recipe');
-        foreach ($appFiles as $file) {
-            $class = 'App\\Recipe\\' . $file->getBasename('.php');
-            if (is_subclass_of($class, ICollectionRecipe::class)) {
+        $path = Path::appDir() . '/Recipe';
+        foreach (Finder::findFiles()->from($path) as $file) {
+            $className = $this->getClassname($file, $path, 'App\\Recipe\\');
+            if (is_subclass_of($className, ICollectionRecipe::class)) {
                 /** @var ICollectionRecipe|null $recipe */
-                $recipe = $this->container->getByType($class, false);
+                $recipe = $this->container->getByType($className, false);
                 if (!$recipe) {
                     /** @var ICollectionRecipe $recipe */
-                    $recipe = $this->container->createInstance($class);
+                    $recipe = $this->container->createInstance($className);
                 }
                 $this->recipes[] = $recipe;
             }
         }
         
-        $vendorFiles = Finder::findFiles()->from(Path::megioVendorDir() . '/src/Recipe');
-        foreach ($vendorFiles as $file) {
-            $class = 'Megio\\Recipe\\' . $file->getBasename('.php');
-            if (is_subclass_of($class, ICollectionRecipe::class)) {
+        $path = Path::megioVendorDir() . '/src/Recipe';
+        foreach (Finder::findFiles()->from($path) as $file) {
+            $className = $this->getClassname($file, $path, 'Megio\\Recipe\\');
+            
+            if (is_subclass_of($className, ICollectionRecipe::class)) {
                 /** @var ICollectionRecipe|null $recipe */
-                $recipe = $this->container->getByType($class, false);
+                $recipe = $this->container->getByType($className, false);
                 if (!$recipe) {
                     /** @var ICollectionRecipe $recipe */
-                    $recipe = $this->container->createInstance($class);
+                    $recipe = $this->container->createInstance($className);
                 }
                 $this->recipes[] = $recipe;
             }
@@ -60,5 +61,13 @@ class RecipeFinder
     {
         $recipe = current(array_filter($this->recipes, fn($r) => $r->key() === $key));
         return $recipe ?: null;
+    }
+    
+    private function getClassname(\SplFileInfo $file, string $path, string $namespacePrefix): string
+    {
+        $namespace = str_replace(realpath($path) . '/', '', $file->getRealPath());
+        $namespace = str_replace('/', '\\', $namespace);
+        
+        return $namespacePrefix . str_replace('.php', '', $namespace);
     }
 }

@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Serializer;
 
 use Megio\Collection\Exception\SerializerException;
+use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 
 class DateTimeSerializer extends BaseSerializer
 {
-    public function serialize(mixed $value): ?\DateTime
+    public function serialize(IField $field): ?\DateTime
     {
+        $value = $field->getValue();
+        
         if ($value === null){
             return null;
         }

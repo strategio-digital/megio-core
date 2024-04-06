@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Serializer;
 
+use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 
 class CallableSerializer extends BaseSerializer
@@ -17,8 +18,8 @@ class CallableSerializer extends BaseSerializer
         $this->callback = [$callback];
     }
     
-    public function serialize(mixed $value): mixed
+    public function serialize(IField $field): mixed
     {
-        return $this->callback[0]($value);
+        return $this->callback[0]($field->getValue());
     }
 }

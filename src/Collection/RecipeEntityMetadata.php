@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\OneToOne;
 
 class RecipeEntityMetadata
 {
@@ -41,12 +42,10 @@ class RecipeEntityMetadata
         return $this->tableName;
     }
     
-    /**
-     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}[]
-     */
-    public function getFullSchemaReflectedByDoctrine(): array
+    public function getFullSchemaReflectedByDoctrine(): RecipeDbSchema
     {
-        $props = [];
+        $schema = new RecipeDbSchema();
+        
         foreach ($this->entityRef->getProperties() as $prop) {
             $attrs = array_map(fn($attr) => $attr->newInstance(), $prop->getAttributes());
             
@@ -54,47 +53,16 @@ class RecipeEntityMetadata
             $columnAttrs = array_filter($attrs, fn($attr) => $attr instanceof Column);
             if (count($columnAttrs) !== 0) {
                 $attr = array_values($columnAttrs)[0];
-                $props[] = $this->getColumnMetadata($attr, $prop);
+                $schema->addUnionColumn($attr, $prop);
+            }
+            
+            $oneToOneAttrs = array_filter($attrs, fn($attr) => $attr instanceof OneToOne);
+            if (count($oneToOneAttrs) !== 0) {
+                $attr = array_values($oneToOneAttrs)[0];
+                $schema->addOneToOneColumn($attr, $prop);
             }
         }
         
-        return $props;
-    }
-    
-    /**
-     * @param \Doctrine\ORM\Mapping\Column $attr
-     * @param \ReflectionProperty $prop
-     * @return array{name: string, type: string, unique: bool, nullable: bool, maxLength: int|null}
-     */
-    public function getColumnMetadata(Column $attr, \ReflectionProperty $prop): array
-    {
-        $propType = $prop->getType();
-        $nullable = $attr->nullable;
-        
-        /**
-         * Doctrine mapping:
-         * https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
-         * @see \Megio\Collection\ReadBuilder\ReadBuilder::createColumnInstance()
-         * @see \Megio\Collection\WriteBuilder\WriteBuilder::createRuleInstanceByColumnType()
-         */
-        $type = $attr->type;
-        
-        // Fallback to union types
-        if ($type === null) {
-            $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? '@unknown';
-        }
-        
-        $maxLength = $attr->length;
-        if ($maxLength === null && $type === 'string') {
-            $maxLength = 255;
-        }
-        
-        return [
-            'name' => $prop->getName(),
-            'type' => mb_strtolower($type),
-            'unique' => $attr->unique,
-            'nullable' => $nullable,
-            'maxLength' => $maxLength
-        ];
+        return $schema;
     }
 }

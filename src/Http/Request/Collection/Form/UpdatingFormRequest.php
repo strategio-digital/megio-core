@@ -52,18 +52,32 @@ class UpdatingFormRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        // TODO: add relations mapping & joins
+        $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
         
-        /** @var array<string, string|int|float|bool|null>|null $row */
-        $row = $this->em->getRepository($recipe->source())
+        $qb = $this->em->getRepository($recipe->source())
             ->createQueryBuilder('entity')
             ->where('entity.id = :id')
-            ->setParameter('id', $data['id'])
+            ->setParameter('id', $data['id']);
+        
+        foreach ($schema->getOneToOneColumns() as $column) {
+            $qb
+                ->addSelect($column['name'])
+                ->leftJoin("entity.{$column['name']}", $column['name']);
+        }
+            
+        /** @var array<string, string|int|float|bool|null>|null $row */
+        $row = $qb
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
-        
+            
         if ($row === null) {
             return $this->error(["Item '{$data['id']}' not found"], 404);
+        }
+        
+        foreach ($schema->getOneToOneColumns() as $column) {
+            if ($row[$column['name']] !== null) {
+                $row[$column['name']] = $row[$column['name']]['id'];
+            }
         }
         
         /** @var string $rowId */

@@ -3,34 +3,27 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder;
 
-use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Megio\Collection\Helper\ColumnCreator;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
-use Megio\Collection\ReadBuilder\Column\ArrayColumn;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
-use Megio\Collection\ReadBuilder\Column\BlobColumn;
-use Megio\Collection\ReadBuilder\Column\DateTimeIntervalColumn;
-use Megio\Collection\ReadBuilder\Column\EmailColumn;
-use Megio\Collection\ReadBuilder\Column\JsonColumn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
-use Megio\Collection\ReadBuilder\Column\BooleanColumn;
-use Megio\Collection\ReadBuilder\Column\DateColumn;
-use Megio\Collection\ReadBuilder\Column\DateTimeColumn;
-use Megio\Collection\ReadBuilder\Column\NumericColumn;
-use Megio\Collection\ReadBuilder\Column\PhoneColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
-use Megio\Collection\ReadBuilder\Column\TimeColumn;
-use Megio\Collection\ReadBuilder\Column\UnknownColumn;
-use Megio\Collection\ReadBuilder\Column\UrlColumn;
-use Megio\Collection\ReadBuilder\Column\VideoLinkColumn;
+use Megio\Collection\RecipeDbSchema;
+use Megio\Collection\RecipeEntityMetadata;
 use Megio\Helper\ArrayMove;
-use Nette\Utils\Strings;
 
 class ReadBuilder implements IRecipeBuilder
 {
     private ICollectionRecipe $recipe;
     
     private ReadBuilderEvent $event;
+    
+    private RecipeEntityMetadata $metadata;
+    
+    private RecipeDbSchema $dbSchema;
     
     /** @var array<string, IColumn> */
     private array $columns = [];
@@ -40,10 +33,16 @@ class ReadBuilder implements IRecipeBuilder
     
     private bool $keepDbSchema = true;
     
+    /**
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
     public function create(ICollectionRecipe $recipe, ReadBuilderEvent $event): self
     {
         $this->recipe = $recipe;
         $this->event = $event;
+        
+        $this->metadata = $this->recipe->getEntityMetadata();
+        $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
         return $this;
     }
     
@@ -78,22 +77,26 @@ class ReadBuilder implements IRecipeBuilder
     
     /**
      * @param string[] $exclude
-     * @throws \Megio\Collection\Exception\CollectionException
      */
     public function buildByDbSchema(array $exclude = [], bool $persist = false): self
     {
-        $metadata = $this->recipe->getEntityMetadata();
-        $dbSchema = $metadata->getFullSchemaReflectedByDoctrine();
-        
         $this->addIdColumnIfNotExists();
         
         $invisibleCols = ['id', 'createdAt', 'updatedAt'];
         $ignored = array_merge($exclude, ['id']);
         
-        foreach ($dbSchema as $field) {
+        foreach ($this->dbSchema->getUnionColumns() as $field) {
             if (!in_array($field['name'], $ignored)) {
                 $visible = !in_array($field['name'], $invisibleCols);
-                $col = $this->createColumnInstance($field['type'], $field['name'], $visible);
+                $col = ColumnCreator::create($field['type'], $field['name'], $visible);
+                $this->columns[$col->getKey()] = $col;
+            }
+        }
+        
+        foreach ($this->dbSchema->getOneToOneColumns() as $field) {
+            if (!in_array($field['name'], $ignored)) {
+                $visible = !in_array($field['name'], $invisibleCols);
+                $col = new StringColumn(key: $field['name'], name: $field['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -153,9 +156,24 @@ class ReadBuilder implements IRecipeBuilder
         return count($this->columns);
     }
     
-    public function getQbSelect(string $alias): string
+    /**
+     * @param \Doctrine\ORM\EntityRepository<object> $repo
+     * @param string $alias
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function createQueryBuilder(EntityRepository $repo, string $alias): QueryBuilder
     {
-        return implode(', ', array_map(fn($col) => $alias . '.' . $col->getKey(), $this->columns));
+        $unionCols = array_map(fn($column) => $column['name'], $this->dbSchema->getUnionColumns());
+        $cols = array_filter($this->columns, fn($col) => in_array($col->getKey(), $unionCols));
+        $select = implode(', ', array_map(fn($col) => $alias . '.' . $col->getKey(), $cols));
+        
+        $qb = $repo->createQueryBuilder($alias);
+        
+        $qb->select($select);
+//        $qb->addSelect('profile');
+//        $qb->leftJoin("{$alias}.profile", 'profile');
+        
+        return $qb;
     }
     
     public function getRecipe(): ICollectionRecipe
@@ -195,57 +213,5 @@ class ReadBuilder implements IRecipeBuilder
                 'id' => new StringColumn(key: 'id', name: 'ID', visible: false),
             ], $this->columns);
         }
-    }
-    
-    protected function createColumnInstance(string $type, string $key, bool $visible): IColumn
-    {
-        $keysMap = [
-            'email' => new EmailColumn(key: $key, name: $key, visible: $visible),
-            'phone' => new PhoneColumn(key: $key, name: $key, visible: $visible),
-            'url' => new UrlColumn(key: $key, name: $key, visible: $visible),
-            'video' => new VideoLinkColumn(key: $key, name: $key, visible: $visible),
-        ];
-        
-        $columnByKey = null;
-        foreach ($keysMap as $colKey => $column) {
-            if (Strings::contains($key, $colKey)) {
-                $columnByKey = $column;
-            }
-        }
-        
-        return match ($type) {
-            Types::ASCII_STRING,
-            Types::BIGINT,
-            Types::BINARY,
-            Types::DECIMAL,
-            Types::GUID,
-            Types::STRING,
-            Types::TEXT => $columnByKey ?: new StringColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::BLOB => new BlobColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::BOOLEAN => new BooleanColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::DATE_MUTABLE,
-            Types::DATE_IMMUTABLE => new DateColumn(key: $key, name: $key, visible: $visible),
-            Types::DATEINTERVAL => new DateTimeIntervalColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::DATETIME_MUTABLE,
-            Types::DATETIME_IMMUTABLE,
-            Types::DATETIMETZ_MUTABLE,
-            Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::FLOAT,
-            Types::INTEGER,
-            Types::SMALLINT => new NumericColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::JSON => new JsonColumn(key: $key, name: $key, visible: $visible),
-            Types::SIMPLE_ARRAY => new ArrayColumn(key: $key, name: $key, visible: $visible),
-            
-            Types::TIME_MUTABLE,
-            Types::TIME_IMMUTABLE => new TimeColumn(key: $key, name: $key, visible: $visible),
-            
-            default => new UnknownColumn(key: $key, name: $key, visible: $visible),
-        };
     }
 }

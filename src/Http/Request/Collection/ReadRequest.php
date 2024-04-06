@@ -77,9 +77,7 @@ class ReadRequest extends Request
         }
         
         $repo = $this->em->getRepository($recipe->source());
-        
-        $qb = $repo->createQueryBuilder('entity')
-            ->select($builder->getQbSelect('entity'))
+        $qb = $builder->createQueryBuilder($repo, 'entity')
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
