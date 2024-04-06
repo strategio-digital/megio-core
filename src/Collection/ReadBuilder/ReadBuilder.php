@@ -10,6 +10,7 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
+use Megio\Collection\ReadBuilder\Column\OneToOneEntityColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
 use Megio\Collection\RecipeDbSchema;
 use Megio\Collection\RecipeEntityMetadata;
@@ -96,7 +97,7 @@ class ReadBuilder implements IRecipeBuilder
         foreach ($this->dbSchema->getOneToOneColumns() as $field) {
             if (!in_array($field['name'], $ignored)) {
                 $visible = !in_array($field['name'], $invisibleCols);
-                $col = new StringColumn(key: $field['name'], name: $field['name'], visible: $visible);
+                $col = new OneToOneEntityColumn(key: $field['name'], name: $field['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -111,11 +112,12 @@ class ReadBuilder implements IRecipeBuilder
     }
     
     /**
-     * @param array<string, mixed> $values
      * @return array<string, mixed>
+     * @throws \ReflectionException
      */
-    public function format(array $values, bool $isAdminPanel): array
+    public function format(mixed $values, bool $isAdminPanel): array
     {
+        $result = [];
         foreach ($this->columns as $col) {
             $key = $col->getKey();
             $formatters = $col->getFormatters();
@@ -123,6 +125,9 @@ class ReadBuilder implements IRecipeBuilder
             $ignoredFormatters = array_key_exists($key, $this->ignoredFormatters)
                 ? $this->ignoredFormatters[$key]
                 : [];
+            
+            $ref = new \ReflectionClass($values);
+            $result[$key] = $ref->getProperty($key)->getValue($values);
             
             foreach ($formatters as $formatter) {
                 if (
@@ -133,13 +138,13 @@ class ReadBuilder implements IRecipeBuilder
                         || (!$isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::API)
                     )
                 ) {
-                    $values[$key] = $formatter->format($values[$key]);
+                    $result[$key] = $formatter->format($result[$key]);
                 }
-                unset($formatter);
+                unset($formatter); // Just performance optimization
             }
         }
         
-        return $values;
+        return $result;
     }
     
     /**
@@ -163,15 +168,14 @@ class ReadBuilder implements IRecipeBuilder
      */
     public function createQueryBuilder(EntityRepository $repo, string $alias): QueryBuilder
     {
-        $unionCols = array_map(fn($column) => $column['name'], $this->dbSchema->getUnionColumns());
-        $cols = array_filter($this->columns, fn($col) => in_array($col->getKey(), $unionCols));
-        $select = implode(', ', array_map(fn($col) => $alias . '.' . $col->getKey(), $cols));
+        $qb = $repo
+            ->createQueryBuilder($alias)
+            ->select($alias);
         
-        $qb = $repo->createQueryBuilder($alias);
-        
-        $qb->select($select);
-//        $qb->addSelect('profile');
-//        $qb->leftJoin("{$alias}.profile", 'profile');
+        foreach ($this->dbSchema->getOneToOneColumns() as $column) {
+            $qb->addSelect($column['name']);
+            $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+        }
         
         return $qb;
     }

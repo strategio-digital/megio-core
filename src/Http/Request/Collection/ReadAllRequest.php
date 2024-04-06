@@ -93,9 +93,6 @@ class ReadAllRequest extends Request
         }
         
         $items = $qb->getQuery()->getResult();
-
-//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-//        $array = $serializer->serialize($items, 'json');
         
         foreach ($items as $key => $item) {
             $items[$key] = $builder->format($item, $data['adminPanel']);
