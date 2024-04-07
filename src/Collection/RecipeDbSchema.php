@@ -21,26 +21,15 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *     defaultValue: mixed
  * }
  *
- * @phpstan-type OneToOneArray array{
+ * @phpstan-type OneToXArray array{
  *     name: string,
  *     type: string,
- *     reverseEntity: class-string,
- *     reverseField: string,
  *     unique: bool,
  *     nullable: bool,
  *     maxLength: int|null,
- *     defaultValue: mixed
- * }
- *
- * @phpstan-type OneToManyArray array{
- *     name: string,
- *     type: string,
+ *     defaultValue: mixed,
  *     reverseEntity: class-string,
  *     reverseField: string,
- *     unique: bool,
- *     nullable: bool,
- *     maxLength: int|null,
- *     defaultValue: mixed
  * }
  */
 class RecipeDbSchema
@@ -48,10 +37,10 @@ class RecipeDbSchema
     /** @var UnionColumnArray[] */
     private array $unionColumns = [];
     
-    /** @var OneToOneArray[] */
+    /** @var OneToXArray[] */
     private array $oneToOneColumns = [];
     
-    /** @var OneToManyArray[] */
+    /** @var OneToXArray[] */
     private array $oneToManyColumns = [];
     
     public function addUnionColumn(Column $attr, \ReflectionProperty $prop): void
@@ -103,12 +92,12 @@ class RecipeDbSchema
         $this->oneToOneColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_one',
-            'reverseEntity' => $attr->targetEntity,
-            'reverseField' => $reverseField,
             'unique' => false,
             'nullable' => $prop->getType()?->allowsNull() ?? false,
             'maxLength' => null,
             'defaultValue' => null,
+            'reverseEntity' => $attr->targetEntity,
+            'reverseField' => $reverseField,
         ];
     }
     
@@ -125,12 +114,12 @@ class RecipeDbSchema
         $this->oneToManyColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_many',
-            'reverseEntity' => $attr->targetEntity,
-            'reverseField' => $attr->mappedBy,
             'unique' => false,
             'nullable' => false,
             'maxLength' => null,
             'defaultValue' => null,
+            'reverseEntity' => $attr->targetEntity,
+            'reverseField' => $attr->mappedBy,
         ];
     }
     
@@ -140,13 +129,13 @@ class RecipeDbSchema
         return $this->unionColumns;
     }
     
-    /** @return OneToOneArray[] */
+    /** @return OneToXArray[] */
     public function getOneToOneColumns(): array
     {
         return $this->oneToOneColumns;
     }
     
-    /** @return OneToManyArray[] */
+    /** @return OneToXArray[] */
     public function getOneToManyColumns(): array
     {
         return $this->oneToManyColumns;
