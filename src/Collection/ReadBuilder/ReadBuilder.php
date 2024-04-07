@@ -10,6 +10,7 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
+use Megio\Collection\ReadBuilder\Column\OneToManyEntityColumn;
 use Megio\Collection\ReadBuilder\Column\OneToOneEntityColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
 use Megio\Collection\RecipeDbSchema;
@@ -102,6 +103,14 @@ class ReadBuilder implements IRecipeBuilder
             }
         }
         
+        foreach ($this->dbSchema->getOneToManyColumns() as $field) {
+            if (!in_array($field['name'], $ignored)) {
+                $visible = !in_array($field['name'], $invisibleCols);
+                $col = new OneToManyEntityColumn(key: $field['name'], name: $field['name'], visible: $visible);
+                $this->columns[$col->getKey()] = $col;
+            }
+        }
+        
         $this->columns = ArrayMove::moveToStart($this->columns, 'id');
         $this->columns = ArrayMove::moveToEnd($this->columns, 'createdAt');
         $this->columns = ArrayMove::moveToEnd($this->columns, 'updatedAt');
@@ -173,6 +182,11 @@ class ReadBuilder implements IRecipeBuilder
             ->select($alias);
         
         foreach ($this->dbSchema->getOneToOneColumns() as $column) {
+            $qb->addSelect($column['name']);
+            $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+        }
+        
+        foreach ($this->dbSchema->getOneToManyColumns() as $column) {
             $qb->addSelect($column['name']);
             $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
         }

@@ -60,7 +60,7 @@ return static function (RoutingConfigurator $routes): void {
         ->controller(Collection\Form\CreatingFormRequest::class);
     
     $form->add('updating', '/updating')
-        ->methods(['PATCH'])
+        ->methods(['POST'])
         ->controller(Collection\Form\UpdatingFormRequest::class);
     
     // Collections

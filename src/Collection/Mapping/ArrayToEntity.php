@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Mapping;
 
+use Doctrine\Common\Collections\Collection;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeDbSchema;
@@ -44,8 +45,10 @@ class ArrayToEntity
         foreach ($data as $fieldKey => $value) {
             try {
                 $methodName = 'set' . ucfirst($fieldKey);
+                
                 if (!in_array($methodName, $methods)) {
                     self::resolveOneToOne($fieldKey, $schema, $entity, $value);
+                    self::resolveOneToMany($fieldKey, $schema, $entity, $value);
                     $ref->getProperty($fieldKey)->setValue($entity, $value);
                 } else {
                     $entity->{$ref->getMethod($methodName)->name}($value);
@@ -66,7 +69,45 @@ class ArrayToEntity
         if (in_array($fieldKey, $oneToOneFieldNames)) {
             $colSchema = $oneToOneSchemas[array_search($fieldKey, $oneToOneFieldNames)];
             $ref = new \ReflectionClass($colSchema['reverseEntity']);
-            $ref->getProperty($colSchema['reverseField'])->setValue($value, $current);
+            
+            $currentRef = new \ReflectionClass($current);
+            $currentValue = $currentRef->getProperty($fieldKey)->getValue($current);
+            
+            if ($currentValue !== null) {
+                $targetRef = new \ReflectionClass($currentValue);
+                $targetField = $oneToOneSchemas[array_search($fieldKey, $oneToOneFieldNames)]['reverseField'];
+                $targetRef->getProperty($targetField)->setValue($currentValue, null);
+            }
+            
+            if ($value !== null) {
+                $ref->getProperty($colSchema['reverseField'])->setValue($value, $current);
+            }
+        }
+    }
+    
+    protected static function resolveOneToMany(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
+    {
+        $oneToManySchemas = $schema->getOneToManyColumns();
+        $oneToManyFieldNames = array_map(fn($c) => $c['name'], $oneToManySchemas);
+        
+        if (in_array($fieldKey, $oneToManyFieldNames) && $value instanceof Collection) {
+            $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
+            $currentRef = new \ReflectionClass($current);
+            $currentItems = $currentRef->getProperty($fieldKey)->getValue($current);
+            
+            foreach ($currentItems as $item) {
+                if (!$value->contains($item)) {
+                    $currentItems->removeElement($item);
+                    $itemRef = new \ReflectionClass($item);
+                    $itemRef->getProperty($colSchema['reverseField'])->setValue($item, null);
+                }
+            }
+            
+            foreach ($value as $item) {
+                $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
+                $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
+                $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
+            }
         }
     }
 }

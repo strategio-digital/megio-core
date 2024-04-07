@@ -6,11 +6,12 @@ namespace Megio\Collection\WriteBuilder\Field;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\WriteBuilder\Serializer\OneToManyEntitySerializer;
 use Megio\Collection\WriteBuilder\Serializer\OneToOneEntitySerializer;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Database\Interface\IJoinable;
 
-class OneToOneSelectField extends BaseField
+class OneToManySelectField extends BaseField
 {
     /** @var array<int, SelectField\Item> */
     protected array $items = [];
@@ -74,7 +75,7 @@ class OneToOneSelectField extends BaseField
             }
         }, $data);
         
-        $this->serializers[] = new OneToOneEntitySerializer($this->reverseEntity, $this->primaryKey);
+        $this->serializers[] = new OneToManyEntitySerializer($this->reverseEntity, $this->primaryKey);
     }
     
     /** @return array<string, mixed> */
@@ -82,6 +83,7 @@ class OneToOneSelectField extends BaseField
     {
         $data = parent::toArray();
         $data['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
+        $data['params']['multiple'] = true;
         return $data;
     }
 }

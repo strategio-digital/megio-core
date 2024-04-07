@@ -11,6 +11,7 @@ use Megio\Collection\RecipeDbSchema;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\WriteBuilder\Field\OneToManySelectField;
 use Megio\Collection\WriteBuilder\Field\OneToOneSelectField;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Rule\RequiredRule;
@@ -115,6 +116,16 @@ class WriteBuilder implements IRecipeBuilder
         $oneToOneColumns = array_filter($this->dbSchema->getOneToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($oneToOneColumns as $cs) {
             $field = new OneToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
+            if ($cs['nullable']) {
+                $field->addRule(new NullableRule());
+            }
+            $field->setBuilder($this);
+            $this->fields[$field->getName()] = $field;
+        }
+        
+        $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+        foreach ($oneToOneMany as $cs) {
+            $field = new OneToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }

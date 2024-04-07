@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 
@@ -30,6 +31,17 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *     maxLength: int|null,
  *     defaultValue: mixed
  * }
+ *
+ * @phpstan-type OneToManyArray array{
+ *     name: string,
+ *     type: string,
+ *     reverseEntity: class-string,
+ *     reverseField: string,
+ *     unique: bool,
+ *     nullable: bool,
+ *     maxLength: int|null,
+ *     defaultValue: mixed
+ * }
  */
 class RecipeDbSchema
 {
@@ -38,6 +50,9 @@ class RecipeDbSchema
     
     /** @var OneToOneArray[] */
     private array $oneToOneColumns = [];
+    
+    /** @var OneToManyArray[] */
+    private array $oneToManyColumns = [];
     
     public function addUnionColumn(Column $attr, \ReflectionProperty $prop): void
     {
@@ -91,6 +106,28 @@ class RecipeDbSchema
             'reverseEntity' => $attr->targetEntity,
             'reverseField' => $reverseField,
             'unique' => false,
+            'nullable' => $prop->getType()?->allowsNull() ?? false,
+            'maxLength' => null,
+            'defaultValue' => null,
+        ];
+    }
+    
+    public function addOneToManyColumn(OneToMany $attr, \ReflectionProperty $prop): void
+    {
+        if ($attr->targetEntity === null) {
+            throw new \InvalidArgumentException('Attribute targetEntity is required');
+        }
+        
+        if ($attr->mappedBy === null) {
+            throw new \InvalidArgumentException('Attribute mappedBy is required');
+        }
+        
+        $this->oneToManyColumns[] = [
+            'name' => $prop->getName(),
+            'type' => 'one_to_many',
+            'reverseEntity' => $attr->targetEntity,
+            'reverseField' => $attr->mappedBy,
+            'unique' => false,
             'nullable' => false,
             'maxLength' => null,
             'defaultValue' => null,
@@ -107,5 +144,11 @@ class RecipeDbSchema
     public function getOneToOneColumns(): array
     {
         return $this->oneToOneColumns;
+    }
+    
+    /** @return OneToManyArray[] */
+    public function getOneToManyColumns(): array
+    {
+        return $this->oneToManyColumns;
     }
 }

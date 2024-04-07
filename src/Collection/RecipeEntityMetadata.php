@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 
 class RecipeEntityMetadata
@@ -49,7 +50,6 @@ class RecipeEntityMetadata
         foreach ($this->entityRef->getProperties() as $prop) {
             $attrs = array_map(fn($attr) => $attr->newInstance(), $prop->getAttributes());
             
-            /** @var Column[] $columnAttrs */
             $columnAttrs = array_filter($attrs, fn($attr) => $attr instanceof Column);
             if (count($columnAttrs) !== 0) {
                 $attr = array_values($columnAttrs)[0];
@@ -60,6 +60,12 @@ class RecipeEntityMetadata
             if (count($oneToOneAttrs) !== 0) {
                 $attr = array_values($oneToOneAttrs)[0];
                 $schema->addOneToOneColumn($attr, $prop);
+            }
+            
+            $oneToManyAttrs = array_filter($attrs, fn($attr) => $attr instanceof OneToMany);
+            if (count($oneToManyAttrs) !== 0) {
+                $attr = array_values($oneToManyAttrs)[0];
+                $schema->addOneToManyColumn($attr, $prop);
             }
         }
         

@@ -5,6 +5,8 @@ namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\ReadBuilder;
+use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
@@ -21,7 +23,8 @@ class UpdatingFormRequest extends Request
     public function __construct(
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
-        protected readonly WriteBuilder  $builder,
+        protected readonly WriteBuilder  $writeBuilder,
+        protected readonly ReadBuilder   $readBuilder,
     )
     {
     }
@@ -52,32 +55,41 @@ class UpdatingFormRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
+        $recipeRequest = new RecipeRequest($this->request, true, null, [], $data['custom_data']);
         
-        $qb = $this->em->getRepository($recipe->source())
-            ->createQueryBuilder('entity')
+        try {
+            $readBuilder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $recipeRequest)->build();
+            $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
+            $repo = $this->em->getRepository($recipe->source());
+        } catch (CollectionException $e) {
+            return $this->error([$e->getMessage()]);
+        }
+        
+        $qb = $readBuilder->createQueryBuilder($repo, 'entity');
+        
+        $qb
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
-        foreach ($schema->getOneToOneColumns() as $column) {
-            $qb
-                ->addSelect($column['name'])
-                ->leftJoin("entity.{$column['name']}", $column['name']);
-        }
-            
         /** @var array<string, string|int|float|bool|null>|null $row */
         $row = $qb
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
-            
+        
         if ($row === null) {
             return $this->error(["Item '{$data['id']}' not found"], 404);
         }
         
+        // Format one-to-one data
         foreach ($schema->getOneToOneColumns() as $column) {
             if ($row[$column['name']] !== null) {
                 $row[$column['name']] = $row[$column['name']]['id'];
             }
+        }
+
+        // Format one-to-many data
+        foreach ($schema->getOneToManyColumns() as $column) {
+            $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
         }
         
         /** @var string $rowId */
@@ -86,7 +98,7 @@ class UpdatingFormRequest extends Request
         
         try {
             $builder = $recipe
-                ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $recipeRequest)
+                ->update($this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $recipeRequest)
                 ->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);

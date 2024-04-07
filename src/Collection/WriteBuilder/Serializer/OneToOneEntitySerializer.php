@@ -7,7 +7,7 @@ use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 
-class JoinOneEntitySerializer extends BaseSerializer
+class OneToOneEntitySerializer extends BaseSerializer
 {
     /**
      * @param class-string $entityClassName
@@ -28,7 +28,7 @@ class JoinOneEntitySerializer extends BaseSerializer
         }
         
         if (!is_string($value) && !is_numeric($value) && !is_bool($value)) {
-            throw new SerializerException("Invalid JoinOneEntity serializer value in field '{$field->getName()}'");
+            throw new SerializerException("Invalid OneToOne serializer value in field '{$field->getName()}'");
         }
         
         $em = $this->getBuilder()->getEntityManager();
@@ -41,6 +41,6 @@ class JoinOneEntitySerializer extends BaseSerializer
             return $row;
         }
         
-        throw new SerializerException("Invalid JoinOneEntity serializer value in field '{$field->getName()}'");
+        throw new SerializerException("Invalid OneToOne serializer value in field '{$field->getName()}'");
     }
 }

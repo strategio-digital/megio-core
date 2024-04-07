@@ -9,7 +9,12 @@ use Megio\Database\Interface\IJoinable;
 
 class OneToOneEntityFormatter extends BaseFormatter
 {
-    public function format(mixed $value): ?string
+    /**
+     * @param mixed $value
+     * @return array{value: string, label: string}|null
+     * @throws \Megio\Collection\Exception\CollectionException
+     */
+    public function format(mixed $value): ?array
     {
         if ($value === null) {
             return null;
@@ -22,6 +27,9 @@ class OneToOneEntityFormatter extends BaseFormatter
             throw new CollectionException("Value '{$value}' must be class that implements IJoinable interface.");
         }
         
-        return $value->getJoinableLabel();
+        return [
+            'value' => $value->getId(),
+            'label' => $value->getJoinableLabel()
+        ];
     }
 }
