@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column;
 
-use Megio\Collection\Formatter\OneToOneEntityFormatter;
+use Megio\Collection\Formatter\ToOneFormatter;
 use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
 
-class OneToOneEntityColumn extends BaseColumn
+class ManyToOneColumn extends BaseColumn
 {
     public function renderer(): string
     {
@@ -21,7 +21,7 @@ class OneToOneEntityColumn extends BaseColumn
         protected array  $formatters = []
     )
     {
-        $formatters[] = new OneToOneEntityFormatter();
+        $formatters[] = new ToOneFormatter();
         parent::__construct(
             key: $key,
             name: $name,

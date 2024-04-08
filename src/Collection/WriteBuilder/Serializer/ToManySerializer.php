@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Serializer;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
+use Tracy\Debugger;
 
-class OneToOneEntitySerializer extends BaseSerializer
+class ToManySerializer extends BaseSerializer
 {
     /**
      * @param class-string $entityClassName
@@ -27,20 +29,16 @@ class OneToOneEntitySerializer extends BaseSerializer
             return null;
         }
         
-        if (!is_string($value) && !is_numeric($value) && !is_bool($value)) {
-            throw new SerializerException("Invalid OneToOne serializer value in field '{$field->getName()}'");
+        if (!is_array($value)) {
+            throw new SerializerException("Invalid OneToMany serializer value in field '{$field->getName()}'");
         }
         
         $em = $this->getBuilder()->getEntityManager();
         
-        $row = $em
+        $rows = $em
             ->getRepository($this->entityClassName)
-            ->findOneBy([$this->primaryKey => $value]);
+            ->findBy([$this->primaryKey => $value]);
         
-        if ($row) {
-            return $row;
-        }
-        
-        throw new SerializerException("Invalid OneToOne serializer value in field '{$field->getName()}'");
+        return new ArrayCollection($rows);
     }
 }

@@ -6,12 +6,11 @@ namespace Megio\Collection\WriteBuilder\Field;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
-use Megio\Collection\WriteBuilder\Serializer\OneToManyEntitySerializer;
-use Megio\Collection\WriteBuilder\Serializer\OneToOneEntitySerializer;
+use Megio\Collection\WriteBuilder\Serializer\ToManySerializer;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Database\Interface\IJoinable;
 
-class OneToManySelectField extends BaseField
+class ToManySelectField extends BaseField
 {
     /** @var array<int, SelectField\Item> */
     protected array $items = [];
@@ -75,7 +74,7 @@ class OneToManySelectField extends BaseField
             }
         }, $data);
         
-        $this->serializers[] = new OneToManyEntitySerializer($this->reverseEntity, $this->primaryKey);
+        $this->serializers[] = new ToManySerializer($this->reverseEntity, $this->primaryKey);
     }
     
     /** @return array<string, mixed> */

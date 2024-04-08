@@ -47,8 +47,9 @@ class ArrayToEntity
                 $methodName = 'set' . ucfirst($fieldKey);
                 
                 if (!in_array($methodName, $methods)) {
-                    self::resolveOneToOne($fieldKey, $schema, $entity, $value);
-                    self::resolveOneToMany($fieldKey, $schema, $entity, $value);
+                    self::resolveOneToOneReverseRelation($fieldKey, $schema, $entity, $value);
+                    self::resolveOneToManyReverseRelation($fieldKey, $schema, $entity, $value);
+                    self::resolveManyToOneReverseRelation($fieldKey, $schema, $value);
                     $ref->getProperty($fieldKey)->setValue($entity, $value);
                 } else {
                     $entity->{$ref->getMethod($methodName)->name}($value);
@@ -61,7 +62,7 @@ class ArrayToEntity
         return $entity;
     }
     
-    protected static function resolveOneToOne(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
+    protected static function resolveOneToOneReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
     {
         $oneToOneSchemas = $schema->getOneToOneColumns();
         $oneToOneFieldNames = array_map(fn($c) => $c['name'], $oneToOneSchemas);
@@ -85,7 +86,7 @@ class ArrayToEntity
         }
     }
     
-    protected static function resolveOneToMany(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
+    protected static function resolveOneToManyReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
     {
         $oneToManySchemas = $schema->getOneToManyColumns();
         $oneToManyFieldNames = array_map(fn($c) => $c['name'], $oneToManySchemas);
@@ -107,6 +108,26 @@ class ArrayToEntity
                 $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
                 $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
                 $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
+            }
+        }
+    }
+    
+    protected static function resolveManyToOneReverseRelation(string $fieldKey, RecipeDbSchema $schema, mixed $value): void
+    {
+        $manyToOneSchemas = $schema->getManyToOneColumns();
+        $manyToOneFieldNames = array_map(fn($c) => $c['name'], $manyToOneSchemas);
+        
+        if (in_array($fieldKey, $manyToOneFieldNames) && $value !== null) {
+            $colSchema = $manyToOneSchemas[array_search($fieldKey, $manyToOneFieldNames)];
+            $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
+            $targetValue = $currentRef->getProperty($colSchema['reverseField'])->getValue($value);
+            
+            if ($targetValue instanceof Collection) {
+                foreach ($targetValue->getIterator() as $item) {
+                    if (!$targetValue->contains($item)) {
+                        $targetValue->add($item);
+                    }
+                }
             }
         }
     }

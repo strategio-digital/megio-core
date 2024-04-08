@@ -7,7 +7,7 @@ use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Formatter\Base\BaseFormatter;
 use Megio\Database\Interface\IJoinable;
 
-class OneToOneEntityFormatter extends BaseFormatter
+class ToOneFormatter extends BaseFormatter
 {
     /**
      * @param mixed $value

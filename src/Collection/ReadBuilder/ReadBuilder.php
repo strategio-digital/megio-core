@@ -10,8 +10,9 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
-use Megio\Collection\ReadBuilder\Column\OneToManyEntityColumn;
-use Megio\Collection\ReadBuilder\Column\OneToOneEntityColumn;
+use Megio\Collection\ReadBuilder\Column\ManyToOneColumn;
+use Megio\Collection\ReadBuilder\Column\OneToManyColumn;
+use Megio\Collection\ReadBuilder\Column\OneToOneColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
 use Megio\Collection\RecipeDbSchema;
 use Megio\Collection\RecipeEntityMetadata;
@@ -87,26 +88,34 @@ class ReadBuilder implements IRecipeBuilder
         $invisibleCols = ['id', 'createdAt', 'updatedAt'];
         $ignored = array_merge($exclude, ['id']);
         
-        foreach ($this->dbSchema->getUnionColumns() as $field) {
-            if (!in_array($field['name'], $ignored)) {
-                $visible = !in_array($field['name'], $invisibleCols);
-                $col = ColumnCreator::create($field['type'], $field['name'], $visible);
+        foreach ($this->dbSchema->getUnionColumns() as $column) {
+            if (!in_array($column['name'], $ignored)) {
+                $visible = !in_array($column['name'], $invisibleCols);
+                $col = ColumnCreator::create($column['type'], $column['name'], $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
         
-        foreach ($this->dbSchema->getOneToOneColumns() as $field) {
-            if (!in_array($field['name'], $ignored)) {
-                $visible = !in_array($field['name'], $invisibleCols);
-                $col = new OneToOneEntityColumn(key: $field['name'], name: $field['name'], visible: $visible);
+        foreach ($this->dbSchema->getOneToOneColumns() as $column) {
+            if (!in_array($column['name'], $ignored)) {
+                $visible = !in_array($column['name'], $invisibleCols);
+                $col = new OneToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
         
-        foreach ($this->dbSchema->getOneToManyColumns() as $field) {
-            if (!in_array($field['name'], $ignored)) {
-                $visible = !in_array($field['name'], $invisibleCols);
-                $col = new OneToManyEntityColumn(key: $field['name'], name: $field['name'], visible: $visible);
+        foreach ($this->dbSchema->getOneToManyColumns() as $column) {
+            if (!in_array($column['name'], $ignored)) {
+                $visible = !in_array($column['name'], $invisibleCols);
+                $col = new OneToManyColumn(key: $column['name'], name: $column['name'], visible: $visible);
+                $this->columns[$col->getKey()] = $col;
+            }
+        }
+        
+        foreach ($this->dbSchema->getManyToOneColumns() as $column) {
+            if (!in_array($column['name'], $ignored)) {
+                $visible = !in_array($column['name'], $invisibleCols);
+                $col = new ManyToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }

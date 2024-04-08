@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 
@@ -66,6 +67,12 @@ class RecipeEntityMetadata
             if (count($oneToManyAttrs) !== 0) {
                 $attr = array_values($oneToManyAttrs)[0];
                 $schema->addOneToManyColumn($attr, $prop);
+            }
+            
+            $manyToOneAttrs = array_filter($attrs, fn($attr) => $attr instanceof ManyToOne);
+            if (count($manyToOneAttrs) !== 0) {
+                $attr = array_values($manyToOneAttrs)[0];
+                $schema->addManyToOneColumn($attr, $prop);
             }
         }
         

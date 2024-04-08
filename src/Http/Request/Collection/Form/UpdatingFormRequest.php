@@ -71,6 +71,11 @@ class UpdatingFormRequest extends Request
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
+        foreach ($schema->getManyToOneColumns() as $column) {
+            $qb->addSelect($column['name']);
+            $qb->leftJoin("entity.{$column['name']}", $column['name']);
+        }
+        
         /** @var array<string, string|int|float|bool|null>|null $row */
         $row = $qb
             ->getQuery()
@@ -90,6 +95,13 @@ class UpdatingFormRequest extends Request
         // Format one-to-many data
         foreach ($schema->getOneToManyColumns() as $column) {
             $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+        }
+        
+        // Format many-to-one data
+        foreach ($schema->getManyToOneColumns() as $column) {
+            if ($row[$column['name']] !== null) {
+                $row[$column['name']] = $row[$column['name']]['id'];
+            }
         }
         
         /** @var string $rowId */

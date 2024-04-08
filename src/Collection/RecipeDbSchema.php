@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
@@ -12,7 +13,7 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *  Doctrine mapping:
  *  https://www.doctrine-project.org/projects/doctrine-orm/en/3.1/reference/basic-mapping.html#doctrine-mapping-types
  *
- * @phpstan-type UnionColumnArray array{
+ * @phpstan-type UnionColumn array{
  *     name: string,
  *     type: string,
  *     unique: bool,
@@ -21,7 +22,7 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *     defaultValue: mixed
  * }
  *
- * @phpstan-type OneToXArray array{
+ * @phpstan-type JoinableColumn array{
  *     name: string,
  *     type: string,
  *     unique: bool,
@@ -34,14 +35,17 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  */
 class RecipeDbSchema
 {
-    /** @var UnionColumnArray[] */
+    /** @var UnionColumn[] */
     private array $unionColumns = [];
     
-    /** @var OneToXArray[] */
+    /** @var JoinableColumn[] */
     private array $oneToOneColumns = [];
     
-    /** @var OneToXArray[] */
+    /** @var JoinableColumn[] */
     private array $oneToManyColumns = [];
+    
+    /** @var JoinableColumn[] */
+    private array $manyToOneColumns = [];
     
     public function addUnionColumn(Column $attr, \ReflectionProperty $prop): void
     {
@@ -123,21 +127,49 @@ class RecipeDbSchema
         ];
     }
     
-    /** @return UnionColumnArray[] */
+    public function addManyToOneColumn(ManyToOne $attr, \ReflectionProperty $prop): void
+    {
+        if ($attr->targetEntity === null) {
+            throw new \InvalidArgumentException('Attribute targetEntity is required');
+        }
+        
+        if ($attr->inversedBy === null) {
+            throw new \InvalidArgumentException('Attribute inversedBy is required');
+        }
+        
+        $this->manyToOneColumns[] = [
+            'name' => $prop->getName(),
+            'type' => 'many_to_one',
+            'unique' => false,
+            'nullable' => true,
+            'maxLength' => null,
+            'defaultValue' => null,
+            'reverseEntity' => $attr->targetEntity,
+            'reverseField' => $attr->inversedBy,
+        ];
+    }
+    
+    /** @return UnionColumn[] */
     public function getUnionColumns(): array
     {
         return $this->unionColumns;
     }
     
-    /** @return OneToXArray[] */
+    /** @return JoinableColumn[] */
     public function getOneToOneColumns(): array
     {
         return $this->oneToOneColumns;
     }
     
-    /** @return OneToXArray[] */
+    /** @return JoinableColumn[] */
     public function getOneToManyColumns(): array
     {
         return $this->oneToManyColumns;
+    }
+    
+    /** @return JoinableColumn[] */
+    public function getManyToOneColumns(): array
+    {
+        return $this->manyToOneColumns;
     }
 }
