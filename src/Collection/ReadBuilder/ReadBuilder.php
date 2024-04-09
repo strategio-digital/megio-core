@@ -10,9 +10,8 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\ReadBuilder\Column\Base\ShowOnlyOn;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
-use Megio\Collection\ReadBuilder\Column\ManyToOneColumn;
-use Megio\Collection\ReadBuilder\Column\OneToManyColumn;
-use Megio\Collection\ReadBuilder\Column\OneToOneColumn;
+use Megio\Collection\ReadBuilder\Column\ToManyColumn;
+use Megio\Collection\ReadBuilder\Column\ToOneColumn;
 use Megio\Collection\ReadBuilder\Column\StringColumn;
 use Megio\Collection\RecipeDbSchema;
 use Megio\Collection\RecipeEntityMetadata;
@@ -99,7 +98,7 @@ class ReadBuilder implements IRecipeBuilder
         foreach ($this->dbSchema->getOneToOneColumns() as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
-                $col = new OneToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
+                $col = new ToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -107,7 +106,7 @@ class ReadBuilder implements IRecipeBuilder
         foreach ($this->dbSchema->getOneToManyColumns() as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
-                $col = new OneToManyColumn(key: $column['name'], name: $column['name'], visible: $visible);
+                $col = new ToManyColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -115,7 +114,7 @@ class ReadBuilder implements IRecipeBuilder
         foreach ($this->dbSchema->getManyToOneColumns() as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
-                $col = new ManyToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
+                $col = new ToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -190,15 +189,23 @@ class ReadBuilder implements IRecipeBuilder
             ->createQueryBuilder($alias)
             ->select($alias);
         
+        $columnNames = array_map(fn($col) => $col->getName(), $this->columns);
+        
         foreach ($this->dbSchema->getOneToOneColumns() as $column) {
-            $qb->addSelect($column['name']);
-            $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+            if (in_array($column['name'], $columnNames)) {
+                $qb->addSelect($column['name']);
+                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+            }
         }
         
         foreach ($this->dbSchema->getOneToManyColumns() as $column) {
-            $qb->addSelect($column['name']);
-            $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+            if (in_array($column['name'], $columnNames)) {
+                $qb->addSelect($column['name']);
+                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+            }
         }
+        
+        bdump($this->dbSchema->getOneToManyColumns());
         
         return $qb;
     }
@@ -240,5 +247,11 @@ class ReadBuilder implements IRecipeBuilder
                 'id' => new StringColumn(key: 'id', name: 'ID', visible: false),
             ], $this->columns);
         }
+    }
+    
+    /** @return  array<string, IColumn> */
+    public function getColumns(): array
+    {
+        return $this->columns;
     }
 }

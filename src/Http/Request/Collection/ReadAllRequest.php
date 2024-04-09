@@ -64,7 +64,7 @@ class ReadAllRequest extends Request
         $recipeRequest = new RecipeRequest($this->request, false, null, [], $data['custom_data']);
         
         try {
-            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $recipeRequest)->build();
+            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ALL), $recipeRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
@@ -103,6 +103,7 @@ class ReadAllRequest extends Request
         $items = iterator_to_array($paginator->getIterator());
         
         foreach ($items as $key => $item) {
+            bdump($item);
             $items[$key] = $builder->format($item, $data['adminPanel']);
         }
         

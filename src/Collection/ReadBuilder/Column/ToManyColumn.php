@@ -6,7 +6,7 @@ namespace Megio\Collection\ReadBuilder\Column;
 use Megio\Collection\Formatter\ToManyFormatter;
 use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
 
-class OneToManyColumn extends BaseColumn
+class ToManyColumn extends BaseColumn
 {
     public function renderer(): string
     {
