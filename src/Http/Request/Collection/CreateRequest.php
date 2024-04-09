@@ -106,8 +106,8 @@ class CreateRequest extends Request
         $this->em->beginTransaction();
         
         try {
-            foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $em) {
-                $this->em->flush($em);
+            foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $entity) {
+                $this->em->flush($entity);
             }
             $this->em->commit();
         } catch (ConstraintViolationException $e) {
