@@ -7,5 +7,8 @@ interface IJoinable
 {
     public function getId(): string;
     
-    public function getJoinableLabel(): string;
+    /**
+     * @return array{fields: string[], format: string}
+     */
+    public function getJoinableLabel(): array;
 }

@@ -130,7 +130,6 @@ class ReadBuilder implements IRecipeBuilder
     
     /**
      * @return array<string, mixed>
-     * @throws \ReflectionException
      */
     public function format(mixed $values, bool $isAdminPanel): array
     {
@@ -143,21 +142,22 @@ class ReadBuilder implements IRecipeBuilder
                 ? $this->ignoredFormatters[$key]
                 : [];
             
-            $ref = new \ReflectionClass($values);
-            $result[$key] = $ref->getProperty($key)->getValue($values);
-            
-            foreach ($formatters as $formatter) {
-                if (
-                    !in_array($formatter::class, $ignoredFormatters)
-                    && (
-                        $formatter->showOnlyOn() === null
-                        || ($isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::ADMIN_PANEL)
-                        || (!$isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::API)
-                    )
-                ) {
-                    $result[$key] = $formatter->format($result[$key]);
+            if (is_array($values) && array_key_exists($key, $values)) {
+                $result[$key] = $values[$key];
+                foreach ($formatters as $formatter) {
+                    if (
+                        !in_array($formatter::class, $ignoredFormatters)
+                        && (
+                            $formatter->showOnlyOn() === null
+                            || ($isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::ADMIN_PANEL)
+                            || (!$isAdminPanel && $formatter->showOnlyOn() === ShowOnlyOn::API)
+                        )
+                    ) {
+                        $formatter->setBuilder($this);
+                        $result[$key] = $formatter->format($result[$key], $key);
+                    }
+                    unset($formatter); // Just performance optimization
                 }
-                unset($formatter); // Just performance optimization
             }
         }
         
@@ -205,7 +205,12 @@ class ReadBuilder implements IRecipeBuilder
             }
         }
         
-        bdump($this->dbSchema->getOneToManyColumns());
+        foreach ($this->dbSchema->getManyToOneColumns() as $column) {
+            if (in_array($column['name'], $columnNames)) {
+                $qb->addSelect($column['name']);
+                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
+            }
+        }
         
         return $qb;
     }
@@ -253,5 +258,10 @@ class ReadBuilder implements IRecipeBuilder
     public function getColumns(): array
     {
         return $this->columns;
+    }
+    
+    public function getMetadata(): RecipeEntityMetadata
+    {
+        return $this->metadata;
     }
 }

@@ -71,11 +71,6 @@ class UpdatingFormRequest extends Request
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
-        foreach ($schema->getManyToOneColumns() as $column) {
-            $qb->addSelect($column['name']);
-            $qb->leftJoin("entity.{$column['name']}", $column['name']);
-        }
-        
         /** @var array<string, string|int|float|bool|null>|null $row */
         $row = $qb
             ->getQuery()

@@ -3,38 +3,49 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Formatter;
 
-use Doctrine\Common\Collections\Collection;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Formatter\Base\BaseFormatter;
-use Megio\Database\Interface\IJoinable;
+use Megio\Collection\Helper\JoinableLabel;
 
 class ToManyFormatter extends BaseFormatter
 {
     /**
      * @param mixed $value
+     * @param string $key
      * @return array{label: string, value: string}[]|null
-     * @throws \Megio\Collection\Exception\CollectionException
+     * @throws \Megio\Collection\Exception\CollectionException|\ReflectionException
      */
-    public function format(mixed $value): ?array
+    public function format(mixed $value, string $key): ?array
     {
         if ($value === null) {
             return null;
         }
         
-        if ($value instanceof Collection === false) {
-            throw new CollectionException("Value '{$value}' must be instance of Collection.");
+        if (!is_array($value)) {
+            throw new CollectionException("Value '{$value}' must be array with keys 'value' and 'label'.");
+        }
+        
+        $schema = $this->builder->getMetadata()->getFullSchemaReflectedByDoctrine();
+        
+        $joins = array_merge(
+            $schema->getOneToOneColumns(),
+            $schema->getOneToManyColumns(),
+            $schema->getManyToOneColumns()
+        );
+        
+        $joinable = array_values(array_filter($joins, fn($item) => $item['name'] === $key));
+        $reverseEntity = $joinable[0]['reverseEntity'] ?? null;
+        
+        if ($reverseEntity === null) {
+            throw new CollectionException("Reverse entity not found for '{$key}'");
         }
         
         $result = [];
         foreach ($value as $item) {
-            if ($item instanceof IJoinable) {
-                $result[] = [
-                    'value' => $item->getId(),
-                    'label' => $item->getJoinableLabel()
-                ];
-            } else {
-                throw new CollectionException("Value '{$item}' must be class that implements IJoinable interface.");
-            }
+            $result[] = [
+                'label' => JoinableLabel::fromArray($item, $reverseEntity),
+                'value' => $item['id'],
+            ];
         }
         
         return $result;

@@ -7,7 +7,7 @@ use Megio\Collection\Formatter\Base\BaseFormatter;
 
 class DateTimeCzFormatter extends BaseFormatter
 {
-    public function format(mixed $value): mixed
+    public function format(mixed $value, string $key): mixed
     {
         if ($value instanceof \DateTime || $value instanceof \DateTimeImmutable) {
             return $value->format('j.n.Y H:i:s');

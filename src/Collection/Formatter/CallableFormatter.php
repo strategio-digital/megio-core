@@ -23,7 +23,7 @@ class CallableFormatter extends BaseFormatter
         parent::__construct($showOnlyOn);
     }
     
-    public function format(mixed $value): mixed
+    public function format(mixed $value, string $key): mixed
     {
         return $this->callback[0]($value, $this);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder\Field;
 
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\Helper\JoinableLabel;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Serializer\ToOneSerializer;
@@ -67,7 +68,7 @@ class ToOneSelectField extends BaseField
         
         $this->items = array_map(function ($item) {
             if ($item instanceof IJoinable) {
-                return new SelectField\Item($item->getId(), $item->getJoinableLabel());
+                return new SelectField\Item($item->getId(), JoinableLabel::fromEntity($item));
             } else {
                 $class = $item::class;
                 throw new CollectionException("Entity '{$class}' has to implement IJoinable interface!");

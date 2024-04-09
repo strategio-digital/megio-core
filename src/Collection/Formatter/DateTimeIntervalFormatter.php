@@ -7,7 +7,7 @@ use Megio\Collection\Formatter\Base\BaseFormatter;
 
 class DateTimeIntervalFormatter extends BaseFormatter
 {
-    public function format(mixed $value): mixed
+    public function format(mixed $value, string $key): mixed
     {
         if ($value instanceof \DateInterval) {
             return [

@@ -98,12 +98,11 @@ class ReadAllRequest extends Request
             $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $query = $qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_OBJECT);
+        $query = $qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
         $paginator = new Paginator($query, true);
         $items = iterator_to_array($paginator->getIterator());
         
         foreach ($items as $key => $item) {
-            bdump($item);
             $items[$key] = $builder->format($item, $data['adminPanel']);
         }
         

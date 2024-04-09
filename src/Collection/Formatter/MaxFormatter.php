@@ -14,7 +14,7 @@ class MaxFormatter extends BaseFormatter
         parent::__construct($showOnlyOn);
     }
     
-    public function format(mixed $value): mixed
+    public function format(mixed $value, string $key): mixed
     {
         if (!is_string($value) && !is_array($value)) {
             return $value;

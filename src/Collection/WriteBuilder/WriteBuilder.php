@@ -260,7 +260,9 @@ class WriteBuilder implements IRecipeBuilder
         foreach ($this->fields as $field) {
             $formatters = $field->getFormatters();
             foreach ($formatters as $formatter) {
-                $field->setValue($formatter->format($field->getValue()));
+                $formatter->setBuilder($this);
+                $value = $formatter->format($field->getValue(), $field->getName());
+                $field->setValue($value);
             }
         }
         
