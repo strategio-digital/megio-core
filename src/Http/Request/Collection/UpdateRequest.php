@@ -131,7 +131,9 @@ class UpdateRequest extends Request
         $this->em->beginTransaction();
         
         try {
-            $this->em->flush();
+            foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $em) {
+                $this->em->flush($em);
+            }
             $this->em->commit();
         } catch (ConstraintViolationException $e) {
             $this->em->rollback();

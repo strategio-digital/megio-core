@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Mapping;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ICollectionRecipe;
@@ -12,6 +13,9 @@ use Megio\Database\Interface\ICrudable;
 
 class ArrayToEntity
 {
+    /** @var \Doctrine\Common\Collections\ArrayCollection<int, object> */
+    private static ArrayCollection $toFlush;
+    
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
      * @param \Megio\Collection\RecipeEntityMetadata $metadata
@@ -21,6 +25,8 @@ class ArrayToEntity
      */
     public static function create(ICollectionRecipe $recipe, RecipeEntityMetadata $metadata, array $data): ICrudable
     {
+        self::$toFlush = new ArrayCollection();
+        
         $className = $recipe->source();
         
         /** @var \Megio\Database\Interface\ICrudable $entity */
@@ -38,6 +44,8 @@ class ArrayToEntity
      */
     public static function update(RecipeEntityMetadata $metadata, ICrudable $entity, array $data): ICrudable
     {
+        self::$toFlush = new ArrayCollection();
+        
         $ref = $metadata->getReflection();
         $schema = $metadata->getFullSchemaReflectedByDoctrine();
         $methods = array_map(fn($method) => $method->name, $ref->getMethods());
@@ -49,7 +57,6 @@ class ArrayToEntity
                 if (!in_array($methodName, $methods)) {
                     self::resolveOneToOneReverseRelation($fieldKey, $schema, $entity, $value);
                     self::resolveOneToManyReverseRelation($fieldKey, $schema, $entity, $value);
-                    self::resolveManyToOneReverseRelation($fieldKey, $schema, $value);
                     $ref->getProperty($fieldKey)->setValue($entity, $value);
                 } else {
                     $entity->{$ref->getMethod($methodName)->name}($value);
@@ -58,6 +65,8 @@ class ArrayToEntity
                 throw new CollectionException("Field '{$fieldKey}' does not exist on '{$metadata->getTableName()}' entity");
             }
         }
+        
+        self::addEntityToFlush($entity);
         
         return $entity;
     }
@@ -78,10 +87,12 @@ class ArrayToEntity
                 $targetRef = new \ReflectionClass($currentValue);
                 $targetField = $oneToOneSchemas[array_search($fieldKey, $oneToOneFieldNames)]['reverseField'];
                 $targetRef->getProperty($targetField)->setValue($currentValue, null);
+                self::addEntityToFlush($currentValue);
             }
             
             if ($value !== null) {
                 $ref->getProperty($colSchema['reverseField'])->setValue($value, $current);
+                self::addEntityToFlush($value);
             }
         }
     }
@@ -101,6 +112,7 @@ class ArrayToEntity
                     $currentItems->removeElement($item);
                     $itemRef = new \ReflectionClass($item);
                     $itemRef->getProperty($colSchema['reverseField'])->setValue($item, null);
+                    self::addEntityToFlush($item);
                 }
             }
             
@@ -108,27 +120,23 @@ class ArrayToEntity
                 $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
                 $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
                 $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
+                self::addEntityToFlush($item);
             }
         }
     }
     
-    protected static function resolveManyToOneReverseRelation(string $fieldKey, RecipeDbSchema $schema, mixed $value): void
+    private static function addEntityToFlush(mixed $entity): void
     {
-        $manyToOneSchemas = $schema->getManyToOneColumns();
-        $manyToOneFieldNames = array_map(fn($c) => $c['name'], $manyToOneSchemas);
-        
-        if (in_array($fieldKey, $manyToOneFieldNames) && $value !== null) {
-            $colSchema = $manyToOneSchemas[array_search($fieldKey, $manyToOneFieldNames)];
-            $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
-            $targetValue = $currentRef->getProperty($colSchema['reverseField'])->getValue($value);
-            
-            if ($targetValue instanceof Collection) {
-                foreach ($targetValue->getIterator() as $item) {
-                    if (!$targetValue->contains($item)) {
-                        $targetValue->add($item);
-                    }
-                }
-            }
+        if (!self::$toFlush->contains($entity)) {
+            self::$toFlush->add($entity);
         }
+    }
+    
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection<int, object>
+     */
+    public static function getEntitiesToFlush(): ArrayCollection
+    {
+        return self::$toFlush;
     }
 }
