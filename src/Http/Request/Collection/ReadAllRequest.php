@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
@@ -81,18 +83,24 @@ class ReadAllRequest extends Request
         }
         
         $repo = $this->em->getRepository($recipe->source());
-        $qb = $builder->createQueryBuilder($repo, 'entity');
         
-        $count = (clone $qb)->select('count(entity.id)')->getQuery()->getSingleScalarResult();
+        $count = $repo->createQueryBuilder('entity')
+            ->select('count(entity.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
         
-        $qb->setFirstResult(($data['currentPage'] - 1) * $data['itemsPerPage'])
+        $qb = $builder
+            ->createQueryBuilder($repo, 'entity')
+            ->setFirstResult(($data['currentPage'] - 1) * $data['itemsPerPage'])
             ->setMaxResults($data['itemsPerPage']);
         
         foreach ($data['orderBy'] as $param) {
             $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
         }
         
-        $items = $qb->getQuery()->getResult();
+        $query = $qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_OBJECT);
+        $paginator = new Paginator($query, true);
+        $items = iterator_to_array($paginator->getIterator());
         
         foreach ($items as $key => $item) {
             $items[$key] = $builder->format($item, $data['adminPanel']);
