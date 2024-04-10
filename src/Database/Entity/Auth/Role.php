@@ -10,12 +10,13 @@ use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\EntityException;
 use Megio\Database\Field\TCreatedAt;
 use Megio\Database\Field\TId;
+use Megio\Database\Interface\IJoinable;
 use Megio\Database\Repository\Auth\RoleRepository;
 
 #[ORM\Table(name: '`auth_role`')]
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Role
+class Role implements IJoinable
 {
     use TId, TCreatedAt;
     
@@ -79,5 +80,16 @@ class Role
         if ($this->name === Admin::ROLE_ADMIN) {
             throw new EntityException('You can not create admin role, admin role is default.');
         }
+    }
+    
+    /**
+     * @return array{fields: string[], format: string}
+     */
+    public function getJoinableLabel(): array
+    {
+        return [
+            'fields' => ['name'],
+            'format' => '%s',
+        ];
     }
 }

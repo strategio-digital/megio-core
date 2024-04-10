@@ -31,7 +31,7 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *     maxLength: int|null,
  *     defaultValue: mixed,
  *     reverseEntity: class-string,
- *     reverseField: string,
+ *     reverseField: string|null,
  * }
  */
 class RecipeDbSchema
@@ -93,10 +93,6 @@ class RecipeDbSchema
             $reverseField = $attr->inversedBy;
         }
         
-        if ($reverseField === null) {
-            throw new \InvalidArgumentException('Attribute mappedBy or inversedBy is required');
-        }
-        
         $this->oneToOneColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_one',
@@ -115,10 +111,6 @@ class RecipeDbSchema
             throw new \InvalidArgumentException('Attribute targetEntity is required');
         }
         
-        if ($attr->mappedBy === null) {
-            throw new \InvalidArgumentException('Attribute mappedBy is required');
-        }
-        
         $this->oneToManyColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_many',
@@ -135,10 +127,6 @@ class RecipeDbSchema
     {
         if ($attr->targetEntity === null) {
             throw new \InvalidArgumentException('Attribute targetEntity is required');
-        }
-        
-        if ($attr->inversedBy === null) {
-            throw new \InvalidArgumentException('Attribute inversedBy is required');
         }
         
         $this->manyToOneColumns[] = [
@@ -162,10 +150,6 @@ class RecipeDbSchema
         $reverseField = $attr->mappedBy;
         if ($reverseField === null) {
             $reverseField = $attr->inversedBy;
-        }
-        
-        if ($reverseField === null) {
-            throw new \InvalidArgumentException('Attribute mappedBy or inversedBy is required');
         }
         
         $this->manyToManyColumns[] = [

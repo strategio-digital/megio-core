@@ -87,12 +87,16 @@ class ArrayToEntity
             if ($currentValue !== null) {
                 $targetRef = new \ReflectionClass($currentValue);
                 $targetField = $schemas[array_search($fieldKey, $schemaNames)]['reverseField'];
-                $targetRef->getProperty($targetField)->setValue($currentValue, null);
+                if ($targetField !== null) {
+                    $targetRef->getProperty($targetField)->setValue($currentValue, null);
+                }
                 self::addEntityToFlush($currentValue);
             }
             
             if ($value !== null) {
-                $ref->getProperty($colSchema['reverseField'])->setValue($value, $current);
+                if ($colSchema['reverseField'] !== null) {
+                    $ref->getProperty($colSchema['reverseField'])->setValue($value, $current);
+                }
                 self::addEntityToFlush($value);
             }
         }
@@ -111,16 +115,20 @@ class ArrayToEntity
             foreach ($currentItems as $item) {
                 if (!$value->contains($item)) {
                     $currentItems->removeElement($item);
-                    $itemRef = new \ReflectionClass($item);
-                    $itemRef->getProperty($colSchema['reverseField'])->setValue($item, null);
+                    if ($colSchema['reverseField'] !== null) {
+                        $itemRef = new \ReflectionClass($item);
+                        $itemRef->getProperty($colSchema['reverseField'])->setValue($item, null);
+                    }
                     self::addEntityToFlush($item);
                 }
             }
             
             foreach ($value as $item) {
                 $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
-                $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
-                $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
+                if ($colSchema['reverseField'] !== null) {
+                    $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
+                    $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
+                }
                 self::addEntityToFlush($item);
             }
         }
@@ -138,19 +146,23 @@ class ArrayToEntity
             $currentItems = $currentProp->getValue($current);
             
             foreach ($value as $item) {
-                $itemRef = new \ReflectionClass($item);
-                $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
-                if (!$currentItems->contains($current) && !$collection->contains($current) ) {
-                    $collection->add($current);
-                    self::addEntityToFlush($item);
+                if ($colSchema['reverseField'] !== null) {
+                    $itemRef = new \ReflectionClass($item);
+                    $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
+                    if (!$currentItems->contains($current) && !$collection->contains($current)) {
+                        $collection->add($current);
+                        self::addEntityToFlush($item);
+                    }
                 }
             }
             
             foreach ($currentItems as $item) {
                 if (!$value->contains($item)) {
-                    $itemRef = new \ReflectionClass($item);
-                    $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
-                    $collection->removeElement($current);
+                    if ($colSchema['reverseField'] !== null) {
+                        $itemRef = new \ReflectionClass($item);
+                        $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
+                        $collection->removeElement($current);
+                    }
                     self::addEntityToFlush($item);
                 }
             }
