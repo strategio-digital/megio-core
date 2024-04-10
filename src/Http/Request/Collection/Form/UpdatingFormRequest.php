@@ -65,9 +65,8 @@ class UpdatingFormRequest extends Request
             return $this->error([$e->getMessage()]);
         }
         
-        $qb = $readBuilder->createQueryBuilder($repo, 'entity');
-        
-        $qb
+        $qb = $readBuilder
+            ->createQueryBuilder($repo, 'entity')
             ->where('entity.id = :id')
             ->setParameter('id', $data['id']);
         
@@ -97,6 +96,11 @@ class UpdatingFormRequest extends Request
             if ($row[$column['name']] !== null) {
                 $row[$column['name']] = $row[$column['name']]['id'];
             }
+        }
+        
+        // Format-many-to-many data
+        foreach ($schema->getManyToManyColumns() as $column) {
+            $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
         }
         
         /** @var string $rowId */

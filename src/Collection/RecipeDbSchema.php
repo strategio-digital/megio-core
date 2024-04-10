@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
@@ -46,6 +47,9 @@ class RecipeDbSchema
     
     /** @var JoinableColumn[] */
     private array $manyToOneColumns = [];
+    
+    /** @var JoinableColumn[] */
+    private array $manyToManyColumns = [];
     
     public function addUnionColumn(Column $attr, \ReflectionProperty $prop): void
     {
@@ -149,6 +153,33 @@ class RecipeDbSchema
         ];
     }
     
+    public function addManyToManyColumn(ManyToMany $attr, \ReflectionProperty $prop): void
+    {
+        if ($attr->targetEntity === null) {
+            throw new \InvalidArgumentException("Attribute targetEntity is required");
+        }
+        
+        $reverseField = $attr->mappedBy;
+        if ($reverseField === null) {
+            $reverseField = $attr->inversedBy;
+        }
+        
+        if ($reverseField === null) {
+            throw new \InvalidArgumentException('Attribute mappedBy or inversedBy is required');
+        }
+        
+        $this->manyToManyColumns[] = [
+            'name' => $prop->getName(),
+            'type' => 'many_to_many',
+            'unique' => false,
+            'nullable' => true,
+            'maxLength' => null,
+            'defaultValue' => null,
+            'reverseEntity' => $attr->targetEntity,
+            'reverseField' => $reverseField,
+        ];
+    }
+    
     /** @return UnionColumn[] */
     public function getUnionColumns(): array
     {
@@ -171,5 +202,11 @@ class RecipeDbSchema
     public function getManyToOneColumns(): array
     {
         return $this->manyToOneColumns;
+    }
+    
+    /** @return JoinableColumn[] */
+    public function getManyToManyColumns(): array
+    {
+        return $this->manyToManyColumns;
     }
 }

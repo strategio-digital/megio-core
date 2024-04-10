@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Helper;
 
-use Megio\Database\Interface\IJoinable;
-
 class JoinableLabel
 {
     /**
@@ -28,21 +26,6 @@ class JoinableLabel
             }
         }
 
-        return sprintf($describer['format'], ...$values);
-    }
-    
-    public static function fromEntity(IJoinable $entity): string
-    {
-        $ref = new \ReflectionClass($entity);
-        $describer = $entity->getJoinableLabel();
-        
-        $values = [];
-        foreach ($describer['fields'] as $field) {
-            if ($ref->hasProperty($field)) {
-                $values[] = $ref->getProperty($field)->getValue($entity);
-            }
-        }
-        
         return sprintf($describer['format'], ...$values);
     }
 }

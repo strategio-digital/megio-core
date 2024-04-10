@@ -122,20 +122,27 @@ class WriteBuilder implements IRecipeBuilder
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
+
         $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($oneToOneMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
+
         $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($manyToOne as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             if ($cs['nullable']) {
                 $field->addRule(new NullableRule());
             }
+            $field->setBuilder($this);
+            $this->fields[$field->getName()] = $field;
+        }
+
+        $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+        foreach ($manyToMany as $cs) {
+            $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }

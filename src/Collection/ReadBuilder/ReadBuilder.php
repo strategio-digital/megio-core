@@ -95,7 +95,8 @@ class ReadBuilder implements IRecipeBuilder
             }
         }
         
-        foreach ($this->dbSchema->getOneToOneColumns() as $column) {
+        $toOneColumns = array_merge($this->dbSchema->getOneToOneColumns(), $this->dbSchema->getManyToOneColumns());
+        foreach ($toOneColumns as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
                 $col = new ToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
@@ -103,18 +104,11 @@ class ReadBuilder implements IRecipeBuilder
             }
         }
         
-        foreach ($this->dbSchema->getOneToManyColumns() as $column) {
+        $toManyColumns = array_merge($this->dbSchema->getOneToManyColumns(), $this->dbSchema->getManyToManyColumns());
+        foreach ($toManyColumns as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
                 $col = new ToManyColumn(key: $column['name'], name: $column['name'], visible: $visible);
-                $this->columns[$col->getKey()] = $col;
-            }
-        }
-        
-        foreach ($this->dbSchema->getManyToOneColumns() as $column) {
-            if (!in_array($column['name'], $ignored)) {
-                $visible = !in_array($column['name'], $invisibleCols);
-                $col = new ToOneColumn(key: $column['name'], name: $column['name'], visible: $visible);
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -191,21 +185,14 @@ class ReadBuilder implements IRecipeBuilder
         
         $columnNames = array_map(fn($col) => $col->getName(), $this->columns);
         
-        foreach ($this->dbSchema->getOneToOneColumns() as $column) {
-            if (in_array($column['name'], $columnNames)) {
-                $qb->addSelect($column['name']);
-                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
-            }
-        }
+        $joins = array_merge(
+            $this->dbSchema->getOneToOneColumns(),
+            $this->dbSchema->getOneToManyColumns(),
+            $this->dbSchema->getManyToOneColumns(),
+            $this->dbSchema->getManyToManyColumns()
+        );
         
-        foreach ($this->dbSchema->getOneToManyColumns() as $column) {
-            if (in_array($column['name'], $columnNames)) {
-                $qb->addSelect($column['name']);
-                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
-            }
-        }
-        
-        foreach ($this->dbSchema->getManyToOneColumns() as $column) {
+        foreach ($joins as $column) {
             if (in_array($column['name'], $columnNames)) {
                 $qb->addSelect($column['name']);
                 $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);

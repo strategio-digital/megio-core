@@ -64,17 +64,9 @@ class ToOneSelectField extends BaseField
             ->createQueryBuilder('e')
             ->select('e')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
         
-        $this->items = array_map(function ($item) {
-            if ($item instanceof IJoinable) {
-                return new SelectField\Item($item->getId(), JoinableLabel::fromEntity($item));
-            } else {
-                $class = $item::class;
-                throw new CollectionException("Entity '{$class}' has to implement IJoinable interface!");
-            }
-        }, $data);
-        
+        $this->items = array_map(fn($item) => new SelectField\Item($item['id'], JoinableLabel::fromArray($item, $this->reverseEntity)), $data);
         $this->serializers[] = new ToOneSerializer($this->reverseEntity, $this->primaryKey);
     }
     

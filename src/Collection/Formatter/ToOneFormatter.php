@@ -33,7 +33,8 @@ class ToOneFormatter extends BaseFormatter
         $joins = array_merge(
             $schema->getOneToOneColumns(),
             $schema->getOneToManyColumns(),
-            $schema->getManyToOneColumns()
+            $schema->getManyToOneColumns(),
+            $schema->getManyToManyColumns(),
         );
         
         $joinable = array_values(array_filter($joins, fn($item) => $item['name'] === $key));

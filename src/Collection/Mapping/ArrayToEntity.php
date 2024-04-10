@@ -57,6 +57,7 @@ class ArrayToEntity
                 if (!in_array($methodName, $methods)) {
                     self::resolveOneToOneReverseRelation($fieldKey, $schema, $entity, $value);
                     self::resolveOneToManyReverseRelation($fieldKey, $schema, $entity, $value);
+                    self::resolveManyToManyReverseRelation($fieldKey, $schema, $entity, $value);
                     $ref->getProperty($fieldKey)->setValue($entity, $value);
                 } else {
                     $entity->{$ref->getMethod($methodName)->name}($value);
@@ -73,11 +74,11 @@ class ArrayToEntity
     
     protected static function resolveOneToOneReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
     {
-        $oneToOneSchemas = $schema->getOneToOneColumns();
-        $oneToOneFieldNames = array_map(fn($c) => $c['name'], $oneToOneSchemas);
+        $schemas = $schema->getOneToOneColumns();
+        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
         
-        if (in_array($fieldKey, $oneToOneFieldNames)) {
-            $colSchema = $oneToOneSchemas[array_search($fieldKey, $oneToOneFieldNames)];
+        if (in_array($fieldKey, $schemaNames)) {
+            $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
             $ref = new \ReflectionClass($colSchema['reverseEntity']);
             
             $currentRef = new \ReflectionClass($current);
@@ -85,7 +86,7 @@ class ArrayToEntity
             
             if ($currentValue !== null) {
                 $targetRef = new \ReflectionClass($currentValue);
-                $targetField = $oneToOneSchemas[array_search($fieldKey, $oneToOneFieldNames)]['reverseField'];
+                $targetField = $schemas[array_search($fieldKey, $schemaNames)]['reverseField'];
                 $targetRef->getProperty($targetField)->setValue($currentValue, null);
                 self::addEntityToFlush($currentValue);
             }
@@ -99,11 +100,11 @@ class ArrayToEntity
     
     protected static function resolveOneToManyReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
     {
-        $oneToManySchemas = $schema->getOneToManyColumns();
-        $oneToManyFieldNames = array_map(fn($c) => $c['name'], $oneToManySchemas);
+        $schemas = $schema->getOneToManyColumns();
+        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
         
-        if (in_array($fieldKey, $oneToManyFieldNames) && $value instanceof Collection) {
-            $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
+        if (in_array($fieldKey, $schemaNames) && $value instanceof Collection) {
+            $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
             $currentRef = new \ReflectionClass($current);
             $currentItems = $currentRef->getProperty($fieldKey)->getValue($current);
             
@@ -117,10 +118,41 @@ class ArrayToEntity
             }
             
             foreach ($value as $item) {
-                $colSchema = $oneToManySchemas[array_search($fieldKey, $oneToManyFieldNames)];
+                $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
                 $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
                 $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
                 self::addEntityToFlush($item);
+            }
+        }
+    }
+    
+    protected static function resolveManyToManyReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
+    {
+        $schemas = $schema->getManyToManyColumns();
+        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
+        
+        if (in_array($fieldKey, $schemaNames) && $value instanceof Collection) {
+            $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
+            $currentRef = new \ReflectionClass($current);
+            $currentProp = $currentRef->getProperty($fieldKey);
+            $currentItems = $currentProp->getValue($current);
+            
+            foreach ($value as $item) {
+                $itemRef = new \ReflectionClass($item);
+                $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
+                if (!$currentItems->contains($current) && !$collection->contains($current) ) {
+                    $collection->add($current);
+                    self::addEntityToFlush($item);
+                }
+            }
+            
+            foreach ($currentItems as $item) {
+                if (!$value->contains($item)) {
+                    $itemRef = new \ReflectionClass($item);
+                    $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
+                    $collection->removeElement($current);
+                    self::addEntityToFlush($item);
+                }
             }
         }
     }
