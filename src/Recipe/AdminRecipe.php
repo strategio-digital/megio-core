@@ -5,6 +5,7 @@ namespace Megio\Recipe;
 
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\RecipeRequest;
+use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\Field\EmailField;
 use Megio\Collection\WriteBuilder\Field\PasswordField;
@@ -37,7 +38,6 @@ class AdminRecipe extends CollectionRecipe
     
     public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
     {
-        //$builder->
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
             ->add(new PasswordField('password', 'Password', [new RequiredRule()]));
@@ -45,8 +45,15 @@ class AdminRecipe extends CollectionRecipe
     
     public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
     {
+        $pwf = new PasswordField(name: 'password', label: 'Heslo');
+        
+        // Do not show password on form rendering
+        if ($request->isFormRendering()) {
+            $pwf->setValue(new EmptyValue());
+        }
+        
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
-            ->add(new PasswordField('password', 'Password'));
+            ->add($pwf);
     }
 }
