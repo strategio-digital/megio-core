@@ -313,11 +313,6 @@ class WriteBuilder implements IRecipeBuilder
         return $values;
     }
     
-    public function dump(): void
-    {
-        dumpe($this->build()->toArray());
-    }
-    
     private function recreateRules(IField $field): IField
     {
         $rules = $field->getRules();

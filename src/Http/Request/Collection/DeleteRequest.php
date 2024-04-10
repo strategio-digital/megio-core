@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection;
 
+use Doctrine\DBAL\Exception\ConstraintViolationException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Megio\Collection\RecipeFinder;
 use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
@@ -74,7 +76,14 @@ class DeleteRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $qb->delete()->getQuery()->execute();
+        try {
+            $qb->delete()->getQuery()->execute();
+        } catch (ConstraintViolationException $e) {
+            $response = $this->error([$e->getMessage()], 400);
+            $event = new OnExceptionEvent(EventType::DELETE, $data, $recipe, $e, $this->request, $response);
+            $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
+            return $dispatcher->getResponse();
+        }
         
         $result = [
             'ids' => $data['ids'],

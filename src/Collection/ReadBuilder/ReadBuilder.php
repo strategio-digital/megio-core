@@ -227,11 +227,6 @@ class ReadBuilder implements IRecipeBuilder
         return array_values($cols);
     }
     
-    public function dump(): void
-    {
-        dumpe($this->build()->toArray());
-    }
-    
     protected function addIdColumnIfNotExists(): void
     {
         if (!array_key_exists('id', $this->columns)) {
