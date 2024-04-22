@@ -12,15 +12,12 @@ class UniqueRule extends BaseRule
 {
     /**
      * @param class-string $targetEntity
-     * @param string $columnName
-     * @param string $primaryKey
-     * @param string|null $message
      */
     public function __construct(
-        protected string      $targetEntity,
-        protected string      $columnName,
-        protected string      $primaryKey = 'id',
-        protected string|null $message = null
+        protected string  $targetEntity,
+        protected string  $columnName,
+        protected string  $primaryKey = 'id',
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);

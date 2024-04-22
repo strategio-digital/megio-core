@@ -8,8 +8,8 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class MinRule extends BaseRule
 {
     public function __construct(
-        protected int         $min,
-        protected string|null $message = null
+        protected int     $min,
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);

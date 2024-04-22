@@ -8,8 +8,8 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class EqualRule extends BaseRule
 {
     public function __construct(
-        protected string      $targetField,
-        protected string|null $message = null
+        protected string  $targetField,
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);

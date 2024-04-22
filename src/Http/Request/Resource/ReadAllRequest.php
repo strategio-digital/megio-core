@@ -133,7 +133,7 @@ class ReadAllRequest extends Request
         return $resources;
     }
     
-    private function createHint(ResourceType $type, string $name): string|null
+    private function createHint(ResourceType $type, string $name): ?string
     {
         if ($type === ResourceType::VUE_ROUTER) {
             return null;

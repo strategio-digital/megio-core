@@ -8,13 +8,11 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class AnyOfRule extends BaseRule
 {
     /**
-     * AnyOfRule constructor.
      * @param array<int, string|int|float|bool|null> $keys
-     * @param string|null $message
      */
     public function __construct(
-        protected array       $keys,
-        protected string|null $message = null
+        protected array   $keys,
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);

@@ -18,7 +18,7 @@ abstract class BaseRule implements IRule
     /** @var IRule[] */
     protected array $relatedRules = [];
     
-    public function __construct(protected string|null $message = null)
+    public function __construct(protected ?string $message = null)
     {
     }
     

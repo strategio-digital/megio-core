@@ -7,13 +7,9 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 
 class RegexRule extends BaseRule
 {
-    /**
-     * @param string $expression
-     * @param string|null $message
-     */
     public function __construct(
-        protected string      $expression,
-        protected string|null $message = null
+        protected string  $expression,
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);

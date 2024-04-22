@@ -8,8 +8,8 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class VideoLinkRule extends BaseRule
 {
     public function __construct(
-        protected string|null $message = null,
-        protected bool        $normalize = true
+        protected ?string $message = null,
+        protected bool    $normalize = true
     )
     {
         parent::__construct(message: $message);

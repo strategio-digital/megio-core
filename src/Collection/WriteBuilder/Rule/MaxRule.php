@@ -8,8 +8,8 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class MaxRule extends BaseRule
 {
     public function __construct(
-        protected int         $max,
-        protected string|null $message = null
+        protected int     $max,
+        protected ?string $message = null
     )
     {
         parent::__construct(message: $message);
