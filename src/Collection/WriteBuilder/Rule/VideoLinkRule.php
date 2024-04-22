@@ -12,7 +12,7 @@ class VideoLinkRule extends BaseRule
         protected bool    $normalize = true
     )
     {
-        parent::__construct(message: $message);
+        parent::__construct($message);
     }
     
     public function message(): string

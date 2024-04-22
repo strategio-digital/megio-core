@@ -12,7 +12,7 @@ class RegexRule extends BaseRule
         protected ?string $message = null
     )
     {
-        parent::__construct(message: $message);
+        parent::__construct($message);
     }
     
     public function message(): string

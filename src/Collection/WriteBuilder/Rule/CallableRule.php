@@ -14,7 +14,7 @@ class CallableRule extends BaseRule
     protected array $callback;
     
     public function __construct(
-        callable              $callback,
+        callable          $callback,
         protected ?string $message = null,
     )
     {
