@@ -11,13 +11,13 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class UniqueRule extends BaseRule
 {
     /**
-     * @param class-string $entityClassName
+     * @param class-string $targetEntity
      * @param string $columnName
      * @param string $primaryKey
      * @param string|null $message
      */
     public function __construct(
-        protected string      $entityClassName,
+        protected string      $targetEntity,
         protected string      $columnName,
         protected string      $primaryKey = 'id',
         protected string|null $message = null
@@ -45,7 +45,7 @@ class UniqueRule extends BaseRule
             return false;
         }
         
-        $repo = $this->getEntityManager()->getRepository($this->entityClassName);
+        $repo = $this->getEntityManager()->getRepository($this->targetEntity);
         
         $row = $repo->createQueryBuilder('e')
             ->select('e')
@@ -59,7 +59,7 @@ class UniqueRule extends BaseRule
         }
         
         if (!array_key_exists($this->primaryKey, $row)) {
-            throw new InvalidArgumentException("Property '{$this->primaryKey}' not found in entity '{$this->entityClassName}'");
+            throw new InvalidArgumentException("Property '{$this->primaryKey}' not found in entity '{$this->targetEntity}'");
         }
         
         if (

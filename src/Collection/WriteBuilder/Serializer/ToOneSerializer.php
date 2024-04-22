@@ -10,11 +10,11 @@ use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 class ToOneSerializer extends BaseSerializer
 {
     /**
-     * @param class-string $entityClassName
+     * @param class-string $targetEntity
      */
     public function __construct(
-        protected string $entityClassName,
-        protected string $primaryKey = 'id',
+        protected string $targetEntity,
+        protected string $columnKey = 'id',
     )
     {
     }
@@ -34,8 +34,8 @@ class ToOneSerializer extends BaseSerializer
         $em = $this->getBuilder()->getEntityManager();
         
         $row = $em
-            ->getRepository($this->entityClassName)
-            ->findOneBy([$this->primaryKey => $value]);
+            ->getRepository($this->targetEntity)
+            ->findOneBy([$this->columnKey => $value]);
         
         if ($row) {
             return $row;
