@@ -42,7 +42,7 @@ use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Database\Entity\Admin;
-use Symfony\Component\HttpFoundation\Request;
+use Nette\Schema\Expect;
 
 class TestRulesRecipe extends CollectionRecipe
 {
@@ -63,6 +63,11 @@ class TestRulesRecipe extends CollectionRecipe
             new SelectField\Item(1, 'Test_2')
         ];
         
+        $schema = Expect::structure([
+            'email' => Expect::email()->required(),
+            'name' => Expect::string()->required()->min(3)->max(32),
+        ]);
+        
         return $builder
             
             // Email and Password
@@ -76,8 +81,8 @@ class TestRulesRecipe extends CollectionRecipe
             ->add(new VideoLinkField(name: 'video_link', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
             
             // JSON & JSON String
-            ->add(new JsonField(name: 'json', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TextAreaField(name: 'json_string', label: '', rules: [new RequiredRule(), new NullableRule(), new JsonStringRule()], mapToEntity: false))
+            ->add(new JsonField(name: 'json', label: '', schema: $schema, rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(new TextAreaField(name: 'json_string', label: '', rules: [new RequiredRule(), new NullableRule(), new JsonStringRule($schema)], mapToEntity: false))
             
             // AnyOf, Slug, Regex
             ->add(new SelectField(name: 'any_of', label: '', items: $items, rules: [new NullableRule(), new IntegerRule(), new AnyOfRule([1, 2, 3])], mapToEntity: false))

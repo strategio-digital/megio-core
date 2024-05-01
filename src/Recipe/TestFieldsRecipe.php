@@ -36,6 +36,7 @@ use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
+use Nette\Schema\Expect;
 
 class TestFieldsRecipe extends CollectionRecipe
 {
@@ -56,6 +57,11 @@ class TestFieldsRecipe extends CollectionRecipe
             new SelectField\Item(1, 'Test_2')
         ];
         
+        $schema = Expect::structure([
+            'email' => Expect::email()->required(),
+            'name' => Expect::string()->required()->min(3)->max(32),
+        ]);
+        
         return $builder
             ->add(new HiddenField('hidden', 'Hidden', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false, defaultValue: 'yep'))
             ->add(new ArrayField('array', 'Array', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
@@ -70,7 +76,7 @@ class TestFieldsRecipe extends CollectionRecipe
             ->add(new HourMinuteCzField('hour_minute_cz', 'HourMinute CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
             ->add(new HourMinuteField('hour_minute', 'HourMinute', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
             ->add(new IntegerField('integer', 'Integer', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new JsonField('json', 'JSON', rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false))
+            ->add(new JsonField('json', 'JSON', schema: $schema, rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false))
             ->add(new NumericField('numeric', 'Numeric', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
             ->add(new PasswordField('password', 'Password', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
             ->add(new PhoneCzField('phone_cz', 'Phone CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))

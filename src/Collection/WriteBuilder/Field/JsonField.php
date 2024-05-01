@@ -6,6 +6,7 @@ namespace Megio\Collection\WriteBuilder\Field;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Rule\JsonRule;
+use Nette\Schema\Schema;
 
 class JsonField extends BaseField
 {
@@ -20,19 +21,20 @@ class JsonField extends BaseField
      * @param array<string, string|int|float|bool|null> $attrs
      */
     public function __construct(
-        protected string $name,
-        protected string $label,
-        protected array  $rules = [],
-        protected array  $serializers = [],
-        protected array  $formatters = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue()
+        protected string  $name,
+        protected string  $label,
+        protected ?Schema $schema = null,
+        protected array   $rules = [],
+        protected array   $serializers = [],
+        protected array   $formatters = [],
+        protected array   $attrs = [],
+        protected bool    $disabled = false,
+        protected bool    $mapToEntity = true,
+        protected mixed   $value = new UndefinedValue(),
+        protected mixed   $defaultValue = new UndefinedValue()
     )
     {
-        $this->rules[] = new JsonRule();
+        $this->rules[] = new JsonRule($schema);
         parent::__construct(
             $this->name,
             $this->label,
