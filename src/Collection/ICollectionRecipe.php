@@ -15,22 +15,16 @@ interface ICollectionRecipe
     /** @return string */
     public function key(): string;
     
-    /**
-     * @throws \Megio\Collection\Exception\CollectionException
-     */
+    /** @throws \Megio\Collection\Exception\CollectionException */
     public function read(ReadBuilder $builder, RecipeRequest $request): ReadBuilder;
     
-    /**
-     * @throws \Megio\Collection\Exception\CollectionException
-     */
+    /** @throws \Megio\Collection\Exception\CollectionException */
     public function readAll(ReadBuilder $builder, RecipeRequest $request): ReadBuilder;
     
     public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder;
     
     public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder;
     
-    /**
-     * @throws \Megio\Collection\Exception\CollectionException
-     */
+    /** @throws \Megio\Collection\Exception\CollectionException */
     public function getEntityMetadata(): RecipeEntityMetadata;
 }

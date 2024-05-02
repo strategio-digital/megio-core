@@ -6,6 +6,7 @@ namespace Megio\Http\Request\Collection;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\Column\Base\IColumn;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -30,9 +31,10 @@ class ReadAllRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
-        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
+        $recipes = $this->recipeFinder->load()->getAll();
+        $recipeKeys = array_map(fn($r) => $r->key(), $recipes);
         
         return [
             'recipe' => Expect::anyOf(...$recipeKeys)->required(),
@@ -43,7 +45,7 @@ class ReadAllRequest extends Request
             'orderBy' => Expect::arrayOf(Expect::structure([
                 'col' => Expect::string()->required(),
                 'desc' => Expect::bool()->required()
-            ])->castTo('array'))->min(1)->default([['col' => 'createdAt', 'desc' => true]]),
+            ])->castTo('array'))->min(0)->default([]),
             'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
@@ -69,7 +71,6 @@ class ReadAllRequest extends Request
             return $this->error([$e->getMessage()]);
         }
         
-        
         /** @noinspection DuplicatedCode */
         if ($builder->countFields() === 1) {
             return $this->error(["Collection '{$data['recipe']}' has no readable fields"]);
@@ -94,8 +95,19 @@ class ReadAllRequest extends Request
             ->setFirstResult(($data['currentPage'] - 1) * $data['itemsPerPage'])
             ->setMaxResults($data['itemsPerPage']);
         
+        // Sortable columns
+        $sortable = array_filter($builder->getColumns(), fn(IColumn $col) => $col->isSortable());
+        $sortableKeys = array_map(fn(IColumn $col) => $col->getKey(), $sortable);
+        
+        // Order by only by sortable columns
         foreach ($data['orderBy'] as $param) {
-            $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
+            if (in_array($param['col'], $sortableKeys)) {
+                $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
+            }
+        }
+        
+        if (!in_array('id', array_column($data['orderBy'], 'col'))) {
+            $qb->addOrderBy('entity.id', 'ASC');
         }
         
         $query = $qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);

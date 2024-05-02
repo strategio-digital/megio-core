@@ -84,13 +84,14 @@ class ReadBuilder implements IRecipeBuilder
     {
         $this->addIdColumnIfNotExists();
         
+        $sortableCols = ['id', 'createdAt', 'updatedAt'];
         $invisibleCols = ['id', 'createdAt', 'updatedAt'];
         $ignored = array_merge($exclude, ['id']);
         
         foreach ($this->dbSchema->getUnionColumns() as $column) {
             if (!in_array($column['name'], $ignored)) {
                 $visible = !in_array($column['name'], $invisibleCols);
-                $col = ColumnCreator::create($column['type'], $column['name'], $visible);
+                $col = ColumnCreator::create($column['type'], $column['name'], $visible, in_array($column['name'], $sortableCols));
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -231,7 +232,7 @@ class ReadBuilder implements IRecipeBuilder
     {
         if (!array_key_exists('id', $this->columns)) {
             $this->columns = array_merge([
-                'id' => new StringColumn(key: 'id', name: 'ID', visible: false),
+                'id' => new StringColumn(key: 'id', name: 'ID', sortable: true, visible: false),
             ], $this->columns);
         }
     }

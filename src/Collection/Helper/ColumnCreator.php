@@ -24,13 +24,13 @@ use Nette\Utils\Strings;
 
 class ColumnCreator
 {
-    public static function create(string $type, string $key, bool $visible): IColumn
+    public static function create(string $type, string $key, bool $visible, bool $sortable): IColumn
     {
         $keysMap = [
-            'email' => new EmailColumn(key: $key, name: $key, visible: $visible),
-            'phone' => new PhoneColumn(key: $key, name: $key, visible: $visible),
-            'url' => new UrlColumn(key: $key, name: $key, visible: $visible),
-            'video' => new VideoLinkColumn(key: $key, name: $key, visible: $visible),
+            'email' => new EmailColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            'phone' => new PhoneColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            'url' => new UrlColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            'video' => new VideoLinkColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
         ];
         
         $columnByKey = null;
@@ -47,32 +47,32 @@ class ColumnCreator
             Types::DECIMAL,
             Types::GUID,
             Types::STRING,
-            Types::TEXT => $columnByKey ?: new StringColumn(key: $key, name: $key, visible: $visible),
+            Types::TEXT => $columnByKey ?: new StringColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
-            Types::BLOB => new BlobColumn(key: $key, name: $key, visible: $visible),
+            Types::BLOB => new BlobColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
-            Types::BOOLEAN => new BooleanColumn(key: $key, name: $key, visible: $visible),
+            Types::BOOLEAN => new BooleanColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
             Types::DATE_MUTABLE,
-            Types::DATE_IMMUTABLE => new DateColumn(key: $key, name: $key, visible: $visible),
-            Types::DATEINTERVAL => new DateTimeIntervalColumn(key: $key, name: $key, visible: $visible),
+            Types::DATE_IMMUTABLE => new DateColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            Types::DATEINTERVAL => new DateTimeIntervalColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
             Types::DATETIME_MUTABLE,
             Types::DATETIME_IMMUTABLE,
             Types::DATETIMETZ_MUTABLE,
-            Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(key: $key, name: $key, visible: $visible),
+            Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
             Types::FLOAT,
             Types::INTEGER,
-            Types::SMALLINT => new NumericColumn(key: $key, name: $key, visible: $visible),
+            Types::SMALLINT => new NumericColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
-            Types::JSON => new JsonColumn(key: $key, name: $key, visible: $visible),
-            Types::SIMPLE_ARRAY => new ArrayColumn(key: $key, name: $key, visible: $visible),
+            Types::JSON => new JsonColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            Types::SIMPLE_ARRAY => new ArrayColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
             Types::TIME_MUTABLE,
-            Types::TIME_IMMUTABLE => new TimeColumn(key: $key, name: $key, visible: $visible),
+            Types::TIME_IMMUTABLE => new TimeColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
-            default => new UnknownColumn(key: $key, name: $key, visible: $visible),
+            default => new UnknownColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
         };
     }
 }

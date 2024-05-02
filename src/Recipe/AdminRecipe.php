@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use Megio\Collection\ReadBuilder\Column\EmailColumn;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
@@ -12,7 +13,6 @@ use Megio\Collection\WriteBuilder\Field\PasswordField;
 use Megio\Collection\WriteBuilder\Rule\RequiredRule;
 use Megio\Collection\CollectionRecipe;
 use Megio\Database\Entity\Admin;
-use Symfony\Component\HttpFoundation\Request;
 
 class AdminRecipe extends CollectionRecipe
 {
@@ -33,7 +33,8 @@ class AdminRecipe extends CollectionRecipe
     
     public function readAll(ReadBuilder $builder, RecipeRequest $request): ReadBuilder
     {
-        return $builder->buildByDbSchema(['password']);
+        return $builder->buildByDbSchema(['password'], persist: true)
+            ->add(new EmailColumn('email', 'E-mail', true));
     }
     
     public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
