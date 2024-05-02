@@ -16,7 +16,7 @@ class CreateRoleRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         return [
             'name' => Expect::string()->min(3)->max(32)->required(),

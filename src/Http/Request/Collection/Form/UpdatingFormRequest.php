@@ -29,7 +29,7 @@ class UpdatingFormRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         

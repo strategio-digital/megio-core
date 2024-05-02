@@ -8,9 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 interface IRequest
 {
     /**
+     * @param array<string|int, mixed> $data
      * @return array<string|int, mixed>
      */
-    public function schema(): array;
+    public function schema(array $data): array;
     
     /**
      * @param array<string|int, mixed> $data

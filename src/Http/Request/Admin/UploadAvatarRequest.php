@@ -16,7 +16,7 @@ class UploadAvatarRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         return ['avatar' => Expect::type(UploadedFile::class)->required()];
     }

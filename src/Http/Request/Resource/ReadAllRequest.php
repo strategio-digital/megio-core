@@ -23,7 +23,7 @@ class ReadAllRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         return [
             'view_resources' => Expect::arrayOf('string')->required(),

@@ -19,7 +19,7 @@ class RevokeTokenRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         $all = $this->entityFinder->findAll();
         $filtered = array_filter($all, fn($item) => is_subclass_of($item['className'], IAuthenticable::class));

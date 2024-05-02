@@ -45,7 +45,7 @@ abstract class Request extends Controller implements IRequest
         $this->request = $request;
         
         $data = $this->getRequestData();
-        $schema = $this->schema();
+        $schema = $this->schema($data);
         
         if (count($schema) !== 0) {
             try {

@@ -15,7 +15,7 @@ class DeleteRoleRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         return [
             'id' => Expect::string()->required(),

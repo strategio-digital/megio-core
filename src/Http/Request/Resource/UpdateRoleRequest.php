@@ -16,7 +16,7 @@ class UpdateRoleRequest extends Request
     {
     }
     
-    public function schema(): array
+    public function schema(array $data): array
     {
         return [
             'resource_id' => Expect::string()->required(),
