@@ -6,6 +6,8 @@ namespace Megio\Recipe;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\ReadBuilder\Column\EmailColumn;
 use Megio\Collection\ReadBuilder\ReadBuilder;
+use Megio\Collection\SearchBuilder\Searchable;
+use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\Field\EmailField;
@@ -24,6 +26,16 @@ class AdminRecipe extends CollectionRecipe
     public function key(): string
     {
         return 'admin';
+    }
+    
+    public function search(SearchBuilder $builder, CollectionRequest $request): SearchBuilder
+    {
+        $builder
+            ->keepDefaults()
+            ->addSearchable(new Searchable('email'))
+            ->addSearchable(new Searchable('lastLogin'));
+        
+        return $builder;
     }
     
     public function read(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
