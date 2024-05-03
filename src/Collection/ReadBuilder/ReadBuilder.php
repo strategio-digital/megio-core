@@ -184,7 +184,7 @@ class ReadBuilder implements IRecipeBuilder
             ->createQueryBuilder($alias)
             ->select($alias);
         
-        $columnNames = array_map(fn($col) => $col->getName(), $this->columns);
+        $columnNames = array_map(fn($col) => $col->getKey(), $this->columns);
         
         $joins = array_merge(
             $this->dbSchema->getOneToOneColumns(),
