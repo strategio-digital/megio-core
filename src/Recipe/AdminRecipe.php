@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\ReadBuilder\Column\EmailColumn;
 use Megio\Collection\ReadBuilder\ReadBuilder;
-use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\Field\EmailField;
@@ -26,25 +26,25 @@ class AdminRecipe extends CollectionRecipe
         return 'admin';
     }
     
-    public function read(ReadBuilder $builder, RecipeRequest $request): ReadBuilder
+    public function read(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
     {
         return $builder->buildByDbSchema(['password']);
     }
     
-    public function readAll(ReadBuilder $builder, RecipeRequest $request): ReadBuilder
+    public function readAll(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
     {
         return $builder->buildByDbSchema(['password'], persist: true)
             ->add(new EmailColumn('email', 'E-mail', true));
     }
     
-    public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
             ->add(new PasswordField('password', 'Password', [new RequiredRule()]));
     }
     
-    public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         $pwf = new PasswordField(name: 'password', label: 'Heslo');
         

@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
-use Megio\Collection\RecipeRequest;
+use Megio\Collection\CollectionRecipe;
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\WriteBuilder\Field\ArrayField;
 use Megio\Collection\WriteBuilder\Field\DateCzField;
 use Megio\Collection\WriteBuilder\Field\DateField;
@@ -39,7 +40,6 @@ use Megio\Collection\WriteBuilder\Rule\MinRule;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Rule\RegexRule;
 use Megio\Collection\WriteBuilder\Rule\RequiredRule;
-use Megio\Collection\CollectionRecipe;
 use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 use Megio\Database\Entity\Admin;
 use Nette\Schema\Expect;
@@ -56,7 +56,7 @@ class TestRulesRecipe extends CollectionRecipe
         return 'test-rules';
     }
     
-    public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),
@@ -148,7 +148,7 @@ class TestRulesRecipe extends CollectionRecipe
             ->add(new DecimalField(name: 'decimal_required', label: '', rules: [new RequiredRule()], mapToEntity: false));
     }
     
-    public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $builder
             ->add(new TextField(name: 'email', label: '', rules: [

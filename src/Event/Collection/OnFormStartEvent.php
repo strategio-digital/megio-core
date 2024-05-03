@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Megio\Event\Collection;
 
 use Megio\Collection\ICollectionRecipe;
-use Megio\Collection\RecipeRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;

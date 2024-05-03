@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Collection\Form;
 
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\CollectionException;
-use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -48,10 +48,10 @@ class CreatingFormRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $recipeRequest = new RecipeRequest($this->request, true, null, [], $data['custom_data']);
+        $collectionRequest = new CollectionRequest($this->request, true, $data, null, []);
         
         try {
-            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $recipeRequest)->build();
+            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $collectionRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

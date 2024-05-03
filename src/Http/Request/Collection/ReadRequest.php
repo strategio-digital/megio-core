@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\ORM\AbstractQuery;
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
-use Megio\Collection\RecipeRequest;
 use Megio\Collection\SchemaFormatter;
 use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
@@ -56,10 +56,10 @@ class ReadRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        $recipeRequest = new RecipeRequest($this->request, false, null, [], $data['custom_data']);
+        $collectionRequest = new CollectionRequest($this->request, false, $data, null, []);
         
         try {
-            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $recipeRequest)->build();
+            $builder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $collectionRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

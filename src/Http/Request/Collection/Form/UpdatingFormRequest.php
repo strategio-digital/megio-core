@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection\Form;
 
 use Doctrine\ORM\AbstractQuery;
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
-use Megio\Collection\RecipeRequest;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Collection\RecipeFinder;
@@ -55,10 +55,10 @@ class UpdatingFormRequest extends Request
             return $dispatcher->getResponse();
         }
         
-        $recipeRequest = new RecipeRequest($this->request, true, null, [], $data['custom_data']);
+        $collectionRequest = new CollectionRequest($this->request, true, $data, null, []);
         
         try {
-            $readBuilder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $recipeRequest)->build();
+            $readBuilder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $collectionRequest)->build();
             $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
             $repo = $this->em->getRepository($recipe->source());
         } catch (CollectionException $e) {
@@ -85,7 +85,7 @@ class UpdatingFormRequest extends Request
                 $row[$column['name']] = $row[$column['name']]['id'];
             }
         }
-
+        
         // Format one-to-many data
         foreach ($schema->getOneToManyColumns() as $column) {
             $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
@@ -105,11 +105,11 @@ class UpdatingFormRequest extends Request
         
         /** @var string $rowId */
         $rowId = $row['id'];
-        $recipeRequest = new RecipeRequest($this->request, true, $rowId, $row, $data['custom_data']);
+        $collectionRequest = new CollectionRequest($this->request, true, $data, $rowId, $row);
         
         try {
             $builder = $recipe
-                ->update($this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $recipeRequest)
+                ->update($this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $collectionRequest)
                 ->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);

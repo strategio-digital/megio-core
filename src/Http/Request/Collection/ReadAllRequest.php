@@ -5,13 +5,14 @@ namespace Megio\Http\Request\Collection;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\ReadBuilder\Column\Base\IColumn;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilderEvent;
 use Megio\Collection\RecipeFinder;
-use Megio\Collection\RecipeRequest;
 use Megio\Collection\SchemaFormatter;
+use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Database\EntityManager;
 use Megio\Event\Collection\EventType;
 use Megio\Http\Request\Request;
@@ -27,6 +28,7 @@ class ReadAllRequest extends Request
         protected readonly EntityManager $em,
         protected readonly RecipeFinder  $recipeFinder,
         protected readonly ReadBuilder   $readBuilder,
+        protected readonly SearchBuilder $searchBuilder,
     )
     {
     }
@@ -42,6 +44,14 @@ class ReadAllRequest extends Request
             'adminPanel' => Expect::bool(false),
             'currentPage' => Expect::int(1)->min(1)->required(),
             'itemsPerPage' => Expect::int(10)->max(1000)->required(),
+            'search' => Expect::structure([
+                'text' => Expect::string()->nullable()->default(null),
+                'filters' => Expect::arrayOf(Expect::structure([
+                    'col' => Expect::string()->required(),
+                    'operator' => Expect::anyOf('AND', 'OR')->required(),
+                    'value' => Expect::mixed()->required()
+                ])->castTo('array'))->min(0)->default([]),
+            ])->castTo('array'),
             'orderBy' => Expect::arrayOf(Expect::structure([
                 'col' => Expect::string()->required(),
                 'desc' => Expect::bool()->required()
@@ -63,10 +73,10 @@ class ReadAllRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' not found"]);
         }
         
-        $recipeRequest = new RecipeRequest($this->request, false, null, [], $data['custom_data']);
+        $collectionRequest = new CollectionRequest($this->request, false, $data, null, []);
         
         try {
-            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ALL), $recipeRequest)->build();
+            $builder = $recipe->readAll($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ALL), $collectionRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
@@ -85,15 +95,27 @@ class ReadAllRequest extends Request
         
         $repo = $this->em->getRepository($recipe->source());
         
-        $count = $repo->createQueryBuilder('entity')
-            ->select('count(entity.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
+        $countQb = $repo->createQueryBuilder('entity')->select('count(entity.id)');
+        
+        // Search
+        if (array_key_exists('search', $data)) {
+            $sb = $this->searchBuilder->create($countQb, $collectionRequest);
+            $countQb = $recipe->search($sb, $sb->getRequest())->build();
+        }
+        
+        // Count
+        $count = $countQb->getQuery()->getSingleScalarResult();
         
         $qb = $builder
             ->createQueryBuilder($repo, 'entity')
             ->setFirstResult(($data['currentPage'] - 1) * $data['itemsPerPage'])
             ->setMaxResults($data['itemsPerPage']);
+        
+        // Search
+        $sb = $this->searchBuilder->create($qb, $collectionRequest);
+        if (array_key_exists('search', $data)) {
+            $qb = $recipe->search($sb, $sb->getRequest())->build();
+        }
         
         // Sortable columns
         $sortable = array_filter($builder->getColumns(), fn(IColumn $col) => $col->isSortable());
@@ -128,9 +150,9 @@ class ReadAllRequest extends Request
             'items' => $items
         ];
         
-        /** @noinspection DuplicatedCode */
         if ($data['schema']) {
             $result['schema'] = SchemaFormatter::format($recipe, $builder);
+            $result['schema']['search'] = $sb->toArray();
         }
         
         $response = $this->json($result);

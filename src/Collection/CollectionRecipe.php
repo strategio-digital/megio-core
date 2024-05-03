@@ -5,30 +5,36 @@ namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Table;
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Database\Interface\ICrudable;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
-    public function read(ReadBuilder $builder, RecipeRequest $request): ReadBuilder
+    public function read(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function readAll(ReadBuilder $builder, RecipeRequest $request): ReadBuilder
+    public function readAll(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function create(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $builder->buildByDbSchema();
     }
     
-    public function update(WriteBuilder $builder, RecipeRequest $request): WriteBuilder
+    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $builder->buildByDbSchema();
+    }
+    
+    public function search(SearchBuilder $builder, CollectionRequest $request): SearchBuilder
+    {
+        return $builder->keepDefaults();
     }
     
     /**

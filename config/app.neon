@@ -23,6 +23,7 @@ services:
     - Megio\Collection\RecipeFinder
     - Megio\Collection\ReadBuilder\ReadBuilder
     - Megio\Collection\WriteBuilder\WriteBuilder
+    - Megio\Collection\SearchBuilder\SearchBuilder
 
     - Megio\Security\JWT\JWTResolver
     - Megio\Security\JWT\ClaimsFormatter
