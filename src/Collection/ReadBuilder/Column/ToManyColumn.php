@@ -16,7 +16,6 @@ class ToManyColumn extends BaseColumn
     public function __construct(
         protected string $key,
         protected string $name,
-        protected bool   $sortable = false,
         protected bool   $visible = true,
         protected array  $formatters = []
     )
@@ -25,7 +24,6 @@ class ToManyColumn extends BaseColumn
         parent::__construct(
             key: $key,
             name: $name,
-            sortable: $sortable,
             visible: $visible,
             formatters: $formatters
         );
