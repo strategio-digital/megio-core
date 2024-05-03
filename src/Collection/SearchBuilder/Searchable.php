@@ -46,14 +46,13 @@ class Searchable
     }
     
     /**
-     * @return array{column: string, relation: string|null, operator: string}
+     * @return array{column: string, relation: string|null}
      */
     public function toArray(): array
     {
         return [
             'column' => $this->column,
-            'relation' => $this->relation,
-            'operator' => $this->operator,
+            'relation' => $this->relation
         ];
     }
 }

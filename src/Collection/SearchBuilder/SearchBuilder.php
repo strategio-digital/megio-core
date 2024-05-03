@@ -14,6 +14,9 @@ class SearchBuilder
     /** @var array<string, Searchable> */
     protected array $searchables = [];
     
+    /** @var string[] */
+    protected array $extraSearchables = [];
+    
     public function create(QueryBuilder $qb, CollectionRequest $request): self
     {
         $this->queryBuilder = $qb;
@@ -52,7 +55,7 @@ class SearchBuilder
             
             if (count($whereDql) !== 0) {
                 $where = implode(' OR ', array_map(fn($where) => $where['dql'], $whereDql));
-                $this->queryBuilder->andWhere($where);
+                $this->queryBuilder->orWhere($where);
                 
                 foreach ($whereDql as $where) {
                     $this->queryBuilder->setParameter($where['paramName'], $where['paramValue']);
@@ -63,12 +66,9 @@ class SearchBuilder
         return $this->queryBuilder;
     }
     
-    /**
-     * @param string[] $searchables
-     */
-    public function keepDefaults(array $searchables = ['id', 'createdAt', 'updatedAt']): self
+    public function keepDefaults(): self
     {
-        foreach ($searchables as $columnName) {
+        foreach (['id', 'createdAt', 'updatedAt'] as $columnName) {
             $this->addSearchable(new Searchable($columnName));
         }
         
@@ -78,6 +78,16 @@ class SearchBuilder
     public function addSearchable(Searchable $searchable): self
     {
         $this->searchables[$searchable->getColumn()] = $searchable;
+        return $this;
+    }
+    
+    /**
+     * @param string[] $columnNames
+     */
+    public function addSearchablesToSchema(array $columnNames): self
+    {
+        // Add only unique values
+        $this->extraSearchables = $columnNames;
         return $this;
     }
     
@@ -92,12 +102,19 @@ class SearchBuilder
     }
     
     /** @return array{
-     *    searchables: array{column: string, relation: string|null, operator: string}[]
+     *    searchables: array{column: string, relation: string|null}[]
      * }
      */
     public function toArray(): array
     {
         $searchables = array_map(fn(Searchable $searchable) => $searchable->toArray(), $this->searchables);
+        
+        foreach ($this->extraSearchables as $columnName) {
+            $searchables[] = [
+                'column' => $columnName,
+                'relation' => null
+            ];
+        }
         
         return [
             'searchables' => array_values($searchables),
