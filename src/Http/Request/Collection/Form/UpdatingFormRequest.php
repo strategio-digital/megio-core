@@ -88,7 +88,9 @@ class UpdatingFormRequest extends Request
         
         // Format one-to-many data
         foreach ($schema->getOneToManyColumns() as $column) {
-            $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+            if (array_key_exists($column['name'], $row)) {
+                $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+            }
         }
         
         // Format many-to-one data
@@ -100,7 +102,9 @@ class UpdatingFormRequest extends Request
         
         // Format-many-to-many data
         foreach ($schema->getManyToManyColumns() as $column) {
-            $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+            if (array_key_exists($column['name'], $row)) {
+                $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+            }
         }
         
         /** @var string $rowId */
