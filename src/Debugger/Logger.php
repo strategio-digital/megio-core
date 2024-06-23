@@ -64,7 +64,7 @@ class Logger extends TracyLogger
             $this->storage->put("tracy-logs/{$date}--app-json.log", $json);
         }
         
-        if (array_key_exists('LOG_MAIL', $_ENV) && $_ENV['LOG_MAIL'] !== '') {
+        if (array_key_exists('LOG_MAIL', $_ENV) && $_ENV['LOG_MAIL'] !== '' && !in_array($level, [self::DEBUG, self::INFO])) {
             $this->sendMail($context);
         }
         
@@ -110,6 +110,7 @@ class Logger extends TracyLogger
     {
         $snooze = strtotime('1 day') - time();
         $body = array_map(function ($key, $value) {
+            $value = is_array($value) ? json_encode($value) : $value;
             return "{$key}: {$value}";
         }, array_keys($context), $context);
         
