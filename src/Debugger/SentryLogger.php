@@ -11,7 +11,6 @@ use Sentry\Integration\FrameContextifierIntegration;
 use Sentry\Integration\ModulesIntegration;
 use Sentry\Integration\RequestIntegration;
 use Sentry\Integration\TransactionIntegration;
-use Sentry\Logger\DebugStdOutLogger;
 use Sentry\Severity;
 use Sentry\State\Scope;
 use Tracy\Dumper;
@@ -39,7 +38,6 @@ class SentryLogger extends BaseLogger
             'profiles_sample_rate' => 1.0,
             'default_integrations' => false,
             'send_default_pii' => true,
-            'logger' => new DebugStdOutLogger(),
             'integrations' => [
                 new ErrorListenerIntegration(),
                 //new ExceptionListenerIntegration(),
