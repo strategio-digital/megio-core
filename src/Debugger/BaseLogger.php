@@ -63,9 +63,6 @@ abstract class BaseLogger implements ILogger
     }
     
     /**
-     * @param array $message
-     * @param string $level
-     * @param \DateTime $now
      * @param array<string, mixed> $context
      * @return array<string, mixed>
      */
