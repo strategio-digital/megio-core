@@ -29,7 +29,7 @@ class ResponseFormatter
         
         $executionTime = microtime(true) - $this->container->parameters['startedAt'];
         
-        return $_ENV['APP_ENV_MODE'] !== 'develop' ? $data : array_merge($data, [
+        return $_ENV['APP_ENVIRONMENT'] !== 'develop' ? $data : array_merge($data, [
             '@debug' => [
                 'execution_time' => number_format($executionTime * 1000, 1, '.') . 'ms',
                 'auth_user' => $user ? [

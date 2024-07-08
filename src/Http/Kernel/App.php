@@ -79,7 +79,7 @@ class App
         
         // Remember: Tracy overrides Response headers!
         $isHtml = $response->headers->get('content-type') === 'text/html';
-        if ($_ENV['APP_ENV_MODE'] === 'develop' && $isHtml && !$this->request->isMethod('OPTIONS')) {
+        if ($_ENV['APP_ENVIRONMENT'] === 'develop' && $isHtml && !$this->request->isMethod('OPTIONS')) {
             Debugger::renderLoader();
         }
         

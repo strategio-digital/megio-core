@@ -26,7 +26,7 @@ class LatteExtension extends CompilerExtension
         // Setup latte engine
         $d = $builder->addDefinition('latte')->setType(Engine::class);
         $this->initialization->addBody('$latte = $this->getService(?);', [$d->getName()]);
-        $this->initialization->addBody('$latte->setAutoRefresh($_ENV["APP_ENV_MODE"] === "develop");');
+        $this->initialization->addBody('$latte->setAutoRefresh($_ENV["APP_ENVIRONMENT"] === "develop");');
         $this->initialization->addBody('$latte->setTempDirectory(Megio\Helper\Path::tempDir() . "/latte");');
         
         // Register latte extensions

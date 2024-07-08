@@ -37,7 +37,7 @@ class Doctrine
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             $entityPaths,
-            $_ENV['APP_ENV_MODE'] === 'develop',
+            $_ENV['APP_ENVIRONMENT'] === 'develop',
             Path::tempDir() . '/doctrine/proxy',
             new PhpFilesAdapter('dp')
         );

@@ -51,8 +51,7 @@ class AppController extends Controller
         
         return $this->json([
             'name' => $_ENV['APP_NAME'],
-            'mode' => $_ENV['APP_ENV_MODE'],
-            'log_adapter' => $_ENV['LOG_ADAPTER'],
+            'mode' => $_ENV['APP_ENVIRONMENT'],
             'storage_adapter' => $storage->getAdapterName(),
             'megio_versions' => $this->versions(),
             'current_dt' => [
