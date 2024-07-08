@@ -43,7 +43,8 @@
         "lcobucci/jwt": "^4.2",
         "aws/aws-sdk-php": "^3.289.0",
         "phpstan/phpstan": "^1.8",
-        "siketyan/yarn-lock": "^1.0"
+        "siketyan/yarn-lock": "^1.0",
+        "sentry/sentry": "^4.8"
     },
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse -l 8 src/ router/ --memory-limit 1G",
