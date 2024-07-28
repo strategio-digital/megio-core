@@ -32,8 +32,12 @@ class AdminRecipe extends CollectionRecipe
     {
         $builder
             ->keepDefaults()
-            ->addSearchable(new Searchable('email'))
-            ->addSearchable(new Searchable('lastLogin'));
+            ->addSearchable(new Searchable('email', operator: 'LIKE', formatter: fn($value) => "%{$value}%"))
+            ->addSearchable(new Searchable(
+                column: 'lastLogin',
+                operator: '=',
+                enabled: fn($value) => \DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false
+            ));
         
         return $builder;
     }

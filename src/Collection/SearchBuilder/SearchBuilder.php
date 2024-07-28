@@ -5,6 +5,7 @@ namespace Megio\Collection\SearchBuilder;
 
 use Doctrine\ORM\QueryBuilder;
 use Megio\Collection\CollectionRequest;
+use Symfony\Component\Uid\UuidV6;
 
 class SearchBuilder
 {
@@ -33,7 +34,9 @@ class SearchBuilder
         if ($searchText !== null) {
             $whereDql = [];
             
-            foreach ($this->searchables as $searchable) {
+            $validSearchables = array_filter($this->searchables, fn(Searchable $searchable) => $searchable->isEnabled($searchText));
+            
+            foreach ($validSearchables as $searchable) {
                 $relationCol = $searchable->getRelation();
                 $colName = 'entity.' . $searchable->getColumn();
                 
@@ -44,10 +47,10 @@ class SearchBuilder
                 }
                 
                 $paramName = 'param_' . str_replace('.', '_', $colName);
-                $value = $searchable->hasFormatter() ? $searchable->format($searchText) : "%{$searchText}%";
+                $value = $searchable->hasFormatter() ? $searchable->format($searchText) : $searchText;
                 
                 $whereDql[] = [
-                    'dql' => "{$colName} {$searchable->getOperator()} :{$paramName}",
+                    'dql' => "$colName {$searchable->getOperator()} :{$paramName}",
                     'paramName' => $paramName,
                     'paramValue' => $value
                 ];
@@ -68,9 +71,23 @@ class SearchBuilder
     
     public function keepDefaults(): self
     {
-        foreach (['id', 'createdAt', 'updatedAt'] as $columnName) {
-            $this->addSearchable(new Searchable($columnName));
-        }
+        $this->addSearchable(new Searchable(
+            column: 'id',
+            operator: '=',
+            enabled: fn($value) => UuidV6::isValid($value)
+        ));
+        
+        $this->addSearchable(new Searchable(
+            column: 'createdAt',
+            operator: '=',
+            enabled: fn($value) => \DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false
+        ));
+        
+        $this->addSearchable(new Searchable(
+            column: 'updatedAt',
+            operator: '=',
+            enabled: fn($value) => \DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false
+        ));
         
         return $this;
     }
