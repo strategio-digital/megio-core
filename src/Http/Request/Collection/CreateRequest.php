@@ -107,6 +107,8 @@ class CreateRequest extends Request
         
         try {
             foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $entity) {
+                $classMetadata = $this->em->getClassMetadata($entity::class);
+                $this->em->getUnitOfWork()->recomputeSingleEntityChangeSet($classMetadata, $entity);
                 $this->em->flush($entity);
             }
             $this->em->commit();
