@@ -184,8 +184,6 @@ class ReadBuilder implements IRecipeBuilder
             ->createQueryBuilder($alias)
             ->select($alias);
         
-        $columnNames = array_map(fn($col) => $col->getKey(), $this->columns);
-        
         $joins = array_merge(
             $this->dbSchema->getOneToOneColumns(),
             $this->dbSchema->getOneToManyColumns(),
@@ -193,11 +191,17 @@ class ReadBuilder implements IRecipeBuilder
             $this->dbSchema->getManyToManyColumns()
         );
         
+        $columnNames = array_map(fn($col) => "{$alias}.{$col->getKey()}", $this->columns);
+        $joins = array_filter($joins, fn($col) => array_key_exists($col['name'], $columnNames));
+        
+        // Prevent  columns
+        if (count($joins) === 0) {
+            $qb->addSelect($columnNames);
+        }
+        
         foreach ($joins as $column) {
-            if (in_array($column['name'], $columnNames)) {
-                $qb->addSelect($column['name']);
-                $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
-            }
+            $qb->addSelect($column['name']);
+            $qb->leftJoin("{$alias}.{$column['name']}", $column['name']);
         }
         
         return $qb;
