@@ -62,6 +62,7 @@ class ColumnCreator
             Types::DATETIMETZ_MUTABLE,
             Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
+            'int',
             Types::FLOAT,
             Types::INTEGER,
             Types::SMALLINT => new NumericColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
