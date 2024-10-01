@@ -57,9 +57,11 @@ class FieldCreator
             Types::DECIMAL,
             Types::FLOAT => new DecimalField($name, $name, defaultValue: $defaultValue),
             
+            'int',
             Types::INTEGER,
             Types::SMALLINT => new IntegerField($name, $name, defaultValue: $defaultValue),
             
+            'bool',
             Types::BOOLEAN => new ToggleBtnField($name, $name, defaultValue: $defaultValue),
             
             Types::DATE_MUTABLE,

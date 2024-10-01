@@ -37,6 +37,7 @@ class RuleCreator
             Types::DECIMAL,
             Types::FLOAT => new DecimalRule(),
             
+            'bool',
             Types::BOOLEAN => new BooleanRule(),
             
             Types::DATE_MUTABLE,
@@ -48,6 +49,7 @@ class RuleCreator
             Types::DATETIMETZ_MUTABLE,
             Types::DATETIMETZ_IMMUTABLE => new DateTimeRule(),
             
+            'int',
             Types::INTEGER,
             Types::SMALLINT => new IntegerRule(),
             

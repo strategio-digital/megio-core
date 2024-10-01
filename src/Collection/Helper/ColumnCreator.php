@@ -51,6 +51,7 @@ class ColumnCreator
             
             Types::BLOB => new BlobColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
+            'bool',
             Types::BOOLEAN => new BooleanColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             
             Types::DATE_MUTABLE,
