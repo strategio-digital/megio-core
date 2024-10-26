@@ -27,12 +27,12 @@ class S3Storage implements StorageAdapter
         ]);
     }
     
-    public function upload(UploadedFile $file, string $destination, bool $publish = true): \SplFileInfo
+    public function upload(UploadedFile $file, string $destination, string $name = null, bool $publish = true): \SplFileInfo
     {
         $ext = $file->getClientOriginalExtension();
-        $name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         
-        $fileName = "{$name}.{$ext}";
+        $fileName = ($name ?? $originalName). ".{$ext}";
         $destination = Strings::replace("{$destination}/{$fileName}", '~\/+~', '/');
         
         $uploader = new ObjectUploader(

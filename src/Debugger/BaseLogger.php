@@ -41,7 +41,7 @@ abstract class BaseLogger implements ILogger
             $storage = new S3Storage();
             if (count($storage->list(".tracy/{$fileName}")) === 0) {
                 $file = new UploadedFile($filePathName, $fileName, 'text/html');
-                $storage->upload($file, ".tracy/", false);
+                $storage->upload($file, ".tracy/", null, false);
             }
         }
     }
