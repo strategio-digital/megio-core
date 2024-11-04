@@ -6,3 +6,12 @@ Most powerful tool for creating webs, apps & APIs.
 
 ## Installation guide
 https://megio.dev/docs/getting-started/installation
+
+## How to run tests
+```bash
+# Initial setup
+make test-with-setup
+
+# After initial setup 
+make test
+```

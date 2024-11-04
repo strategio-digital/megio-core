@@ -1,0 +1,11 @@
+services:
+    entityManager: Megio\Database\EntityManager
+
+includes:
+    - app.neon
+    #- events.neon
+
+extensions:
+    doctrine: Megio\Extension\Doctrine\DoctrineExtension
+    events: Megio\Extension\Events\EventsExtension
+    latte: Megio\Extension\Latte\LatteExtension

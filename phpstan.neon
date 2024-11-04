@@ -1,0 +1,16 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - router
+        - tests
+    ignoreErrors:
+        -
+            # Pest is not supported by PHPStan
+            message: "#^Undefined variable\\: \\$this$#"
+            path: "tests"
+
+        -
+            # Pest is not supported by PHPStan
+            message: "#^Call to an undefined method Pest\\\\PendingCalls\\\\TestCall\\|Pest\\\\Support\\\\HigherOrderTapProxy\\:\\:repeat\\(\\)\\.$#"
+            path: "tests"
