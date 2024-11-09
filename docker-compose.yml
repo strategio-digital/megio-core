@@ -10,6 +10,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: "no"
+    environment:
+      QUEUE_WORKERS_ENABLED: ${QUEUE_WORKERS_ENABLED}
     networks:
       - megio-apps
     ports:
