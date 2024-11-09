@@ -53,12 +53,18 @@
         "sentry/sentry": "^4.8"
     },
     "scripts": {
-        "phpstan": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon",
         "phpstan:baseline": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon -vv -b phpstan-baseline.neon --allow-empty-baseline",
+        "phpstan": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.neon",
         "neon": "vendor/bin/neon-lint config/",
+        "latte": "vendor/bin/latte-lint view/",
+        "schema": "#bin/console orm:validate-schema",
+        "test": "vendor/bin/pest",
         "analyse": [
             "@phpstan",
-            "@neon"
+            "@neon",
+            "@latte",
+            "@schema",
+            "@test"
         ]
     },
     "require-dev": {

@@ -6,12 +6,9 @@ endif
 
 test:
 	docker compose exec app composer analyse
-	#docker compose exec app bin/console orm:validate-schema
-	docker compose exec app vendor/bin/pest
 
 test-with-setup:
 	make test-setup
-	docker compose exec app bin/console admin admin@test.cz Test1234
 	make test
 
 test-one:
@@ -30,3 +27,5 @@ test-setup:
 	docker compose exec app bin/console migration:diff --no-interaction
 	docker compose exec app bin/console migration:migrate --no-interaction
 	docker compose exec app bin/console app:auth:resources:update
+
+	docker compose exec app bin/console admin admin@test.cz Test1234
