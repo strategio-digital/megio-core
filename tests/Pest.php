@@ -11,7 +11,8 @@
 |
 */
 
-uses(Tests\MegioTestCase::class)->in('Request');
+uses(Tests\MegioTestCase::class)
+    ->in('Doctrine', 'Collection');
 
 /*
 |--------------------------------------------------------------------------

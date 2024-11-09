@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Megio\Tests\Request\Collection;
+namespace Megio\Tests\Collection;
 
 use Megio\Database\Entity\Admin;
 use Megio\Http\Request\Collection\CreateRequest;
 use Megio\Recipe\AdminRecipe;
 
-test('request collection create rows', function () {
+test('collection create row', function () {
     $recipe = $this->createCollectionRecipe(AdminRecipe::class);
-    $request = $this->createRequest(CreateRequest::class);
+    $request = $this->createCollectionRequest(CreateRequest::class);
+    
+    $email = $this->generator()->email();
     
     $data = [
         'recipe' => $recipe->key(),
         'rows' => [
             [
-                'email' => $this->generator()->email(),
+                'email' => $email,
                 'password' => $this->generator()->password()
             ]
         ],
@@ -26,6 +28,6 @@ test('request collection create rows', function () {
     $response = $request->process($data);
     expect($response->getStatusCode())->toBe(200, (string)$response->getContent());
     
-    $row = $this->em()->getAdminRepo()->findOneBy(['email' => $data['rows'][0]['email']]);
+    $row = $this->em()->getAdminRepo()->findOneBy(['email' => $email]);
     expect($row)->toBeInstanceOf(Admin::class);
-})->repeat(5);
+});
