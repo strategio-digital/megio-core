@@ -5,12 +5,12 @@ namespace Megio\Database\Method;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Megio\Database\Entity\Auth\Role;
+use Megio\Database\Entity\Auth\Resource;
 
 trait TResourceMethods
 {
     /**
-     * @return Collection<int, Role>
+     * @return Collection<int, Resource>
      */
     public function getResources(): Collection
     {
