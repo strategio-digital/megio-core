@@ -19,19 +19,12 @@ use App\Database\Repository\Order\OrderRepository;
 use App\Database\Repository\Order\OrderStatusRepository;
 use App\Database\Repository\ShopRepository;
 use App\Database\Repository\UserRepository;
-use Megio\Database\Entity\Queue;
-use Megio\Database\Repository\QueueRepository;
 
 class EntityManager extends \Megio\Database\EntityManager
 {
     public function getUserRepo(): UserRepository
     {
         return $this->getRepository(User::class); // @phpstan-ignore-line
-    }
-    
-    public function getQueueRepo(): QueueRepository
-    {
-        return $this->getRepository(Queue::class); // @phpstan-ignore-line
     }
     
     public function getOrderRepo(): OrderRepository
