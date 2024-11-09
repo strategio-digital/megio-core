@@ -5,8 +5,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "Megio\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "App\\": "app/",
-            "Megio\\": "src/",
             "Tests\\": "tests/"
         }
     },

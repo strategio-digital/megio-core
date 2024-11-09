@@ -9,6 +9,8 @@ https://megio.dev/docs/getting-started/installation
 
 ## How to run tests
 ```bash
+cp .env.example .env
+
 # Initial setup
 make test-with-setup
 
