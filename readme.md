@@ -9,6 +9,7 @@ https://megio.dev/docs/getting-started/installation
 
 ## How to run tests
 ```bash
+# Create .env file
 cp .env.example .env
 
 # Init environment
