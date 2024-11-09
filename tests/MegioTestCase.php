@@ -2,17 +2,14 @@
 
 namespace Tests;
 
+use App\Database\EntityManager;
 use Faker\Factory as FakerFactory;
 use Faker\Generator;
 use Megio\Bootstrap;
 use Megio\Collection\CollectionRecipe;
-use Megio\Database\EntityManager;
 use Megio\Debugger\JsonLogstashLogger;
 use Megio\Helper\Path;
-use Megio\Http\Request\Collection\CreateRequest;
-use Megio\Http\Request\IRequest;
 use Megio\Http\Request\Request as MegioRequest;
-use Megio\Recipe\AdminRecipe;
 use Nette\DI\Container;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,10 +65,10 @@ abstract class MegioTestCase extends BaseTestCase
      * @param class-string<MegioRequest> $request
      * @return MegioRequest
      */
-    public function createRequest(string $request): MegioRequest
+    public function createCollectionRequest(string $request): MegioRequest
     {
         $request = $this->container()->createInstance($request);
-        assert($request instanceof CreateRequest);
+        assert($request instanceof MegioRequest);
         $request->__inject($this->container());
         $request->__invoke($this->httpRequest());
         

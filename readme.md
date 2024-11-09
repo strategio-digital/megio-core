@@ -14,4 +14,7 @@ make test-with-setup
 
 # After initial setup 
 make test
+
+# Run specific test
+make test-one FILE=Request/Collection/UpdateRowsTest.php
 ```

@@ -5,6 +5,10 @@ includes:
     - app.neon
     - events.neon
 
+events:
+    #- App\Subscriber\Collection\OnUserCreated
+    #- Megio\Subscriber\RedirectToWww
+
 extensions:
     doctrine: Megio\Extension\Doctrine\DoctrineExtension
     events: Megio\Extension\Events\EventsExtension
