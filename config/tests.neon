@@ -1,9 +1,9 @@
 services:
-    entityManager: Megio\Database\EntityManager
+    entityManager: App\Database\EntityManager
 
 includes:
     - app.neon
-    #- events.neon
+    - events.neon
 
 extensions:
     doctrine: Megio\Extension\Doctrine\DoctrineExtension
