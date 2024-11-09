@@ -6,11 +6,12 @@ endif
 
 test:
 	docker compose exec app composer analyse
+	#docker compose exec app bin/console orm:validate-schema
 	docker compose exec app vendor/bin/pest
 
 test-with-setup:
 	make test-setup
-	docker compose exec app bin/console admin test@test.cz Test1234
+	docker compose exec app bin/console admin admin@test.cz Test1234
 	make test
 
 test-one:
