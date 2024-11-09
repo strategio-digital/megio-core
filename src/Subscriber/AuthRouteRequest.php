@@ -36,6 +36,10 @@ class AuthRouteRequest implements EventSubscriberInterface
         
         $routeName = $this->request->attributes->get('_route');
         
+        if ($routeName === null) {
+            return;
+        }
+        
         /** @var \Symfony\Component\Routing\Route $currentRoute */
         $currentRoute = $this->routes->get($routeName);
         
