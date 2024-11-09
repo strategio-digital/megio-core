@@ -11,12 +11,12 @@ https://megio.dev/docs/getting-started/installation
 ```bash
 cp .env.example .env
 
-# Initial setup
-make test-with-setup
+# Init environment
+make test-setup
 
-# After initial setup 
-make test
+# Run all tests
+make test-full
 
-# Run specific test
-make test-one FILE=Request/Collection/UpdateRowsTest.php
+# Or run specific test
+make test-single FILE=tests/Collection/UpdateRowsTest.php
 ```
