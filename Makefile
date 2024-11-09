@@ -4,15 +4,11 @@ ifneq (,$(wildcard ./.env))
 	export
 endif
 
-test:
-	docker compose exec app composer analyse
-
-test-with-setup:
-	make test-setup
-	make test
-
-test-one:
+test-single:
 	docker compose exec app vendor/bin/pest $(FILE)
+
+test-full:
+	docker compose exec app composer analyse
 
 test-setup:
 	rm -rf migrations/*
