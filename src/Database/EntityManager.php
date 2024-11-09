@@ -7,10 +7,12 @@ use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\Entity\Auth\Role;
 use Megio\Database\Entity\Auth\Token;
+use Megio\Database\Entity\Queue;
 use Megio\Database\Repository\AdminRepository;
 use Megio\Database\Repository\Auth\ResourceRepository;
 use Megio\Database\Repository\Auth\RoleRepository;
 use Megio\Database\Repository\Auth\TokenRepository;
+use Megio\Database\Repository\QueueRepository;
 use Megio\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
@@ -43,5 +45,10 @@ class EntityManager extends \Doctrine\ORM\EntityManager
     public function getAuthResourceRepo(): ResourceRepository
     {
         return $this->getRepository(Resource::class); // @phpstan-ignore-line
+    }
+    
+    public function getQueueRepo(): QueueRepository
+    {
+        return $this->getRepository(Queue::class); // @phpstan-ignore-line
     }
 }
