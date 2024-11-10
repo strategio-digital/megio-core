@@ -5,6 +5,7 @@ namespace Megio\Http\Request\Collection;
 
 use Megio\Collection\RecipeFinder;
 use Megio\Database\Entity\Admin;
+use Megio\Database\Entity\Queue;
 use Megio\Helper\Router;
 use Megio\Http\Request\Request;
 use Megio\Security\Auth\AuthUser;
@@ -26,12 +27,14 @@ class NavbarRequest extends Request
     
     public function process(array $data): Response
     {
+        $excluded = [Admin::class, Queue::class];
+        
         $recipes = $this->recipeFinder->load()->getAll();
-        $recipes = array_filter($recipes, fn($recipe) => $recipe->source() !== Admin::class);
+        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
         $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
         
-        if (!$this->authUser->get() instanceof Admin) {
+        if ($this->authUser->get() instanceof Admin === false) {
             $resources = $this->authUser->getResources();
             $recipeKeys = array_filter($recipeKeys, fn($endpoint) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources));
         }

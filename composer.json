@@ -11,6 +11,7 @@
     "autoload-dev": {
         "psr-4": {
             "App\\": "app/",
+            "App\\Migrations\\": "app/Migrations/",
             "Tests\\": "tests/"
         }
     },
