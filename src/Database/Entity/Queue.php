@@ -9,13 +9,13 @@ use Megio\Database\Field\TId;
 use Megio\Database\Field\TUpdatedAt;
 use Megio\Database\Interface\ICrudable;
 use Megio\Database\Repository\QueueRepository;
-use Megio\Queue\QueueWorker;
+use Megio\Queue\IQueueWorkerEnum;
 use Megio\Queue\QueueStatus;
 
 #[ORM\Table(name: '`queue`')]
 #[ORM\Entity(repositoryClass: QueueRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Index(fields: ['jobName', 'priority'])]
+#[ORM\Index(fields: ['worker', 'priority'])]
 class Queue implements ICrudable
 {
     use TId, TCreatedAt, TUpdatedAt;
@@ -26,8 +26,8 @@ class Queue implements ICrudable
     #[ORM\Column(type: 'string', enumType: QueueStatus::class)]
     protected QueueStatus $status = QueueStatus::PENDING;
     
-    #[ORM\Column(type: 'string', enumType: QueueWorker::class)]
-    protected QueueWorker $worker;
+    #[ORM\Column]
+    protected string $worker;
     
     /** @var array<int|string, mixed> */
     #[ORM\Column(type: 'json')]
@@ -58,9 +58,9 @@ class Queue implements ICrudable
         $this->status = $status;
     }
     
-    public function setWorker(QueueWorker $worker): void
+    public function setWorker(IQueueWorkerEnum $worker): void
     {
-        $this->worker = $worker;
+        $this->worker = (string)$worker->value;
     }
     
     /** @param array<int|string, mixed> $payload */
@@ -114,11 +114,6 @@ class Queue implements ICrudable
     public function getStatus(): QueueStatus
     {
         return $this->status;
-    }
-    
-    public function getWorker(): QueueWorker
-    {
-        return $this->worker;
     }
     
     public function getWorkerId(): ?int

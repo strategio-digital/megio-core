@@ -12,7 +12,7 @@
 */
 
 uses(Tests\MegioTestCase::class)
-    ->in('Doctrine', 'Collection');
+    ->in('Doctrine', 'Collection', 'Queue');
 
 /*
 |--------------------------------------------------------------------------

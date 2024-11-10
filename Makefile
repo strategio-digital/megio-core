@@ -4,6 +4,12 @@ ifneq (,$(wildcard ./.env))
 	export
 endif
 
+sh:
+	docker compose exec -it app /bin/bash
+
+analyse:
+	docker compose exec app composer analyse
+
 test-single:
 	docker compose exec app vendor/bin/pest $(FILE)
 

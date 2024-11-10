@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
+use App\Worker\QueueWorker;
 use Megio\Collection\CollectionRecipe;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\Formatter\CallableFormatter;
@@ -14,7 +15,6 @@ use Megio\Collection\WriteBuilder\Serializer\CallableSerializer;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Database\Entity\Queue;
 use Megio\Queue\QueueStatus;
-use Megio\Queue\QueueWorker;
 
 class QueueRecipe extends CollectionRecipe
 {
