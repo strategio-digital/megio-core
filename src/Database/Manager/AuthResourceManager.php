@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Database\Manager;
 
 use Megio\Collection\RecipeFinder;
+use Megio\Database\Entity\Queue;
 use Nette\Utils\Strings;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
@@ -123,7 +124,7 @@ readonly class AuthResourceManager
      */
     public function collectionDataResources(): array
     {
-        $excluded = [Admin::class];
+        $excluded = [Admin::class, Queue::class];
         $recipes = $this->recipeFinder->load()->getAll();
         
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
@@ -148,7 +149,7 @@ readonly class AuthResourceManager
      */
     public function collectionNavResources(): array
     {
-        $excluded = [Admin::class];
+        $excluded = [Admin::class, Queue::class];
         $recipes = $this->recipeFinder->load()->getAll();
         
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
