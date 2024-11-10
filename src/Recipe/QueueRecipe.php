@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Recipe;
+namespace Megio\Recipe;
 
 use Megio\Collection\CollectionRecipe;
 use Megio\Collection\CollectionRequest;
@@ -13,8 +13,8 @@ use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Serializer\CallableSerializer;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Database\Entity\Queue;
-use Megio\Queue\QueueWorker;
 use Megio\Queue\QueueStatus;
+use Megio\Queue\QueueWorker;
 
 class QueueRecipe extends CollectionRecipe
 {
@@ -43,7 +43,7 @@ class QueueRecipe extends CollectionRecipe
         return $builder
             ->buildByDbSchema(persist: true)
             ->add(new EnumField('status', 'status', QueueStatus::class))
-            ->add(new EnumField('job', 'job', QueueWorker::class, attrs: ['fullWidth' => true]))
+            ->add(new EnumField('worker', 'worker', QueueWorker::class, attrs: ['fullWidth' => true]))
             ->add(new TextAreaField(
                 name: 'payload',
                 label: 'payload',
