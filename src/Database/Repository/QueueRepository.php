@@ -8,8 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Megio\Database\Entity\Queue;
+use Megio\Queue\IQueueWorkerEnum;
 use Megio\Queue\QueueDelay;
-use Megio\Queue\QueueWorker;
 use Megio\Queue\QueueStatus;
 use Nette\InvalidArgumentException;
 
@@ -30,21 +30,21 @@ class QueueRepository extends EntityRepository
         parent::__construct($em, $class);
     }
     
-    public function fetchQueueJob(int $workerId, QueueWorker $job): ?Queue
+    public function fetchQueueJob(int $workerId, IQueueWorkerEnum $worker): ?Queue
     {
-        return $this->em->wrapInTransaction(function (EntityManager $em) use ($workerId, $job) {
+        return $this->em->wrapInTransaction(function (EntityManager $em) use ($workerId, $worker) {
             $qb = $this->createQueryBuilder('q');
             
             $qb
                 ->where('q.status = :pendingStatus')
-                ->andWhere('q.job = :job')
+                ->andWhere('q.worker = :worker')
                 ->andWhere('q.errorRetries < :errorRetries')
                 ->andWhere('q.delayUntil IS NULL OR q.delayUntil < :dateTime')
                 ->addOrderBy('q.createdAt', 'ASC')
                 ->addOrderBy('q.priority', 'DESC')
                 ->setMaxResults(1)
                 ->setParameter('pendingStatus', QueueStatus::PENDING)
-                ->setParameter('job', $job)
+                ->setParameter('worker', $worker->value)
                 ->setParameter('errorRetries', self::MAX_ERROR_RETRIES)
                 ->setParameter('dateTime', new \DateTime());
             
@@ -71,7 +71,7 @@ class QueueRepository extends EntityRepository
     /**
      * @param array<int|string, mixed> $payload
      */
-    public function add(QueueWorker $worker, array $payload, int $priority = 0, QueueDelay $delay = null): Queue
+    public function add(IQueueWorkerEnum $worker, array $payload, int $priority = 0, QueueDelay $delay = null): Queue
     {
         if (count($payload) === 0) {
             throw new InvalidArgumentException('Payload cannot be empty array');
