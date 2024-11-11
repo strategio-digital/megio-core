@@ -58,7 +58,8 @@ class UpdatingFormRequest extends Request
         $collectionRequest = new CollectionRequest($this->request, true, $data, null, []);
         
         try {
-            $readBuilder = $recipe->read($this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE), $collectionRequest)->build();
+            $defaultBuilder = $this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE);
+            $readBuilder = $recipe->read($defaultBuilder, $collectionRequest)->build();
             $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
             $repo = $this->em->getRepository($recipe->source());
         } catch (CollectionException $e) {
@@ -112,9 +113,8 @@ class UpdatingFormRequest extends Request
         $collectionRequest = new CollectionRequest($this->request, true, $data, $rowId, $row);
         
         try {
-            $builder = $recipe
-                ->update($this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row), $collectionRequest)
-                ->build();
+            $defaultBuilder = $this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row);
+            $builder = $recipe->update($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }
