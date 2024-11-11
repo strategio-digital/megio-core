@@ -33,8 +33,7 @@ test('collection update row', function () {
                     'email' => $newEmail
                 ]
             ]
-        ],
-        'custom_data' => null
+        ]
     ];
     
     $response = $request->process($data);
