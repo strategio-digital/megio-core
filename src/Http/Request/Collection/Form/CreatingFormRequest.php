@@ -51,7 +51,8 @@ class CreatingFormRequest extends Request
         $collectionRequest = new CollectionRequest($this->request, true, $data, null, []);
         
         try {
-            $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE), $collectionRequest)->build();
+            $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::CREATE);
+            $builder = $recipe->create($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
             return $this->error([$e->getMessage()]);
         }

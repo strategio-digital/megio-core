@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\ConstraintViolationException;
+use Exception;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
@@ -70,7 +71,8 @@ class CreateRequest extends Request
             $collectionRequest = new CollectionRequest($this->request, false, $data, null, $row);
             
             try {
-                $builder = $recipe->create($this->builder->create($recipe, WriteBuilderEvent::CREATE, null, $row), $collectionRequest)->build();
+                $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::CREATE, null, $row);
+                $builder = $recipe->create($defaultBuilder, $collectionRequest)->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
@@ -116,7 +118,7 @@ class CreateRequest extends Request
             $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->em->rollback();
             throw $e;
         }
