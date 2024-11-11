@@ -20,8 +20,6 @@ abstract class MegioTestCase extends BaseTestCase
     
     private static ?Generator $generator = null;
     
-    private static ?Request $request = null;
-    
     public function em(): EntityManager
     {
         return $this->container()->getByType(EntityManager::class);
@@ -38,11 +36,7 @@ abstract class MegioTestCase extends BaseTestCase
     
     public function httpRequest(): Request
     {
-        if (self::$request === null) {
-            self::$request = Request::createFromGlobals();
-        }
-        
-        return self::$request;
+        return Request::createFromGlobals();
     }
     
     public function container(): Container
@@ -61,13 +55,13 @@ abstract class MegioTestCase extends BaseTestCase
         return self::$container;
     }
     
-    /***
-     * @param class-string<MegioRequest> $request
+    /**
+     * @param class-string<MegioRequest> $class
      * @return MegioRequest
      */
-    public function createCollectionRequest(string $request): MegioRequest
+    public function createCollectionRequest(string $class): MegioRequest
     {
-        $request = $this->container()->createInstance($request);
+        $request = $this->container()->createInstance($class);
         assert($request instanceof MegioRequest);
         $request->__inject($this->container());
         $request->__invoke($this->httpRequest());
@@ -76,12 +70,12 @@ abstract class MegioTestCase extends BaseTestCase
     }
     
     /**
-     * @param class-string<CollectionRecipe> $recipe
+     * @param class-string<CollectionRecipe> $class
      * @return CollectionRecipe
      */
-    public function createCollectionRecipe(string $recipe): CollectionRecipe
+    public function createCollectionRecipe(string $class): CollectionRecipe
     {
-        $recipe = $this->container()->createInstance($recipe);
+        $recipe = $this->container()->createInstance($class);
         assert($recipe instanceof CollectionRecipe);
         return $recipe;
     }

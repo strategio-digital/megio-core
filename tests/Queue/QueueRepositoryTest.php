@@ -10,6 +10,8 @@ use Megio\Queue\QueueDelay;
 test('queue repository tests', function () {
     $email = $this->generator()->email();
     
+    $this->em()->createQueryBuilder()->delete(Queue::class, 'q')->getQuery()->execute();
+    
     $this->em()->getQueueRepo()->add(QueueWorker::EXAMPLE_WORKER, [
         'email' => $email
     ]);
