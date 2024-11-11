@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\DBAL\Exception\ConstraintViolationException;
+use Exception;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\WriteBuilder\WriteBuilder;
@@ -95,9 +96,8 @@ class UpdateRequest extends Request
             $collectionRequest = new CollectionRequest($this->request, false, $data, $row['id'], $row['data']);
             
             try {
-                $builder = $recipe
-                    ->update($this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['id'], $row['data']), $collectionRequest)
-                    ->build();
+                $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['id'], $row['data']);
+                $builder = $recipe->update($defaultBuilder, $collectionRequest)->build();
             } catch (CollectionException $e) {
                 $response = $this->error([$e->getMessage()], 406);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
@@ -132,8 +132,6 @@ class UpdateRequest extends Request
         
         try {
             foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $entity) {
-                $classMetadata = $this->em->getClassMetadata($entity::class);
-                $this->em->getUnitOfWork()->recomputeSingleEntityChangeSet($classMetadata, $entity);
                 $this->em->flush($entity);
             }
             $this->em->commit();
@@ -143,7 +141,7 @@ class UpdateRequest extends Request
             $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->em->rollback();
             throw $e;
         }
