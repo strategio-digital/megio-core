@@ -10,6 +10,8 @@ use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\RecipeDbSchema;
 use Megio\Collection\RecipeEntityMetadata;
 use Megio\Database\Interface\ICrudable;
+use ReflectionClass;
+use ReflectionException;
 
 class ArrayToEntity
 {
@@ -52,7 +54,8 @@ class ArrayToEntity
         
         foreach ($data as $fieldKey => $value) {
             try {
-                $methodName = 'set' . ucfirst($fieldKey);
+                // Example: 'order_' property method have probably 'setOrder()' not 'setOrder_()'
+                $methodName = 'set' . str_replace('_', '', ucwords($fieldKey, '_'));
                 
                 if (!in_array($methodName, $methods)) {
                     self::resolveOneToOneReverseRelation($fieldKey, $schema, $entity, $value);
@@ -62,7 +65,7 @@ class ArrayToEntity
                 } else {
                     $entity->{$ref->getMethod($methodName)->name}($value);
                 }
-            } catch (\ReflectionException) {
+            } catch (ReflectionException) {
                 throw new CollectionException("Field '{$fieldKey}' does not exist on '{$metadata->getTableName()}' entity");
             }
         }
@@ -79,13 +82,13 @@ class ArrayToEntity
         
         if (in_array($fieldKey, $schemaNames)) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
-            $ref = new \ReflectionClass($colSchema['reverseEntity']);
+            $ref = new ReflectionClass($colSchema['reverseEntity']);
             
-            $currentRef = new \ReflectionClass($current);
+            $currentRef = new ReflectionClass($current);
             $currentValue = $currentRef->getProperty($fieldKey)->getValue($current);
             
             if ($currentValue !== null) {
-                $targetRef = new \ReflectionClass($currentValue);
+                $targetRef = new ReflectionClass($currentValue);
                 $targetField = $schemas[array_search($fieldKey, $schemaNames)]['reverseField'];
                 if ($targetField !== null) {
                     $targetRef->getProperty($targetField)->setValue($currentValue, null);
@@ -109,14 +112,14 @@ class ArrayToEntity
         
         if (in_array($fieldKey, $schemaNames) && $value instanceof Collection) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
-            $currentRef = new \ReflectionClass($current);
+            $currentRef = new ReflectionClass($current);
             $currentItems = $currentRef->getProperty($fieldKey)->getValue($current);
             
             foreach ($currentItems as $item) {
                 if (!$value->contains($item)) {
                     $currentItems->removeElement($item);
                     if ($colSchema['reverseField'] !== null) {
-                        $itemRef = new \ReflectionClass($item);
+                        $itemRef = new ReflectionClass($item);
                         $itemRef->getProperty($colSchema['reverseField'])->setValue($item, null);
                     }
                     self::addEntityToFlush($item);
@@ -126,7 +129,7 @@ class ArrayToEntity
             foreach ($value as $item) {
                 $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
                 if ($colSchema['reverseField'] !== null) {
-                    $currentRef = new \ReflectionClass($colSchema['reverseEntity']);
+                    $currentRef = new ReflectionClass($colSchema['reverseEntity']);
                     $currentRef->getProperty($colSchema['reverseField'])->setValue($item, $current);
                 }
                 self::addEntityToFlush($item);
@@ -141,13 +144,13 @@ class ArrayToEntity
         
         if (in_array($fieldKey, $schemaNames) && $value instanceof Collection) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames)];
-            $currentRef = new \ReflectionClass($current);
+            $currentRef = new ReflectionClass($current);
             $currentProp = $currentRef->getProperty($fieldKey);
             $currentItems = $currentProp->getValue($current);
             
             foreach ($value as $item) {
                 if ($colSchema['reverseField'] !== null) {
-                    $itemRef = new \ReflectionClass($item);
+                    $itemRef = new ReflectionClass($item);
                     $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
                     if (!$currentItems->contains($current) && !$collection->contains($current)) {
                         $collection->add($current);
@@ -159,7 +162,7 @@ class ArrayToEntity
             foreach ($currentItems as $item) {
                 if (!$value->contains($item)) {
                     if ($colSchema['reverseField'] !== null) {
-                        $itemRef = new \ReflectionClass($item);
+                        $itemRef = new ReflectionClass($item);
                         $collection = $itemRef->getProperty($colSchema['reverseField'])->getValue($item);
                         $collection->removeElement($current);
                     }
