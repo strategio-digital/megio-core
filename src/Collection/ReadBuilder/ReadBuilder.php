@@ -35,11 +35,22 @@ class ReadBuilder implements IRecipeBuilder
     
     private bool $keepDbSchema = true;
     
+    public function reset(): self
+    {
+        $this->columns = [];
+        $this->ignoredFormatters = [];
+        $this->keepDbSchema = true;
+        
+        return $this;
+    }
+    
     /**
      * @throws \Megio\Collection\Exception\CollectionException
      */
     public function create(ICollectionRecipe $recipe, ReadBuilderEvent $event): self
     {
+        $this->reset();
+        
         $this->recipe = $recipe;
         $this->event = $event;
         
