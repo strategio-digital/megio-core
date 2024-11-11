@@ -50,6 +50,18 @@ class WriteBuilder implements IRecipeBuilder
     {
     }
     
+    public function reset(): self
+    {
+        $this->rowId = null;
+        $this->fields = [];
+        $this->errors = [];
+        $this->values = [];
+        $this->ignoredRules = [];
+        $this->keepDbSchema = true;
+        
+        return $this;
+    }
+    
     /**
      * @param \Megio\Collection\ICollectionRecipe $recipe
      * @param \Megio\Collection\WriteBuilder\WriteBuilderEvent $event
@@ -60,6 +72,8 @@ class WriteBuilder implements IRecipeBuilder
      */
     public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, string $rowId = null, array $values = []): self
     {
+        $this->reset();
+        
         $this->recipe = $recipe;
         $this->values = $values;
         $this->event = $event;
@@ -122,14 +136,14 @@ class WriteBuilder implements IRecipeBuilder
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-
+        
         $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($oneToOneMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-
+        
         $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($manyToOne as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
@@ -139,7 +153,7 @@ class WriteBuilder implements IRecipeBuilder
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-
+        
         $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
         foreach ($manyToMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
@@ -296,7 +310,6 @@ class WriteBuilder implements IRecipeBuilder
     public function getSerializedValues(): array
     {
         $values = [];
-        
         foreach ($this->fields as $field) {
             if ($field->mappedToEntity() === true && $field->isDisabled() === false) {
                 if ($field->getValue() instanceof UndefinedValue === false && $field->getValue() instanceof EmptyValue === false) {
