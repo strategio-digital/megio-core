@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tracy\Debugger;
 
-#[AsCommand(name: 'app:queue', description: 'Process some heavy stuff in queue job')]
+#[AsCommand(name: 'app:queue', description: 'Process some heavy stuff in jobs queue.')]
 class QueueWorkerCommand extends Command
 {
     private readonly QueueRepository $repository;
@@ -23,7 +23,7 @@ class QueueWorkerCommand extends Command
     public function __construct(
         private readonly EntityManager          $em,
         private readonly Container              $container,
-        private readonly QueueWorkerEnumFactory $workerEnumFactory,
+        private readonly QueueWorkerEnumFactory $queueWorkerEnumFactory,
     )
     {
         $this->repository = $this->em->getQueueRepo();
@@ -39,7 +39,7 @@ class QueueWorkerCommand extends Command
     {
         $pid = (int)getmypid();
         $name = $input->getArgument('workerName');
-        $worker = $this->workerEnumFactory->create($name);
+        $worker = $this->queueWorkerEnumFactory->create($name);
         
         $date = (new \DateTime())->format('Y-m-d H:i:s');
         $processor = $this->container->createInstance($worker->className());

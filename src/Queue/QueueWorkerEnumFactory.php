@@ -6,16 +6,16 @@ namespace Megio\Queue;
 final readonly class QueueWorkerEnumFactory
 {
     /**
-     * @param class-string<IQueueWorkerEnum> $workerEnumClass
+     * @param class-string<IQueueWorkerEnum> $enumName
      */
     public function __construct(
-        private string $workerEnumClass
+        private string $enumName
     )
     {
     }
     
     public function create(string $value): IQueueWorkerEnum
     {
-        return $this->workerEnumClass::from($value);
+        return $this->enumName::from($value);
     }
 }
