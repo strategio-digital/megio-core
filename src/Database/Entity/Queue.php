@@ -20,14 +20,14 @@ class Queue implements ICrudable
 {
     use TId, TCreatedAt, TUpdatedAt;
     
+    #[ORM\Column]
+    protected string $worker;
+    
     #[ORM\Column(options: ['default' => 0])]
     protected int $priority = 0;
     
     #[ORM\Column(type: 'string', enumType: QueueStatus::class)]
     protected QueueStatus $status = QueueStatus::PENDING;
-    
-    #[ORM\Column]
-    protected string $worker;
     
     /** @var array<int|string, mixed> */
     #[ORM\Column(type: 'json')]
