@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:auth:resources:update', description: 'Create resources in database', aliases: ['resources'])]
+#[AsCommand(name: 'app:auth:resources:update', description: 'Create resources in database.', aliases: ['resources'])]
 class PermissionsUpdateCommand extends Command
 {
     public function __construct(private readonly AuthResourceManager $manager)

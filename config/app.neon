@@ -31,5 +31,5 @@ services:
     - Megio\Database\Manager\AuthResourceManager
 
 includes:
-   - command.neon
-   - latte.neon
+    - command.neon
+    - latte.neon

@@ -58,7 +58,6 @@ class ApprovalPageRecipe extends CollectionRecipe
     
     public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
-        var_dump('create approval page');
         return $this->commonBuilder($builder);
     }
     
