@@ -1,6 +1,6 @@
 services:
     entityManager: App\Database\EntityManager
-    - Megio\Queue\QueueWorkerEnumFactory(\\App\\Worker\\QueueWorker)
+    - Megio\Queue\QueueWorkerEnumFactory(App\Worker\QueueWorker)
 
 includes:
     - app.neon
