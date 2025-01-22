@@ -64,8 +64,8 @@
             "@phpstan",
             "@neon",
             "@latte",
-            "@schema",
-            "@test"
+            "@test",
+            "@schema"
         ]
     },
     "require-dev": {

@@ -6,6 +6,7 @@ namespace Megio\Console;
 use App\Database\EntityManager;
 use Megio\Database\Repository\QueueRepository;
 use Megio\Queue\IQueueWorker;
+use Megio\Queue\IQueueWorkerEnum;
 use Megio\Queue\QueueWorkerEnumFactory;
 use Nette\DI\Container;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -18,6 +19,9 @@ use Tracy\Debugger;
 #[AsCommand(name: 'app:queue', description: 'Process some heavy stuff in jobs queue.')]
 class QueueWorkerCommand extends Command
 {
+    protected int $loopTicks = 100;
+    protected int $sleepAfterLoopMicroseconds = 5 * 1000 * 1000;
+    
     private readonly QueueRepository $repository;
     
     public function __construct(
@@ -41,47 +45,72 @@ class QueueWorkerCommand extends Command
         $name = $input->getArgument('workerName');
         $worker = $this->queueWorkerEnumFactory->create($name);
         
-        $date = (new \DateTime())->format('Y-m-d H:i:s');
         $processor = $this->container->createInstance($worker->className());
         
         if (!$processor instanceof IQueueWorker) {
             throw new \RuntimeException('Queue worker must implement IQueueJob interface');
         }
         
-        $output->writeln("[{$date}] | Starting queue worker | Worker: {$worker->value} | PID: {$pid}");
-        $this->em->getConfiguration()->setSQLLogger();
+        $this->em->getConfiguration()->setSQLLogger(null);
         
-        while (true) { // @phpstan-ignore-line
-            // Connect to database and fetch queue item
-            $date = (new \DateTime())->format('Y-m-d H:i:s');
-            $this->em->getConnection()->connect();
-            $queue = $this->repository->fetchQueueJob($pid, $worker);
-            
-            try {
-                if ($queue) {
-                    // Process queue
-                    $queueId = $queue->getId();
-                    $output->writeln("[$date] | Processing queue | Worker: {$worker->value} | PID: {$pid} | Queue ID: {$queueId} | retries: {$queue->getErrorRetries()}");
-                    $delay = $processor->process($queue, $output);
-                    
-                    if ($delay) {
-                        $this->repository->delay($queue, $delay);
-                    } else {
-                        $this->repository->remove($queue);
-                    }
-                }
-            } catch (\Throwable $e) {
-                $this->repository->autoRetry($queue, $e->getMessage());
-                Debugger::log($e, Debugger::ERROR);
-            }
-            
-            $this->em->clear();
-            $this->em->getConnection()->close();
-            
-            if (!$queue) {
-                $output->writeln("[{$date}] | Queue is empty | PID: {$pid} | Worker: {$worker->value} | Sleeping for 5 seconds...");
-                sleep(5);
-            }
+        $date = (new \DateTime())->format('Y-m-d H:i:s');
+        $output->writeln("[$date] | Starting loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
+        
+        $iterations = 0;
+        while ($iterations < $this->loopTicks) {
+            $iterations++;
+            $this->loopTask($pid, $processor, $worker, $output);
+            gc_collect_cycles();
         }
+        
+        $date = (new \DateTime())->format('Y-m-d H:i:s');
+        $output->writeln("[$date] | Finished loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
+        usleep($this->sleepAfterLoopMicroseconds);
+        
+        return Command::SUCCESS;
+    }
+    
+    protected function loopTask(
+        int              $pid,
+        IQueueWorker     $processor,
+        IQueueWorkerEnum $worker,
+        OutputInterface  $output,
+    ): void
+    {
+        // Connect to database and fetch queue item
+        $this->em->getConnection()->connect();
+        $queue = $this->repository->fetchQueueJob($pid, $worker);
+        $queueId = $queue?->getId();
+        
+        try {
+            if ($queue) {
+                // Process queue
+                $date = (new \DateTime())->format('Y-m-d H:i:s');
+                $output->writeln("[$date] | Processing job | Worker: {$worker->value} | PID: {$pid} | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB | retries: {$queue->getErrorRetries()}");
+                $delay = $processor->process($queue, $output);
+                
+                if ($delay) {
+                    $this->repository->delay($queue, $delay);
+                } else {
+                    $this->repository->remove($queue);
+                }
+            }
+        } catch (\Throwable $e) {
+            $this->repository->autoRetry($queue, $e->getMessage());
+            Debugger::log($e, Debugger::ERROR);
+        }
+        
+        $this->em->clear();
+        $this->em->getConnection()->close();
+        
+        if ($queue) {
+            $date = (new \DateTime())->format('Y-m-d H:i:s');
+            $output->writeln("[$date] | Finished job | Worker {$worker->value} | PID: {$pid} | | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB");
+        }
+    }
+    
+    protected function getMemoryUsageMB(): float
+    {
+        return memory_get_usage(true) / 1024 / 1024;
     }
 }
