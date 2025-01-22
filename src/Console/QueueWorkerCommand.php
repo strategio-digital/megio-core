@@ -19,8 +19,18 @@ use Tracy\Debugger;
 #[AsCommand(name: 'app:queue', description: 'Process some heavy stuff in jobs queue.')]
 class QueueWorkerCommand extends Command
 {
-    protected int $loopTicks = 100;
-    protected int $sleepAfterLoopMicroseconds = 5 * 1000 * 1000;
+    /**
+     * Maximum jobs processed during worker startup.
+     * Don't worry, after reaching this number, the worker will automatically restart and continue processing.
+     */
+    protected int $maxJobs = 100;
+    
+    /**
+     * Prevents high peaks in CPU usage.
+     * Sleep time between each job in microseconds.
+     * 1 * 1000 * 1000 = 1 second
+     */
+    protected int $jobSleepMicroseconds = 1 * 1000 * 1000;
     
     private readonly QueueRepository $repository;
     
@@ -57,15 +67,15 @@ class QueueWorkerCommand extends Command
         $output->writeln("[$date] | Starting loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
         
         $iterations = 0;
-        while ($iterations < $this->loopTicks) {
+        while ($iterations < $this->maxJobs) {
             $iterations++;
             $this->loopTask($pid, $processor, $worker, $output);
             gc_collect_cycles();
+            usleep($this->jobSleepMicroseconds);
         }
         
         $date = (new \DateTime())->format('Y-m-d H:i:s');
         $output->writeln("[$date] | Finished loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
-        usleep($this->sleepAfterLoopMicroseconds);
         
         return Command::SUCCESS;
     }
