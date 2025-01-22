@@ -1,6 +1,4 @@
 #!/bin/sh
-# remove temp files
-#rm -rf /var/www/html/temp/*
 
 # migrate databases
 su-exec www-data php bin/console migration:migrate --no-interaction
@@ -11,10 +9,9 @@ su-exec www-data php bin/console app:auth:resources:update
 start_queue_worker() {
   worker_command="$1"
 
-  echo "Starting queue worker: $worker_command"
   while true; do
+    echo "Starting queue worker '$worker_command'..."
     su-exec www-data nohup $worker_command >>"/var/www/html/log/queue-worker.log" 2>&1
-    echo "Queue worker '$worker_command' crashed. Restarting in 5 seconds..."
     sleep 5
   done &
 }
@@ -25,7 +22,7 @@ if [ "$QUEUE_WORKERS_ENABLED" = "true" ]; then
   echo "Starting queue workers..."
   start_queue_worker "php bin/console app:queue example.worker"
   #start_queue_worker "php bin/console app:queue example.worker"
-  #start_queue_worker "php bin/console app:queue example.worker"
+  #start_queue_worker "php bin/console app:queue example.worker-two"
 fi
 
 # start php-fpm and nginx
