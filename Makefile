@@ -7,14 +7,12 @@ endif
 sh:
 	docker compose exec -it app /bin/bash
 
-analyse:
+test:
 	docker compose exec app composer analyse
 
 test-single:
 	docker compose exec app vendor/bin/pest $(FILE)
 
-test-full:
-	docker compose exec app composer analyse
 
 test-setup:
 	rm -rf migrations/*

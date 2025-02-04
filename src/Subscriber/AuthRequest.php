@@ -18,8 +18,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class AuthRequest implements EventSubscriberInterface
 {
-    protected RequestEvent $event;
+    const string HEADER_NAME = 'X-Auth-Reject-Reason';
+    const string INVALID_CREDENTIALS = 'invalid_credentials';
+    const string INVALID_PERMISSIONS = 'invalid_permissions';
     
+    protected RequestEvent $event;
     protected Request $request;
     
     public function __construct(
@@ -60,14 +63,18 @@ class AuthRequest implements EventSubscriberInterface
         $authHeader = $this->request->headers->get('Authorization');
         
         if (!is_string($authHeader)) {
-            $this->sendError('Invalid or empty Authorization header');
+            $this->sendError('Invalid or empty Authorization header', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
         $bearer = trim(str_replace('Bearer', '', $authHeader));
         
         if (!$this->jwt->isTrustedToken($bearer)) {
-            $this->sendError('Invalid or expired token');
+            $this->sendError('Invalid or expired token', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
@@ -79,7 +86,9 @@ class AuthRequest implements EventSubscriberInterface
         $tokenId = $claims->get('bearer_token_id');
         
         if (!$tokenId) {
-            $this->sendError('Missing bearer_token_id in JWT token claims');
+            $this->sendError('Missing bearer_token_id in JWT token claims', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
@@ -87,7 +96,9 @@ class AuthRequest implements EventSubscriberInterface
         $token = $this->em->getAuthTokenRepo()->findOneBy(['id' => $tokenId]);
         
         if (!$token) {
-            $this->sendError('Unknown JWT token, probably it was revoked');
+            $this->sendError('Unknown JWT token, probably it was revoked', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
@@ -95,7 +106,9 @@ class AuthRequest implements EventSubscriberInterface
         if ($jwt->isExpired(new \DateTime())) {
             $this->em->remove($token);
             $this->em->flush();
-            $this->sendError('JWT token expired');
+            $this->sendError('JWT token expired', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
@@ -124,7 +137,9 @@ class AuthRequest implements EventSubscriberInterface
         $user = $qb->getQuery()->getOneOrNullResult();
         
         if (!$user) {
-            $this->sendError("User does not exist in '{$token->getSource()}' source");
+            $this->sendError("User does not exist in '{$token->getSource()}' source", 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
             return;
         }
         
@@ -145,18 +160,19 @@ class AuthRequest implements EventSubscriberInterface
             $userResources = implode('|', $authResources);
             
             if ($userResources !== $requestResources) {
-                $this->sendError('User permissions have been changed');
+                $this->sendError('User permissions have been changed', 401, [
+                    self::HEADER_NAME => self::INVALID_PERMISSIONS
+                ]);
             }
         }
     }
-    
+
     /**
-     * @param string $error
-     * @param int $status
+     * @param array<string, string> $headers
      */
-    public function sendError(string $error, int $status = 401): void
+    public function sendError(string $error, int $status = 401, array $headers = []): void
     {
-        $this->event->setResponse(new JsonResponse(['errors' => [$error]], $status));
+        $this->event->setResponse(new JsonResponse(['errors' => [$error]], $status, $headers));
         $this->event->stopPropagation();
     }
 }
