@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Queue;
 
-use App\Worker\QueueWorker;
+use App\QueueWorker;
 use Megio\Database\Entity\Queue;
 use Megio\Queue\QueueDelay;
 

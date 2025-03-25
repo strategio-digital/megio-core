@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Recipe;
 
-use App\Worker\QueueWorker;
+use App\QueueWorker;
 use Megio\Collection\CollectionRecipe;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\Formatter\CallableFormatter;

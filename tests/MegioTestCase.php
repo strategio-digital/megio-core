@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\Database\EntityManager;
+use App\EntityManager;
 use Faker\Factory as FakerFactory;
 use Faker\Generator;
 use Megio\Bootstrap;

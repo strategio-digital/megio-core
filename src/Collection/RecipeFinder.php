@@ -20,9 +20,9 @@ class RecipeFinder
     {
         $this->recipes = [];
         
-        $path = Path::appDir() . '/Recipe';
+        $path = Path::appDir();
         foreach (Finder::findFiles()->from($path) as $file) {
-            $className = $this->getClassname($file, $path, 'App\\Recipe\\');
+            $className = $this->getClassname($file, $path, 'App\\');
             if (is_subclass_of($className, ICollectionRecipe::class)) {
                 /** @var ICollectionRecipe|null $recipe */
                 $recipe = $this->container->getByType($className, false);

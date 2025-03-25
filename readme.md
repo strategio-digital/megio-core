@@ -16,7 +16,7 @@ cp .env.example .env
 make test-setup
 
 # Run all tests
-make test-full
+make test
 
 # Or run specific test
 make test-single FILE=tests/Collection/UpdateRowsTest.php

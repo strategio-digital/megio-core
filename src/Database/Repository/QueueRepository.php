@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Database\Repository;
 
-use App\Database\EntityManager;
+use App\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;

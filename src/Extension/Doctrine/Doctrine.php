@@ -32,8 +32,12 @@ class Doctrine
     
     public function __construct()
     {
-        $srcEntityPath = Path::appDir() . '/Database/Entity';
-        $entityPaths = array_merge([Path::megioVendorDir() . '/src/Database/Entity'], file_exists($srcEntityPath) ? [$srcEntityPath] : []);
+        $srcEntityPath = Path::appDir();
+
+        $entityPaths = array_merge(
+            [Path::megioVendorDir() . '/src/Database/Entity'],
+            file_exists($srcEntityPath) ? [$srcEntityPath] : []
+        );
         
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             $entityPaths,

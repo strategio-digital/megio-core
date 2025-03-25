@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Megio\Tests\Hooray;
 
-use App\Database\Entity\Hooray\Customer\ApprovalPage;
-use App\Database\Entity\Hooray\Order\Order;
-use App\Database\Entity\Hooray\Order\Status;
-use App\Recipe\Hooray\ApprovalPageRecipe;
+use App\Hooray\Database\Entity\Customer\ApprovalPage;
+use App\Hooray\Database\Entity\Order\Order;
+use App\Hooray\Database\Entity\Order\Status;
+use App\Hooray\Recipe\ApprovalPageRecipe;
 use Megio\Http\Request\Collection\CreateRequest;
 
 test('hooray - create approval page', function () {

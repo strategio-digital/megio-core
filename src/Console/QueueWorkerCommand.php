@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Console;
 
-use App\Database\EntityManager;
+use App\EntityManager;
 use Megio\Database\Repository\QueueRepository;
 use Megio\Queue\IQueueWorker;
 use Megio\Queue\IQueueWorkerEnum;
