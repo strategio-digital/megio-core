@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace App\Article\Recipe;
 
-use App\Article\Database\Entity\Tag;
+use App\Article\Database\Entity\ArticleAuthorProfile;
 use Megio\Collection\CollectionRecipe;
 
-class TagRecipe extends CollectionRecipe
+class ArticleAuthorProfileRecipe extends CollectionRecipe
 {
     public function source(): string
     {
-        return Tag::class;
+        return ArticleAuthorProfile::class;
     }
     
     public function key(): string
     {
-        return 'blog-tag';
+        return 'article-author-profile';
     }
 }

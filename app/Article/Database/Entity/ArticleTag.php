@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Article\Database\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Megio\Database\Field\TCreatedAt;
 use Megio\Database\Field\TId;
@@ -11,24 +13,29 @@ use Megio\Database\Interface\ICrudable;
 use Megio\Database\Interface\IJoinable;
 
 #[ORM\Entity]
-#[ORM\Table(name: '`blog_author_profile`')]
+#[ORM\Table(name: '`article_tag`')]
 #[ORM\HasLifecycleCallbacks]
-class Profile implements ICrudable, IJoinable
+class ArticleTag implements ICrudable, IJoinable
 {
     use TId, TCreatedAt, TUpdatedAt;
     
     ## DONE
-    #[ORM\Column(length: 64, unique: true)]
-    protected string $nickname;
+    #[ORM\Column(length: 32)]
+    protected string $name;
     
     ## DONE
-    #[ORM\Column(type: 'text')]
-    protected string $biography;
+    #[ORM\Column(length: 32, unique: true)]
+    protected string $slug;
     
-    ## DONE
-    #[ORM\OneToOne(inversedBy: 'profile', targetEntity: Author::class)]
-    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
-    protected ?Author $author = null;
+    ## TODO:
+    /** @var Collection<int, Article> */
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'tags')]
+    protected Collection $articles;
+    
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
     
     /**
      * @return array{fields: string[], format: string}
@@ -36,7 +43,7 @@ class Profile implements ICrudable, IJoinable
     public function getJoinableLabel(): array
     {
         return [
-            'fields' => ['nickname'],
+            'fields' => ['name'],
             'format' => '%s'
         ];
     }

@@ -15,6 +15,6 @@ class ArticleRecipe extends CollectionRecipe
     
     public function key(): string
     {
-        return 'blog-article';
+        return 'article';
     }
 }
