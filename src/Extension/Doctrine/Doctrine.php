@@ -22,38 +22,55 @@ use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 class Doctrine
 {
     protected EntityManager $entityManager;
-    
+
     protected Connection $connection;
-    
+
     protected Configuration $configuration;
-    
+
     /** @var array<string, string> */
     protected array $connectionConfig = [];
-    
+
     public function __construct()
     {
         $srcEntityPath = Path::appDir();
 
         $entityPaths = array_merge(
             [Path::megioVendorDir() . '/src/Database/Entity'],
-            file_exists($srcEntityPath) ? [$srcEntityPath] : []
+            file_exists($srcEntityPath) ? [$srcEntityPath] : [],
         );
-        
+
+        $proxyAdapter =
+            $_ENV['APP_ENVIRONMENT'] === 'develop'
+                ? new \Symfony\Component\Cache\Adapter\ArrayAdapter()
+                : new PhpFilesAdapter('dp', 0, Path::tempDir() . '/doctrine/proxy');
+
+        $metadataAdapter =
+            $_ENV['APP_ENVIRONMENT'] === 'develop'
+                ? new \Symfony\Component\Cache\Adapter\ArrayAdapter()
+                : new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata');
+
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
-            $entityPaths,
-            $_ENV['APP_ENVIRONMENT'] === 'develop',
-            Path::tempDir() . '/doctrine/proxy',
-            new PhpFilesAdapter('dp')
+            paths: $entityPaths,
+            isDevMode: $_ENV['APP_ENVIRONMENT'] === 'develop',
+            proxyDir: Path::tempDir() . '/doctrine/proxy',
+            cache: new PhpFilesAdapter('dp'),
         );
-        
-        $this->configuration->setMetadataCache(new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata'));
+
+        $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
+            paths: $entityPaths,
+            isDevMode: $_ENV['APP_ENVIRONMENT'] === 'develop',
+            proxyDir: Path::tempDir() . '/doctrine/proxy',
+            cache: $proxyAdapter,
+        );
+
+        $this->configuration->setMetadataCache($metadataAdapter);
         $this->configuration->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
-        
+
         $this->connectionConfig = [
             'driver' => $_ENV['DB_DRIVER'],
             'charset' => 'UTF8',
         ];
-        
+
         if ($_ENV['DB_DRIVER'] === 'pdo_pgsql' || $_ENV['DB_DRIVER'] === 'pdo_mysql') {
             $this->connectionConfig['host'] = $_ENV['DB_HOST'];
             $this->connectionConfig['port'] = $_ENV['DB_PORT'];
@@ -61,33 +78,33 @@ class Doctrine
             $this->connectionConfig['user'] = $_ENV['DB_USERNAME'];
             $this->connectionConfig['password'] = $_ENV['DB_PASSWORD'];
         }
-        
+
         if ($_ENV['DB_DRIVER'] === 'pdo_sqlite') {
             $filePath = $_ENV['DB_SQLITE_FILE'];
-            
+
             if (!FileSystem::isAbsolute($filePath)) {
                 $filePath = Path::appDir() . '/../docker/temp/sqlite/' . $filePath;
             }
-            
+
             if (!file_exists($filePath)) {
                 FileSystem::write($filePath, '');
             }
-            
+
             $this->connectionConfig['path'] = $filePath;
         }
-        
+
         if (!file_exists(Path::appDir() . '/../migrations')) {
             FileSystem::createDir(Path::appDir() . '/../migrations');
         }
-        
+
         $evm = new EventManager();
         $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
         $evm->addEventSubscriber(new SqliteForeignKeyChecksSubscriber());
-        
+
         $this->connection = DriverManager::getConnection($this->connectionConfig, $this->configuration, $evm);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
     }
-    
+
     public function getMigrationFactory(): DependencyFactory
     {
         $conf = new ConfigurationArray([
@@ -98,11 +115,11 @@ class Doctrine
                 'executed_at_column_name' => 'executed_at',
                 'execution_time_column_name' => 'execution_time',
             ],
-            
+
             'migrations_paths' => [
                 'App\\Migrations' => Path::appDir() . '/../migrations',
             ],
-            
+
             'all_or_nothing' => true,
             'transactional' => true,
             'check_database_platform' => true,
@@ -110,15 +127,15 @@ class Doctrine
             'connection' => null,
             'em' => null
         ]);
-        
+
         return DependencyFactory::fromEntityManager($conf, new ExistingEntityManager($this->entityManager));
     }
-    
+
     public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
-    
+
     public function getConnection(): Connection
     {
         return $this->connection;
