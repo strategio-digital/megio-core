@@ -32,7 +32,11 @@ class VideoLinkField extends BaseField
         protected mixed  $defaultValue = new UndefinedValue()
     )
     {
-        $this->rules[] = new VideoLinkRule();
+        $this->rules[] = new VideoLinkRule(
+            message: null,
+            normalize: false
+        );
+
         parent::__construct(
             $this->name,
             $this->label,
