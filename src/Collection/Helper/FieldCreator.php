@@ -12,6 +12,7 @@ use Megio\Collection\WriteBuilder\Field\DateTimeField;
 use Megio\Collection\WriteBuilder\Field\DateTimeIntervalField;
 use Megio\Collection\WriteBuilder\Field\DecimalField;
 use Megio\Collection\WriteBuilder\Field\EmailField;
+use Megio\Collection\WriteBuilder\Field\EnumField;
 use Megio\Collection\WriteBuilder\Field\IntegerField;
 use Megio\Collection\WriteBuilder\Field\JsonField;
 use Megio\Collection\WriteBuilder\Field\PasswordField;
@@ -43,6 +44,14 @@ class FieldCreator
             if (Strings::contains($name, $key)) {
                 $fieldByName = $field;
             }
+        }
+
+        if (class_exists($columnType) === true) {
+            $reflection = new \ReflectionClass($columnType);
+            if ($reflection->isEnum()) {
+                return new EnumField($name, $name, $columnType);
+            }
+            unset($reflection);
         }
         
         $instance = match ($columnType) {
