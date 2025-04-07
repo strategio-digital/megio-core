@@ -63,7 +63,8 @@ class ArrayToEntity
                     self::resolveManyToManyReverseRelation($fieldKey, $schema, $entity, $value);
                     $ref->getProperty($fieldKey)->setValue($entity, $value);
                 } else {
-                    $entity->{$ref->getMethod($methodName)->name}($value);
+                    $ref->getMethod($methodName)->invoke($entity, $value);
+                    //$entity->{$ref->getMethod($methodName)->name}($value);
                 }
             } catch (ReflectionException) {
                 throw new CollectionException("Field '{$fieldKey}' does not exist on '{$metadata->getTableName()}' entity");
