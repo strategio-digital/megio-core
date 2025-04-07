@@ -12,6 +12,7 @@ use Megio\Collection\ReadBuilder\Column\DateColumn;
 use Megio\Collection\ReadBuilder\Column\DateTimeColumn;
 use Megio\Collection\ReadBuilder\Column\DateTimeIntervalColumn;
 use Megio\Collection\ReadBuilder\Column\EmailColumn;
+use Megio\Collection\ReadBuilder\Column\EnumColumn;
 use Megio\Collection\ReadBuilder\Column\JsonColumn;
 use Megio\Collection\ReadBuilder\Column\NumericColumn;
 use Megio\Collection\ReadBuilder\Column\PhoneColumn;
@@ -38,6 +39,14 @@ class ColumnCreator
             if (Strings::contains($key, $colKey)) {
                 $columnByKey = $column;
             }
+        }
+
+        if (class_exists($type) === true) {
+            $reflection = new \ReflectionClass($type);
+            if ($reflection->isEnum()) {
+                return new EnumColumn(key: $key, name: $key, sortable: $sortable, visible: $visible);
+            }
+            unset($reflection);
         }
         
         return match ($type) {

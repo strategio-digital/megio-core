@@ -22,7 +22,13 @@ class JoinableLabel
         $values = [];
         foreach ($describer['fields'] as $field) {
             if (array_key_exists($field, $data)) {
-                $values[] = $data[$field];
+                $value = $data[$field];
+                if ($value instanceof \BackedEnum) {
+                    $value = $value->value;
+                } else if ($value instanceof \UnitEnum) {
+                    $value = $value->name;
+                }
+                $values[] = $value;
             }
         }
 
