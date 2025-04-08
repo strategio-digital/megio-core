@@ -12,31 +12,50 @@ use Megio\Database\Interface\ICrudable;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
-    public function read(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
+    /** @return array<string, 'ASC'|'DESC'> */
+    public function sort(): array
     {
+        return [
+            'createdAt' => 'DESC',
+            'id' => 'ASC',
+        ];
+    }
+
+    public function read(
+        ReadBuilder $builder,
+        CollectionRequest $request,
+    ): ReadBuilder {
         return $builder->buildByDbSchema();
     }
-    
-    public function readAll(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
-    {
+
+    public function readAll(
+        ReadBuilder $builder,
+        CollectionRequest $request,
+    ): ReadBuilder {
         return $builder->buildByDbSchema();
     }
-    
-    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+
+    public function create(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $builder->buildByDbSchema();
     }
-    
-    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+
+    public function update(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $builder->buildByDbSchema();
     }
-    
-    public function search(SearchBuilder $builder, CollectionRequest $request): SearchBuilder
-    {
+
+    public function search(
+        SearchBuilder $builder,
+        CollectionRequest $request,
+    ): SearchBuilder {
         return $builder->keepDefaults();
     }
-    
+
     /**
      * @throws \Megio\Collection\Exception\CollectionException
      */
@@ -45,23 +64,23 @@ abstract class CollectionRecipe implements ICollectionRecipe
         if (!is_subclass_of($this->source(), ICrudable::class)) {
             throw new CollectionException("Entity '{$this->source()}' does not implement ICrudable");
         }
-        
+
         $rf = new \ReflectionClass($this->source());
         $attr = $rf->getAttributes(Table::class);
-        
+
         if (count($attr) === 0) {
             throw new CollectionException("Entity '{$this->source()}' is missing Table attribute");
         }
-        
+
         /** @var Table $attrInstance */
         $attrInstance = $attr[0]->newInstance();
-        
+
         if ($attrInstance->name === null) {
             throw new CollectionException("Entity '{$this->source()}' has Table attribute without name");
         }
-        
+
         $tableName = str_replace('`', '', $attrInstance->name);
-        
+
         return new RecipeEntityMetadata($this, $rf, $tableName);
     }
 }
