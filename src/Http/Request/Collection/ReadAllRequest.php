@@ -132,22 +132,30 @@ class ReadAllRequest extends Request
             IColumn $col,
         ) => $col->getKey(), $sortable);
 
+        $responseSort = [];
+
         // Order by only by sortable columns
         foreach ($data['orderBy'] as $param) {
             if (in_array($param['col'], $sortableKeys)) {
                 $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
+                $responseSort[] = [
+                    'col' => $param['col'],
+                    'desc' => $param['desc']
+                ];
             }
-        }
-
-        if (count($data['orderBy']) > 0 && in_array('id', array_column($data['orderBy'], 'col')) === false) {
-            $qb->addOrderBy('entity.id', 'ASC');
         }
 
         if (count($data['orderBy']) === 0) {
             foreach ($recipe->sort() as $columnName => $direction) {
                 $qb->addOrderBy("entity.{$columnName}", $direction);
+                $responseSort[] = [
+                    'col' => $columnName,
+                    'desc' => $direction === 'DESC'
+                ];
             }
         }
+
+        $qb->addOrderBy('entity.id', 'ASC');
 
         $query = $qb->getQuery()->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
         $paginator = new Paginator($query, true);
@@ -163,6 +171,7 @@ class ReadAllRequest extends Request
                 'lastPage' => (int)ceil($count / $data['itemsPerPage']),
                 'itemsPerPage' => $data['itemsPerPage'],
                 'itemsCountAll' => $count,
+                'orderBy' => $responseSort,
             ],
             'items' => $items
         ];

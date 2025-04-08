@@ -16,8 +16,7 @@ abstract class CollectionRecipe implements ICollectionRecipe
     public function sort(): array
     {
         return [
-            'createdAt' => 'DESC',
-            'id' => 'ASC',
+            'createdAt' => 'DESC'
         ];
     }
 
