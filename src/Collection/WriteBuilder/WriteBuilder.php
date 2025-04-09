@@ -182,27 +182,27 @@ class WriteBuilder implements IRecipeBuilder
                 $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->key()}' recipe for '{$this->event->name}' action";
             }
         }
-        
+
         foreach ($this->fields as $field) {
             if ($field->isDisabled() === false) {
                 $valueIsUndefined = $field->getValue() instanceof UndefinedValue;
-                $required = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
-                $nullable = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
-                
+                $hasRequiredRule = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
+                $hasNullableRule = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
+
                 $validate = false;
-                
+
                 if (!$valueIsUndefined) {
                     $validate = true;
                 }
-                
-                if ($valueIsUndefined && $required) {
+
+                if ($valueIsUndefined && $hasRequiredRule) {
                     $validate = true;
                 }
-                
-                if ($nullable && $field->getValue() === null) {
+
+                if ($hasNullableRule === true && $field->getValue() === null && $hasRequiredRule === false) {
                     $validate = false;
                 }
-                
+
                 foreach ($field->getRules() as $rule) {
                     if ($validate && $rule->validate() === false) {
                         $field->addError($rule->message());
