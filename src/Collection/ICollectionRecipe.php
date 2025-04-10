@@ -12,8 +12,9 @@ interface ICollectionRecipe
     /** @return class-string */
     public function source(): string;
 
-    /** @return string */
     public function key(): string;
+
+    public function name(): string;
 
     /** @return  array<string, 'ASC'|'DESC'> */
     public function sort(): array;

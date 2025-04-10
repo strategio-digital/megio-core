@@ -30,7 +30,8 @@ class NavbarRequest extends Request
         $excluded = [Admin::class, Queue::class];
         
         $recipes = $this->recipeFinder->load()->getAll();
-        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded));
+        $recipes = array_filter($recipes, fn($recipe) => in_array($recipe->source(), $excluded) === false);
+
         /** @var \Megio\Collection\ICollectionRecipe[] $recipes */
         $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
         
@@ -38,9 +39,16 @@ class NavbarRequest extends Request
             $resources = $this->authUser->getResources();
             $recipeKeys = array_filter($recipeKeys, fn($endpoint) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources));
         }
+
+        $items = array_map(fn($recipe) => [
+            'key' => $recipe->key(),
+            'name' => $recipe->name(),
+        ], $recipes);
+
+        $items = array_filter($items, fn($item) => in_array($item['key'], $recipeKeys, true) === true);
+
+        usort($items, fn($a, $b) => strnatcasecmp($a['name'], $b['name']));
         
-        sort($recipeKeys);
-        
-        return $this->json(['items' => $recipeKeys]);
+        return $this->json(['items' => $items]);
     }
 }

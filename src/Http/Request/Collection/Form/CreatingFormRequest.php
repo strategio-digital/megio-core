@@ -28,17 +28,17 @@ class CreatingFormRequest extends Request
         $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         
         return [
-            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
+            'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
             'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
     }
     
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByKey($data['recipe']);
+        $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
         
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipe']}' not found"]);
+            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
         }
         
         $event = new OnFormStartEvent(true, $data, $recipe, $this->request);
@@ -61,6 +61,12 @@ class CreatingFormRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' has no creatable fields"]);
         }
         
-        return $this->json(['form' => $builder->toArray()]);
+        return $this->json([
+            'recipe' => [
+                'key' => $recipe->key(),
+                'name' => $recipe->name(),
+            ],
+            'form' => $builder->toArray()
+        ]);
     }
 }

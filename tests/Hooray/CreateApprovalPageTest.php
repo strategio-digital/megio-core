@@ -28,7 +28,7 @@ test('hooray - create approval page', function () {
     $this->em()->flush();
     
     $data = [
-        'recipe' => $recipe->key(),
+        'recipeKey' => $recipe->key(),
         'rows' => [
             [
                 'items' => json_encode(['a' => 'b']),

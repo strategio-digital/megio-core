@@ -40,7 +40,7 @@ class ReadAllRequest extends Request
         ) => $r->key(), $recipes);
 
         return [
-            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
+            'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
             'schema' => Expect::bool(false),
             'adminPanel' => Expect::bool(false),
             'currentPage' => Expect::int(1)->min(1)->required(),
@@ -72,10 +72,10 @@ class ReadAllRequest extends Request
      */
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByKey($data['recipe']);
+        $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipe']}' not found"]);
+            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
         }
 
         $collectionRequest = new CollectionRequest($this->request, false, $data, null, []);

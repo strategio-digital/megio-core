@@ -34,7 +34,7 @@ class UpdatingFormRequest extends Request
         $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         
         return [
-            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
+            'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
             'id' => Expect::string()->required(),
             'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
         ];
@@ -42,10 +42,10 @@ class UpdatingFormRequest extends Request
     
     public function process(array $data): Response
     {
-        $recipe = $this->recipeFinder->findByKey($data['recipe']);
+        $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
         
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipe']}' not found"]);
+            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
         }
         
         $event = new OnFormStartEvent(false, $data, $recipe, $this->request);
@@ -123,6 +123,12 @@ class UpdatingFormRequest extends Request
             return $this->error(["Collection '{$data['recipe']}' has no editable fields"]);
         }
         
-        return $this->json(['form' => $builder->toArray()]);
+        return $this->json([
+            'recipe' => [
+                'key' => $recipe->key(),
+                'name' => $recipe->name(),
+            ],
+            'form' => $builder->toArray()
+        ]);
     }
 }

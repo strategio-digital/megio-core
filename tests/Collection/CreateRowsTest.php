@@ -15,7 +15,7 @@ test('collection create row', function () {
     $email = $this->generator()->email();
     
     $data = [
-        'recipe' => $recipe->key(),
+        'recipeKey' => $recipe->key(),
         'rows' => [
             [
                 'email' => $email,

@@ -25,7 +25,7 @@ test('collection update row', function () {
     $request = $this->createCollectionRequest(UpdateRequest::class);
     
     $data = [
-        'recipe' => $recipe->key(),
+        'recipeKey' => $recipe->key(),
         'rows' => [
             [
                 'id' => $admin->getId(),

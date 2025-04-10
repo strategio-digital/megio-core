@@ -20,6 +20,14 @@ abstract class CollectionRecipe implements ICollectionRecipe
         ];
     }
 
+    public function name(): string
+    {
+        $words = explode('-', $this->key());
+        $words[0] = mb_ucfirst($words[0]);
+
+        return implode(' ', $words);
+    }
+
     public function read(
         ReadBuilder $builder,
         CollectionRequest $request,

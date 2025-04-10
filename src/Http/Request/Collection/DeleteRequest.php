@@ -31,7 +31,7 @@ class DeleteRequest extends Request
         $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
         
         return [
-            'recipe' => Expect::anyOf(...$recipeKeys)->required(),
+            'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
             'ids' => Expect::arrayOf('string')->min(1)->required(),
         ];
     }
@@ -45,10 +45,10 @@ class DeleteRequest extends Request
     {
         
         /** @noinspection DuplicatedCode */
-        $recipe = $this->recipeFinder->findByKey($data['recipe']);
+        $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
         
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipe']}' not found"]);
+            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
         }
         
         $event = new OnStartEvent(EventType::DELETE, $data, $recipe, $this->request);
