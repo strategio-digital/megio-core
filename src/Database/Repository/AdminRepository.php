@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Megio\Database\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Megio\Database\Entity\Admin;
 
 /**
- * @method \Megio\Database\Entity\Admin|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method \Megio\Database\Entity\Admin|NULL findOneBy(array $criteria, array $orderBy = NULL)
- * @method \Megio\Database\Entity\Admin[] findAll()
- * @method \Megio\Database\Entity\Admin[] findBy(array $criteria, array $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
- * @extends EntityRepository<AdminRepository>
+ * @method Admin|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
+ * @method Admin|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Admin[] findAll()
+ * @method Admin[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @extends EntityRepository<Admin>
  */
 class AdminRepository extends EntityRepository
 {
