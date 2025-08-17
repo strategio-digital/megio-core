@@ -44,7 +44,7 @@ class EmailAuthRequest extends Request
     {
         $className = $this->entityFinder->getClassName($data['source']);
         
-        if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
+        if ($className === null || is_subclass_of($className, IAuthenticable::class) === false) {
             return $this->error(['Invalid source']);
         }
         
@@ -52,8 +52,12 @@ class EmailAuthRequest extends Request
         
         /** @var IAuthenticable|null $user */
         $user = $userRepo->findOneBy(['email' => $data['email']]);
+
+        if ($user === null) {
+            return $this->error(['Invalid e-mail or password credentials'], 401);
+        }
         
-        if (!$user || !(new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword())) {
+        if ((new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword()) === false) {
             return $this->error(['Invalid e-mail or password credentials'], 401);
         }
         

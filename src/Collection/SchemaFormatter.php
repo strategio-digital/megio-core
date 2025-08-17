@@ -6,7 +6,10 @@ namespace Megio\Collection;
 class SchemaFormatter
 {
     /**
-     * @return array{recipe: array{key: string, name: string}, props: array<int, mixed>}>
+     * @return array{
+     *     recipe: array{ key: string, name: string },
+     *     props: array<int, mixed>
+     * }
      */
     public static function format(ICollectionRecipe $recipe, IRecipeBuilder $builder): array
     {

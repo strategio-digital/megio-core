@@ -47,9 +47,9 @@
         "doctrine/dbal": "^3.4.5",
         "doctrine/annotations": "^1.13.3",
         "doctrine/migrations": "^3.5",
-        "lcobucci/jwt": "^4.2",
+        "lcobucci/jwt": "^5.5",
         "aws/aws-sdk-php": "^3.289.0",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1",
         "siketyan/yarn-lock": "^1.0",
         "sentry/sentry": "^4.8"
     },

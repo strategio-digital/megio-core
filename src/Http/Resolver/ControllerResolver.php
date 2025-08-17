@@ -15,10 +15,9 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
     
     public function instantiateController(string $class): object
     {
-        /** @var \Megio\Http\Controller\Base\IController $instance */
         $instance = $this->container->createInstance($class);
         
-        if (is_subclass_of($instance::class, IController::class)) {
+        if ($instance instanceof IController === true) {
             $instance->__inject($this->container);
         }
         

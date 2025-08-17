@@ -26,22 +26,24 @@ enum SizeUnit: string
             default => throw new \InvalidArgumentException("Invalid unit: $unit"),
         };
     }
-    
+
     public static function getIdealUnit(float $size): self
     {
-        $unit = self::Bytes;
-        
-        while ($size >= 1024 && $unit !== self::PetaBytes) {
-            $size /= 1024;
-            $unit = match ($unit) {
-                self::Bytes => self::KiloBytes,
-                self::KiloBytes => self::MegaBytes,
-                self::MegaBytes => self::GigaBytes,
-                self::GigaBytes => self::TeraBytes,
-            };
+        if ($size <= 0) {
+            return self::Bytes;
         }
-        
-        return $unit;
+
+        $idx = (int) floor(log($size, 1024));
+        $idx = max(0, min($idx, 5));
+
+        return match ($idx) {
+            0 => self::Bytes,
+            1 => self::KiloBytes,
+            2 => self::MegaBytes,
+            3 => self::GigaBytes,
+            4 => self::TeraBytes,
+            5 => self::PetaBytes,
+        };
     }
     
     public static function convert(float $size, SizeUnit $sourceUnit, SizeUnit $targetUnit): float

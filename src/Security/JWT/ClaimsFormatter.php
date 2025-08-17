@@ -13,7 +13,7 @@ class ClaimsFormatter
     /**
      * @param \Megio\Database\Interface\IAuthenticable $user
      * @param \Megio\Database\Entity\Auth\Token $token
-     * @return array<string, mixed>
+     * @return array<non-empty-string, mixed>
      */
     public function format(IAuthenticable $user, Token $token): array
     {

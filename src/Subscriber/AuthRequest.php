@@ -62,7 +62,7 @@ class AuthRequest implements EventSubscriberInterface
         
         $authHeader = $this->request->headers->get('Authorization');
         
-        if (!is_string($authHeader)) {
+        if (is_string($authHeader) === false) {
             $this->sendError('Invalid or empty Authorization header', 401, [
                 self::HEADER_NAME => self::INVALID_CREDENTIALS
             ]);
@@ -70,8 +70,15 @@ class AuthRequest implements EventSubscriberInterface
         }
         
         $bearer = trim(str_replace('Bearer', '', $authHeader));
+
+        if ($bearer === '') {
+            $this->sendError('Empty Bearer token', 401, [
+                self::HEADER_NAME => self::INVALID_CREDENTIALS
+            ]);
+            return;
+        }
         
-        if (!$this->jwt->isTrustedToken($bearer)) {
+        if ($this->jwt->isTrustedToken($bearer) === false) {
             $this->sendError('Invalid or expired token', 401, [
                 self::HEADER_NAME => self::INVALID_CREDENTIALS
             ]);
@@ -79,30 +86,27 @@ class AuthRequest implements EventSubscriberInterface
         }
         
         $jwt = $this->jwt->parseToken($bearer);
-        
-        // @phpstan-ignore-next-line
+
         $claims = $jwt->claims();
         
         $tokenId = $claims->get('bearer_token_id');
         
-        if (!$tokenId) {
+        if ($tokenId === null) {
             $this->sendError('Missing bearer_token_id in JWT token claims', 401, [
                 self::HEADER_NAME => self::INVALID_CREDENTIALS
             ]);
             return;
         }
-        
-        /** @var \Megio\Database\Entity\Auth\Token|null $token */
+
         $token = $this->em->getAuthTokenRepo()->findOneBy(['id' => $tokenId]);
         
-        if (!$token) {
+        if ($token === null) {
             $this->sendError('Unknown JWT token, probably it was revoked', 401, [
                 self::HEADER_NAME => self::INVALID_CREDENTIALS
             ]);
             return;
         }
-        
-        /** @var \Megio\Database\Entity\Auth\Token $token */
+
         if ($jwt->isExpired(new \DateTime())) {
             $this->em->remove($token);
             $this->em->flush();
@@ -114,7 +118,7 @@ class AuthRequest implements EventSubscriberInterface
         
         $className = $this->entityFinder->getClassName($token->getSource());
         
-        if (!$className || !is_subclass_of($className, IAuthenticable::class)) {
+        if ($className === null || is_subclass_of($className, IAuthenticable::class) === false) {
             $this->sendError("For source {$token->getSource()} does not exists IAuthenticable entity");
             return;
         }
@@ -136,20 +140,19 @@ class AuthRequest implements EventSubscriberInterface
         
         $user = $qb->getQuery()->getOneOrNullResult();
         
-        if (!$user) {
+        if ($user instanceof IAuthenticable === false) {
             $this->sendError("User does not exist in '{$token->getSource()}' source", 401, [
                 self::HEADER_NAME => self::INVALID_CREDENTIALS
             ]);
             return;
         }
-        
-        /** @var IAuthenticable $user */
+
         $this->authUser->setAuthUser($user);
         
-        // Don't watch only if strict mode is off
+        // Strictly watch resources, if AUTH_STRICT_RESOURCES is not set to false
         $watch = !(array_key_exists('AUTH_STRICT_RESOURCES', $_ENV) && $_ENV['AUTH_STRICT_RESOURCES'] === 'false');
         
-        if ($watch) {
+        if ($watch === true) {
             $claimsResources = $claims->get('user')['resources'];
             $authResources = $this->authUser->getResources();
             

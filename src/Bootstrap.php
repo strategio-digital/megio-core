@@ -18,11 +18,18 @@ use Tracy\ILogger;
 class Bootstrap
 {
     protected bool $invokedLogger = false;
-    
+
+    /**
+     * @throws \Exception
+     */
     public function projectRootPath(string $rootPath): Bootstrap
     {
-        /** @var string $realPath */
         $realPath = realpath($rootPath);
+
+        if ($realPath === false) {
+            throw new \Exception("Invalid project root path-");
+        }
+
         Path::setProjectPath($realPath);
         
         // Load environment variables
@@ -76,9 +83,7 @@ class Bootstrap
         Debugger::getBar()->addPanel(new ContainerPanel($container));
         
         // Initialize extensions
-        if (method_exists($container, 'initialize')) {
-            $container->initialize();
-        }
+        $container->initialize();
         
         return $container;
     }
@@ -90,8 +95,7 @@ class Bootstrap
     protected function createContainer(string $configPath): Container
     {
         $loader = new ContainerLoader(Path::tempDir() . '/di', $_ENV['APP_ENVIRONMENT'] === 'develop');
-        
-        /** @var Container $class */
+
         $class = $loader->load(function (Compiler $compiler) use ($configPath) {
             // Load entry-point config
             $compiler->loadConfig($configPath);
@@ -101,7 +105,7 @@ class Bootstrap
             
             // Register custom extensions
             $neon = Neon::decodeFile($configPath);
-            if (array_key_exists('extensions', $neon) && $neon['extensions']) {
+            if (array_key_exists('extensions', $neon) === true && is_array($neon['extensions']) === true) {
                 foreach ($neon['extensions'] as $name => $extension) {
                     /** @var \Nette\DI\CompilerExtension $instance */
                     $instance = new $extension();
@@ -109,7 +113,9 @@ class Bootstrap
                 }
             }
         });
-        
-        return new $class;
+
+        $instance = new $class;
+        assert($instance instanceof Container);
+        return $instance;
     }
 }

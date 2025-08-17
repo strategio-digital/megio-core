@@ -23,7 +23,7 @@ class JsonLogstashLogger extends BaseLogger
         $date = $now->format('Y-m-d');
         $payload = $this->formatPayload($message, $level, $now);
         
-        /** @var string $json */
+        /** @var non-empty-string $json */
         $json = json_encode($payload);
         $filePathName = Path::logDir() . "/{$date}--logstash.json.log";
         
