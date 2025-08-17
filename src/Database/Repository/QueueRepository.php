@@ -14,10 +14,10 @@ use Megio\Queue\QueueStatus;
 use Nette\InvalidArgumentException;
 
 /**
- * @method Queue|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method Queue|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Queue|null find($id, ?int $lockMode = null, ?int $lockVersion = null)
+ * @method Queue|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Queue[] findAll()
- * @method Queue[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @method Queue[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
  * @extends EntityRepository<Queue>
  */
 class QueueRepository extends EntityRepository
@@ -39,7 +39,7 @@ class QueueRepository extends EntityRepository
                 ->where('q.status = :pendingStatus')
                 ->andWhere('q.worker = :worker')
                 ->andWhere('q.errorRetries < :errorRetries')
-                ->andWhere('q.delayUntil IS NULL OR q.delayUntil < :dateTime')
+                ->andWhere('q.delayUntil IS null OR q.delayUntil < :dateTime')
                 ->addOrderBy('q.createdAt', 'ASC')
                 ->addOrderBy('q.priority', 'DESC')
                 ->setMaxResults(1)

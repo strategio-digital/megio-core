@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityRepository;
 use Megio\Database\Entity\Auth\Resource;
 
 /**
- * @method Resource|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method Resource|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Resource|null find($id, ?int $lockMode = null, ?int $lockVersion = null)
+ * @method Resource|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Resource[] findAll()
- * @method Resource[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @method Resource[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
  * @extends EntityRepository<Resource>
  */
 class ResourceRepository extends EntityRepository

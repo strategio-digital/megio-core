@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityRepository;
 use Megio\Database\Entity\Auth\Role;
 
 /**
- * @method Role|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method Role|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Role|null find($id, ?int $lockMode = null, ?int $lockVersion = null)
+ * @method Role|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Role[] findAll()
- * @method Role[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @method Role[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
  * @extends EntityRepository<Role>
  */
 class RoleRepository extends EntityRepository

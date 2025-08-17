@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityRepository;
 use Megio\Database\Entity\Admin;
 
 /**
- * @method Admin|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method Admin|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Admin|null find($id, ?int $lockMode = null, ?int $lockVersion = null)
+ * @method Admin|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Admin[] findAll()
- * @method Admin[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @method Admin[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
  * @extends EntityRepository<Admin>
  */
 class AdminRepository extends EntityRepository
