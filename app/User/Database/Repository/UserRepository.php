@@ -7,10 +7,10 @@ use App\User\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * @method User|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method User|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method User|null find($id, ?int $lockMode = null, ?int $lockVersion = null)
+ * @method User|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method User[] findAll()
- * @method User[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @method User[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
  * @extends EntityRepository<User>
  */
 class UserRepository extends EntityRepository
