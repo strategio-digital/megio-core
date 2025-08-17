@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Megio\Database\Repository\Auth;
 
 use Doctrine\ORM\EntityRepository;
+use Megio\Database\Entity\Auth\Resource;
 
 /**
- * @method \Megio\Database\Entity\Auth\Resource|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method \Megio\Database\Entity\Auth\Resource|NULL findOneBy(array $criteria, array $orderBy = NULL)
- * @method \Megio\Database\Entity\Auth\Resource[] findAll()
- * @method \Megio\Database\Entity\Auth\Resource[] findBy(array $criteria, array $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
- * @extends EntityRepository<ResourceRepository>
+ * @method Resource|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
+ * @method Resource|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Resource[] findAll()
+ * @method Resource[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @extends EntityRepository<Resource>
  */
 class ResourceRepository extends EntityRepository
 {

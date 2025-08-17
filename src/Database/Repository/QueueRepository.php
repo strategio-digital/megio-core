@@ -14,11 +14,11 @@ use Megio\Queue\QueueStatus;
 use Nette\InvalidArgumentException;
 
 /**
- * @method \Megio\Database\Entity\Queue|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
- * @method \Megio\Database\Entity\Queue|NULL findOneBy(array $criteria, array $orderBy = NULL)
- * @method \Megio\Database\Entity\Queue[] findAll()
- * @method \Megio\Database\Entity\Queue[] findBy(array $criteria, array $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
- * @extends EntityRepository<QueueRepository>
+ * @method Queue|NULL find($id, ?int $lockMode = NULL, ?int $lockVersion = NULL)
+ * @method Queue|NULL findOneBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL)
+ * @method Queue[] findAll()
+ * @method Queue[] findBy(array<string, mixed> $criteria, array<string, string>|NULL $orderBy = NULL, ?int $limit = NULL, ?int $offset = NULL)
+ * @extends EntityRepository<Queue>
  */
 class QueueRepository extends EntityRepository
 {
