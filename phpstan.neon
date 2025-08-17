@@ -5,6 +5,7 @@ parameters:
         - src
         - router
         - tests
+    treatPhpDocTypesAsCertain: false
     ignoreErrors:
         -
             # Pest is not supported by PHPStan

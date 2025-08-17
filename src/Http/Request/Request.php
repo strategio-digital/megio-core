@@ -36,7 +36,7 @@ abstract class Request extends Controller implements IRequest
     public function getRequestData(): array
     {
         $raw = $this->request->getContent();
-        $json = is_string($raw) ? json_decode($raw, true) : []; //@phpstan-ignore-line
+        $json = is_string($raw) ? json_decode($raw, true) : [];
         return array_merge($json ?: [], $this->request->files->all());
     }
     

@@ -58,18 +58,24 @@ class Vite
      */
     protected function getManifest(): array
     {
-        if (!$this->manifest) {
-            if (!file_exists(Path::wwwTempDir() . '/manifest.json')) {
+        if ($this->manifest === null) {
+            if (file_exists(Path::wwwTempDir() . '/manifest.json') === false) {
                 throw new \Exception("Vite manifest file not found, please execute 'yarn build' or 'yarn dev' command.");
             }
             
             $content = file_get_contents(Path::wwwTempDir() . '/manifest.json');
             
-            if (!$content) {
+            if ($content === false) {
                 throw new \Exception("Vite manifest file has wrong format.");
             }
             
-            $this->manifest = json_decode($content, true);
+            $array = json_decode($content, true);
+
+            if ($array === null) {
+                throw new \Exception("Vite manifest file has wrong format.");
+            }
+
+            $this->manifest = $array;
         }
         
         return $this->manifest;

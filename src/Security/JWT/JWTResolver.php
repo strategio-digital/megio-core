@@ -3,86 +3,112 @@ declare(strict_types=1);
 
 namespace Megio\Security\JWT;
 
-use Megio\Helper\Path;
-use Megio\Security\SSL\KeyPair;
-use Lcobucci\Clock\SystemClock;
-use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Builder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Validation\Constraint;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Token\Plain;
+use Lcobucci\JWT\Validation\Constraint\IssuedBy;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
+use Lcobucci\JWT\Validation\Constraint\PermittedFor;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
+use Lcobucci\JWT\Validation\Validator;
+use Megio\Helper\Path;
+use Megio\Security\SSL\KeyPair;
+use Psr\Clock\ClockInterface;
 
 class JWTResolver
 {
-    const ISSUER = 'strategio.dev';
-    
-    const PERMIT_FOR = 'strategio-megio-apps';
-    
-    private Configuration $config;
-    
+    const string ISSUER = 'strategio.dev';
+
+    const string PERMIT_FOR = 'strategio-megio-apps';
+
+    private Sha256 $signer;
+
+    private InMemory $signingKey;
+
+    private ClockInterface $clock;
+
     public function __construct()
     {
         $filePath = Path::tempDir() . '/jwt/jwt-RSA.key';
-        
+
         if (!is_file($filePath)) {
             $keyPair = KeyPair::generate();
             $keyPair->saveTo($filePath);
         } else {
             $keyPair = KeyPair::fromFile($filePath);
         }
-        
-        $this->config = Configuration::forSymmetricSigner(
-            new Sha256(),
-            InMemory::plainText($keyPair->getPrivateKey())
-        );
+
+        $this->signer = new Sha256();
+        $this->signingKey = InMemory::plainText($keyPair->getPrivateKey());
+        $this->clock = new class implements ClockInterface {
+            public function now(): \DateTimeImmutable
+            {
+                return new \DateTimeImmutable();
+            }
+        };
     }
-    
-    public function parseToken(string $token): Token
+
+    /**
+     * @param non-empty-string $token
+     */
+    public function parseToken(string $token): Plain
     {
-        return $this->config->parser()->parse($token);
+        $parser = new Parser(new JoseEncoder());
+        $token = $parser->parse($token);
+        assert($token instanceof Plain);
+
+        return $token;
     }
-    
+
+    /**
+     * @param non-empty-string $token
+     */
     public function isTrustedToken(string $token): bool
     {
-        $this->config->setValidationConstraints(
-            new Constraint\SignedWith($this->config->signer(), $this->config->verificationKey()),
-            new Constraint\IssuedBy(self::ISSUER),
-            new Constraint\PermittedFor(self::PERMIT_FOR),
-            new Constraint\LooseValidAt(SystemClock::fromSystemTimezone())
-        );
-        
-        $constraints = $this->config->validationConstraints();
-        
+        $constraints = [
+            new SignedWith($this->signer, $this->signingKey),
+            new IssuedBy(self::ISSUER),
+            new PermittedFor(self::PERMIT_FOR),
+            new LooseValidAt($this->clock)
+        ];
+
         try {
-            $token = $this->config->parser()->parse($token);
-            return $this->config->validator()->validate($token, ...$constraints);
+            $parsedToken = $this->parseToken($token);
+            $validator = new Validator();
+            return $validator->validate($parsedToken, ...$constraints);
         } catch (InvalidTokenStructure|CannotDecodeContent) {
             return false;
         }
     }
-    
+
     /**
      * @param \DateTimeImmutable $expirationAt
-     * @param array<string, mixed> $claims
+     * @param array<non-empty-string, mixed> $claims
      * @return string
      */
-    public function createToken(\DateTimeImmutable $expirationAt, array $claims = []): string
-    {
-        $createdAt = new \DateTimeImmutable();
-        
-        $builder = $this->config
-            ->builder()
+    public function createToken(
+        \DateTimeImmutable $expirationAt,
+        array $claims = [],
+    ): string {
+        $createdAt = $this->clock->now();
+
+        $builder = new Builder(new JoseEncoder(), ChainedFormatter::default());
+        $builder = $builder
             ->issuedBy(self::ISSUER)
             ->permittedFor(self::PERMIT_FOR)
             ->issuedAt($createdAt)
             ->expiresAt($expirationAt);
-        
+
         foreach ($claims as $name => $value) {
-            $builder->withClaim($name, $value);
+            $builder = $builder->withClaim($name, $value);
         }
-        
-        return $builder->getToken($this->config->signer(), $this->config->signingKey())->toString();
+
+        return $builder->getToken($this->signer, $this->signingKey)->toString();
     }
 }

@@ -4,6 +4,13 @@ ifneq (,$(wildcard ./.env))
 	export
 endif
 
+serve:
+	docker compose up -d
+	docker compose exec app composer i
+	docker compose exec app bin/console migration:diff --no-interaction
+	docker compose exec app bin/console migration:migrate --no-interaction
+	docker compose exec app bin/console app:auth:resources:update
+
 sh:
 	docker compose exec -it app /bin/bash
 
