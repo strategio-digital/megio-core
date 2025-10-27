@@ -49,7 +49,7 @@
         "doctrine/migrations": "^3.5",
         "lcobucci/jwt": "^5.5",
         "aws/aws-sdk-php": "^3.289.0",
-        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan": "^2.0",
         "siketyan/yarn-lock": "^1.0",
         "sentry/sentry": "^4.8"
     },
