@@ -19,8 +19,7 @@ return static function (RoutingConfigurator $routes): void {
     // Api overview
     $routes->add(Router::ROUTE_API, '/api')
         ->methods(['GET'])
-        ->controller([AppController::class, 'api'])
-        ->options(['auth' => false]);
+        ->controller([AppController::class, 'api']);
     
     // Auth
     $auth = $routes->collection('megio.auth.')->prefix('/megio/auth');

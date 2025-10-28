@@ -23,7 +23,7 @@ class EntityManager extends \Doctrine\ORM\EntityManager
      */
     public function __construct(Doctrine $doctrine)
     {
-        $em = $doctrine->getEntityManager();
+        $em = $doctrine->entityManager;
         parent::__construct($em->getConnection(), $em->getConfiguration());
     }
     

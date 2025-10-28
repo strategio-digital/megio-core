@@ -70,7 +70,7 @@ class WriteBuilder implements IRecipeBuilder
      * @return $this
      * @throws \Megio\Collection\Exception\CollectionException
      */
-    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, string $rowId = null, array $values = []): self
+    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, ?string $rowId = null, array $values = []): self
     {
         $this->reset();
         
@@ -85,7 +85,7 @@ class WriteBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function add(IField $field, string $moveBeforeName = null, string $moveAfterName = null): self
+    public function add(IField $field, ?string $moveBeforeName = null, ?string $moveAfterName = null): self
     {
         if ($this->keepDbSchema === false) {
             $this->fields = [];

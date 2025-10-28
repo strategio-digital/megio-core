@@ -7,8 +7,6 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Nette\Utils\FileSystem;
-use Megio\Extension\Doctrine\Subscriber\PostgresDefaultSchemaSubscriber;
-use Megio\Extension\Doctrine\Subscriber\SqliteForeignKeyChecksSubscriber;
 use Megio\Helper\Path;
 use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
@@ -17,23 +15,42 @@ use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\ORMSetup;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Megio\Extension\Doctrine\Middleware\QueryLogger;
 use Megio\Extension\Doctrine\Middleware\LoggingMiddleware;
 
 class Doctrine
 {
-    protected EntityManager $entityManager;
+    const string MIGRATION_TABLE = '_migration_versions';
 
-    protected Connection $connection;
+    public EntityManager $entityManager {
+        get {
+            return $this->entityManager;
+        }
+    }
+
+    protected Connection $connection {
+        get {
+            return $this->connection;
+        }
+    }
+
+    protected QueryLogger $queryLogger {
+        get {
+            return $this->queryLogger;
+        }
+    }
+
 
     protected Configuration $configuration;
 
     /** @var array<string, string> */
     protected array $connectionConfig = [];
 
-    protected QueryLogger $queryLogger;
-
+    /**
+     * @throws \Symfony\Component\Cache\Exception\CacheException
+     */
     public function __construct(QueryLogger $queryLogger)
     {
         $this->queryLogger = $queryLogger;
@@ -47,20 +64,13 @@ class Doctrine
 
         $proxyAdapter =
             $_ENV['APP_ENVIRONMENT'] === 'develop'
-                ? new \Symfony\Component\Cache\Adapter\ArrayAdapter()
+                ? new ArrayAdapter()
                 : new PhpFilesAdapter('dp', 0, Path::tempDir() . '/doctrine/proxy');
 
         $metadataAdapter =
             $_ENV['APP_ENVIRONMENT'] === 'develop'
-                ? new \Symfony\Component\Cache\Adapter\ArrayAdapter()
+                ? new ArrayAdapter()
                 : new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata');
-
-        $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
-            paths: $entityPaths,
-            isDevMode: $_ENV['APP_ENVIRONMENT'] === 'develop',
-            proxyDir: Path::tempDir() . '/doctrine/proxy',
-            cache: new PhpFilesAdapter('dp'),
-        );
 
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             paths: $entityPaths,
@@ -85,31 +95,17 @@ class Doctrine
             $this->connectionConfig['password'] = $_ENV['DB_PASSWORD'];
         }
 
-        if ($_ENV['DB_DRIVER'] === 'pdo_sqlite') {
-            $filePath = $_ENV['DB_SQLITE_FILE'];
-
-            if (!FileSystem::isAbsolute($filePath)) {
-                $filePath = Path::appDir() . '/../docker/temp/sqlite/' . $filePath;
-            }
-
-            if (!file_exists($filePath)) {
-                FileSystem::write($filePath, '');
-            }
-
-            $this->connectionConfig['path'] = $filePath;
-        }
-
         if (!file_exists(Path::appDir() . '/../migrations')) {
             FileSystem::createDir(Path::appDir() . '/../migrations');
         }
 
-        $evm = new EventManager();
-        $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
-        $evm->addEventSubscriber(new SqliteForeignKeyChecksSubscriber());
 
-        // Add logging middleware and event manager to DBAL configuration
+        $evm = new EventManager();
         $dbalConfig = new \Doctrine\DBAL\Configuration();
         $dbalConfig->setMiddlewares([new LoggingMiddleware($this->queryLogger)]);
+
+        // Remove migrations table from default schema management
+        $dbalConfig->setSchemaAssetsFilter(static fn (string $assetName): bool => $assetName !== self::MIGRATION_TABLE);
 
         $this->connection = DriverManager::getConnection($this->connectionConfig, $dbalConfig);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
@@ -119,7 +115,7 @@ class Doctrine
     {
         $conf = new ConfigurationArray([
             'table_storage' => [
-                'table_name' => 'migration_versions',
+                'table_name' => self::MIGRATION_TABLE,
                 'version_column_name' => 'version',
                 'version_column_length' => 1024,
                 'executed_at_column_name' => 'executed_at',
@@ -141,18 +137,4 @@ class Doctrine
         return DependencyFactory::fromEntityManager($conf, new ExistingEntityManager($this->entityManager));
     }
 
-    public function getEntityManager(): EntityManager
-    {
-        return $this->entityManager;
-    }
-
-    public function getConnection(): Connection
-    {
-        return $this->connection;
-    }
-
-    public function getQueryLogger(): QueryLogger
-    {
-        return $this->queryLogger;
-    }
 }

@@ -59,7 +59,7 @@ class ReadBuilder implements IRecipeBuilder
         return $this;
     }
     
-    public function add(IColumn $col, string $moveBeforeKey = null, string $moveAfterKey = null): self
+    public function add(IColumn $col, ?string $moveBeforeKey = null, ?string $moveAfterKey = null): self
     {
         $this->addIdColumnIfNotExists();
         
