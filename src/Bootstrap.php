@@ -51,7 +51,10 @@ class Bootstrap
     public function logger(ILogger $logger): Bootstrap
     {
         // Setup debugger
-        Debugger::enable($_ENV['APP_ENVIRONMENT'] === 'develop' ? Debugger::Development : Debugger::Production, Path::logDir());
+        Debugger::enable(
+            $_ENV['APP_ENVIRONMENT'] === 'develop' ? Debugger::Development : Debugger::Production,
+            Path::logDir(),
+        );
         Debugger::$strictMode = E_ALL;
         Debugger::setLogger($logger);
 
@@ -67,8 +70,10 @@ class Bootstrap
 
     /**
      */
-    public function configure(string $configPath, float $startedAt): Container
-    {
+    public function configure(
+        string $configPath,
+        float $startedAt,
+    ): Container {
         if ($this->invokedLogger === false) {
             $this->logger(new JsonLogstashLogger());
         }
@@ -95,7 +100,11 @@ class Bootstrap
     {
         $loader = new ContainerLoader(Path::tempDir() . '/di', $_ENV['APP_ENVIRONMENT'] === 'develop');
 
-        $class = $loader->load(function (Compiler $compiler) use ($configPath): void {
+        $class = $loader->load(function (
+            Compiler $compiler,
+        ) use (
+            $configPath,
+        ): void {
             // Load entry-point config
             $compiler->loadConfig($configPath);
 

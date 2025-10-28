@@ -38,8 +38,8 @@ class QueueWorkerCommand extends Command
     private readonly QueueRepository $repository;
 
     public function __construct(
-        private readonly EntityManager          $em,
-        private readonly Container              $container,
+        private readonly EntityManager $em,
+        private readonly Container $container,
         private readonly QueueWorkerEnumFactory $queueWorkerEnumFactory,
     ) {
         $this->repository = $this->em->getQueueRepo();
@@ -51,8 +51,10 @@ class QueueWorkerCommand extends Command
         $this->addArgument('workerName', InputArgument::REQUIRED, 'Queue job name');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
         $pid = (int)getmypid();
         $name = $input->getArgument('workerName');
         $worker = $this->queueWorkerEnumFactory->create($name);
@@ -66,7 +68,9 @@ class QueueWorkerCommand extends Command
         $this->em->getConfiguration()->setMiddlewares([]);
 
         $date = new DateTime()->format('Y-m-d H:i:s');
-        $output->writeln("[$date] | Starting loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
+        $output->writeln(
+            "[$date] | Starting loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB",
+        );
 
         $iterations = 0;
         while ($iterations < $this->maxJobs) {
@@ -77,16 +81,23 @@ class QueueWorkerCommand extends Command
         }
 
         $date = (new DateTime())->format('Y-m-d H:i:s');
-        $output->writeln("[$date] | Finished loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
+        $output->writeln(
+            "[$date] | Finished loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB",
+        );
 
         return Command::SUCCESS;
     }
 
+    protected function getMemoryUsageMB(): float
+    {
+        return memory_get_usage(true) / 1024 / 1024;
+    }
+
     protected function loopTask(
-        int              $pid,
-        IQueueWorker     $processor,
+        int $pid,
+        IQueueWorker $processor,
         IQueueWorkerEnum $worker,
-        OutputInterface  $output,
+        OutputInterface $output,
     ): void {
         $queue = $this->repository->fetchQueueJob($pid, $worker);
         $queueId = $queue?->getId();
@@ -95,7 +106,9 @@ class QueueWorkerCommand extends Command
             if ($queue) {
                 // Process queue
                 $date = new DateTime()->format('Y-m-d H:i:s');
-                $output->writeln("[$date] | Processing job | Worker: {$worker->value} | PID: {$pid} | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB | retries: {$queue->getErrorRetries()}");
+                $output->writeln(
+                    "[$date] | Processing job | Worker: {$worker->value} | PID: {$pid} | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB | retries: {$queue->getErrorRetries()}",
+                );
                 $delay = $processor->process($queue, $output);
 
                 if ($delay) {
@@ -114,12 +127,9 @@ class QueueWorkerCommand extends Command
 
         if ($queue) {
             $date = new DateTime()->format('Y-m-d H:i:s');
-            $output->writeln("[$date] | Finished job | Worker {$worker->value} | PID: {$pid} | | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB");
+            $output->writeln(
+                "[$date] | Finished job | Worker {$worker->value} | PID: {$pid} | | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB",
+            );
         }
-    }
-
-    protected function getMemoryUsageMB(): float
-    {
-        return memory_get_usage(true) / 1024 / 1024;
     }
 }

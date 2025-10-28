@@ -18,7 +18,11 @@ class EnumColumn extends BaseColumn
             name: $name,
             sortable: $sortable,
             visible: $visible,
-            formatters: [new CallableFormatter(fn($value) => $value ? $value->value : null)],
+            formatters: [
+                new CallableFormatter(fn(
+                    $value,
+                ) => $value ? $value->value : null),
+            ],
         );
     }
 

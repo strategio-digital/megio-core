@@ -9,7 +9,7 @@ class PhoneCzRule extends BaseRule
 {
     public function __construct(
         protected ?string $message = null,
-        protected bool    $normalize = true,
+        protected bool $normalize = true,
     ) {
         parent::__construct($message);
     }

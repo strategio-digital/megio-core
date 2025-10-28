@@ -13,10 +13,10 @@ class CollectionRequest
      */
     public function __construct(
         protected Request &$request,
-        protected bool    $isFormRendering,
-        protected mixed   $requestData,
+        protected bool $isFormRendering,
+        protected mixed $requestData,
         protected ?string $rowId = null,
-        protected array   $rowValues = [],
+        protected array $rowValues = [],
     ) {}
 
     public function getHttpRequest(): Request

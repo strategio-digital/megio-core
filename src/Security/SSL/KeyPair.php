@@ -11,10 +11,15 @@ use const OPENSSL_KEYTYPE_RSA;
 
 class KeyPair
 {
-    private function __construct(protected string $privateKey, protected string $publicKey) {}
+    private function __construct(
+        protected string $privateKey,
+        protected string $publicKey,
+    ) {}
 
-    public static function generate(int $bits = 4096, int $keyType = OPENSSL_KEYTYPE_RSA): KeyPair
-    {
+    public static function generate(
+        int $bits = 4096,
+        int $keyType = OPENSSL_KEYTYPE_RSA,
+    ): KeyPair {
         /** @var OpenSSLAsymmetricKey $keys */
         $keys = openssl_pkey_new([
             'private_key_bits' => $bits,

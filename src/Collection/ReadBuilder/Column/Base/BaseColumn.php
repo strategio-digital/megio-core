@@ -13,10 +13,41 @@ abstract class BaseColumn implements IColumn
     public function __construct(
         protected string $key,
         protected string $name,
-        protected bool   $sortable = false,
-        protected bool   $visible = true,
-        protected array  $formatters = [],
+        protected bool $sortable = false,
+        protected bool $visible = true,
+        protected array $formatters = [],
     ) {}
+
+    /** @return array{
+     *     renderer: string,
+     *     key: string,
+     *     name: string,
+     *     sortable: bool,
+     *     visible: bool,
+     *     formatters: class-string[]
+     * }
+     */
+    public function toArray(): array
+    {
+        $formatters = array_map(fn(
+            $f,
+        ) => $f::class, $this->getFormatters());
+
+        return [
+            'renderer' => $this->renderer(),
+            'key' => $this->getKey(),
+            'name' => $this->getName(),
+            'sortable' => $this->isSortable(),
+            'visible' => $this->isVisible(),
+            'formatters' => array_values($formatters),
+        ];
+    }
+
+    /** @return IFormatter[] */
+    public function getFormatters(): array
+    {
+        return $this->formatters;
+    }
 
     public function getKey(): string
     {
@@ -36,34 +67,5 @@ abstract class BaseColumn implements IColumn
     public function isVisible(): bool
     {
         return $this->visible;
-    }
-
-    /** @return IFormatter[] */
-    public function getFormatters(): array
-    {
-        return $this->formatters;
-    }
-
-    /** @return array{
-     *     renderer: string,
-     *     key: string,
-     *     name: string,
-     *     sortable: bool,
-     *     visible: bool,
-     *     formatters: class-string[]
-     * }
-     */
-    public function toArray(): array
-    {
-        $formatters = array_map(fn($f) => $f::class, $this->getFormatters());
-
-        return [
-            'renderer' => $this->renderer(),
-            'key' => $this->getKey(),
-            'name' => $this->getName(),
-            'sortable' => $this->isSortable(),
-            'visible' => $this->isVisible(),
-            'formatters' => array_values($formatters),
-        ];
     }
 }

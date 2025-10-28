@@ -22,14 +22,14 @@ class DateTimeZoneField extends BaseField
     public function __construct(
         protected string $name,
         protected string $label,
-        protected array  $rules = [],
-        protected array  $serializers = [new DateTimeZoneSerializer()],
-        protected array  $formatters = [new DateTimeZoneFormatter()],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue(),
+        protected array $rules = [],
+        protected array $serializers = [new DateTimeZoneSerializer()],
+        protected array $formatters = [new DateTimeZoneFormatter()],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         $this->rules[] = new DateTimeZoneRule();
         parent::__construct(

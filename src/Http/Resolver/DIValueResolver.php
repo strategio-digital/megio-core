@@ -16,8 +16,10 @@ class DIValueResolver implements ValueResolverInterface
     /**
      * @return iterable<int, object>
      */
-    public function resolve(Request $request, ArgumentMetadata $argument): iterable
-    {
+    public function resolve(
+        Request $request,
+        ArgumentMetadata $argument,
+    ): iterable {
         $argumentType = $argument->getType();
 
         if ($argumentType && class_exists($argumentType) && is_subclass_of($argumentType, IRequest::class)) {

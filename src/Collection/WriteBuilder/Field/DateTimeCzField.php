@@ -21,14 +21,14 @@ class DateTimeCzField extends BaseField
     public function __construct(
         protected string $name,
         protected string $label,
-        protected array  $rules = [],
-        protected array  $serializers = [new DateTimeSerializer()],
-        protected array  $formatters = [new DateTimeCzFormatter()],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue(),
+        protected array $rules = [],
+        protected array $serializers = [new DateTimeSerializer()],
+        protected array $formatters = [new DateTimeCzFormatter()],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         $this->rules[] = new DateTimeCzRule();
         parent::__construct(

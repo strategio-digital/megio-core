@@ -23,17 +23,21 @@ class EmailAuthRequest extends Request
     public const string EXPIRATION_TIME = '4hours';
 
     public function __construct(
-        private readonly EntityManager   $em,
-        private readonly JWTResolver     $jwt,
+        private readonly EntityManager $em,
+        private readonly JWTResolver $jwt,
         private readonly ClaimsFormatter $claims,
-        private readonly EntityFinder    $entityFinder,
+        private readonly EntityFinder $entityFinder,
     ) {}
 
     public function schema(array $data): array
     {
         $all = $this->entityFinder->findAll();
-        $filtered = array_filter($all, fn($item) => is_subclass_of($item['className'], IAuthenticable::class));
-        $tables = array_map(fn($class) => $class['table'], $filtered);
+        $filtered = array_filter($all, fn(
+            $item,
+        ) => is_subclass_of($item['className'], IAuthenticable::class));
+        $tables = array_map(fn(
+            $class,
+        ) => $class['table'], $filtered);
 
         return [
             'source' => Expect::anyOf(...$tables),

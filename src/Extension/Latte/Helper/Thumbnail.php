@@ -13,8 +13,13 @@ class Thumbnail
 
     protected string $thumbFilePath;
 
-    public function __construct(protected string $path, protected ?int $width, protected ?int $height, protected string $method = 'EXACT', protected int $quality = 80)
-    {
+    public function __construct(
+        protected string $path,
+        protected ?int $width,
+        protected ?int $height,
+        protected string $method = 'EXACT',
+        protected int $quality = 80,
+    ) {
         $this->method = mb_strtoupper($this->method);
 
         $this->splFileInfo = new SplFileInfo($path);

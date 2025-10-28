@@ -24,7 +24,7 @@ class Role implements IJoinable
     #[ORM\Column(length: 32, unique: true)]
     private string $name;
 
-    /** @var Collection<int, Resource>  */
+    /** @var Collection<int, Resource> */
     #[ORM\ManyToMany(targetEntity: Resource::class, inversedBy: 'roles')]
     #[ORM\JoinTable(name: '`auth_role_has_resource`')]
     private Collection $resources;

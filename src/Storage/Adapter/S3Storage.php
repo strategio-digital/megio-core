@@ -38,8 +38,12 @@ class S3Storage implements StorageAdapter
         return $this->client;
     }
 
-    public function upload(UploadedFile $file, string $destination, ?string $name = null, bool $publish = true): SplFileInfo
-    {
+    public function upload(
+        UploadedFile $file,
+        string $destination,
+        ?string $name = null,
+        bool $publish = true,
+    ): SplFileInfo {
         $ext = $file->getClientOriginalExtension();
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
@@ -52,9 +56,11 @@ class S3Storage implements StorageAdapter
             $destination,
             $file->getContent(),
             $publish ? 'public-read' : 'private',
-            ['params' => [
-                'ContentType' => $ext === 'svg' ? 'image/svg+xml' : $file->getClientMimeType(),
-            ]],
+            [
+                'params' => [
+                    'ContentType' => $ext === 'svg' ? 'image/svg+xml' : $file->getClientMimeType(),
+                ],
+            ],
         );
 
         $uploader->upload();
@@ -67,7 +73,12 @@ class S3Storage implements StorageAdapter
         $destination = Strings::replace($destination, '~\/+~', '/');
 
         try {
-            $res = $this->client->getObject(['Bucket' => $_ENV['S3_BUCKET'], 'Key' => $destination,]);
+            $res = $this->client->getObject(
+                [
+                    'Bucket' => $_ENV['S3_BUCKET'],
+                    'Key' => $destination,
+                ],
+            );
             return $res->get('@metadata')['effectiveUri'];
         } catch (S3Exception $exception) {
             if ($exception->getStatusCode() === 404) {
@@ -77,12 +88,18 @@ class S3Storage implements StorageAdapter
         }
     }
 
-    public function put(string $destination, string $newLine): void
-    {
+    public function put(
+        string $destination,
+        string $newLine,
+    ): void {
         $destination = Strings::replace($destination, '~\/+~', '/');
 
         $this->client->registerStreamWrapperV2();
-        if (!@file_put_contents("s3://{$_ENV['S3_BUCKET']}/{$destination}", $newLine . PHP_EOL, FILE_APPEND /*| LOCK_EX*/)) {
+        if (!@file_put_contents(
+            "s3://{$_ENV['S3_BUCKET']}/{$destination}",
+            $newLine . PHP_EOL,
+            FILE_APPEND, /*| LOCK_EX*/
+        )) {
             throw new Exception("Cannot write stream into AWS S3 file '{$destination}'");
         }
     }

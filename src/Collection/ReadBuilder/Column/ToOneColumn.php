@@ -11,8 +11,8 @@ class ToOneColumn extends BaseColumn
     public function __construct(
         protected string $key,
         protected string $name,
-        protected bool   $visible = true,
-        protected array  $formatters = [],
+        protected bool $visible = true,
+        protected array $formatters = [],
     ) {
         $formatters[] = new ToOneFormatter();
         parent::__construct(

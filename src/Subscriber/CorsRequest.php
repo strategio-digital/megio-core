@@ -16,9 +16,18 @@ class CorsRequest implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 9999],
-            KernelEvents::RESPONSE => ['onKernelResponse', 9999],
-            KernelEvents::EXCEPTION => ['onKernelException', 9999],
+            KernelEvents::REQUEST => [
+                'onKernelRequest',
+                9999,
+            ],
+            KernelEvents::RESPONSE => [
+                'onKernelResponse',
+                9999,
+            ],
+            KernelEvents::EXCEPTION => [
+                'onKernelException',
+                9999,
+            ],
         ];
     }
 

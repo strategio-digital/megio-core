@@ -14,8 +14,11 @@ class SnapshotLogger extends AbstractLogger
     /**
      * @param mixed[] $context
      */
-    public function log(mixed $level, Stringable|string $message, array $context = []): void
-    {
+    public function log(
+        mixed $level,
+        Stringable|string $message,
+        array $context = [],
+    ): void {
         $this->snapshots[] = [
             'level' => $level,
             'message' => (string)$message,

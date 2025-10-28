@@ -12,11 +12,11 @@ class Searchable
     private array $enabled = [];
 
     public function __construct(
-        protected string  $column,
+        protected string $column,
         protected ?string $relation = null,
-        protected string  $operator = '=',
-        ?callable         $formatter = null,
-        ?callable         $enabled = null,
+        protected string $operator = '=',
+        ?callable $formatter = null,
+        ?callable $enabled = null,
     ) {
         if ($formatter !== null) {
             $this->formatter[] = $formatter;

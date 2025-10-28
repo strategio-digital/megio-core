@@ -18,9 +18,13 @@ class PermissionsUpdateCommand extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::VUE_ROUTER);
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
+        $types = array_filter(ResourceType::cases(), fn(
+            $case,
+        ) => $case !== ResourceType::VUE_ROUTER);
         $result = $this->manager->updateResources(true, [], ...$types);
 
         foreach ($result['created'] as $resource) {

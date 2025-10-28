@@ -9,8 +9,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 class BeforeValidationEvent extends Event
 {
     public function __construct(
-        private mixed            $data,
-        private mixed            $schema,
+        private mixed $data,
+        private mixed $schema,
         private readonly Request $request,
     ) {}
 

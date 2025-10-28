@@ -30,13 +30,15 @@ class UpdateRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder,
-        protected readonly WriteBuilder  $builder,
+        protected readonly RecipeFinder $recipeFinder,
+        protected readonly WriteBuilder $builder,
     ) {}
 
     public function schema(array $data): array
     {
-        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
+        $recipeKeys = array_map(fn(
+            $r,
+        ) => $r->key(), $this->recipeFinder->load()->getAll());
 
         return [
             'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
@@ -70,7 +72,9 @@ class UpdateRequest extends Request
             return $dispatcher->getResponse();
         }
 
-        $ids = array_map(fn($row) => $row['id'], $data['rows']);
+        $ids = array_map(fn(
+            $row,
+        ) => $row['id'], $data['rows']);
 
         $qb = $this->em->getRepository($recipe->source())
             ->createQueryBuilder('entity')
@@ -82,7 +86,9 @@ class UpdateRequest extends Request
         $rows = $qb->getQuery()->getResult();
 
         foreach ($data['rows'] as $row) {
-            $item = current(array_filter($rows, fn($db) => $db->getId() === $row['id']));
+            $item = current(array_filter($rows, fn(
+                $db,
+            ) => $db->getId() === $row['id']));
 
             /** @noinspection DuplicatedCode */
             if (!$item) {
@@ -109,7 +115,13 @@ class UpdateRequest extends Request
             $builder->validate();
 
             if (!$builder->isValid()) {
-                $response = $this->json(['errors' => [], 'validation_errors' => $builder->getErrors()], 400);
+                $response = $this->json(
+                    [
+                        'errors' => [],
+                        'validation_errors' => $builder->getErrors(),
+                    ],
+                    400,
+                );
                 $e = new CollectionException('Invalid data');
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);

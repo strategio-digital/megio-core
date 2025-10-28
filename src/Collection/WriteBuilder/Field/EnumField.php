@@ -17,14 +17,14 @@ class EnumField extends SelectField
         protected string $name,
         protected string $label,
         protected string $enumClassName,
-        protected array  $rules = [],
-        protected array  $serializers = [],
-        protected array  $formatters = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue(),
+        protected array $rules = [],
+        protected array $serializers = [],
+        protected array $formatters = [],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         $isEnum = (new ReflectionClass($this->enumClassName))->isEnum();
 
@@ -34,11 +34,15 @@ class EnumField extends SelectField
 
         if (count($this->serializers) === 0) {
             $this->serializers = [
-                new CallableSerializer(fn($value) => $value ? $this->enumClassName::from($value) : null),
+                new CallableSerializer(fn(
+                    $value,
+                ) => $value ? $this->enumClassName::from($value) : null),
             ];
         }
 
-        $this->items = array_map(fn($item) => new Item($item->value, $item->value), $this->enumClassName::cases());
+        $this->items = array_map(fn(
+            $item,
+        ) => new Item($item->value, $item->value), $this->enumClassName::cases());
 
         parent::__construct(
             $this->name,

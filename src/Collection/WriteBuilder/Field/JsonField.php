@@ -18,17 +18,17 @@ class JsonField extends BaseField
      * @param array<string, bool|float|int|string|null> $attrs
      */
     public function __construct(
-        protected string  $name,
-        protected string  $label,
+        protected string $name,
+        protected string $label,
         protected ?Schema $schema = null,
-        protected array   $rules = [],
-        protected array   $serializers = [],
-        protected array   $formatters = [],
-        protected array   $attrs = [],
-        protected bool    $disabled = false,
-        protected bool    $mapToEntity = true,
-        protected mixed   $value = new UndefinedValue(),
-        protected mixed   $defaultValue = new UndefinedValue(),
+        protected array $rules = [],
+        protected array $serializers = [],
+        protected array $formatters = [],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         $this->rules[] = new JsonRule($schema);
         parent::__construct(

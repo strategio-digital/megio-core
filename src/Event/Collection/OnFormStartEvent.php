@@ -13,10 +13,10 @@ class OnFormStartEvent extends Event
     protected ?Response $response = null;
 
     public function __construct(
-        protected bool              $creatingForm,
-        protected mixed             $data,
+        protected bool $creatingForm,
+        protected mixed $data,
         protected ICollectionRecipe $recipe,
-        protected Request           $request,
+        protected Request $request,
     ) {}
 
     /**
@@ -43,15 +43,15 @@ class OnFormStartEvent extends Event
         return $this->response;
     }
 
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
     /**
      */
     public function setResponse(Response $response): void
     {
         $this->response = $response;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 }

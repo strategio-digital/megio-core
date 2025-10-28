@@ -27,8 +27,10 @@ class AdminCreateCommand extends Command
         $this->addArgument('password', InputArgument::REQUIRED, 'Password');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output,
+    ): int {
         $email = $input->getArgument('email');
         $passwd = $input->getArgument('password');
 

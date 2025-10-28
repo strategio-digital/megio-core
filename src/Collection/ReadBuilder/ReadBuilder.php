@@ -48,8 +48,10 @@ class ReadBuilder implements IRecipeBuilder
     /**
      * @throws CollectionException
      */
-    public function create(ICollectionRecipe $recipe, ReadBuilderEvent $event): self
-    {
+    public function create(
+        ICollectionRecipe $recipe,
+        ReadBuilderEvent $event,
+    ): self {
         $this->reset();
 
         $this->recipe = $recipe;
@@ -60,8 +62,11 @@ class ReadBuilder implements IRecipeBuilder
         return $this;
     }
 
-    public function add(IColumn $col, ?string $moveBeforeKey = null, ?string $moveAfterKey = null): self
-    {
+    public function add(
+        IColumn $col,
+        ?string $moveBeforeKey = null,
+        ?string $moveAfterKey = null,
+    ): self {
         $this->addIdColumnIfNotExists();
 
         if ($this->keepDbSchema === false) {
@@ -92,18 +97,33 @@ class ReadBuilder implements IRecipeBuilder
     /**
      * @param string[] $exclude
      */
-    public function buildByDbSchema(array $exclude = [], bool $persist = false): self
-    {
+    public function buildByDbSchema(
+        array $exclude = [],
+        bool $persist = false,
+    ): self {
         $this->addIdColumnIfNotExists();
 
-        $sortableCols = ['id', 'createdAt', 'updatedAt'];
-        $invisibleCols = ['id', 'createdAt', 'updatedAt'];
+        $sortableCols = [
+            'id',
+            'createdAt',
+            'updatedAt',
+        ];
+        $invisibleCols = [
+            'id',
+            'createdAt',
+            'updatedAt',
+        ];
         $ignored = array_merge($exclude, ['id']);
 
         foreach ($this->dbSchema->getUnionColumns() as $column) {
             if (!in_array($column['name'], $ignored, true)) {
                 $visible = !in_array($column['name'], $invisibleCols, true);
-                $col = ColumnCreator::create($column['type'], $column['name'], $visible, in_array($column['name'], $sortableCols, true));
+                $col = ColumnCreator::create(
+                    $column['type'],
+                    $column['name'],
+                    $visible,
+                    in_array($column['name'], $sortableCols, true),
+                );
                 $this->columns[$col->getKey()] = $col;
             }
         }
@@ -138,8 +158,10 @@ class ReadBuilder implements IRecipeBuilder
     /**
      * @return array<string, mixed>
      */
-    public function format(mixed $values, bool $isAdminPanel): array
-    {
+    public function format(
+        mixed $values,
+        bool $isAdminPanel,
+    ): array {
         $result = [];
         foreach ($this->columns as $col) {
             $key = $col->getKey();
@@ -188,8 +210,10 @@ class ReadBuilder implements IRecipeBuilder
     /**
      * @param EntityRepository<object> $repo
      */
-    public function createQueryBuilder(EntityRepository $repo, string $alias): QueryBuilder
-    {
+    public function createQueryBuilder(
+        EntityRepository $repo,
+        string $alias,
+    ): QueryBuilder {
         $qb = $repo
             ->createQueryBuilder($alias)
             ->select($alias);
@@ -201,8 +225,12 @@ class ReadBuilder implements IRecipeBuilder
             $this->dbSchema->getManyToManyColumns(),
         );
 
-        $columnNames = array_map(fn($col) => "{$alias}.{$col->getKey()}", $this->columns);
-        $joins = array_filter($joins, fn($col) => array_key_exists($col['name'], $columnNames));
+        $columnNames = array_map(fn(
+            $col,
+        ) => "{$alias}.{$col->getKey()}", $this->columns);
+        $joins = array_filter($joins, fn(
+            $col,
+        ) => array_key_exists($col['name'], $columnNames));
 
         // Prevent  columns
         if (count($joins) === 0) {
@@ -238,7 +266,9 @@ class ReadBuilder implements IRecipeBuilder
      */
     public function toArray(): array
     {
-        $cols = array_map(fn($col) => $col->toArray(), $this->columns);
+        $cols = array_map(fn(
+            $col,
+        ) => $col->toArray(), $this->columns);
         return array_values($cols);
     }
 

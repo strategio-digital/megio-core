@@ -24,6 +24,45 @@ use Megio\Collection\WriteBuilder\Rule\UniqueRule;
 
 class RuleCreator
 {
+    /**
+     * @param array{
+     *     name: string,
+     *     type: string,
+     *     unique: bool,
+     *     nullable: bool,
+     *     maxLength: int|null,
+     *     defaultValue: mixed|UndefinedValue
+     * } $columnSchema
+     */
+    public static function createRulesByDbSchema(
+        IField $field,
+        ICollectionRecipe $recipe,
+        array $columnSchema,
+    ): IField {
+        $ruleClassNames = array_map(fn(
+            $rule,
+        ) => $rule::class, $field->getRules());
+        $rule = RuleCreator::create($columnSchema['type']);
+
+        if ($rule !== null && !in_array($rule::class, $ruleClassNames, true)) {
+            $field->addRule($rule);
+        }
+
+        if ($columnSchema['nullable'] === true && !in_array(NullableRule::class, $ruleClassNames, true)) {
+            $field->addRule(new NullableRule());
+        }
+
+        if ($columnSchema['maxLength'] !== null && !in_array(MaxRule::class, $ruleClassNames, true)) {
+            $field->addRule(new MaxRule($columnSchema['maxLength']));
+        }
+
+        if ($columnSchema['unique'] === true && !in_array(UniqueRule::class, $ruleClassNames, true)) {
+            $field->addRule(new UniqueRule($recipe->source(), $field->getName()));
+        }
+
+        return $field;
+    }
+
     public static function create(string $columnType): ?IRule
     {
         return match ($columnType) {
@@ -62,39 +101,5 @@ class RuleCreator
 
             default => null,
         };
-    }
-
-    /**
-     * @param array{
-     *     name: string,
-     *     type: string,
-     *     unique: bool,
-     *     nullable: bool,
-     *     maxLength: int|null,
-     *     defaultValue: mixed|UndefinedValue
-     * } $columnSchema
-     */
-    public static function createRulesByDbSchema(IField $field, ICollectionRecipe $recipe, array $columnSchema): IField
-    {
-        $ruleClassNames = array_map(fn($rule) => $rule::class, $field->getRules());
-        $rule = RuleCreator::create($columnSchema['type']);
-
-        if ($rule !== null && !in_array($rule::class, $ruleClassNames, true)) {
-            $field->addRule($rule);
-        }
-
-        if ($columnSchema['nullable'] === true && !in_array(NullableRule::class, $ruleClassNames, true)) {
-            $field->addRule(new NullableRule());
-        }
-
-        if ($columnSchema['maxLength'] !== null && !in_array(MaxRule::class, $ruleClassNames, true)) {
-            $field->addRule(new MaxRule($columnSchema['maxLength']));
-        }
-
-        if ($columnSchema['unique'] === true && !in_array(UniqueRule::class, $ruleClassNames, true)) {
-            $field->addRule(new UniqueRule($recipe->source(), $field->getName()));
-        }
-
-        return $field;
     }
 }

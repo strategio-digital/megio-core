@@ -66,13 +66,13 @@ class Doctrine
 
         $proxyAdapter
             = $_ENV['APP_ENVIRONMENT'] === 'develop'
-                ? new ArrayAdapter()
-                : new PhpFilesAdapter('dp', 0, Path::tempDir() . '/doctrine/proxy');
+            ? new ArrayAdapter()
+            : new PhpFilesAdapter('dp', 0, Path::tempDir() . '/doctrine/proxy');
 
         $metadataAdapter
             = $_ENV['APP_ENVIRONMENT'] === 'develop'
-                ? new ArrayAdapter()
-                : new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata');
+            ? new ArrayAdapter()
+            : new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata');
 
         $this->configuration = ORMSetup::createAttributeMetadataConfiguration(
             paths: $entityPaths,
@@ -101,13 +101,14 @@ class Doctrine
             FileSystem::createDir(Path::appDir() . '/../migrations');
         }
 
-
         $evm = new EventManager();
         $dbalConfig = new Configuration();
         $dbalConfig->setMiddlewares([new LoggingMiddleware($this->queryLogger)]);
 
         // Remove migrations table from default schema management
-        $dbalConfig->setSchemaAssetsFilter(static fn(string $assetName): bool => $assetName !== self::MIGRATION_TABLE);
+        $dbalConfig->setSchemaAssetsFilter(static fn(
+            string $assetName,
+        ): bool => $assetName !== self::MIGRATION_TABLE);
 
         $this->connection = DriverManager::getConnection($this->connectionConfig, $dbalConfig);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);

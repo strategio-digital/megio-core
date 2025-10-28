@@ -29,40 +29,58 @@ class AdminRecipe extends CollectionRecipe
         return 'admin';
     }
 
-    public function search(SearchBuilder $builder, CollectionRequest $request): SearchBuilder
-    {
+    public function search(
+        SearchBuilder $builder,
+        CollectionRequest $request,
+    ): SearchBuilder {
         $builder
             ->keepDefaults()
-            ->addSearchable(new Searchable('email', operator: 'LIKE', formatter: fn($value) => "%{$value}%"))
-            ->addSearchable(new Searchable(
-                column: 'lastLogin',
-                operator: '=',
-                enabled: fn($value) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
-            ));
+            ->addSearchable(
+                new Searchable('email', operator: 'LIKE', formatter: fn(
+                    $value,
+                ) => "%{$value}%"),
+            )
+            ->addSearchable(
+                new Searchable(
+                    column: 'lastLogin',
+                    operator: '=',
+                    enabled: fn(
+                        $value,
+                    ) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
+                ),
+            );
 
         return $builder;
     }
 
-    public function read(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
-    {
+    public function read(
+        ReadBuilder $builder,
+        CollectionRequest $request,
+    ): ReadBuilder {
         return $builder->buildByDbSchema(['password']);
     }
 
-    public function readAll(ReadBuilder $builder, CollectionRequest $request): ReadBuilder
-    {
+    public function readAll(
+        ReadBuilder $builder,
+        CollectionRequest $request,
+    ): ReadBuilder {
         return $builder->buildByDbSchema(['password'], persist: true)
             ->add(new EmailColumn('email', 'E-mail', true));
     }
 
-    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function create(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $builder
             ->add(new EmailField('email', 'E-mail', [new RequiredRule()]))
             ->add(new PasswordField('password', 'Password', [new RequiredRule()]));
     }
 
-    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function update(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         $pwf = new PasswordField(name: 'password', label: 'Heslo');
 
         // Do not show password on form rendering

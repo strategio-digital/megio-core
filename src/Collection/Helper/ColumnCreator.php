@@ -26,8 +26,12 @@ use ReflectionClass;
 
 class ColumnCreator
 {
-    public static function create(string $type, string $key, bool $visible, bool $sortable): IColumn
-    {
+    public static function create(
+        string $type,
+        string $key,
+        bool $visible,
+        bool $sortable,
+    ): IColumn {
         $keysMap = [
             'email' => new EmailColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
             'phone' => new PhoneColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
@@ -57,7 +61,12 @@ class ColumnCreator
             Types::DECIMAL,
             Types::GUID,
             Types::STRING,
-            Types::TEXT => $columnByKey ?: new StringColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            Types::TEXT => $columnByKey ?: new StringColumn(
+                key: $key,
+                name: $key,
+                sortable: $sortable,
+                visible: $visible,
+            ),
 
             Types::BLOB => new BlobColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
 
@@ -66,12 +75,22 @@ class ColumnCreator
 
             Types::DATE_MUTABLE,
             Types::DATE_IMMUTABLE => new DateColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
-            Types::DATEINTERVAL => new DateTimeIntervalColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            Types::DATEINTERVAL => new DateTimeIntervalColumn(
+                key: $key,
+                name: $key,
+                sortable: $sortable,
+                visible: $visible,
+            ),
 
             Types::DATETIME_MUTABLE,
             Types::DATETIME_IMMUTABLE,
             Types::DATETIMETZ_MUTABLE,
-            Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(key: $key, name: $key, sortable: $sortable, visible: $visible),
+            Types::DATETIMETZ_IMMUTABLE => new DateTimeColumn(
+                key: $key,
+                name: $key,
+                sortable: $sortable,
+                visible: $visible,
+            ),
 
             'int',
             Types::FLOAT,

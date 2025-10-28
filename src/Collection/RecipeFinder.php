@@ -58,12 +58,17 @@ class RecipeFinder
 
     public function findByKey(string $key): ?ICollectionRecipe
     {
-        $recipe = current(array_filter($this->recipes, fn($r) => $r->key() === $key));
+        $recipe = current(array_filter($this->recipes, fn(
+            $r,
+        ) => $r->key() === $key));
         return $recipe ?: null;
     }
 
-    private function getClassname(SplFileInfo $file, string $path, string $namespacePrefix): string
-    {
+    private function getClassname(
+        SplFileInfo $file,
+        string $path,
+        string $namespacePrefix,
+    ): string {
         $namespace = str_replace(realpath($path) . '/', '', $file->getRealPath());
         $namespace = str_replace('/', '\\', $namespace);
 

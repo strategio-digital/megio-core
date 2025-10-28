@@ -22,7 +22,10 @@ class DateTimeSerializer extends BaseSerializer
             throw new SerializerException('Invalid value for DateTimeSerializer');
         }
 
-        if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1]) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $value)) {
+        if (!preg_match(
+            '/^\d{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1]) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/',
+            $value,
+        )) {
             throw new SerializerException('Invalid value for DateTimeSerializer');
         }
 

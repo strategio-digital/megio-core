@@ -22,7 +22,7 @@ class AuthCollectionFormRequest implements EventSubscriberInterface
 
     public function __construct(
         protected RouteCollection $routes,
-        protected AuthUser        $authUser,
+        protected AuthUser $authUser,
     ) {}
 
     public static function getSubscribedEvents(): array

@@ -13,8 +13,11 @@ class RouteFunction
     /**
      * @param array<string, int|string> $params
      */
-    public function create(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH): string
-    {
+    public function create(
+        string $name,
+        array $params = [],
+        int $path = UrlGeneratorInterface::ABSOLUTE_PATH,
+    ): string {
         return $this->linkResolver->link($name, $params, $path);
     }
 }

@@ -46,7 +46,9 @@ class AuthUser
     public function getRoles(): array
     {
         if ($this->user !== null) {
-            return $this->user->getRoles()->map(fn(Role $role) => $role->getName())->toArray();
+            return $this->user->getRoles()->map(fn(
+                Role $role,
+            ) => $role->getName())->toArray();
         }
 
         return [];

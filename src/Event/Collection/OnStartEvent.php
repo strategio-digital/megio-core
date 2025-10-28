@@ -13,10 +13,10 @@ class OnStartEvent extends Event
     protected ?Response $response = null;
 
     public function __construct(
-        protected EventType         $eventType,
-        protected mixed             $data,
+        protected EventType $eventType,
+        protected mixed $data,
         protected ICollectionRecipe $recipe,
-        protected Request           $request,
+        protected Request $request,
     ) {}
 
     public function getEventType(): EventType

@@ -11,12 +11,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 class OnFinishEvent extends Event
 {
     public function __construct(
-        protected EventType         $eventType,
-        protected mixed             $data,
+        protected EventType $eventType,
+        protected mixed $data,
         protected ICollectionRecipe $recipe,
-        protected mixed             $result,
-        protected Request           $request,
-        protected Response          $response,
+        protected mixed $result,
+        protected Request $request,
+        protected Response $response,
     ) {}
 
     public function getEventType(): EventType

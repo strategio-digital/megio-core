@@ -25,8 +25,10 @@ abstract class Request extends Controller implements IRequest
      *
      * @return array<string, mixed>|false
      */
-    public function validate(?array $data, array $structure): array|false
-    {
+    public function validate(
+        ?array $data,
+        array $structure,
+    ): array|false {
         $schema = Expect::structure($structure)->castTo('array');
         return (new Processor())->process($schema, $data);
     }

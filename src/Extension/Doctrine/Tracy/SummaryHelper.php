@@ -15,7 +15,14 @@ class SummaryHelper
             return 0.0;
         }
 
-        return array_reduce($this->logger->queries, fn($a, $query) => $a + $query['executionMS'], 0);
+        return array_reduce(
+            $this->logger->queries,
+            fn(
+                $a,
+                $query,
+            ) => $a + $query['executionMS'],
+            0,
+        );
     }
 
     public function count(): int

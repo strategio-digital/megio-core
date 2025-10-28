@@ -10,8 +10,10 @@ class ArrayMove
      *
      * @return array<string, mixed>
      */
-    public static function moveToEnd(array $array, string $key): array
-    {
+    public static function moveToEnd(
+        array $array,
+        string $key,
+    ): array {
         if (!array_key_exists($key, $array)) {
             return $array;
         }
@@ -27,8 +29,10 @@ class ArrayMove
      *
      * @return array<string, mixed>
      */
-    public static function moveToStart(array $array, string $key): array
-    {
+    public static function moveToStart(
+        array $array,
+        string $key,
+    ): array {
         if (!array_key_exists($key, $array)) {
             return $array;
         }
@@ -43,8 +47,11 @@ class ArrayMove
      *
      * @return array<string, mixed>
      */
-    public static function moveAfter(array $array, string $key, string $afterKey): array
-    {
+    public static function moveAfter(
+        array $array,
+        string $key,
+        string $afterKey,
+    ): array {
         if (!array_key_exists($key, $array)) {
             return $array;
         }
@@ -71,8 +78,11 @@ class ArrayMove
      *
      * @return array<string, mixed>
      */
-    public static function moveBefore(array $array, string $key, string $beforeKey): array
-    {
+    public static function moveBefore(
+        array $array,
+        string $key,
+        string $beforeKey,
+    ): array {
         if (!array_key_exists($key, $array)) {
             return $array;
         }

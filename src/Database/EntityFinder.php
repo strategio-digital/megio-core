@@ -11,7 +11,11 @@ use Megio\Database\Entity\Auth\Token;
 
 class EntityFinder
 {
-    public const EXCLUDED_EVERYWHERE = [Role::class, Resource::class, Token::class];
+    public const EXCLUDED_EVERYWHERE = [
+        Role::class,
+        Resource::class,
+        Token::class,
+    ];
 
     public function __construct(protected EntityManager $em) {}
 
@@ -22,7 +26,9 @@ class EntityFinder
     {
         $metadata = $this->em->getMetadataFactory()->getAllMetadata();
 
-        $entities = array_map(function (ClassMetadata $metadata) {
+        $entities = array_map(function (
+            ClassMetadata $metadata,
+        ) {
             $attr = $metadata->getReflectionClass()->getAttributes(Table::class)[0]->newInstance();
             return [
                 'table' => str_replace('`', '', $attr->name ?? ''),
@@ -30,7 +36,9 @@ class EntityFinder
             ];
         }, $metadata);
 
-        return array_filter($entities, fn($entity) => !in_array($entity['className'], self::EXCLUDED_EVERYWHERE, true));
+        return array_filter($entities, fn(
+            $entity,
+        ) => !in_array($entity['className'], self::EXCLUDED_EVERYWHERE, true));
     }
 
     /**
@@ -39,7 +47,9 @@ class EntityFinder
     public function getClassName(string $tableName): ?string
     {
         $entityNames = $this->findAll();
-        $current = current(array_filter($entityNames, fn($namespace) => $namespace['table'] === $tableName));
+        $current = current(array_filter($entityNames, fn(
+            $namespace,
+        ) => $namespace['table'] === $tableName));
         return $current ? $current['className'] : null;
     }
 }

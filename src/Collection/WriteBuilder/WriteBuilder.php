@@ -68,8 +68,12 @@ class WriteBuilder implements IRecipeBuilder
      *
      * @return $this
      */
-    public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, ?string $rowId = null, array $values = []): self
-    {
+    public function create(
+        ICollectionRecipe $recipe,
+        WriteBuilderEvent $event,
+        ?string $rowId = null,
+        array $values = [],
+    ): self {
         $this->reset();
 
         $this->recipe = $recipe;
@@ -83,8 +87,11 @@ class WriteBuilder implements IRecipeBuilder
         return $this;
     }
 
-    public function add(IField $field, ?string $moveBeforeName = null, ?string $moveAfterName = null): self
-    {
+    public function add(
+        IField $field,
+        ?string $moveBeforeName = null,
+        ?string $moveAfterName = null,
+    ): self {
         if ($this->keepDbSchema === false) {
             $this->fields = [];
             $this->keepDbSchema = true;
@@ -115,18 +122,24 @@ class WriteBuilder implements IRecipeBuilder
      *
      * @throws CollectionException
      */
-    public function buildByDbSchema(array $exclude = [], bool $persist = false): self
-    {
+    public function buildByDbSchema(
+        array $exclude = [],
+        bool $persist = false,
+    ): self {
         $ignored = array_merge($exclude, ['id']);
 
-        $unionColumns = array_filter($this->dbSchema->getUnionColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
+        $unionColumns = array_filter($this->dbSchema->getUnionColumns(), fn(
+            $cs,
+        ) => !in_array($cs['name'], $ignored, true));
         foreach ($unionColumns as $cs) {
             $field = FieldCreator::create($this, $cs['type'], $cs['name'], $cs['defaultValue']);
             $field = RuleCreator::createRulesByDbSchema($field, $this->recipe, $cs);
             $this->fields[$field->getName()] = $field;
         }
 
-        $oneToOneColumns = array_filter($this->dbSchema->getOneToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
+        $oneToOneColumns = array_filter($this->dbSchema->getOneToOneColumns(), fn(
+            $cs,
+        ) => !in_array($cs['name'], $ignored, true));
         foreach ($oneToOneColumns as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             if ($cs['nullable']) {
@@ -136,14 +149,18 @@ class WriteBuilder implements IRecipeBuilder
             $this->fields[$field->getName()] = $field;
         }
 
-        $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
+        $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn(
+            $cs,
+        ) => !in_array($cs['name'], $ignored, true));
         foreach ($oneToOneMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
 
-        $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
+        $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn(
+            $cs,
+        ) => !in_array($cs['name'], $ignored, true));
         foreach ($manyToOne as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             if ($cs['nullable']) {
@@ -153,7 +170,9 @@ class WriteBuilder implements IRecipeBuilder
             $this->fields[$field->getName()] = $field;
         }
 
-        $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
+        $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn(
+            $cs,
+        ) => !in_array($cs['name'], $ignored, true));
         foreach ($manyToMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
@@ -185,8 +204,12 @@ class WriteBuilder implements IRecipeBuilder
         foreach ($this->fields as $field) {
             if ($field->isDisabled() === false) {
                 $valueIsUndefined = $field->getValue() instanceof UndefinedValue;
-                $hasRequiredRule = count(array_filter($field->getRules(), fn($rule) => $rule::class === RequiredRule::class)) !== 0;
-                $hasNullableRule = count(array_filter($field->getRules(), fn($rule) => $rule::class === NullableRule::class)) !== 0;
+                $hasRequiredRule = count(array_filter($field->getRules(), fn(
+                    $rule,
+                ) => $rule::class === RequiredRule::class)) !== 0;
+                $hasNullableRule = count(array_filter($field->getRules(), fn(
+                    $rule,
+                ) => $rule::class === NullableRule::class)) !== 0;
 
                 $validate = false;
 
@@ -269,7 +292,14 @@ class WriteBuilder implements IRecipeBuilder
 
     public function isValid(): bool
     {
-        return array_reduce($this->errors, fn($sum, $items) => $sum + count($items), 0) === 0;
+        return array_reduce(
+            $this->errors,
+            fn(
+                $sum,
+                $items,
+            ) => $sum + count($items),
+            0,
+        ) === 0;
     }
 
     /**
@@ -286,7 +316,9 @@ class WriteBuilder implements IRecipeBuilder
             }
         }
 
-        $fields = array_values(array_map(fn($field) => $field->toArray(), $this->fields));
+        $fields = array_values(array_map(fn(
+            $field,
+        ) => $field->toArray(), $this->fields));
 
         foreach ($fields as $key => $field) {
             if ($field['default_value'] instanceof UndefinedValue) {
@@ -312,7 +344,8 @@ class WriteBuilder implements IRecipeBuilder
         $values = [];
         foreach ($this->fields as $field) {
             if ($field->mappedToEntity() === true && $field->isDisabled() === false) {
-                if ($field->getValue() instanceof UndefinedValue === false && $field->getValue() instanceof EmptyValue === false) {
+                if ($field->getValue() instanceof UndefinedValue === false && $field->getValue(
+                ) instanceof EmptyValue === false) {
                     foreach ($field->getSerializers() as $serializer) {
                         $serializer->setBuilder($this);
                         $serialized = $serializer->serialize($field);

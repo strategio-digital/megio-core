@@ -11,7 +11,10 @@ interface IFormatter
 {
     public function setBuilder(WriteBuilder|ReadBuilder $builder): void;
 
-    public function format(mixed $value, string $key): mixed;
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed;
 
     public function showOnlyOn(): ?ShowOnlyOn;
 }

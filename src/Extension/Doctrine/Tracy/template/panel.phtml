@@ -1,11 +1,13 @@
 <?php
 
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
+use Nette\Utils\Strings;
+
 /**
- * @var \Megio\Extension\Doctrine\Middleware\QueryLogger $logger
+ * @var QueryLogger $logger
  * @var int $count
  * @var float $time
  */
-
 ?>
 
 <?php if ($count === 0): ?>
@@ -20,13 +22,13 @@
             <th>Time&nbsp;ms</th>
             <th>SQL Statement</th>
         </tr>
-        
+
         <?php if ($count !== 0): ?>
             <?php foreach ($logger->queries as $q): ?>
                 <tr>
                     <td><?= sprintf('%0.2f', $q['executionMS'] * 1000); ?></td>
                     <td class="tracy-dbal-sql">
-                        <?= \Nette\Utils\Strings::replace($q['sql'], '~([A-Z])~', '<strong>$1</strong>') ?>
+                        <?= Strings::replace($q['sql'], '~([A-Z])~', '<strong>$1</strong>') ?>
                         <?php if (array_key_exists('params', $q) && $q['params'] && count($q['params'])): ?>
                             <div style=" margin-top: .3rem">
                                 <span style="font-weight: bold;">Params:</span>

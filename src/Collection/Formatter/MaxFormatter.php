@@ -9,13 +9,17 @@ use Nette\Utils\Strings;
 
 class MaxFormatter extends BaseFormatter
 {
-    public function __construct(protected int $max, protected ?ShowOnlyOn $showOnlyOn = null)
-    {
+    public function __construct(
+        protected int $max,
+        protected ?ShowOnlyOn $showOnlyOn = null,
+    ) {
         parent::__construct($showOnlyOn);
     }
 
-    public function format(mixed $value, string $key): mixed
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed {
         if (!is_string($value) && !is_array($value)) {
             return $value;
         }

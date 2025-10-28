@@ -13,8 +13,10 @@ class QueryLogger
     /**
      * @param array<mixed>|null $params
      */
-    public function startQuery(string $sql, ?array $params): void
-    {
+    public function startQuery(
+        string $sql,
+        ?array $params,
+    ): void {
         $this->currentQueryStartTime = microtime(true);
         $this->queries[] = [
             'sql' => $sql,

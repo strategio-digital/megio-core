@@ -29,14 +29,34 @@ use Tracy\Debugger;
 class App
 {
     public function __construct(
-        protected RequestContext     $context,
+        protected RequestContext $context,
         protected ControllerResolver $controllerResolver,
-        protected EventDispatcher    $dispatcher,
-        protected RouteCollection    $routes,
-        protected UrlMatcher         $router,
-        protected Request            $request,
-        protected Container          $container,
+        protected EventDispatcher $dispatcher,
+        protected RouteCollection $routes,
+        protected UrlMatcher $router,
+        protected Request $request,
+        protected Container $container,
     ) {}
+
+    /**
+     * @throws Exception
+     */
+    public function cmd(): void
+    {
+        self::createKernel();
+
+        $app = new Application();
+        $services = $this->container->findByType(Command::class);
+
+        foreach ($services as $name) {
+            /** @var Command $command */
+            $command = $this->container->getByName($name);
+            $app->add($command);
+        }
+
+        $app->setDispatcher($this->dispatcher);
+        $app->run();
+    }
 
     /**
      * @throws Exception
@@ -91,25 +111,5 @@ class App
 
         $response->send();
         $kernel->terminate($this->request, $response);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function cmd(): void
-    {
-        self::createKernel();
-
-        $app = new Application();
-        $services = $this->container->findByType(Command::class);
-
-        foreach ($services as $name) {
-            /** @var Command $command */
-            $command = $this->container->getByName($name);
-            $app->add($command);
-        }
-
-        $app->setDispatcher($this->dispatcher);
-        $app->run();
     }
 }

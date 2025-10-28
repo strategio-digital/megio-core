@@ -13,7 +13,10 @@ use Megio\Database\Repository\Auth\TokenRepository;
 
 #[ORM\Table(name: '`auth_token`')]
 #[ORM\Entity(repositoryClass: TokenRepository::class)]
-#[ORM\Index(fields: ['source', 'sourceId'])]
+#[ORM\Index(fields: [
+    'source',
+    'sourceId',
+])]
 #[ORM\HasLifecycleCallbacks]
 class Token
 {

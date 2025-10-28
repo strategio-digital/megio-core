@@ -9,8 +9,10 @@ use Megio\Collection\Formatter\Base\BaseFormatter;
 
 class TimeCzFormatter extends BaseFormatter
 {
-    public function format(mixed $value, string $key): mixed
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed {
         if ($value instanceof DateTime || $value instanceof DateTimeImmutable) {
             return $value->format('G:i:s');
         }

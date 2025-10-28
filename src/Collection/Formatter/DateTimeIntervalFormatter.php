@@ -8,8 +8,10 @@ use Megio\Collection\Formatter\Base\BaseFormatter;
 
 class DateTimeIntervalFormatter extends BaseFormatter
 {
-    public function format(mixed $value, string $key): mixed
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed {
         if ($value instanceof DateInterval) {
             return [
                 'is_positive' => $value->invert === 0,

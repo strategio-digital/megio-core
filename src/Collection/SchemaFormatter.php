@@ -11,8 +11,10 @@ class SchemaFormatter
      *     props: array<int, mixed>
      * }
      */
-    public static function format(ICollectionRecipe $recipe, IRecipeBuilder $builder): array
-    {
+    public static function format(
+        ICollectionRecipe $recipe,
+        IRecipeBuilder $builder,
+    ): array {
         return [
             'recipe' => [
                 'key' => $recipe->key(),

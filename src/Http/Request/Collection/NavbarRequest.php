@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class NavbarRequest extends Request
 {
     public function __construct(
-        protected readonly AuthUser     $authUser,
+        protected readonly AuthUser $authUser,
         protected readonly RecipeFinder $recipeFinder,
     ) {}
 
@@ -26,27 +26,46 @@ class NavbarRequest extends Request
 
     public function process(array $data): Response
     {
-        $excluded = [Admin::class, Queue::class];
+        $excluded = [
+            Admin::class,
+            Queue::class,
+        ];
 
         $recipes = $this->recipeFinder->load()->getAll();
-        $recipes = array_filter($recipes, fn($recipe) => in_array($recipe->source(), $excluded, true) === false);
+        $recipes = array_filter($recipes, fn(
+            $recipe,
+        ) => in_array($recipe->source(), $excluded, true) === false);
 
         /** @var ICollectionRecipe[] $recipes */
-        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
+        $recipeKeys = array_map(fn(
+            $recipe,
+        ) => $recipe->key(), $recipes);
 
         if ($this->authUser->get() instanceof Admin === false) {
             $resources = $this->authUser->getResources();
-            $recipeKeys = array_filter($recipeKeys, fn($endpoint) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources, true));
+            $recipeKeys = array_filter($recipeKeys, fn(
+                $endpoint,
+            ) => in_array(Router::ROUTE_META_NAVBAR . '.' . $endpoint, $resources, true));
         }
 
-        $items = array_map(fn($recipe) => [
+        $items = array_map(fn(
+            $recipe,
+        ) => [
             'key' => $recipe->key(),
             'name' => $recipe->name(),
         ], $recipes);
 
-        $items = array_filter($items, fn($item) => in_array($item['key'], $recipeKeys, true) === true);
+        $items = array_filter($items, fn(
+            $item,
+        ) => in_array($item['key'], $recipeKeys, true) === true);
 
-        usort($items, fn($a, $b) => strnatcasecmp($a['name'], $b['name']));
+        usort(
+            $items,
+            fn(
+                $a,
+                $b,
+            ) => strnatcasecmp($a['name'], $b['name']),
+        );
 
         return $this->json(['items' => $items]);
     }

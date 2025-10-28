@@ -58,18 +58,6 @@ class JWTResolver
     /**
      * @param non-empty-string $token
      */
-    public function parseToken(string $token): Plain
-    {
-        $parser = new Parser(new JoseEncoder());
-        $token = $parser->parse($token);
-        assert($token instanceof Plain);
-
-        return $token;
-    }
-
-    /**
-     * @param non-empty-string $token
-     */
     public function isTrustedToken(string $token): bool
     {
         $constraints = [
@@ -86,6 +74,18 @@ class JWTResolver
         } catch (InvalidTokenStructure|CannotDecodeContent) {
             return false;
         }
+    }
+
+    /**
+     * @param non-empty-string $token
+     */
+    public function parseToken(string $token): Plain
+    {
+        $parser = new Parser(new JoseEncoder());
+        $token = $parser->parse($token);
+        assert($token instanceof Plain);
+
+        return $token;
     }
 
     /**

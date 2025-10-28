@@ -21,8 +21,11 @@ class LoggingStatement extends AbstractStatementMiddleware
         parent::__construct($wrappedStatement);
     }
 
-    public function bindValue(int|string $param, mixed $value, ParameterType $type = ParameterType::STRING): void
-    {
+    public function bindValue(
+        int|string $param,
+        mixed $value,
+        ParameterType $type = ParameterType::STRING,
+    ): void {
         $this->params[$param] = $value;
         parent::bindValue($param, $value, $type);
     }

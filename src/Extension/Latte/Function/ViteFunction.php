@@ -9,8 +9,10 @@ class ViteFunction
 {
     protected static ?Vite $vite = null;
 
-    public static function create(string $source, bool $isEntryPoint = false): string
-    {
+    public static function create(
+        string $source,
+        bool $isEntryPoint = false,
+    ): string {
         if (!self::$vite) {
             self::$vite = new Vite();
         }
