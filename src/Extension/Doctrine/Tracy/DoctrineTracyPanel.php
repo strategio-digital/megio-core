@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Megio\Extension\Doctrine\Tracy;
 
-use Doctrine\DBAL\Logging\DebugStack;
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
 use Tracy\IBarPanel;
 
 class DoctrineTracyPanel implements IBarPanel
 {
     protected SummaryHelper $helper;
-    
-    public function __construct(protected DebugStack $stack)
+
+    public function __construct(protected QueryLogger $logger)
     {
-        $this->helper = new SummaryHelper($stack);
+        $this->helper = new SummaryHelper($logger);
     }
     
     public function getTab(): string
@@ -36,7 +36,7 @@ class DoctrineTracyPanel implements IBarPanel
     public function getPanel(): string
     {
         ob_start();
-        $stack = $this->stack;
+        $logger = $this->logger;
         $count = $this->helper->count();
         $time = $this->helper->getTotalTime();
         require __DIR__ . '/template/panel.phtml';

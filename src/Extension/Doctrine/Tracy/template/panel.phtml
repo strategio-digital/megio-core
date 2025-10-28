@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @var \Doctrine\DBAL\Logging\DebugStack $stack
+ * @var \Megio\Extension\Doctrine\Middleware\QueryLogger $logger
  * @var int $count
  * @var float $time
  */
@@ -22,7 +22,7 @@
         </tr>
         
         <?php if ($count !== 0): ?>
-            <?php foreach ($stack->queries as $q): ?>
+            <?php foreach ($logger->queries as $q): ?>
                 <tr>
                     <td><?= sprintf('%0.2f', $q['executionMS'] * 1000); ?></td>
                     <td class="tracy-dbal-sql">
