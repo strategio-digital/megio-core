@@ -39,8 +39,8 @@ class UpdateRoleRequest extends Request
         } else {
             $role->getResources()->removeElement($resource);
         }
-        
-        $this->em->flush($role);
+
+        $this->em->flush();
         
         return $this->json(['message' => 'Resources successfully updated']);
     }

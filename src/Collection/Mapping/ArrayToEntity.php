@@ -179,12 +179,4 @@ class ArrayToEntity
             self::$toFlush->add($entity);
         }
     }
-    
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection<int, object>
-     */
-    public static function getEntitiesToFlush(): ArrayCollection
-    {
-        return self::$toFlush;
-    }
 }

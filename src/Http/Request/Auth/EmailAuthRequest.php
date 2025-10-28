@@ -16,7 +16,7 @@ use Nette\Schema\Expect;
 
 class EmailAuthRequest extends Request
 {
-    const EXPIRATION_TIME = '4hours';
+    const string EXPIRATION_TIME = '4hours';
     
     public function __construct(
         private readonly EntityManager   $em,
@@ -76,9 +76,8 @@ class EmailAuthRequest extends Request
         $token->setExpiration($expiration);
         $token->setToken($jwt);
         $user->setLastLogin(new \DateTime());
-        
-        $this->em->flush($token);
-        $this->em->flush($user);
+
+        $this->em->flush();
         
         return $this->json([
             'bearer_token' => $token->getToken(),

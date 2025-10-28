@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Database\Repository;
 
-use App\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -25,14 +24,16 @@ class QueueRepository extends EntityRepository
     protected const int MAX_ERROR_RETRIES = 5;
     protected const string RETRY_DELAY = '+30 minutes';
     
-    public function __construct(protected EntityManagerInterface $em, ClassMetadata $class)
-    {
+    public function __construct(
+        private EntityManagerInterface $em,
+        ClassMetadata $class
+    ) {
         parent::__construct($em, $class);
     }
     
     public function fetchQueueJob(int $workerId, IQueueWorkerEnum $worker): ?Queue
     {
-        return $this->em->wrapInTransaction(function (EntityManager $em) use ($workerId, $worker) {
+        return $this->em->wrapInTransaction(function (EntityManagerInterface $em) use ($workerId, $worker) {
             $qb = $this->createQueryBuilder('q');
             
             $qb
@@ -47,9 +48,9 @@ class QueueRepository extends EntityRepository
                 ->setParameter('worker', $worker->value)
                 ->setParameter('errorRetries', self::MAX_ERROR_RETRIES)
                 ->setParameter('dateTime', new \DateTime());
-            
-            /** @var \Megio\Database\Entity\Queue|null $queue */
+
             $queue = $qb->getQuery()->getOneOrNullResult();
+            assert($queue instanceof Queue || $queue === null);
             
             if ($queue) {
                 $queue->setStatus(QueueStatus::PROCESSING);
