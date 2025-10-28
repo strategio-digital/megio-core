@@ -17,7 +17,7 @@ class Storage
      * @return StorageAdapter
      * @throws \Exception
      */
-    public function get(string $adapterName = null): StorageAdapter
+    public function get(?string $adapterName = null): StorageAdapter
     {
         $className = $this->getAdapterClass($adapterName);
         
@@ -31,7 +31,7 @@ class Storage
      * @return class-string
      * @throws \Exception
      */
-    public function getAdapterClass(string $type = null): string
+    public function getAdapterClass(?string $type = null): string
     {
         $type = $type ?: $this->getAdapterName();
         $type = Strings::firstUpper($type);
