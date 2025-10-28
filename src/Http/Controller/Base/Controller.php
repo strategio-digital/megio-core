@@ -35,8 +35,10 @@ abstract class Controller implements IController
     /**
      * @param array<string, mixed> $params
      */
-    public function render(string $path, array $params = []): Response
-    {
+    public function render(
+        string $path,
+        array $params = [],
+    ): Response {
         $html = $this->latte->renderToString($path, $params);
         return new Response($html, 200, ['content-type' => 'text/html']);
     }
@@ -44,8 +46,10 @@ abstract class Controller implements IController
     /**
      * @param array<int|string,mixed> $data
      */
-    public function json(array $data = [], int $code = 200): Response
-    {
+    public function json(
+        array $data = [],
+        int $code = 200,
+    ): Response {
         $data = $this->formatter->formatResponseData($data);
         return new JsonResponse($data, $code);
     }
@@ -53,8 +57,10 @@ abstract class Controller implements IController
     /**
      * @param array<int|string,mixed> $messages
      */
-    public function error(array $messages, int $code = 400): Response
-    {
+    public function error(
+        array $messages,
+        int $code = 400,
+    ): Response {
         $data = ['errors' => $messages];
         $data = $this->formatter->formatResponseData($data);
 
@@ -67,8 +73,10 @@ abstract class Controller implements IController
         return new Response($file->getContent(), 200, ['Content-Disposition' => $disposition]);
     }
 
-    public function sendFileContent(string $content, string $fileName): Response
-    {
+    public function sendFileContent(
+        string $content,
+        string $fileName,
+    ): Response {
         $disposition = HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName);
         return new Response($content, 200, ['Content-Disposition' => $disposition]);
     }
@@ -81,8 +89,10 @@ abstract class Controller implements IController
     /**
      * @param array<string,int|string> $params
      */
-    public function redirect(string $route, array $params = []): RedirectResponse
-    {
+    public function redirect(
+        string $route,
+        array $params = [],
+    ): RedirectResponse {
         $url = $this->urlGenerator->generate($route, $params);
         return new RedirectResponse($url);
     }

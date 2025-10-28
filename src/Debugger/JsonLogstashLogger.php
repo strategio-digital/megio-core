@@ -18,8 +18,10 @@ class JsonLogstashLogger extends BaseLogger
 
     /**
      */
-    public function log(mixed $message, string $level = self::INFO): void
-    {
+    public function log(
+        mixed $message,
+        string $level = self::INFO,
+    ): void {
         $now = new DateTime();
         $date = $now->format('Y-m-d');
         $payload = $this->formatPayload($message, $level, $now);
@@ -45,8 +47,11 @@ class JsonLogstashLogger extends BaseLogger
     /**
      * @return array<string, mixed>
      */
-    protected function formatPayload(mixed $message, string $level, \DateTime $now): array
-    {
+    protected function formatPayload(
+        mixed $message,
+        string $level,
+        \DateTime $now,
+    ): array {
         $messageString = 'Unknown message';
         if ($message instanceof Throwable) {
             $messageString = $message->getMessage();

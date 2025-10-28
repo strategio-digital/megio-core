@@ -23,6 +23,7 @@ use function Sentry\addBreadcrumb;
 use function Sentry\captureException;
 use function Sentry\captureMessage;
 use function Sentry\configureScope;
+use function Sentry\init;
 
 class SentryLogger extends BaseLogger
 {
@@ -30,10 +31,10 @@ class SentryLogger extends BaseLogger
      * @param array<string, mixed> $options
      */
     public function __construct(
-        protected array   $options = [],
+        protected array $options = [],
         protected ?string $tracyUri = null,
     ) {
-        \Sentry\init(array_merge([
+        init(array_merge([
             'dsn' => $_ENV['LOG_SENTRY_DSN'],
             'environment' => $_ENV['APP_ENVIRONMENT'],
             'attach_stacktrace' => true,
@@ -54,8 +55,10 @@ class SentryLogger extends BaseLogger
         ], $options));
     }
 
-    public function log(mixed $message, string $level = self::INFO): ?EventId
-    {
+    public function log(
+        mixed $message,
+        string $level = self::INFO,
+    ): ?EventId {
         $now = new DateTime();
 
         if ($message instanceof Throwable) {
@@ -91,8 +94,10 @@ class SentryLogger extends BaseLogger
         addBreadcrumb('debugger', null, $payload, Breadcrumb::LEVEL_DEBUG);
     }
 
-    protected function captureMessage(string $message, string $level = ILogger::ERROR): ?EventId
-    {
+    protected function captureMessage(
+        string $message,
+        string $level = ILogger::ERROR,
+    ): ?EventId {
         $severity = $this->mapSeverity($level);
         return captureMessage($message, $severity);
     }
@@ -102,7 +107,11 @@ class SentryLogger extends BaseLogger
      */
     protected function addTracyContext(array $tracy): void
     {
-        configureScope(function (Scope $scope) use ($tracy): void {
+        configureScope(function (
+            Scope $scope,
+        ) use (
+            $tracy,
+        ): void {
             $scope->setContext('tracy', $tracy);
         });
     }

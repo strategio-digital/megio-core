@@ -23,12 +23,14 @@ class DeleteRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder,
+        protected readonly RecipeFinder $recipeFinder,
     ) {}
 
     public function schema(array $data): array
     {
-        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
+        $recipeKeys = array_map(fn(
+            $r,
+        ) => $r->key(), $this->recipeFinder->load()->getAll());
 
         return [
             'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),

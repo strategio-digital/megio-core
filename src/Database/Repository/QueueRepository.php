@@ -34,9 +34,16 @@ class QueueRepository extends EntityRepository
         parent::__construct($em, $class);
     }
 
-    public function fetchQueueJob(int $workerId, IQueueWorkerEnum $worker): ?Queue
-    {
-        return $this->em->wrapInTransaction(function (EntityManagerInterface $em) use ($workerId, $worker) {
+    public function fetchQueueJob(
+        int $workerId,
+        IQueueWorkerEnum $worker,
+    ): ?Queue {
+        return $this->em->wrapInTransaction(function (
+            EntityManagerInterface $em,
+        ) use (
+            $workerId,
+            $worker,
+        ) {
             $qb = $this->createQueryBuilder('q');
 
             $qb
@@ -75,8 +82,12 @@ class QueueRepository extends EntityRepository
     /**
      * @param array<int|string, mixed> $payload
      */
-    public function add(IQueueWorkerEnum $worker, array $payload, int $priority = 0, ?QueueDelay $delay = null): Queue
-    {
+    public function add(
+        IQueueWorkerEnum $worker,
+        array $payload,
+        int $priority = 0,
+        ?QueueDelay $delay = null,
+    ): Queue {
         if (count($payload) === 0) {
             throw new InvalidArgumentException('Payload cannot be empty array');
         }
@@ -97,8 +108,10 @@ class QueueRepository extends EntityRepository
         return $queue;
     }
 
-    public function delay(Queue $queue, QueueDelay $delay): Queue
-    {
+    public function delay(
+        Queue $queue,
+        QueueDelay $delay,
+    ): Queue {
         $queue->setWorkerId(null);
         $queue->setErrorMessage(null);
         $queue->setUpdatedAt(new DateTime());
@@ -112,8 +125,10 @@ class QueueRepository extends EntityRepository
         return $queue;
     }
 
-    public function autoRetry(Queue $queue, ?string $error = null): Queue
-    {
+    public function autoRetry(
+        Queue $queue,
+        ?string $error = null,
+    ): Queue {
         $queue->setWorkerId(null);
         $queue->setUpdatedAt(new DateTime());
 

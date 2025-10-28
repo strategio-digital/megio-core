@@ -15,8 +15,10 @@ class ToManyFormatter extends BaseFormatter
      *
      * @return array{label: string, value: string}[]|null
      */
-    public function format(mixed $value, string $key): ?array
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): ?array {
         if ($value === null) {
             return null;
         }
@@ -34,7 +36,9 @@ class ToManyFormatter extends BaseFormatter
             $schema->getManyToManyColumns(),
         );
 
-        $joinable = array_values(array_filter($joins, fn($item) => $item['name'] === $key));
+        $joinable = array_values(array_filter($joins, fn(
+            $item,
+        ) => $item['name'] === $key));
         $reverseEntity = $joinable[0]['reverseEntity'] ?? null;
 
         if ($reverseEntity === null) {

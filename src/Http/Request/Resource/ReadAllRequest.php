@@ -18,9 +18,9 @@ use const PATHINFO_EXTENSION;
 class ReadAllRequest extends Request
 {
     public function __construct(
-        protected EntityManager       $em,
+        protected EntityManager $em,
         protected AuthResourceManager $manager,
-        protected RouteCollection     $routes,
+        protected RouteCollection $routes,
     ) {}
 
     public function schema(array $data): array
@@ -33,7 +33,13 @@ class ReadAllRequest extends Request
 
     public function process(array $data): Response
     {
-        $resources = $this->em->getAuthResourceRepo()->findBy([], ['type' => 'ASC', 'name' => 'ASC']);
+        $resources = $this->em->getAuthResourceRepo()->findBy(
+            [],
+            [
+                'type' => 'ASC',
+                'name' => 'ASC',
+            ],
+        );
 
         /** @var Role[] $roles */
         $roles = $this->em->getAuthRoleRepo()->createQueryBuilder('role')
@@ -46,7 +52,9 @@ class ReadAllRequest extends Request
         $groups = $this->groupResources($resources, $roles);
         $groups = $this->sortCollectionDataResources($groups);
 
-        $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::VUE_ROUTER);
+        $types = array_filter(ResourceType::cases(), fn(
+            $case,
+        ) => $case !== ResourceType::VUE_ROUTER);
 
         if ($data['make_view_diff']) {
             $types = ResourceType::cases();
@@ -63,8 +71,15 @@ class ReadAllRequest extends Request
         }
 
         return $this->json([
-            'roles' => array_map(fn(Role $role) => [ 'id' => $role->getId(), 'name' => $role->getName() ], $roles),
-            'resources' => array_map(fn(Resource $resource) => [
+            'roles' => array_map(fn(
+                Role $role,
+            ) => [
+                'id' => $role->getId(),
+                'name' => $role->getName(),
+            ], $roles),
+            'resources' => array_map(fn(
+                Resource $resource,
+            ) => [
                 'id' => $resource->getId(),
                 'name' => $resource->getName(),
                 'type' => $resource->getType()->value,
@@ -83,8 +98,10 @@ class ReadAllRequest extends Request
      *
      * @return array<string, mixed>
      */
-    private function groupResources(array $resources, array $roles): array
-    {
+    private function groupResources(
+        array $resources,
+        array $roles,
+    ): array {
         $result = [];
 
         foreach ($resources as $resource) {
@@ -93,7 +110,9 @@ class ReadAllRequest extends Request
                 'name' => $resource->getName(),
                 'type' => $resource->getType()->value,
                 'hint' => $this->createHint($resource->getType(), $resource->getName()),
-                'roles' => array_map(fn(Role $role) => [
+                'roles' => array_map(fn(
+                    Role $role,
+                ) => [
                     'id' => $role->getId(),
                     'name' => $role->getName(),
                     'enabled' => $role->getResources()->contains($resource),
@@ -135,8 +154,10 @@ class ReadAllRequest extends Request
         return $resources;
     }
 
-    private function createHint(ResourceType $type, string $name): ?string
-    {
+    private function createHint(
+        ResourceType $type,
+        string $name,
+    ): ?string {
         if ($type === ResourceType::VUE_ROUTER) {
             return null;
         }

@@ -15,9 +15,9 @@ class HourMinuteCzColumn extends BaseColumn
     public function __construct(
         protected string $key,
         protected string $name,
-        protected bool   $sortable = false,
-        protected bool   $visible = true,
-        protected array  $formatters = [],
+        protected bool $sortable = false,
+        protected bool $visible = true,
+        protected array $formatters = [],
     ) {
         $formatters[] = new HourMinuteCzFormatter();
         parent::__construct(

@@ -30,13 +30,17 @@ class QueueRecipe extends CollectionRecipe
         return 'queue';
     }
 
-    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function update(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $this->commonBuilder($builder);
     }
 
-    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function create(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $this->commonBuilder($builder);
     }
 
@@ -46,29 +50,37 @@ class QueueRecipe extends CollectionRecipe
             ->buildByDbSchema(persist: true)
             ->add(new EnumField('status', 'status', QueueStatus::class))
             ->add(new EnumField('worker', 'worker', QueueWorker::class, attrs: ['fullWidth' => true]))
-            ->add(new TextAreaField(
-                name: 'payload',
-                label: 'payload',
-                rules: [
-                    new JsonStringRule(),
-                ],
-                serializers: [
-                    new CallableSerializer(fn($payload) => json_decode($payload, true)),
-                ],
-                formatters: [
-                    new CallableFormatter(fn($payload) => json_encode($payload, JSON_PRETTY_PRINT)),
-                ],
-                attrs: [
-                    'fullWidth' => true,
-                ],
-            ))
-            ->add(new TextAreaField(
-                name: 'errorMessage',
-                label: 'error message',
-                rules: [
-                    new NullableRule(),
-                ],
-                attrs: ['fullWidth' => true],
-            ));
+            ->add(
+                new TextAreaField(
+                    name: 'payload',
+                    label: 'payload',
+                    rules: [
+                        new JsonStringRule(),
+                    ],
+                    serializers: [
+                        new CallableSerializer(fn(
+                            $payload,
+                        ) => json_decode($payload, true)),
+                    ],
+                    formatters: [
+                        new CallableFormatter(fn(
+                            $payload,
+                        ) => json_encode($payload, JSON_PRETTY_PRINT)),
+                    ],
+                    attrs: [
+                        'fullWidth' => true,
+                    ],
+                ),
+            )
+            ->add(
+                new TextAreaField(
+                    name: 'errorMessage',
+                    label: 'error message',
+                    rules: [
+                        new NullableRule(),
+                    ],
+                    attrs: ['fullWidth' => true],
+                ),
+            );
     }
 }

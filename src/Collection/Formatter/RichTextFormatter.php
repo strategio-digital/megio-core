@@ -10,17 +10,19 @@ use Nette\Utils\Strings;
 class RichTextFormatter extends BaseFormatter
 {
     public function __construct(
-        protected int         $max = 100,
-        protected bool        $truncate = false,
-        protected string      $suffix = '...',
-        protected bool        $stripTags = true,
+        protected int $max = 100,
+        protected bool $truncate = false,
+        protected string $suffix = '...',
+        protected bool $stripTags = true,
         protected ?ShowOnlyOn $showOnlyOn = null,
     ) {
         parent::__construct($showOnlyOn);
     }
 
-    public function format(mixed $value, string $key): mixed
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed {
         if (!is_string($value)) {
             return $value;
         }

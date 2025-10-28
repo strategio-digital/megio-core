@@ -48,8 +48,11 @@ enum SizeUnit: string
         };
     }
 
-    public static function convert(float $size, SizeUnit $sourceUnit, SizeUnit $targetUnit): float
-    {
+    public static function convert(
+        float $size,
+        SizeUnit $sourceUnit,
+        SizeUnit $targetUnit,
+    ): float {
         return $size * $sourceUnit->getMultiplier($targetUnit);
     }
 

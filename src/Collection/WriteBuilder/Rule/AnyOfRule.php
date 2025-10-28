@@ -11,7 +11,7 @@ class AnyOfRule extends BaseRule
      * @param array<int, bool|float|int|string|null> $keys
      */
     public function __construct(
-        protected array   $keys,
+        protected array $keys,
         protected ?string $message = null,
     ) {
         parent::__construct($message);

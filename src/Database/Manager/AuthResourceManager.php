@@ -19,9 +19,9 @@ use Symfony\Component\Routing\RouteCollection;
 readonly class AuthResourceManager
 {
     public function __construct(
-        private EntityManager   $em,
+        private EntityManager $em,
         private RouteCollection $routes,
-        private RecipeFinder    $recipeFinder,
+        private RecipeFinder $recipeFinder,
     ) {}
 
     /**
@@ -31,8 +31,11 @@ readonly class AuthResourceManager
      *
      * @return array{created: string[], removed: string[]}
      */
-    public function updateResources(bool $flush = true, array $viewResources = [], ResourceType...$types): array
-    {
+    public function updateResources(
+        bool $flush = true,
+        array $viewResources = [],
+        ResourceType...$types,
+    ): array {
         $created = [];
         $removed = [];
 
@@ -75,10 +78,14 @@ readonly class AuthResourceManager
      *
      * @return array{created: string[], removed: string[]}
      */
-    public function diffNames(array $sourceNames, ResourceType $type): array
-    {
+    public function diffNames(
+        array $sourceNames,
+        ResourceType $type,
+    ): array {
         $resources = $this->em->getAuthResourceRepo()->findBy(['type' => $type->value]);
-        $resourceNames = array_map(fn(Resource $resource) => $resource->getName(), $resources);
+        $resourceNames = array_map(fn(
+            Resource $resource,
+        ) => $resource->getName(), $resources);
 
         $create = [];
         $remove = [];
@@ -107,7 +114,9 @@ readonly class AuthResourceManager
     public function routerResources(): array
     {
         $routes = $this->routes->all();
-        $routes = array_filter($routes, fn(Route $route) => $route->getOption('auth') !== false && $route->getOption('inResources') !== false);
+        $routes = array_filter($routes, fn(
+            Route $route,
+        ) => $route->getOption('auth') !== false && $route->getOption('inResources') !== false);
         return array_keys($routes);
     }
 
@@ -126,15 +135,24 @@ readonly class AuthResourceManager
      */
     public function collectionDataResources(): array
     {
-        $excluded = [Admin::class, Queue::class];
+        $excluded = [
+            Admin::class,
+            Queue::class,
+        ];
         $recipes = $this->recipeFinder->load()->getAll();
 
         /** @var ICollectionRecipe[] $recipes */
-        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded, true));
-        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
+        $recipes = array_filter($recipes, fn(
+            $recipe,
+        ) => !in_array($recipe->source(), $excluded, true));
+        $recipeKeys = array_map(fn(
+            $recipe,
+        ) => $recipe->key(), $recipes);
 
         $resourceNames = array_keys($this->routes->all());
-        $collectionRouteNames = array_filter($resourceNames, fn($name) => Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX));
+        $collectionRouteNames = array_filter($resourceNames, fn(
+            $name,
+        ) => Strings::startsWith($name, Router::ROUTE_COLLECTION_PREFIX));
 
         $names = [];
         foreach ($recipeKeys as $recipeKey) {
@@ -151,12 +169,19 @@ readonly class AuthResourceManager
      */
     public function collectionNavResources(): array
     {
-        $excluded = [Admin::class, Queue::class];
+        $excluded = [
+            Admin::class,
+            Queue::class,
+        ];
         $recipes = $this->recipeFinder->load()->getAll();
 
         /** @var ICollectionRecipe[] $recipes */
-        $recipes = array_filter($recipes, fn($recipe) => !in_array($recipe->source(), $excluded, true));
-        $recipeKeys = array_map(fn($recipe) => $recipe->key(), $recipes);
+        $recipes = array_filter($recipes, fn(
+            $recipe,
+        ) => !in_array($recipe->source(), $excluded, true));
+        $recipeKeys = array_map(fn(
+            $recipe,
+        ) => $recipe->key(), $recipes);
 
         $names = [];
         foreach ($recipeKeys as $recipeKey) {

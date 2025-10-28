@@ -20,15 +20,15 @@ class SelectField extends BaseField
     public function __construct(
         protected string $name,
         protected string $label,
-        protected array  $items = [],
-        protected array  $rules = [],
-        protected array  $serializers = [],
-        protected array  $formatters = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue(),
+        protected array $items = [],
+        protected array $rules = [],
+        protected array $serializers = [],
+        protected array $formatters = [],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         parent::__construct(
             $this->name,
@@ -53,7 +53,9 @@ class SelectField extends BaseField
     public function toArray(): array
     {
         $data = parent::toArray();
-        $data['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
+        $data['params']['items'] = array_map(fn(
+            $item,
+        ) => $item->toArray(), $this->items);
         return $data;
     }
 }

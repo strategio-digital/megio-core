@@ -13,7 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UploadAvatarRequest extends Request
 {
-    public function __construct(protected readonly AuthUser $user, protected readonly Storage $storage) {}
+    public function __construct(
+        protected readonly AuthUser $user,
+        protected readonly Storage $storage,
+    ) {}
 
     public function schema(array $data): array
     {

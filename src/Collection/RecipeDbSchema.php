@@ -53,8 +53,10 @@ class RecipeDbSchema
     /** @var JoinableColumn[] */
     private array $manyToManyColumns = [];
 
-    public function addUnionColumn(Column $attr, ReflectionProperty $prop): void
-    {
+    public function addUnionColumn(
+        Column $attr,
+        ReflectionProperty $prop,
+    ): void {
         $propType = $prop->getType();
         $nullable = $attr->nullable;
         $type = $attr->type;
@@ -90,8 +92,10 @@ class RecipeDbSchema
         ];
     }
 
-    public function addOneToOneColumn(OneToOne $attr, ReflectionProperty $prop): void
-    {
+    public function addOneToOneColumn(
+        OneToOne $attr,
+        ReflectionProperty $prop,
+    ): void {
         if ($attr->targetEntity === null) {
             throw new InvalidArgumentException('Attribute targetEntity is required');
         }
@@ -113,8 +117,10 @@ class RecipeDbSchema
         ];
     }
 
-    public function addOneToManyColumn(OneToMany $attr, ReflectionProperty $prop): void
-    {
+    public function addOneToManyColumn(
+        OneToMany $attr,
+        ReflectionProperty $prop,
+    ): void {
         if ($attr->targetEntity === null) {
             throw new InvalidArgumentException('Attribute targetEntity is required');
         }
@@ -131,8 +137,10 @@ class RecipeDbSchema
         ];
     }
 
-    public function addManyToOneColumn(ManyToOne $attr, ReflectionProperty $prop): void
-    {
+    public function addManyToOneColumn(
+        ManyToOne $attr,
+        ReflectionProperty $prop,
+    ): void {
         if ($attr->targetEntity === null) {
             throw new InvalidArgumentException('Attribute targetEntity is required');
         }
@@ -149,8 +157,10 @@ class RecipeDbSchema
         ];
     }
 
-    public function addManyToManyColumn(ManyToMany $attr, ReflectionProperty $prop): void
-    {
+    public function addManyToManyColumn(
+        ManyToMany $attr,
+        ReflectionProperty $prop,
+    ): void {
         $reverseField = $attr->mappedBy;
         if ($reverseField === null) {
             $reverseField = $attr->inversedBy;

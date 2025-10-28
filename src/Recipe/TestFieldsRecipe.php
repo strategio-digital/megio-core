@@ -50,8 +50,10 @@ class TestFieldsRecipe extends CollectionRecipe
         return 'test-fields';
     }
 
-    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function create(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         $items = [
             new SelectField\Item(0, 'Test_1'),
             new SelectField\Item(1, 'Test_2'),
@@ -63,33 +65,173 @@ class TestFieldsRecipe extends CollectionRecipe
         ]);
 
         return $builder
-            ->add(new HiddenField('hidden', 'Hidden', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false, defaultValue: 'yep'))
-            ->add(new ArrayField('array', 'Array', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateCzField('date_cz', 'Date CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateField('date', 'Date', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateTimeCzField('date_time_cz', 'DateTime CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateTimeField('date_time', 'DateTime', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateTimeIntervalField('date_time_interval', 'DateTime interval', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DateTimeZoneField('date_time_zone', 'DateTime zone', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new DecimalField('decimal', 'Decimal', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new EmailField('email', 'E-mail', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new HourMinuteCzField('hour_minute_cz', 'HourMinute CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new HourMinuteField('hour_minute', 'HourMinute', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new IntegerField('integer', 'Integer', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new JsonField('json', 'JSON', schema: $schema, rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false))
-            ->add(new NumericField('numeric', 'Numeric', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new PasswordField('password', 'Password', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new PhoneCzField('phone_cz', 'Phone CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new RichTextField('rich_text', 'RichText', rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false))
-            ->add(new SelectField('select', 'Select', items: $items, rules: [new NullableRule(), new RequiredRule()], mapToEntity: false, defaultValue: $items[0]->getValue()))
-            ->add(new RichTextField('rich_text_2', 'RichText', rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false, defaultValue: null))
-            ->add(new SlugField('slug', 'Slug', slugFrom: 'email', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new TextAreaField('text_area', 'Text area', rules: [new NullableRule(), new RequiredRule()], attrs: ['fullWidth' => true], mapToEntity: false))
-            ->add(new TextField('text', 'Text', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new TimeCzField('time_cz', 'Time CZ', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new TimeField('time', 'Time', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new ToggleBtnField('toggle_btn', 'Toggle Btn', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new UrlField('url', 'URL', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))
-            ->add(new VideoLinkField('video_link', 'Video link', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false));
+            ->add(
+                new HiddenField('hidden', 'Hidden', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false, defaultValue: 'yep'),
+            )
+            ->add(
+                new ArrayField('array', 'Array', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateCzField('date_cz', 'Date CZ', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateField('date', 'Date', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateTimeCzField('date_time_cz', 'DateTime CZ', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateTimeField('date_time', 'DateTime', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateTimeIntervalField('date_time_interval', 'DateTime interval', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateTimeZoneField('date_time_zone', 'DateTime zone', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DecimalField('decimal', 'Decimal', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new EmailField('email', 'E-mail', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new HourMinuteCzField('hour_minute_cz', 'HourMinute CZ', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new HourMinuteField('hour_minute', 'HourMinute', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new IntegerField('integer', 'Integer', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new JsonField('json', 'JSON', schema: $schema, rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], attrs: ['fullWidth' => true], mapToEntity: false),
+            )
+            ->add(
+                new NumericField('numeric', 'Numeric', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new PasswordField('password', 'Password', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new PhoneCzField('phone_cz', 'Phone CZ', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new RichTextField('rich_text', 'RichText', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], attrs: ['fullWidth' => true], mapToEntity: false),
+            )
+            ->add(
+                new SelectField('select', 'Select', items: $items, rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false, defaultValue: $items[0]->getValue()),
+            )
+            ->add(
+                new RichTextField('rich_text_2', 'RichText', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], attrs: ['fullWidth' => true], mapToEntity: false, defaultValue: null),
+            )
+            ->add(
+                new SlugField('slug', 'Slug', slugFrom: 'email', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TextAreaField('text_area', 'Text area', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], attrs: ['fullWidth' => true], mapToEntity: false),
+            )
+            ->add(
+                new TextField('text', 'Text', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TimeCzField('time_cz', 'Time CZ', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TimeField('time', 'Time', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new ToggleBtnField('toggle_btn', 'Toggle Btn', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new UrlField('url', 'URL', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new VideoLinkField('video_link', 'Video link', rules: [
+                    new NullableRule(),
+                    new RequiredRule(),
+                ], mapToEntity: false),
+            );
     }
 }

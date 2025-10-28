@@ -10,9 +10,9 @@ use Symfony\Contracts\EventDispatcher\Event;
 class OnValidationExceptionEvent extends Event
 {
     public function __construct(
-        private mixed                        $data,
-        private mixed                        $schema,
-        private readonly Request             $request,
+        private mixed $data,
+        private mixed $schema,
+        private readonly Request $request,
         private readonly ValidationException $exception,
     ) {}
 

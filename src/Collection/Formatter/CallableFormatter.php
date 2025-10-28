@@ -15,14 +15,18 @@ class CallableFormatter extends BaseFormatter
 
     /**
      */
-    public function __construct(callable $callback, protected ?ShowOnlyOn $showOnlyOn = null)
-    {
+    public function __construct(
+        callable $callback,
+        protected ?ShowOnlyOn $showOnlyOn = null,
+    ) {
         $this->callback = [$callback];
         parent::__construct($showOnlyOn);
     }
 
-    public function format(mixed $value, string $key): mixed
-    {
+    public function format(
+        mixed $value,
+        string $key,
+    ): mixed {
         return $this->callback[0]($value, $this);
     }
 }

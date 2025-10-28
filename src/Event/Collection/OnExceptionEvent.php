@@ -12,12 +12,12 @@ use Throwable;
 class OnExceptionEvent extends Event
 {
     public function __construct(
-        protected EventType         $eventType,
-        protected mixed             $data,
+        protected EventType $eventType,
+        protected mixed $data,
         protected ICollectionRecipe $recipe,
-        protected Throwable        $exception,
-        protected Request           $request,
-        private Response            $response,
+        protected Throwable $exception,
+        protected Request $request,
+        private Response $response,
     ) {}
 
     public function getEventType(): EventType

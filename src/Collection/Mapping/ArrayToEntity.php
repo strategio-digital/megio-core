@@ -23,8 +23,11 @@ class ArrayToEntity
      *
      * @throws CollectionException
      */
-    public static function create(ICollectionRecipe $recipe, RecipeEntityMetadata $metadata, array $data): ICrudable
-    {
+    public static function create(
+        ICollectionRecipe $recipe,
+        RecipeEntityMetadata $metadata,
+        array $data,
+    ): ICrudable {
         self::$toFlush = new ArrayCollection();
 
         $className = $recipe->source();
@@ -40,13 +43,18 @@ class ArrayToEntity
      *
      * @throws CollectionException
      */
-    public static function update(RecipeEntityMetadata $metadata, ICrudable $entity, array $data): ICrudable
-    {
+    public static function update(
+        RecipeEntityMetadata $metadata,
+        ICrudable $entity,
+        array $data,
+    ): ICrudable {
         self::$toFlush = new ArrayCollection();
 
         $ref = $metadata->getReflection();
         $schema = $metadata->getFullSchemaReflectedByDoctrine();
-        $methods = array_map(fn($method) => $method->name, $ref->getMethods());
+        $methods = array_map(fn(
+            $method,
+        ) => $method->name, $ref->getMethods());
 
         foreach ($data as $fieldKey => $value) {
             try {
@@ -63,7 +71,9 @@ class ArrayToEntity
                     //$entity->{$ref->getMethod($methodName)->name}($value);
                 }
             } catch (ReflectionException) {
-                throw new CollectionException("Field '{$fieldKey}' does not exist on '{$metadata->getTableName()}' entity");
+                throw new CollectionException(
+                    "Field '{$fieldKey}' does not exist on '{$metadata->getTableName()}' entity",
+                );
             }
         }
 
@@ -72,10 +82,16 @@ class ArrayToEntity
         return $entity;
     }
 
-    protected static function resolveOneToOneReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
-    {
+    protected static function resolveOneToOneReverseRelation(
+        string $fieldKey,
+        RecipeDbSchema $schema,
+        ICrudable $current,
+        mixed $value,
+    ): void {
         $schemas = $schema->getOneToOneColumns();
-        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
+        $schemaNames = array_map(fn(
+            $c,
+        ) => $c['name'], $schemas);
 
         if (in_array($fieldKey, $schemaNames, true)) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames, true)];
@@ -102,10 +118,16 @@ class ArrayToEntity
         }
     }
 
-    protected static function resolveOneToManyReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
-    {
+    protected static function resolveOneToManyReverseRelation(
+        string $fieldKey,
+        RecipeDbSchema $schema,
+        ICrudable $current,
+        mixed $value,
+    ): void {
         $schemas = $schema->getOneToManyColumns();
-        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
+        $schemaNames = array_map(fn(
+            $c,
+        ) => $c['name'], $schemas);
 
         if (in_array($fieldKey, $schemaNames, true) && $value instanceof Collection) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames, true)];
@@ -134,10 +156,16 @@ class ArrayToEntity
         }
     }
 
-    protected static function resolveManyToManyReverseRelation(string $fieldKey, RecipeDbSchema $schema, ICrudable $current, mixed $value): void
-    {
+    protected static function resolveManyToManyReverseRelation(
+        string $fieldKey,
+        RecipeDbSchema $schema,
+        ICrudable $current,
+        mixed $value,
+    ): void {
         $schemas = $schema->getManyToManyColumns();
-        $schemaNames = array_map(fn($c) => $c['name'], $schemas);
+        $schemaNames = array_map(fn(
+            $c,
+        ) => $c['name'], $schemas);
 
         if (in_array($fieldKey, $schemaNames, true) && $value instanceof Collection) {
             $colSchema = $schemas[array_search($fieldKey, $schemaNames, true)];

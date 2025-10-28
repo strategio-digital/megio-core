@@ -14,9 +14,9 @@ class UniqueRule extends BaseRule
      * @param class-string $targetEntity
      */
     public function __construct(
-        protected string  $targetEntity,
-        protected string  $columnName,
-        protected string  $primaryKey = 'id',
+        protected string $targetEntity,
+        protected string $columnName,
+        protected string $primaryKey = 'id',
         protected ?string $message = null,
     ) {
         parent::__construct($message);
@@ -55,7 +55,9 @@ class UniqueRule extends BaseRule
         }
 
         if (!array_key_exists($this->primaryKey, $row)) {
-            throw new InvalidArgumentException("Property '{$this->primaryKey}' not found in entity '{$this->targetEntity}'");
+            throw new InvalidArgumentException(
+                "Property '{$this->primaryKey}' not found in entity '{$this->targetEntity}'",
+            );
         }
 
         if (

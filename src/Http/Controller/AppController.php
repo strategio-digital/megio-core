@@ -34,13 +34,19 @@ class AppController extends Controller
         ]);
     }
 
-    public function api(Storage $storage, Container $container): Response
-    {
+    public function api(
+        Storage $storage,
+        Container $container,
+    ): Response {
         /** @var RouteCollection $routes */
         $routes = $container->getByName('routes');
 
-        $prettyRoutes = array_map(function (Route $route) {
-            $options = array_filter($route->getOptions(), fn($key) => $key !== 'compiler_class', ARRAY_FILTER_USE_KEY);
+        $prettyRoutes = array_map(function (
+            Route $route,
+        ) {
+            $options = array_filter($route->getOptions(), fn(
+                $key,
+            ) => $key !== 'compiler_class', ARRAY_FILTER_USE_KEY);
 
             return [
                 'path' => $route->getPath(),
@@ -82,7 +88,9 @@ class AppController extends Controller
         $content = file_get_contents(Path::appDir() . '/../composer.lock');
 
         if ($content && $json = json_decode($content, true)) {
-            $composer = current(array_filter($json['packages'], fn($package) => $package['name'] === 'strategio/megio-core'));
+            $composer = current(array_filter($json['packages'], fn(
+                $package,
+            ) => $package['name'] === 'strategio/megio-core'));
 
             if ($composer) {
                 $composerVersion = $composer['version'];
@@ -94,7 +102,9 @@ class AppController extends Controller
 
         if ($content) {
             $json = YarnLock::toArray($content);
-            $yarn = current(array_filter($json, fn(string $key) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
+            $yarn = current(array_filter($json, fn(
+                string $key,
+            ) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
 
             if ($yarn) {
                 $yarnVersion = $yarn['version'];

@@ -29,8 +29,12 @@ use ReflectionClass;
 
 class FieldCreator
 {
-    public static function create(WriteBuilder $builder, string $columnType, string $name, mixed $defaultValue): IField
-    {
+    public static function create(
+        WriteBuilder $builder,
+        string $columnType,
+        string $name,
+        mixed $defaultValue,
+    ): IField {
         $namesMap = [
             'password' => new PasswordField($name, $name, defaultValue: $defaultValue),
             'email' => new EmailField($name, $name, defaultValue: $defaultValue),

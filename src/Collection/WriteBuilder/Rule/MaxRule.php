@@ -8,7 +8,7 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class MaxRule extends BaseRule
 {
     public function __construct(
-        protected int     $max,
+        protected int $max,
         protected ?string $message = null,
     ) {
         parent::__construct(message: $message);
@@ -35,7 +35,9 @@ class MaxRule extends BaseRule
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        $nullable = array_filter($this->relatedRules, fn($rule) => $rule::class === NullableRule::class);
+        $nullable = array_filter($this->relatedRules, fn(
+            $rule,
+        ) => $rule::class === NullableRule::class);
 
         if (count($nullable) !== 0 && $value === null) {
             return true;

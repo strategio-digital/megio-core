@@ -8,7 +8,7 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class RegexRule extends BaseRule
 {
     public function __construct(
-        protected string  $expression,
+        protected string $expression,
         protected ?string $message = null,
     ) {
         parent::__construct($message);

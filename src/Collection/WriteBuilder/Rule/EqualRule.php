@@ -9,7 +9,7 @@ use Megio\Collection\WriteBuilder\Rule\Base\BaseRule;
 class EqualRule extends BaseRule
 {
     public function __construct(
-        protected string  $targetField,
+        protected string $targetField,
         protected ?string $message = null,
     ) {
         parent::__construct($message);
@@ -28,7 +28,9 @@ class EqualRule extends BaseRule
         $value = $this->field->getValue();
 
         /** @var false|IField $targetField */
-        $targetField = current(array_filter($this->relatedFields, fn($field) => $field->getName() === $this->targetField));
+        $targetField = current(array_filter($this->relatedFields, fn(
+            $field,
+        ) => $field->getName() === $this->targetField));
 
         if (!$targetField) {
             $this->message = "Field '{$this->targetField}' not found in related fields";

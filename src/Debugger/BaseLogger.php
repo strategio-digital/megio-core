@@ -21,11 +21,15 @@ abstract class BaseLogger implements ILogger
 
     protected function createErrorHash(Throwable $throwable): string
     {
-        return md5($throwable->getMessage() . $throwable->getFile() . $throwable->getLine() . $throwable->getTraceAsString());
+        return md5(
+            $throwable->getMessage() . $throwable->getFile() . $throwable->getLine() . $throwable->getTraceAsString(),
+        );
     }
 
-    protected function createBlueScreen(Throwable $message, string $fileName): void
-    {
+    protected function createBlueScreen(
+        Throwable $message,
+        string $fileName,
+    ): void {
         (new BlueScreen())->renderToFile($message, Path::logDir() . '/' . $fileName);
     }
 
@@ -71,8 +75,12 @@ abstract class BaseLogger implements ILogger
      *
      * @return array<string, mixed>
      */
-    protected function createBasicPayload(string $message, string $level, DateTime $now, array $context): array
-    {
+    protected function createBasicPayload(
+        string $message,
+        string $level,
+        DateTime $now,
+        array $context,
+    ): array {
         return [
             '@timestamp' => $now->format('Y-m-d\TH:i:s.uP'),
             '@version' => 1,
@@ -88,17 +96,33 @@ abstract class BaseLogger implements ILogger
     /**
      * @param array<string, mixed> $context
      */
-    protected function sendMailOnEnvEnabled(array $context, string $level, DateTime $now): void
-    {
-        if (array_key_exists('LOG_MAIL', $_ENV) && $_ENV['LOG_MAIL'] !== '' && !in_array($level, [self::DEBUG, self::INFO], true)) {
+    protected function sendMailOnEnvEnabled(
+        array $context,
+        string $level,
+        DateTime $now,
+    ): void {
+        if (array_key_exists('LOG_MAIL', $_ENV) && $_ENV['LOG_MAIL'] !== '' && !in_array(
+            $level,
+            [
+                self::DEBUG,
+                self::INFO,
+            ],
+            true,
+        )) {
             $utcTime = $now->format('Y-m-d\TH:i:s.uP');
             $snooze = strtotime('1 day') - time();
 
-            $body = array_map(function ($key, $value) {
-                $value = json_encode($value, JSON_PRETTY_PRINT);
-                return "{$key}: {$value}";
-            }, array_keys($context), $context);
-
+            $body = array_map(
+                function (
+                    $key,
+                    $value,
+                ) {
+                    $value = json_encode($value, JSON_PRETTY_PRINT);
+                    return "{$key}: {$value}";
+                },
+                array_keys($context),
+                $context,
+            );
 
             if (@filemtime(Path::logDir() . '/email-sent') + $snooze < time() // @ file may not exist
                 && @file_put_contents(Path::logDir() . '/email-sent', $utcTime) // @ file may not be writable

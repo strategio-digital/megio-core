@@ -17,10 +17,22 @@ class MegioExtension extends Extension
      */
     public function getFunctions(): array
     {
-        return  [
-            'vite' => [ViteFunction::class, 'create'], // Static
-            'thumbnail' => [ThumbnailFunction::class, 'create'], // Static
-            'route' => [$this->routeFunction, 'create'], // With DI
+        return [
+            'vite' => [
+                ViteFunction::class,
+                'create',
+            ],
+            // Static
+            'thumbnail' => [
+                ThumbnailFunction::class,
+                'create',
+            ],
+            // Static
+            'route' => [
+                $this->routeFunction,
+                'create',
+            ],
+            // With DI
         ];
     }
 }

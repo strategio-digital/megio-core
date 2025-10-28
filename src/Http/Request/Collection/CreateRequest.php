@@ -28,13 +28,15 @@ class CreateRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder,
-        protected readonly WriteBuilder  $builder,
+        protected readonly RecipeFinder $recipeFinder,
+        protected readonly WriteBuilder $builder,
     ) {}
 
     public function schema(array $data): array
     {
-        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
+        $recipeKeys = array_map(fn(
+            $r,
+        ) => $r->key(), $this->recipeFinder->load()->getAll());
 
         return [
             'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
@@ -83,7 +85,13 @@ class CreateRequest extends Request
             $builder->validate();
 
             if (!$builder->isValid()) {
-                $response = $this->json(['errors' => [], 'validation_errors' => $builder->getErrors()], 400);
+                $response = $this->json(
+                    [
+                        'errors' => [],
+                        'validation_errors' => $builder->getErrors(),
+                    ],
+                    400,
+                );
                 $e = new CollectionException('Invalid data');
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);

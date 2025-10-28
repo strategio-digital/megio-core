@@ -49,8 +49,12 @@ class Vite
 
         $result = array_merge(
             [$this->sourceToHtmlTag('/temp/' . $entry['file'])],
-            array_key_exists('css', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/temp/' . $source), $entry['css']) : [],
-            array_key_exists('js', $entry) ? array_map(fn($source) => $this->sourceToHtmlTag('/temp/' . $source), $entry['js']) : [],
+            array_key_exists('css', $entry) ? array_map(fn(
+                $source,
+            ) => $this->sourceToHtmlTag('/temp/' . $source), $entry['css']) : [],
+            array_key_exists('js', $entry) ? array_map(fn(
+                $source,
+            ) => $this->sourceToHtmlTag('/temp/' . $source), $entry['js']) : [],
         );
 
         return implode(PHP_EOL, $result);

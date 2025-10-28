@@ -19,14 +19,14 @@ class ToggleBtnField extends BaseField
     public function __construct(
         protected string $name,
         protected string $label,
-        protected array  $rules = [new BooleanRule()],
-        protected array  $serializers = [],
-        protected array  $formatters = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = false,
+        protected array $rules = [new BooleanRule()],
+        protected array $serializers = [],
+        protected array $formatters = [],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = false,
     ) {
         parent::__construct(
             $this->name,

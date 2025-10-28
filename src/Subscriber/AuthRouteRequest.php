@@ -19,7 +19,10 @@ class AuthRouteRequest implements EventSubscriberInterface
 
     protected Request $request;
 
-    public function __construct(protected RouteCollection $routes, protected AuthUser $authUser) {}
+    public function __construct(
+        protected RouteCollection $routes,
+        protected AuthUser $authUser,
+    ) {}
 
     public static function getSubscribedEvents(): array
     {

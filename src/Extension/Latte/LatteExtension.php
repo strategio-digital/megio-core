@@ -37,6 +37,8 @@ class LatteExtension extends CompilerExtension
         }
 
         // Add debugger panel
-        $this->initialization->addBody('\Tracy\Debugger::getBar()->addPanel(new \Latte\Bridges\Tracy\LattePanel($latte));');
+        $this->initialization->addBody(
+            '\Tracy\Debugger::getBar()->addPanel(new \Latte\Bridges\Tracy\LattePanel($latte));',
+        );
     }
 }

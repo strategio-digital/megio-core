@@ -33,8 +33,10 @@ class ClientFactory
     /**
      * @param array<string, mixed> $config
      */
-    public function create(string $loggerName, array $config = []): Client
-    {
+    public function create(
+        string $loggerName,
+        array $config = [],
+    ): Client {
         $this->loggerName = $loggerName;
 
         if (!array_key_exists('handler', $config)) {
@@ -51,9 +53,18 @@ class ClientFactory
 
     public function loggerMiddleware(): callable
     {
-        return function (callable $handler) {
-            return function (RequestInterface $request, array $options) use ($handler) {
-                $options['on_stats'] = function (TransferStats $stats): void {
+        return function (
+            callable $handler,
+        ) {
+            return function (
+                RequestInterface $request,
+                array $options,
+            ) use (
+                $handler,
+            ) {
+                $options['on_stats'] = function (
+                    TransferStats $stats,
+                ): void {
                     if ($_ENV['APP_ENVIRONMENT'] === 'develop') {
                         self::$history[] = $stats;
                     }

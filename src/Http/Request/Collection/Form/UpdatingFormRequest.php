@@ -22,14 +22,16 @@ class UpdatingFormRequest extends Request
 {
     public function __construct(
         protected readonly EntityManager $em,
-        protected readonly RecipeFinder  $recipeFinder,
-        protected readonly WriteBuilder  $writeBuilder,
-        protected readonly ReadBuilder   $readBuilder,
+        protected readonly RecipeFinder $recipeFinder,
+        protected readonly WriteBuilder $writeBuilder,
+        protected readonly ReadBuilder $readBuilder,
     ) {}
 
     public function schema(array $data): array
     {
-        $recipeKeys = array_map(fn($r) => $r->key(), $this->recipeFinder->load()->getAll());
+        $recipeKeys = array_map(fn(
+            $r,
+        ) => $r->key(), $this->recipeFinder->load()->getAll());
 
         return [
             'recipeKey' => Expect::anyOf(...$recipeKeys)->required(),
@@ -88,7 +90,9 @@ class UpdatingFormRequest extends Request
         // Format one-to-many data
         foreach ($schema->getOneToManyColumns() as $column) {
             if (array_key_exists($column['name'], $row)) {
-                $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+                $row[$column['name']] = array_map(fn(
+                    $item,
+                ) => $item['id'], $row[$column['name']]);
             }
         }
 
@@ -102,7 +106,9 @@ class UpdatingFormRequest extends Request
         // Format-many-to-many data
         foreach ($schema->getManyToManyColumns() as $column) {
             if (array_key_exists($column['name'], $row)) {
-                $row[$column['name']] = array_map(fn($item) => $item['id'], $row[$column['name']]);
+                $row[$column['name']] = array_map(fn(
+                    $item,
+                ) => $item['id'], $row[$column['name']]);
             }
         }
 

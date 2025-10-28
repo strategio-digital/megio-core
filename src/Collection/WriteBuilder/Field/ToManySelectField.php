@@ -25,12 +25,12 @@ class ToManySelectField extends BaseField
         protected string $label,
         protected string $reverseEntity,
         protected string $primaryKey = 'id',
-        protected array  $rules = [],
-        protected array  $attrs = [],
-        protected bool   $disabled = false,
-        protected bool   $mapToEntity = true,
-        protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue(),
+        protected array $rules = [],
+        protected array $attrs = [],
+        protected bool $disabled = false,
+        protected bool $mapToEntity = true,
+        protected mixed $value = new UndefinedValue(),
+        protected mixed $defaultValue = new UndefinedValue(),
     ) {
         parent::__construct(
             $this->name,
@@ -64,7 +64,9 @@ class ToManySelectField extends BaseField
             ->getQuery()
             ->getArrayResult();
 
-        $this->items = array_map(fn($item) => new SelectField\Item($item['id'], JoinableLabel::fromArray($item, $this->reverseEntity)), $data);
+        $this->items = array_map(fn(
+            $item,
+        ) => new SelectField\Item($item['id'], JoinableLabel::fromArray($item, $this->reverseEntity)), $data);
         $this->serializers[] = new ToManySerializer($this->reverseEntity, $this->primaryKey);
     }
 
@@ -72,7 +74,9 @@ class ToManySelectField extends BaseField
     public function toArray(): array
     {
         $data = parent::toArray();
-        $data['params']['items'] = array_map(fn($item) => $item->toArray(), $this->items);
+        $data['params']['items'] = array_map(fn(
+            $item,
+        ) => $item->toArray(), $this->items);
         $data['params']['multiple'] = true;
         return $data;
     }

@@ -20,8 +20,10 @@ class SearchBuilder
     /** @var string[] */
     protected array $extraSearchables = [];
 
-    public function create(QueryBuilder $qb, CollectionRequest $request): self
-    {
+    public function create(
+        QueryBuilder $qb,
+        CollectionRequest $request,
+    ): self {
         $this->queryBuilder = $qb;
         $this->request = $request;
 
@@ -36,7 +38,9 @@ class SearchBuilder
         if ($searchText !== null) {
             $whereDql = [];
 
-            $validSearchables = array_filter($this->searchables, fn(Searchable $searchable) => $searchable->isEnabled($searchText));
+            $validSearchables = array_filter($this->searchables, fn(
+                Searchable $searchable,
+            ) => $searchable->isEnabled($searchText));
 
             foreach ($validSearchables as $searchable) {
                 $relationCol = $searchable->getRelation();
@@ -59,7 +63,9 @@ class SearchBuilder
             }
 
             if (count($whereDql) !== 0) {
-                $where = implode(' OR ', array_map(fn($where) => $where['dql'], $whereDql));
+                $where = implode(' OR ', array_map(fn(
+                    $where,
+                ) => $where['dql'], $whereDql));
                 $this->queryBuilder->orWhere($where);
 
                 foreach ($whereDql as $where) {
@@ -73,23 +79,35 @@ class SearchBuilder
 
     public function keepDefaults(): self
     {
-        $this->addSearchable(new Searchable(
-            column: 'id',
-            operator: '=',
-            enabled: fn($value) => UuidV6::isValid($value),
-        ));
+        $this->addSearchable(
+            new Searchable(
+                column: 'id',
+                operator: '=',
+                enabled: fn(
+                    $value,
+                ) => UuidV6::isValid($value),
+            ),
+        );
 
-        $this->addSearchable(new Searchable(
-            column: 'createdAt',
-            operator: '=',
-            enabled: fn($value) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
-        ));
+        $this->addSearchable(
+            new Searchable(
+                column: 'createdAt',
+                operator: '=',
+                enabled: fn(
+                    $value,
+                ) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
+            ),
+        );
 
-        $this->addSearchable(new Searchable(
-            column: 'updatedAt',
-            operator: '=',
-            enabled: fn($value) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
-        ));
+        $this->addSearchable(
+            new Searchable(
+                column: 'updatedAt',
+                operator: '=',
+                enabled: fn(
+                    $value,
+                ) => DateTime::createFromFormat('Y-m-d H:i:s', $value) !== false,
+            ),
+        );
 
         return $this;
     }
@@ -126,7 +144,9 @@ class SearchBuilder
      */
     public function toArray(): array
     {
-        $searchables = array_map(fn(Searchable $searchable) => $searchable->toArray(), $this->searchables);
+        $searchables = array_map(fn(
+            Searchable $searchable,
+        ) => $searchable->toArray(), $this->searchables);
 
         foreach ($this->extraSearchables as $columnName) {
             $searchables[] = [

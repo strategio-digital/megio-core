@@ -16,8 +16,10 @@ class JoinableLabel
      *
      * @throws ReflectionException
      */
-    public static function fromArray(array $data, string $className): string
-    {
+    public static function fromArray(
+        array $data,
+        string $className,
+    ): string {
         $instance = new $className();
         $method = new ReflectionMethod($className, 'getJoinableLabel');
 

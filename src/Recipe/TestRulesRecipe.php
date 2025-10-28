@@ -56,8 +56,10 @@ class TestRulesRecipe extends CollectionRecipe
         return 'test-rules';
     }
 
-    public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function create(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         $items = [
             new SelectField\Item(0, 'Test_1'),
             new SelectField\Item(1, 'Test_2'),
@@ -71,39 +73,155 @@ class TestRulesRecipe extends CollectionRecipe
         return $builder
 
             // Email and Password
-            ->add(new EmailField(name: 'email', label: '', rules: [new RequiredRule(), new UniqueRule($this->source(), 'email')]))
-            ->add(new PasswordField(name: 'password', label: '', rules: [new RequiredRule(), new NullableRule()]))
-            ->add(new PasswordField(name: 'equal_to_password', label: '', rules: [new EqualRule('password')], mapToEntity: false))
+            ->add(
+                new EmailField(name: 'email', label: '', rules: [
+                    new RequiredRule(),
+                    new UniqueRule($this->source(), 'email'),
+                ]),
+            )
+            ->add(
+                new PasswordField(name: 'password', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ]),
+            )
+            ->add(
+                new PasswordField(
+                    name: 'equal_to_password',
+                    label: '',
+                    rules: [new EqualRule('password')],
+                    mapToEntity: false,
+                ),
+            )
 
             // URL, phone, video
-            ->add(new UrlField(name: 'url', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new PhoneCzField(name: 'phone_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new VideoLinkField(name: 'video_link', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(
+                new UrlField(name: 'url', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new PhoneCzField(name: 'phone_cz', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new VideoLinkField(name: 'video_link', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // JSON & JSON String
-            ->add(new JsonField(name: 'json', label: '', schema: $schema, rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TextAreaField(name: 'json_string', label: '', rules: [new RequiredRule(), new NullableRule(), new JsonStringRule($schema)], mapToEntity: false))
+            ->add(
+                new JsonField(name: 'json', label: '', schema: $schema, rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TextAreaField(name: 'json_string', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                    new JsonStringRule($schema),
+                ], mapToEntity: false),
+            )
 
             // AnyOf, Slug, Regex
-            ->add(new SelectField(name: 'any_of', label: '', items: $items, rules: [new NullableRule(), new IntegerRule(), new AnyOfRule([1, 2, 3])], mapToEntity: false))
-            ->add(new SlugField(name: 'slug', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TextField(name: 'regex', label: '', rules: [new RequiredRule(), new NullableRule(), new RegexRule('/^[a-z]+/')], mapToEntity: false))
+            ->add(
+                new SelectField(name: 'any_of', label: '', items: $items, rules: [
+                    new NullableRule(),
+                    new IntegerRule(),
+                    new AnyOfRule(
+                        [
+                            1,
+                            2,
+                            3,
+                        ],
+                    ),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new SlugField(name: 'slug', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TextField(name: 'regex', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                    new RegexRule('/^[a-z]+/'),
+                ], mapToEntity: false),
+            )
 
             // DateTime Interval
-            ->add(new DateTimeIntervalField(name: 'date_time_interval', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new DateTimeZoneField(name: 'date_time_zone', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(
+                new DateTimeIntervalField(name: 'date_time_interval', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateTimeZoneField(name: 'date_time_zone', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Date, Time, DateTime, HourMinute
-            ->add(new DateTimeField(name: 'date_time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new DateField(name: 'date', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TimeField(name: 'time', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new HourMinuteField(name: 'hour_minute', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(
+                new DateTimeField(name: 'date_time', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateField(name: 'date', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TimeField(name: 'time', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new HourMinuteField(name: 'hour_minute', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Date, Time, Datetime, HourMinute (CZ)
-            ->add(new DateTimeCzField(name: 'date_time_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new DateCzField(name: 'date_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new TimeCzField(name: 'time_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
-            ->add(new HourMinuteCzField(name: 'hour_minute_cz', label: '', rules: [new RequiredRule(), new NullableRule()], mapToEntity: false))
+            ->add(
+                new DateTimeCzField(name: 'date_time_cz', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new DateCzField(name: 'date_cz', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new TimeCzField(name: 'time_cz', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
+            ->add(
+                new HourMinuteCzField(name: 'hour_minute_cz', label: '', rules: [
+                    new RequiredRule(),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Toggle switch (boolean)
             ->add(new ToggleBtnField(name: 'bool_true', label: '', mapToEntity: false))
@@ -111,21 +229,51 @@ class TestRulesRecipe extends CollectionRecipe
 
             // Min/Max (numeric)
             ->add(new NumericField(name: 'min_num_5', label: '', rules: [new MinRule(5)], mapToEntity: false))
-            ->add(new NumericField(name: 'min_num_null', label: '', rules: [new MinRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new NumericField(name: 'min_num_null', label: '', rules: [
+                    new MinRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
             ->add(new NumericField(name: 'max_num_5', label: '', rules: [new MaxRule(5)], mapToEntity: false))
-            ->add(new NumericField(name: 'max_num_null', label: '', rules: [new MaxRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new NumericField(name: 'max_num_null', label: '', rules: [
+                    new MaxRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Min/Max (string)
             ->add(new TextField(name: 'min_string_5', label: '', rules: [new MinRule(5)], mapToEntity: false))
-            ->add(new TextField(name: 'min_string_null', label: '', rules: [new MinRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new TextField(name: 'min_string_null', label: '', rules: [
+                    new MinRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
             ->add(new TextField(name: 'max_string_5', label: '', rules: [new MaxRule(5)], mapToEntity: false))
-            ->add(new TextField(name: 'max_string_null', label: '', rules: [new MaxRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new TextField(name: 'max_string_null', label: '', rules: [
+                    new MaxRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Min/Max (array)
             ->add(new ArrayField(name: 'min_array_5', label: '', rules: [new MinRule(5)], mapToEntity: false))
-            ->add(new ArrayField(name: 'min_array_null', label: '', rules: [new MinRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new ArrayField(name: 'min_array_null', label: '', rules: [
+                    new MinRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
             ->add(new ArrayField(name: 'max_array_5', label: '', rules: [new MaxRule(5)], mapToEntity: false))
-            ->add(new ArrayField(name: 'max_array_null', label: '', rules: [new MaxRule(5), new NullableRule()], mapToEntity: false))
+            ->add(
+                new ArrayField(name: 'max_array_null', label: '', rules: [
+                    new MaxRule(5),
+                    new NullableRule(),
+                ], mapToEntity: false),
+            )
 
             // Strings
             ->add(new TextField(name: 'string', label: '', mapToEntity: false))
@@ -134,26 +282,42 @@ class TestRulesRecipe extends CollectionRecipe
 
             // Numerics
             ->add(new NumericField(name: 'numeric', label: '', mapToEntity: false))
-            ->add(new NumericField(name: 'numeric_nullable', label: '', rules: [new NullableRule()], mapToEntity: false))
-            ->add(new NumericField(name: 'numeric_required', label: '', rules: [new RequiredRule()], mapToEntity: false))
+            ->add(
+                new NumericField(name: 'numeric_nullable', label: '', rules: [new NullableRule()], mapToEntity: false),
+            )
+            ->add(
+                new NumericField(name: 'numeric_required', label: '', rules: [new RequiredRule()], mapToEntity: false),
+            )
 
             // Integers
             ->add(new IntegerField(name: 'integer', label: '', rules: [new IntegerRule()], mapToEntity: false))
-            ->add(new IntegerField(name: 'integer_nullable', label: '', rules: [new NullableRule()], mapToEntity: false))
-            ->add(new IntegerField(name: 'integer_required', label: '', rules: [new RequiredRule()], mapToEntity: false))
+            ->add(
+                new IntegerField(name: 'integer_nullable', label: '', rules: [new NullableRule()], mapToEntity: false),
+            )
+            ->add(
+                new IntegerField(name: 'integer_required', label: '', rules: [new RequiredRule()], mapToEntity: false),
+            )
 
             // Decimals
             ->add(new DecimalField(name: 'decimal', label: '', mapToEntity: false))
-            ->add(new DecimalField(name: 'decimal_nullable', label: '', rules: [new NullableRule()], mapToEntity: false))
-            ->add(new DecimalField(name: 'decimal_required', label: '', rules: [new RequiredRule()], mapToEntity: false));
+            ->add(
+                new DecimalField(name: 'decimal_nullable', label: '', rules: [new NullableRule()], mapToEntity: false),
+            )
+            ->add(
+                new DecimalField(name: 'decimal_required', label: '', rules: [new RequiredRule()], mapToEntity: false),
+            );
     }
 
-    public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
-    {
+    public function update(
+        WriteBuilder $builder,
+        CollectionRequest $request,
+    ): WriteBuilder {
         return $builder
-            ->add(new TextField(name: 'email', label: '', rules: [
-                new RequiredRule(),
-                new UniqueRule($this->source(), 'email'),
-            ], mapToEntity: true));
+            ->add(
+                new TextField(name: 'email', label: '', rules: [
+                    new RequiredRule(),
+                    new UniqueRule($this->source(), 'email'),
+                ], mapToEntity: true),
+            );
     }
 }

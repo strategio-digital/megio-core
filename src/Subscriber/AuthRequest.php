@@ -31,11 +31,11 @@ class AuthRequest implements EventSubscriberInterface
     protected Request $request;
 
     public function __construct(
-        protected EntityFinder    $entityFinder,
-        protected JWTResolver     $jwt,
-        protected EntityManager   $em,
+        protected EntityFinder $entityFinder,
+        protected JWTResolver $jwt,
+        protected EntityManager $em,
         protected RouteCollection $routes,
-        protected AuthUser        $authUser,
+        protected AuthUser $authUser,
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -176,8 +176,11 @@ class AuthRequest implements EventSubscriberInterface
     /**
      * @param array<string, string> $headers
      */
-    public function sendError(string $error, int $status = 401, array $headers = []): void
-    {
+    public function sendError(
+        string $error,
+        int $status = 401,
+        array $headers = [],
+    ): void {
         $this->event->setResponse(new JsonResponse(['errors' => [$error]], $status, $headers));
         $this->event->stopPropagation();
     }

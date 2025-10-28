@@ -16,7 +16,10 @@ use Megio\Queue\QueueStatus;
 #[ORM\Table(name: '`queue`')]
 #[ORM\Entity(repositoryClass: QueueRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Index(fields: ['worker', 'priority'])]
+#[ORM\Index(fields: [
+    'worker',
+    'priority',
+])]
 class Queue implements ICrudable
 {
     use TId;

@@ -29,6 +29,8 @@ class DoctrineExtension extends CompilerExtension
             ->setFactory('@doctrine::getMigrationFactory');
 
         $this->initialization->addBody('$queryLogger = $this->getService(?);', ['doctrineQueryLogger']);
-        $this->initialization->addBody('\Tracy\Debugger::getBar()->addPanel(new \Megio\Extension\Doctrine\Tracy\DoctrineTracyPanel($queryLogger));');
+        $this->initialization->addBody(
+            '\Tracy\Debugger::getBar()->addPanel(new \Megio\Extension\Doctrine\Tracy\DoctrineTracyPanel($queryLogger));',
+        );
     }
 }

@@ -27,7 +27,10 @@ class DateTimeZoneSerializer extends BaseSerializer
         $dateTimeString = $value['datetime'];
         $zoneString = $value['zone'];
 
-        if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1]) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/', $dateTimeString)) {
+        if (!preg_match(
+            '/^\d{4}-(0[1-9]|1[0-2])-([0-2][0-9]|3[0-1]) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/',
+            $dateTimeString,
+        )) {
             throw new SerializerException('Invalid value for DateTimeZoneSerializer');
         }
 
