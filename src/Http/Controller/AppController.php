@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Route;
 
 class AppController extends Controller
 {
-    public function app(Container $container, string|int|float $uri = null): Response
+    public function app(Container $container): Response
     {
         /** @var \Symfony\Component\Routing\RouteCollection $routes */
         $routes = $container->getByName('routes');
@@ -82,7 +82,7 @@ class AppController extends Controller
             
             if ($composer) {
                 $composerVersion = $composer['version'];
-                $commit = $composer['source']['reference'];
+                $commit = $composer['source']['reference'] ?? $composer['dist']['reference'] ?? null;
             }
         }
         

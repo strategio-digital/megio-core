@@ -61,9 +61,9 @@ class QueueWorkerCommand extends Command
             throw new \RuntimeException('Queue worker must implement IQueueJob interface');
         }
         
-        $this->em->getConfiguration()->setSQLLogger(null);
+        $this->em->getConfiguration()->setMiddlewares([]);
         
-        $date = (new \DateTime())->format('Y-m-d H:i:s');
+        $date = new \DateTime()->format('Y-m-d H:i:s');
         $output->writeln("[$date] | Starting loop | Worker: {$worker->value} | PID: {$pid} | Memory: {$this->getMemoryUsageMB()} MB");
         
         $iterations = 0;
@@ -95,7 +95,7 @@ class QueueWorkerCommand extends Command
         try {
             if ($queue) {
                 // Process queue
-                $date = (new \DateTime())->format('Y-m-d H:i:s');
+                $date = new \DateTime()->format('Y-m-d H:i:s');
                 $output->writeln("[$date] | Processing job | Worker: {$worker->value} | PID: {$pid} | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB | retries: {$queue->getErrorRetries()}");
                 $delay = $processor->process($queue, $output);
                 

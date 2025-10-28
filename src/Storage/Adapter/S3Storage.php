@@ -32,7 +32,7 @@ class S3Storage implements StorageAdapter
         return $this->client;
     }
     
-    public function upload(UploadedFile $file, string $destination, string $name = null, bool $publish = true): \SplFileInfo
+    public function upload(UploadedFile $file, string $destination, ?string $name = null, bool $publish = true): \SplFileInfo
     {
         $ext = $file->getClientOriginalExtension();
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);

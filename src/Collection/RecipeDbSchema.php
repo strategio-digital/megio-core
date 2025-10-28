@@ -59,22 +59,28 @@ class RecipeDbSchema
         
         // Fallback to union types
         if ($type === null) {
-            $type = $propType instanceof \ReflectionNamedType ? $propType->getName() : $propType ?? '@unknown';
+            $type = ($propType instanceof \ReflectionNamedType
+                ? $propType->getName()
+                : $propType)
+                ?? '@unknown';
         }
-        
+
+        // Ensure $type is string for mb_strtolower
+        $typeString = is_string($type) ? $type : (string) $type;
+
         $maxLength = $attr->length;
-        if ($maxLength === null && $type === 'string') {
+        if ($maxLength === null && $typeString === 'string') {
             $maxLength = 255;
         }
-        
+
         $default = new UndefinedValue();
         if (array_key_exists('default', $attr->options)) {
             $default = $attr->options['default'];
         }
-        
+
         $this->unionColumns[] = [
             'name' => $prop->getName(),
-            'type' => mb_strtolower($type),
+            'type' => mb_strtolower($typeString),
             'unique' => $attr->unique,
             'nullable' => $nullable,
             'maxLength' => $maxLength,
@@ -143,10 +149,6 @@ class RecipeDbSchema
     
     public function addManyToManyColumn(ManyToMany $attr, \ReflectionProperty $prop): void
     {
-        if ($attr->targetEntity === null) {
-            throw new \InvalidArgumentException("Attribute targetEntity is required");
-        }
-        
         $reverseField = $attr->mappedBy;
         if ($reverseField === null) {
             $reverseField = $attr->inversedBy;

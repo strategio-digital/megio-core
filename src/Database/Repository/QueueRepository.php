@@ -71,7 +71,7 @@ class QueueRepository extends EntityRepository
     /**
      * @param array<int|string, mixed> $payload
      */
-    public function add(IQueueWorkerEnum $worker, array $payload, int $priority = 0, QueueDelay $delay = null): Queue
+    public function add(IQueueWorkerEnum $worker, array $payload, int $priority = 0, ?QueueDelay $delay = null): Queue
     {
         if (count($payload) === 0) {
             throw new InvalidArgumentException('Payload cannot be empty array');
