@@ -87,8 +87,6 @@ class QueueWorkerCommand extends Command
         OutputInterface  $output,
     ): void
     {
-        // Connect to database and fetch queue item
-        $this->em->getConnection()->connect();
         $queue = $this->repository->fetchQueueJob($pid, $worker);
         $queueId = $queue?->getId();
         
@@ -114,7 +112,7 @@ class QueueWorkerCommand extends Command
         $this->em->getConnection()->close();
         
         if ($queue) {
-            $date = (new \DateTime())->format('Y-m-d H:i:s');
+            $date = new \DateTime()->format('Y-m-d H:i:s');
             $output->writeln("[$date] | Finished job | Worker {$worker->value} | PID: {$pid} | | Queue ID: {$queueId} | Memory: {$this->getMemoryUsageMB()} MB");
         }
     }

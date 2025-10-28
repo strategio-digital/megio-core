@@ -46,7 +46,8 @@ class App
     {
         // Controllers & argument resolvers
         $custom = [new DIValueResolver($this->container)];
-        $valueResolvers = array_merge(ArgumentResolver::getDefaultArgumentValueResolvers(), $custom); // @phpstan-ignore-line
+        $defaultResolvers = iterator_to_array(ArgumentResolver::getDefaultArgumentValueResolvers());
+        $valueResolvers = array_merge($defaultResolvers, $custom);
         $argumentResolver = new ArgumentResolver(null, $valueResolvers);
         $requestStack = new RequestStack();
         
@@ -68,7 +69,14 @@ class App
      */
     public function run(): void
     {
-        Request::setTrustedProxies(explode(',', $_ENV['APP_TRUSTED_PROXIES']), -1);
+        $trustedProxies = explode(',', $_ENV['APP_TRUSTED_PROXIES']);
+        $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR
+            | Request::HEADER_X_FORWARDED_HOST
+            | Request::HEADER_X_FORWARDED_PROTO
+            | Request::HEADER_X_FORWARDED_PORT
+            | Request::HEADER_X_FORWARDED_PREFIX;
+
+        Request::setTrustedProxies($trustedProxies, $trustedHeaderSet);
         $kernel = self::createKernel();
         
         try {

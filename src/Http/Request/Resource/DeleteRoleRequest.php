@@ -31,7 +31,7 @@ class DeleteRoleRequest extends Request
         }
         
         $this->em->remove($role);
-        $this->em->flush($role);
+        $this->em->flush();
         
         return $this->json(['message' => 'Role successfully deleted']);
     }

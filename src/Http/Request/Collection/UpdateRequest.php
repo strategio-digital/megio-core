@@ -129,11 +129,9 @@ class UpdateRequest extends Request
         
         /** @noinspection DuplicatedCode */
         $this->em->beginTransaction();
-        
+
         try {
-            foreach (ArrayToEntity::getEntitiesToFlush()->getIterator() as $entity) {
-                $this->em->flush($entity);
-            }
+            $this->em->flush();
             $this->em->commit();
         } catch (ConstraintViolationException $e) {
             $this->em->rollback();

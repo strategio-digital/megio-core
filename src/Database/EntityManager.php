@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Database;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\Entity\Auth\Role;
@@ -16,7 +17,7 @@ use Megio\Database\Repository\QueueRepository;
 use Megio\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
-class EntityManager extends \Doctrine\ORM\EntityManager
+class EntityManager extends \Doctrine\ORM\EntityManager implements EntityManagerInterface
 {
     /**
      * @throws \Doctrine\ORM\Exception\MissingMappingDriverImplementation
@@ -26,29 +27,44 @@ class EntityManager extends \Doctrine\ORM\EntityManager
         $em = $doctrine->entityManager;
         parent::__construct($em->getConnection(), $em->getConfiguration());
     }
-    
+
     public function getAdminRepo(): AdminRepository
     {
-        return $this->getRepository(Admin::class); // @phpstan-ignore-line
+        $repository = $this->getRepository(Admin::class);
+        assert($repository instanceof AdminRepository);
+
+        return $repository;
     }
-    
+
     public function getAuthTokenRepo(): TokenRepository
     {
-        return $this->getRepository(Token::class); // @phpstan-ignore-line
+        $repository = $this->getRepository(Token::class);
+        assert($repository instanceof TokenRepository);
+
+        return $repository;
     }
-    
+
     public function getAuthRoleRepo(): RoleRepository
     {
-        return $this->getRepository(Role::class); // @phpstan-ignore-line
+        $repository = $this->getRepository(Role::class);
+        assert($repository instanceof RoleRepository);
+
+        return $repository;
     }
-    
+
     public function getAuthResourceRepo(): ResourceRepository
     {
-        return $this->getRepository(Resource::class); // @phpstan-ignore-line
+        $repository = $this->getRepository(Resource::class);
+        assert($repository instanceof ResourceRepository);
+
+        return $repository;
     }
-    
+
     public function getQueueRepo(): QueueRepository
     {
-        return $this->getRepository(Queue::class); // @phpstan-ignore-line
+        $repository = $this->getRepository(Queue::class);
+        assert($repository instanceof QueueRepository);
+
+        return $repository;
     }
 }

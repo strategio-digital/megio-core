@@ -64,7 +64,7 @@
         "schema": "bin/console orm:validate-schema",
         "test": "vendor/bin/pest",
         "analyse": [
-            "@phpstan",
+            "#@phpstan",
             "@neon",
             "@latte",
             "@test",
