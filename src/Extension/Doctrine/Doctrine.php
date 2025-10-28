@@ -18,6 +18,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\ORMSetup;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
+use Megio\Extension\Doctrine\Middleware\LoggingMiddleware;
 
 class Doctrine
 {
@@ -30,8 +32,12 @@ class Doctrine
     /** @var array<string, string> */
     protected array $connectionConfig = [];
 
-    public function __construct()
+    protected QueryLogger $queryLogger;
+
+    public function __construct(QueryLogger $queryLogger)
     {
+        $this->queryLogger = $queryLogger;
+
         $srcEntityPath = Path::appDir();
 
         $entityPaths = array_merge(
@@ -101,7 +107,11 @@ class Doctrine
         $evm->addEventSubscriber(new PostgresDefaultSchemaSubscriber());
         $evm->addEventSubscriber(new SqliteForeignKeyChecksSubscriber());
 
-        $this->connection = DriverManager::getConnection($this->connectionConfig, $this->configuration, $evm);
+        // Add logging middleware and event manager to DBAL configuration
+        $dbalConfig = new \Doctrine\DBAL\Configuration();
+        $dbalConfig->setMiddlewares([new LoggingMiddleware($this->queryLogger)]);
+
+        $this->connection = DriverManager::getConnection($this->connectionConfig, $dbalConfig);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
     }
 
@@ -139,5 +149,10 @@ class Doctrine
     public function getConnection(): Connection
     {
         return $this->connection;
+    }
+
+    public function getQueryLogger(): QueryLogger
+    {
+        return $this->queryLogger;
     }
 }

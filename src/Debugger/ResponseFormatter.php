@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Megio\Debugger;
 
-use Doctrine\DBAL\Logging\DebugStack;
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
 use Nette\DI\Container;
 use Megio\Extension\Doctrine\Tracy\SummaryHelper;
 use Megio\Security\Auth\AuthUser;
 
-class ResponseFormatter
+readonly class ResponseFormatter
 {
     public function __construct(
-        private readonly Container $container,
-        private readonly AuthUser $user,
-        private readonly DebugStack $queryStack,
+        private Container $container,
+        private AuthUser $user,
+        private QueryLogger $queryLogger,
     )
     {
     }
@@ -25,10 +25,10 @@ class ResponseFormatter
     public function formatResponseData(array $data): array
     {
         $user = $this->user->get();
-        $queriesHelper = new SummaryHelper($this->queryStack);
-        
+        $queriesHelper = new SummaryHelper($this->queryLogger);
+
         $executionTime = microtime(true) - $this->container->parameters['startedAt'];
-        
+
         return $_ENV['APP_ENVIRONMENT'] !== 'develop' ? $data : array_merge($data, [
             '@debug' => [
                 'execution_time' => number_format($executionTime * 1000, 1, '.') . 'ms',
@@ -40,7 +40,7 @@ class ResponseFormatter
                 'database' => [
                     'query_time' => number_format($queriesHelper->getTotalTime() * 1000, 1, '.') . 'ms',
                     'query_count' => $queriesHelper->count(),
-                    'queries' => $queriesHelper->count() ? array_values($this->queryStack->queries) : []
+                    'queries' => $queriesHelper->count() ? array_values($this->queryLogger->queries) : []
                 ]
             ]
         ]);

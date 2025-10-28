@@ -3,29 +3,29 @@ declare(strict_types=1);
 
 namespace Megio\Extension\Doctrine\Tracy;
 
-use Doctrine\DBAL\Logging\DebugStack;
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
 
 class SummaryHelper
 {
-    public function __construct(protected DebugStack $stack)
+    public function __construct(protected QueryLogger $logger)
     {
     }
-    
+
     public function getTotalTime(): float
     {
         if ($this->count() === 0) {
             return 0.0;
         }
-        
-        return array_reduce($this->stack->queries, fn($a, $query) => $a + $query['executionMS'], 0);
+
+        return array_reduce($this->logger->queries, fn($a, $query) => $a + $query['executionMS'], 0);
     }
-    
+
     public function count(): int
     {
-        if (!$this->stack->queries) {
+        if (!$this->logger->queries) {
             return 0;
         }
-        
-        return count($this->stack->queries);
+
+        return count($this->logger->queries);
     }
 }

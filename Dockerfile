@@ -6,7 +6,7 @@
 #RUN yarn cache clean --mirror
 #RUN yarn && yarn build
 
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 WORKDIR /var/www/html
 
 # Set timezone
@@ -40,7 +40,7 @@ RUN apk add --no-cache libpq-dev
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
 RUN docker-php-ext-install pdo pdo_pgsql
 
-# Isntall excimer (Sentry)
+# Install excimer (Sentry)
 #RUN apk add autoconf g++ make pcre-dev
 #RUN pecl install excimer
 #RUN docker-php-ext-enable excimer
@@ -74,6 +74,9 @@ COPY . ./
 # Install composer & dependencies
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+#RUN composer update -W --no-scripts --prefer-dist --no-cache
+#RUN composer dump-autoload
 RUN composer install --no-cache --prefer-dist --no-scripts
 
 # Resolve permissions
