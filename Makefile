@@ -14,10 +14,18 @@ serve:
 sh:
 	docker compose exec -it app /bin/bash
 
+format:
+	docker compose exec app composer format
+
+format-check:
+	docker compose exec app composer format:check
+
 test:
+	docker compose exec app rm -rf temp/*
 	docker compose exec app composer analyse
 
 test-single:
+	docker compose exec app rm -rf temp/*
 	docker compose exec app vendor/bin/pest $(FILE)
 
 

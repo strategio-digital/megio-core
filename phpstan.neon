@@ -6,8 +6,3 @@ parameters:
         - router
         - tests
     treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-        -
-            # Pest is not supported by PHPStan
-            message: "#^Undefined variable\\: \\$this$#"
-            path: "tests"
