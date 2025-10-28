@@ -12,10 +12,10 @@ class CSPResponse implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::RESPONSE => ['onResponse']
+            KernelEvents::RESPONSE => ['onResponse'],
         ];
     }
-    
+
     public function onResponse(ResponseEvent $event): void
     {
         $headers = [
@@ -25,9 +25,9 @@ class CSPResponse implements EventSubscriberInterface
             'X-Frame-Options' => 'SAMEORIGIN',
             'X-Xss-Protection' => '1; mode=block',
             'X-Content-Type-Options' => 'nosniff',
-            'X-Powered-By' => 'Megio Panel'
+            'X-Powered-By' => 'Megio Panel',
         ];
-        
+
         foreach ($headers as $key => $value) {
             $event->getResponse()->headers->set($key, $value);
         }

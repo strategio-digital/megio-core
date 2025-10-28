@@ -10,16 +10,14 @@ use Megio\Collection\WriteBuilder\WriteBuilder;
 abstract class BaseFormatter implements IFormatter
 {
     protected WriteBuilder|ReadBuilder $builder;
-    
+
+    public function __construct(protected ?ShowOnlyOn $showOnlyOn = null) {}
+
     public function setBuilder(WriteBuilder|ReadBuilder $builder): void
     {
         $this->builder = $builder;
     }
-    
-    public function __construct(protected ?ShowOnlyOn $showOnlyOn = null)
-    {
-    }
-    
+
     public function showOnlyOn(): ?ShowOnlyOn
     {
         return $this->showOnlyOn;

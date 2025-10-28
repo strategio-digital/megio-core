@@ -3,28 +3,22 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Field;
 
-use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\Helper\JoinableLabel;
 use Megio\Collection\WriteBuilder\Field\Base\BaseField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use Megio\Collection\WriteBuilder\Rule\Base\IRule;
 use Megio\Collection\WriteBuilder\Serializer\ToOneSerializer;
 use Megio\Collection\WriteBuilder\WriteBuilder;
-use Megio\Database\Interface\IJoinable;
 
 class ToOneSelectField extends BaseField
 {
     /** @var array<int, SelectField\Item> */
     protected array $items = [];
-    
-    public function renderer(): string
-    {
-        return 'select-field-renderer';
-    }
-    
+
     /**
      * @param class-string $reverseEntity
-     * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param array<string, string|int|float|bool|null> $attrs
+     * @param IRule[] $rules
+     * @param array<string, bool|float|int|string|null> $attrs
      */
     public function __construct(
         protected string $name,
@@ -36,9 +30,8 @@ class ToOneSelectField extends BaseField
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
         protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue()
-    )
-    {
+        protected mixed  $defaultValue = new UndefinedValue(),
+    ) {
         parent::__construct(
             $this->name,
             $this->label,
@@ -49,27 +42,32 @@ class ToOneSelectField extends BaseField
             $this->disabled,
             $this->mapToEntity,
             $this->value,
-            $this->defaultValue
+            $this->defaultValue,
         );
     }
-    
+
+    public function renderer(): string
+    {
+        return 'select-field-renderer';
+    }
+
     public function setBuilder(WriteBuilder $builder): void
     {
         parent::setBuilder($builder);
-        
+
         $em = $builder->getEntityManager();
-        
+
         /** @var array<int, mixed> $data */
         $data = $em->getRepository($this->reverseEntity)
             ->createQueryBuilder('e')
             ->select('e')
             ->getQuery()
             ->getArrayResult();
-        
+
         $this->items = array_map(fn($item) => new SelectField\Item($item['id'], JoinableLabel::fromArray($item, $this->reverseEntity)), $data);
         $this->serializers[] = new ToOneSerializer($this->reverseEntity, $this->primaryKey);
     }
-    
+
     /** @return array<string, mixed> */
     public function toArray(): array
     {

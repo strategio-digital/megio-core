@@ -11,19 +11,18 @@ class DecimalRule extends BaseRule
     {
         return $this->message ?: "Field must be a decimal number";
     }
-    
+
     /**
      * Return true if validation is passed
-     * @return bool
      */
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
+
         if (is_float($value) || is_int($value)) {
             return true;
         }
-        
+
         return false;
     }
 }

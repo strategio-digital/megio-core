@@ -16,28 +16,30 @@ use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Database\Entity\Queue;
 use Megio\Queue\QueueStatus;
 
+use const JSON_PRETTY_PRINT;
+
 class QueueRecipe extends CollectionRecipe
 {
     public function source(): string
     {
         return Queue::class;
     }
-    
+
     public function key(): string
     {
         return 'queue';
     }
-    
+
     public function update(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $this->commonBuilder($builder);
     }
-    
+
     public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         return $this->commonBuilder($builder);
     }
-    
+
     private function commonBuilder(WriteBuilder $builder): WriteBuilder
     {
         return $builder
@@ -48,25 +50,25 @@ class QueueRecipe extends CollectionRecipe
                 name: 'payload',
                 label: 'payload',
                 rules: [
-                    new JsonStringRule()
+                    new JsonStringRule(),
                 ],
                 serializers: [
-                    new CallableSerializer(fn($payload) => json_decode($payload, true))
+                    new CallableSerializer(fn($payload) => json_decode($payload, true)),
                 ],
                 formatters: [
-                    new CallableFormatter(fn($payload) => json_encode($payload, JSON_PRETTY_PRINT))
+                    new CallableFormatter(fn($payload) => json_encode($payload, JSON_PRETTY_PRINT)),
                 ],
                 attrs: [
                     'fullWidth' => true,
-                ]
+                ],
             ))
             ->add(new TextAreaField(
                 name: 'errorMessage',
                 label: 'error message',
                 rules: [
-                    new NullableRule()
+                    new NullableRule(),
                 ],
-                attrs: ['fullWidth' => true]
+                attrs: ['fullWidth' => true],
             ));
     }
 }

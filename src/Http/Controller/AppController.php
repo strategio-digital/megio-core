@@ -3,52 +3,56 @@ declare(strict_types=1);
 
 namespace Megio\Http\Controller;
 
-use Nette\DI\Container;
-use Nette\Utils\Strings;
+use DateTime;
 use Megio\Helper\Path;
 use Megio\Helper\Router;
 use Megio\Http\Controller\Base\Controller;
 use Megio\Storage\Storage;
+use Nette\DI\Container;
+use Nette\Utils\Strings;
 use Siketyan\YarnLock\YarnLock;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+
+use const ARRAY_FILTER_USE_KEY;
 
 class AppController extends Controller
 {
     public function app(Container $container): Response
     {
-        /** @var \Symfony\Component\Routing\RouteCollection $routes */
+        /** @var RouteCollection $routes */
         $routes = $container->getByName('routes');
-        
-        /** @var \Symfony\Component\Routing\Route $route */
+
+        /** @var Route $route */
         $route = $routes->get(Router::ROUTE_APP);
         $appPath = $route->compile()->getStaticPrefix();
-        
+
         return $this->render(Path::megioVendorDir() . '/view/controller/admin.latte', [
             'appPath' => $appPath,
             'appVersions' => $this->versions(),
         ]);
     }
-    
+
     public function api(Storage $storage, Container $container): Response
     {
-        /** @var \Symfony\Component\Routing\RouteCollection $routes */
+        /** @var RouteCollection $routes */
         $routes = $container->getByName('routes');
-        
+
         $prettyRoutes = array_map(function (Route $route) {
             $options = array_filter($route->getOptions(), fn($key) => $key !== 'compiler_class', ARRAY_FILTER_USE_KEY);
-            
+
             return [
                 'path' => $route->getPath(),
                 'methods' => count($route->getMethods()) ? $route->getMethods() : null,
                 'options' => count($options) ? $options : null,
-                'route_rules' => count($route->getRequirements()) ? $route->getRequirements() : null
+                'route_rules' => count($route->getRequirements()) ? $route->getRequirements() : null,
             ];
-            
+
         }, $routes->all());
-        
-        $dt = new \DateTime();
-        
+
+        $dt = new DateTime();
+
         return $this->json([
             'name' => $_ENV['APP_NAME'],
             'mode' => $_ENV['APP_ENVIRONMENT'],
@@ -56,16 +60,16 @@ class AppController extends Controller
             'megio_versions' => $this->versions(),
             'current_dt' => [
                 'date_time' => $dt->format('Y.m.d H:i:s:u'),
-                'time_zone' => $dt->getTimezone()->getName()
+                'time_zone' => $dt->getTimezone()->getName(),
             ],
             'execution_time' => floor((microtime(true) - $container->parameters['startedAt']) * 1000) . 'ms',
             'endpoints' => [
                 'count' => $routes->count(),
-                'items' => $prettyRoutes
-            ]
+                'items' => $prettyRoutes,
+            ],
         ]);
     }
-    
+
     /**
      * @return array{ composer: string|null, yarn: string|null }
      */
@@ -74,33 +78,33 @@ class AppController extends Controller
         $composerVersion = null;
         $yarnVersion = null;
         $commit = null;
-        
+
         $content = file_get_contents(Path::appDir() . '/../composer.lock');
-        
+
         if ($content && $json = json_decode($content, true)) {
             $composer = current(array_filter($json['packages'], fn($package) => $package['name'] === 'strategio/megio-core'));
-            
+
             if ($composer) {
                 $composerVersion = $composer['version'];
                 $commit = $composer['source']['reference'] ?? $composer['dist']['reference'] ?? null;
             }
         }
-        
+
         $content = file_get_contents(Path::appDir() . '/../yarn.lock');
-        
+
         if ($content) {
             $json = YarnLock::toArray($content);
             $yarn = current(array_filter($json, fn(string $key) => Strings::startsWith($key, 'megio-panel@'), ARRAY_FILTER_USE_KEY));
-            
+
             if ($yarn) {
                 $yarnVersion = $yarn['version'];
             }
         }
-        
+
         return [
             'yarn' => $yarnVersion,
             'composer' => $composerVersion,
-            'commit_reference' => $commit
+            'commit_reference' => $commit,
         ];
     }
 }

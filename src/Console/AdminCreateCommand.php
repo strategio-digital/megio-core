@@ -20,18 +20,18 @@ class AdminCreateCommand extends Command
     {
         parent::__construct();
     }
-    
+
     protected function configure(): void
     {
         $this->addArgument('email', InputArgument::REQUIRED, 'E-mail');
         $this->addArgument('password', InputArgument::REQUIRED, 'Password');
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $email = $input->getArgument('email');
         $passwd = $input->getArgument('password');
-        
+
         try {
             $admin = new Admin();
             $admin->setEmail($email);
@@ -42,7 +42,7 @@ class AdminCreateCommand extends Command
         } catch (EntityException|UniqueConstraintViolationException $e) {
             $output->writeln("<error>{$e->getMessage()}</error>");
         }
-        
+
         return Command::SUCCESS;
     }
 }

@@ -9,7 +9,7 @@ use Symfony\Component\Uid\Ulid;
 
 class UlidGenerator extends AbstractIdGenerator
 {
-    public function generateId(EntityManagerInterface $em, object|null $entity): string
+    public function generateId(EntityManagerInterface $em, ?object $entity): string
     {
         return Ulid::generate();
     }

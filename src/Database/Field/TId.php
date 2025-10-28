@@ -14,9 +14,8 @@ trait TId
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidV6Generator::class)]
     protected string $id;
-    
+
     /**
-     * @return string
      */
     public function getId(): string
     {

@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
+use InvalidArgumentException;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
+use ReflectionNamedType;
+use ReflectionProperty;
 
 /**
  *  Doctrine mapping:
@@ -22,7 +25,6 @@ use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
  *     maxLength: int|null,
  *     defaultValue: mixed
  * }
- *
  * @phpstan-type JoinableColumn array{
  *     name: string,
  *     type: string,
@@ -38,35 +40,35 @@ class RecipeDbSchema
 {
     /** @var UnionColumn[] */
     private array $unionColumns = [];
-    
+
     /** @var JoinableColumn[] */
     private array $oneToOneColumns = [];
-    
+
     /** @var JoinableColumn[] */
     private array $oneToManyColumns = [];
-    
+
     /** @var JoinableColumn[] */
     private array $manyToOneColumns = [];
-    
+
     /** @var JoinableColumn[] */
     private array $manyToManyColumns = [];
-    
-    public function addUnionColumn(Column $attr, \ReflectionProperty $prop): void
+
+    public function addUnionColumn(Column $attr, ReflectionProperty $prop): void
     {
         $propType = $prop->getType();
         $nullable = $attr->nullable;
         $type = $attr->type;
-        
+
         // Fallback to union types
         if ($type === null) {
-            $type = ($propType instanceof \ReflectionNamedType
+            $type = ($propType instanceof ReflectionNamedType
                 ? $propType->getName()
                 : $propType)
                 ?? '@unknown';
         }
 
         // Ensure $type is string for mb_strtolower
-        $typeString = is_string($type) ? $type : (string) $type;
+        $typeString = is_string($type) ? $type : (string)$type;
 
         $maxLength = $attr->length;
         if ($maxLength === null && $typeString === 'string') {
@@ -87,18 +89,18 @@ class RecipeDbSchema
             'defaultValue' => $default,
         ];
     }
-    
-    public function addOneToOneColumn(OneToOne $attr, \ReflectionProperty $prop): void
+
+    public function addOneToOneColumn(OneToOne $attr, ReflectionProperty $prop): void
     {
         if ($attr->targetEntity === null) {
-            throw new \InvalidArgumentException('Attribute targetEntity is required');
+            throw new InvalidArgumentException('Attribute targetEntity is required');
         }
-        
+
         $reverseField = $attr->mappedBy;
         if ($reverseField === null) {
             $reverseField = $attr->inversedBy;
         }
-        
+
         $this->oneToOneColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_one',
@@ -110,13 +112,13 @@ class RecipeDbSchema
             'reverseField' => $reverseField,
         ];
     }
-    
-    public function addOneToManyColumn(OneToMany $attr, \ReflectionProperty $prop): void
+
+    public function addOneToManyColumn(OneToMany $attr, ReflectionProperty $prop): void
     {
         if ($attr->targetEntity === null) {
-            throw new \InvalidArgumentException('Attribute targetEntity is required');
+            throw new InvalidArgumentException('Attribute targetEntity is required');
         }
-        
+
         $this->oneToManyColumns[] = [
             'name' => $prop->getName(),
             'type' => 'one_to_many',
@@ -128,13 +130,13 @@ class RecipeDbSchema
             'reverseField' => $attr->mappedBy,
         ];
     }
-    
-    public function addManyToOneColumn(ManyToOne $attr, \ReflectionProperty $prop): void
+
+    public function addManyToOneColumn(ManyToOne $attr, ReflectionProperty $prop): void
     {
         if ($attr->targetEntity === null) {
-            throw new \InvalidArgumentException('Attribute targetEntity is required');
+            throw new InvalidArgumentException('Attribute targetEntity is required');
         }
-        
+
         $this->manyToOneColumns[] = [
             'name' => $prop->getName(),
             'type' => 'many_to_one',
@@ -146,14 +148,14 @@ class RecipeDbSchema
             'reverseField' => $attr->inversedBy,
         ];
     }
-    
-    public function addManyToManyColumn(ManyToMany $attr, \ReflectionProperty $prop): void
+
+    public function addManyToManyColumn(ManyToMany $attr, ReflectionProperty $prop): void
     {
         $reverseField = $attr->mappedBy;
         if ($reverseField === null) {
             $reverseField = $attr->inversedBy;
         }
-        
+
         $this->manyToManyColumns[] = [
             'name' => $prop->getName(),
             'type' => 'many_to_many',
@@ -165,31 +167,31 @@ class RecipeDbSchema
             'reverseField' => $reverseField,
         ];
     }
-    
+
     /** @return UnionColumn[] */
     public function getUnionColumns(): array
     {
         return $this->unionColumns;
     }
-    
+
     /** @return JoinableColumn[] */
     public function getOneToOneColumns(): array
     {
         return $this->oneToOneColumns;
     }
-    
+
     /** @return JoinableColumn[] */
     public function getOneToManyColumns(): array
     {
         return $this->oneToManyColumns;
     }
-    
+
     /** @return JoinableColumn[] */
     public function getManyToOneColumns(): array
     {
         return $this->manyToOneColumns;
     }
-    
+
     /** @return JoinableColumn[] */
     public function getManyToManyColumns(): array
     {

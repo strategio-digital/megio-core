@@ -9,10 +9,11 @@ enum ResourceType: string
     case VUE_ROUTER = 'vue.router';
     case COLLECTION_DATA = 'collection.data';
     case COLLECTION_NAV = 'collection.nav';
-    
-    public function getResourcesMethodName(): string {
+
+    public function getResourcesMethodName(): string
+    {
         // Method names in AuthResourceManager
-        return match($this) {
+        return match ($this) {
             self::ROUTER => 'routerResources',
             self::VUE_ROUTER => 'routerViewResources',
             self::COLLECTION_DATA => 'collectionDataResources',

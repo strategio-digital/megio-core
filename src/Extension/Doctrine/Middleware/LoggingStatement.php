@@ -16,7 +16,7 @@ class LoggingStatement extends AbstractStatementMiddleware
     public function __construct(
         Statement $wrappedStatement,
         private readonly QueryLogger $logger,
-        private readonly string $sql
+        private readonly string $sql,
     ) {
         parent::__construct($wrappedStatement);
     }

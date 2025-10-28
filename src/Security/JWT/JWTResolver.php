@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Security\JWT;
 
+use DateTimeImmutable;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -23,9 +24,9 @@ use Psr\Clock\ClockInterface;
 
 class JWTResolver
 {
-    const string ISSUER = 'strategio.dev';
+    public const string ISSUER = 'strategio.dev';
 
-    const string PERMIT_FOR = 'strategio-megio-apps';
+    public const string PERMIT_FOR = 'strategio-megio-apps';
 
     private Sha256 $signer;
 
@@ -47,9 +48,9 @@ class JWTResolver
         $this->signer = new Sha256();
         $this->signingKey = InMemory::plainText($keyPair->getPrivateKey());
         $this->clock = new class implements ClockInterface {
-            public function now(): \DateTimeImmutable
+            public function now(): DateTimeImmutable
             {
-                return new \DateTimeImmutable();
+                return new DateTimeImmutable();
             }
         };
     }
@@ -75,7 +76,7 @@ class JWTResolver
             new SignedWith($this->signer, $this->signingKey),
             new IssuedBy(self::ISSUER),
             new PermittedFor(self::PERMIT_FOR),
-            new LooseValidAt($this->clock)
+            new LooseValidAt($this->clock),
         ];
 
         try {
@@ -88,12 +89,10 @@ class JWTResolver
     }
 
     /**
-     * @param \DateTimeImmutable $expirationAt
      * @param array<non-empty-string, mixed> $claims
-     * @return string
      */
     public function createToken(
-        \DateTimeImmutable $expirationAt,
+        DateTimeImmutable $expirationAt,
         array $claims = [],
     ): string {
         $createdAt = $this->clock->now();

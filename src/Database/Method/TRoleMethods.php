@@ -13,17 +13,15 @@ trait TRoleMethods
     {
         return $this->roles;
     }
-    
+
     /**
-     * @param Role $role
-     * @return self
      */
     public function addRole(Role $role): self
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
         }
-        
+
         return $this;
     }
 }

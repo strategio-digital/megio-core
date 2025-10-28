@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Megio\Storage;
 
+use InvalidArgumentException;
+
 enum SizeUnit: string
 {
     case Bytes = 'B';
@@ -11,11 +13,11 @@ enum SizeUnit: string
     case GigaBytes = 'GB';
     case TeraBytes = 'TB';
     case PetaBytes = 'PB';
-    
+
     public static function fromPhpIniAlias(string $unit): self
     {
         $unit = strtoupper($unit);
-        
+
         return match ($unit) {
             'B' => self::Bytes,
             'K' => self::KiloBytes,
@@ -23,7 +25,7 @@ enum SizeUnit: string
             'G' => self::GigaBytes,
             'T' => self::TeraBytes,
             'P' => self::PetaBytes,
-            default => throw new \InvalidArgumentException("Invalid unit: $unit"),
+            default => throw new InvalidArgumentException("Invalid unit: $unit"),
         };
     }
 
@@ -33,7 +35,7 @@ enum SizeUnit: string
             return self::Bytes;
         }
 
-        $idx = (int) floor(log($size, 1024));
+        $idx = (int)floor(log($size, 1024));
         $idx = max(0, min($idx, 5));
 
         return match ($idx) {
@@ -45,12 +47,12 @@ enum SizeUnit: string
             5 => self::PetaBytes,
         };
     }
-    
+
     public static function convert(float $size, SizeUnit $sourceUnit, SizeUnit $targetUnit): float
     {
         return $size * $sourceUnit->getMultiplier($targetUnit);
     }
-    
+
     public function getMultiplier(SizeUnit $targetUnit): float
     {
         $units = [
@@ -61,7 +63,7 @@ enum SizeUnit: string
             self::TeraBytes->value => 1024 ** 4,
             self::PetaBytes->value => 1024 ** 5,
         ];
-        
+
         return $units[$this->value] / $units[$targetUnit->value];
     }
 }

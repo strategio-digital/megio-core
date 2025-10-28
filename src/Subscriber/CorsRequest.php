@@ -21,53 +21,53 @@ class CorsRequest implements EventSubscriberInterface
             KernelEvents::EXCEPTION => ['onKernelException', 9999],
         ];
     }
-    
+
     public function onKernelException(ExceptionEvent $event): void
     {
         $response = $event->getResponse();
         $headers = $event->getRequest()->headers->get('Access-Control-Request-Headers');
-        
+
         if ($response) {
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Methods', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
-            
+
             if ($headers) {
                 $response->headers->set('Access-Control-Allow-Headers', $headers);
             }
         }
     }
-    
+
     public function onKernelRequest(RequestEvent $event): void
     {
         // Don't do anything if it's not the master request.
         if (!$event->isMainRequest()) {
             return;
         }
-        
+
         $request = $event->getRequest();
         $method = $request->getRealMethod();
-        
-        if (Request::METHOD_OPTIONS === $method) {
+
+        if ($method === Request::METHOD_OPTIONS) {
             $response = new Response();
             $event->setResponse($response);
         }
     }
-    
+
     public function onKernelResponse(ResponseEvent $event): void
     {
         // Don't do anything if it's not the master request.
         if (!$event->isMainRequest()) {
             return;
         }
-        
+
         $response = $event->getResponse();
         $headers = $event->getRequest()->headers->get('Access-Control-Request-Headers');
-        
+
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Access-Control-Allow-Methods', '*');
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        
+
         if ($headers) {
             $response->headers->set('Access-Control-Allow-Headers', $headers);
         }

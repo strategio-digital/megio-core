@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Field;
 
@@ -6,6 +6,7 @@ use Megio\Collection\Exception\CollectionException;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
 use Megio\Collection\WriteBuilder\Field\SelectField\Item;
 use Megio\Collection\WriteBuilder\Serializer\CallableSerializer;
+use ReflectionClass;
 
 class EnumField extends SelectField
 {
@@ -23,23 +24,22 @@ class EnumField extends SelectField
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
         protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue()
-    )
-    {
-        $isEnum = (new \ReflectionClass($this->enumClassName))->isEnum();
-        
+        protected mixed  $defaultValue = new UndefinedValue(),
+    ) {
+        $isEnum = (new ReflectionClass($this->enumClassName))->isEnum();
+
         if (!$isEnum) {
             throw new CollectionException('Parameter $enumClassName must be an enum class name.');
         }
-        
+
         if (count($this->serializers) === 0) {
             $this->serializers = [
-                new CallableSerializer(fn($value) => $value ? $this->enumClassName::from($value) : null)
+                new CallableSerializer(fn($value) => $value ? $this->enumClassName::from($value) : null),
             ];
         }
-        
+
         $this->items = array_map(fn($item) => new Item($item->value, $item->value), $this->enumClassName::cases());
-        
+
         parent::__construct(
             $this->name,
             $this->label,
@@ -51,7 +51,7 @@ class EnumField extends SelectField
             $this->disabled,
             $this->mapToEntity,
             $this->value,
-            $this->defaultValue
+            $this->defaultValue,
         );
     }
 }

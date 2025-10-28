@@ -8,15 +8,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RouteFunction
 {
-    public function __construct(protected LinkResolver $linkResolver)
-    {
-    }
-    
+    public function __construct(protected LinkResolver $linkResolver) {}
+
     /**
-     * @param string $name
      * @param array<string, int|string> $params
-     * @param int $path
-     * @return string
      */
     public function create(string $name, array $params = [], int $path = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {

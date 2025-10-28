@@ -12,19 +12,18 @@ class EmailRule extends BaseRule
     {
         return $this->message ?: "Field must be a valid email address";
     }
-    
+
     /**
      * Return true if validation is passed
-     * @return bool
      */
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
+
         if (!is_string($value)) {
             return false;
         }
-        
+
         return Validators::isEmail($value);
     }
 }

@@ -10,48 +10,47 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class AuthRouteRequest implements EventSubscriberInterface
 {
     protected RequestEvent $event;
-    
+
     protected Request $request;
-    
-    public function __construct(protected RouteCollection $routes, protected AuthUser $authUser)
-    {
-    }
-    
+
+    public function __construct(protected RouteCollection $routes, protected AuthUser $authUser) {}
+
     public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => ['onRequest'],
         ];
     }
-    
+
     public function onRequest(RequestEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
-        
+
         $routeName = $this->request->attributes->get('_route');
-        
+
         if ($routeName === null) {
             return;
         }
-        
-        /** @var \Symfony\Component\Routing\Route $currentRoute */
+
+        /** @var Route $currentRoute */
         $currentRoute = $this->routes->get($routeName);
-        
+
         if ($currentRoute->getOption('auth') === false) {
             return;
         }
-        
+
         if ($this->authUser->get() instanceof Admin) {
             return;
         }
-        
-        if (!in_array($routeName, $this->authUser->getResources())) {
+
+        if (!in_array($routeName, $this->authUser->getResources(), true)) {
             $message = "This router-resource '{$routeName}' is not allowed for current user";
             $this->event->setResponse(new JsonResponse(['errors' => [$message]], 401));
         }

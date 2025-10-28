@@ -12,7 +12,7 @@ class LoggingConnection extends AbstractConnectionMiddleware
 {
     public function __construct(
         Connection $wrappedConnection,
-        private readonly QueryLogger $logger
+        private readonly QueryLogger $logger,
     ) {
         parent::__construct($wrappedConnection);
     }
@@ -22,7 +22,7 @@ class LoggingConnection extends AbstractConnectionMiddleware
         return new LoggingStatement(
             parent::prepare($sql),
             $this->logger,
-            $sql
+            $sql,
         );
     }
 

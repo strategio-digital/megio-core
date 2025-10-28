@@ -11,10 +11,7 @@ class LinkResolver
     public function __construct(protected UrlGenerator $urlGenerator) {}
 
     /**
-     * @param string $name
-     * @param array<string, string|int> $params
-     * @param int $path
-     * @return string
+     * @param array<string, int|string> $params
      */
     public function link(
         string $name,
@@ -27,7 +24,7 @@ class LinkResolver
             referenceType: $path,
         );
 
-        if (php_sapi_name() == 'cli' && $path === UrlGeneratorInterface::ABSOLUTE_URL) {
+        if (php_sapi_name() === 'cli' && $path === UrlGeneratorInterface::ABSOLUTE_URL) {
             $appUrl = $_ENV['APP_URL'];
             if (str_ends_with($_ENV['APP_URL'], '/')) {
                 $appUrl = substr($_ENV['APP_URL'], 0, -1);

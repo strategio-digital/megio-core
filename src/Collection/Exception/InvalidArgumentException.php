@@ -3,6 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Exception;
 
-class InvalidArgumentException extends \Exception
-{
-}
+use Exception;
+
+class InvalidArgumentException extends Exception {}

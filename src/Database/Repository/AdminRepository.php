@@ -11,8 +11,7 @@ use Megio\Database\Entity\Admin;
  * @method Admin|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Admin[] findAll()
  * @method Admin[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
+ *
  * @extends EntityRepository<Admin>
  */
-class AdminRepository extends EntityRepository
-{
-}
+class AdminRepository extends EntityRepository {}

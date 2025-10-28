@@ -17,28 +17,28 @@ class PermissionsUpdateCommand extends Command
     {
         parent::__construct();
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $types = array_filter(ResourceType::cases(), fn($case) => $case !== ResourceType::VUE_ROUTER);
         $result = $this->manager->updateResources(true, [], ...$types);
-        
+
         foreach ($result['created'] as $resource) {
             $output->writeln("<info>Resource '{$resource}' created.</info>");
         }
-        
+
         foreach ($result['removed'] as $resource) {
             $output->writeln("<comment>Resource '{$resource}' removed.</comment>");
         }
-        
+
         $diffCount = count($result['created']) + count($result['removed']);
-        
+
         if ($diffCount === 0) {
             $output->writeln('<comment>No resources for update.</comment>');
         } else {
             $output->writeln("<info>Updated {$diffCount} resources.</info>");
         }
-        
+
         return Command::SUCCESS;
     }
 }

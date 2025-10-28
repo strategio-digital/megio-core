@@ -3,17 +3,15 @@ declare(strict_types=1);
 
 namespace Megio\Collection\WriteBuilder\Field\Base;
 
+use Megio\Collection\Formatter\Base\IFormatter;
+use Megio\Collection\WriteBuilder\Rule\Base\IRule;
+
 class PureField extends BaseField
 {
-    public function renderer(): string
-    {
-        return 'pure-renderer';
-    }
-    
     /**
-     * @param \Megio\Collection\WriteBuilder\Rule\Base\IRule[] $rules
-     * @param \Megio\Collection\Formatter\Base\IFormatter[] $formatters
-     * @param array<string, string|int|float|bool|null> $attrs
+     * @param IRule[] $rules
+     * @param IFormatter[] $formatters
+     * @param array<string, bool|float|int|string|null> $attrs
      */
     public function __construct(
         protected string $name,
@@ -25,9 +23,8 @@ class PureField extends BaseField
         protected bool   $disabled = false,
         protected bool   $mapToEntity = true,
         protected mixed  $value = new UndefinedValue(),
-        protected mixed  $defaultValue = new UndefinedValue()
-    )
-    {
+        protected mixed  $defaultValue = new UndefinedValue(),
+    ) {
         parent::__construct(
             $this->name,
             $this->label,
@@ -38,7 +35,12 @@ class PureField extends BaseField
             $this->disabled,
             $this->mapToEntity,
             $this->value,
-            $this->defaultValue
+            $this->defaultValue,
         );
+    }
+
+    public function renderer(): string
+    {
+        return 'pure-renderer';
     }
 }

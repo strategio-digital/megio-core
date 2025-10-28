@@ -12,7 +12,7 @@ class ArticleAuthorProfileRecipe extends CollectionRecipe
     {
         return ArticleAuthorProfile::class;
     }
-    
+
     public function key(): string
     {
         return 'article-author-profile';

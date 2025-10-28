@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+use Tests\MegioTestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +13,7 @@
 |
 */
 
-uses(Tests\MegioTestCase::class)
+uses(MegioTestCase::class)
     ->in('Doctrine', 'Collection', 'Queue', 'Hooray');
 
 /*

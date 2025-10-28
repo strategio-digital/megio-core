@@ -11,8 +11,8 @@ interface ISerializer
 {
     /** @throws SerializerException */
     public function serialize(IField $field): mixed;
-    
+
     public function setBuilder(WriteBuilder $builder): void;
-    
+
     public function getBuilder(): WriteBuilder;
 }

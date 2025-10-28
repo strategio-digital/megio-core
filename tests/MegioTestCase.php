@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests;
 
@@ -17,47 +17,46 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class MegioTestCase extends BaseTestCase
 {
     private static ?Container $container = null;
-    
+
     private static ?Generator $generator = null;
-    
+
     public function em(): EntityManager
     {
         return $this->container()->getByType(EntityManager::class);
     }
-    
+
     public function generator(): Generator
     {
         if (self::$generator === null) {
             self::$generator = FakerFactory::create();
         }
-        
+
         return self::$generator;
     }
-    
+
     public function httpRequest(): Request
     {
         return Request::createFromGlobals();
     }
-    
+
     public function container(): Container
     {
         if (self::$container === null) {
             $bootstrap = (new Bootstrap())
                 ->projectRootPath(__DIR__ . '/../')
                 ->logger(new JsonLogstashLogger());
-            
+
             self::$container = $bootstrap->configure(
                 configPath: Path::configDir() . '/tests.neon',
-                startedAt: microtime(true)
+                startedAt: microtime(true),
             );
         }
-        
+
         return self::$container;
     }
-    
+
     /**
      * @param class-string<MegioRequest> $class
-     * @return MegioRequest
      */
     public function createCollectionRequest(string $class): MegioRequest
     {
@@ -65,13 +64,12 @@ abstract class MegioTestCase extends BaseTestCase
         assert($request instanceof MegioRequest);
         $request->__inject($this->container());
         $request->__invoke($this->httpRequest());
-        
+
         return $request;
     }
-    
+
     /**
      * @param class-string<CollectionRecipe> $class
-     * @return CollectionRecipe
      */
     public function createCollectionRecipe(string $class): CollectionRecipe
     {

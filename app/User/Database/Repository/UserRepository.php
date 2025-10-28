@@ -11,8 +11,7 @@ use Doctrine\ORM\EntityRepository;
  * @method User|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method User[] findAll()
  * @method User[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
+ *
  * @extends EntityRepository<User>
  */
-class UserRepository extends EntityRepository
-{
-}
+class UserRepository extends EntityRepository {}

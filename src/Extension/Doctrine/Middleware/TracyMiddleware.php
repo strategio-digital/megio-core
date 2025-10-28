@@ -11,17 +11,17 @@ use Megio\Extension\Doctrine\Logger\SnapshotLogger;
 class TracyMiddleware implements Middleware
 {
     protected SnapshotLogger $logger;
-    
+
     public function __construct()
     {
         $this->logger = new SnapshotLogger();
     }
-    
+
     public function wrap(Driver $driver): Driver
     {
         return new LoggingDriver($driver, $this->logger);
     }
-    
+
     public function getLogger(): SnapshotLogger
     {
         return $this->logger;

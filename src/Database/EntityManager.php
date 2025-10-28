@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Database;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\MissingMappingDriverImplementation;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\Entity\Auth\Role;
@@ -20,7 +21,7 @@ use Megio\Extension\Doctrine\Doctrine;
 class EntityManager extends \Doctrine\ORM\EntityManager implements EntityManagerInterface
 {
     /**
-     * @throws \Doctrine\ORM\Exception\MissingMappingDriverImplementation
+     * @throws MissingMappingDriverImplementation
      */
     public function __construct(Doctrine $doctrine)
     {
