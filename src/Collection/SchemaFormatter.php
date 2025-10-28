@@ -18,7 +18,7 @@ class SchemaFormatter
                 'key' => $recipe->key(),
                 'name' => $recipe->name(),
             ],
-            'props' => $builder->toArray()
+            'props' => $builder->toArray(),
         ];
     }
 }

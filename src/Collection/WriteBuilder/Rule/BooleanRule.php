@@ -11,19 +11,18 @@ class BooleanRule extends BaseRule
     {
         return $this->message ?: "Field must be a boolean";
     }
-    
+
     /**
      * Return true if validation is passed
-     * @return bool
      */
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
+
         if ($value === true || $value === false) {
             return true;
         }
-        
+
         return false;
     }
 }

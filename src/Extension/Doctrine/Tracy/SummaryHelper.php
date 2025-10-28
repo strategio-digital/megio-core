@@ -7,9 +7,7 @@ use Megio\Extension\Doctrine\Middleware\QueryLogger;
 
 class SummaryHelper
 {
-    public function __construct(protected QueryLogger $logger)
-    {
-    }
+    public function __construct(protected QueryLogger $logger) {}
 
     public function getTotalTime(): float
     {

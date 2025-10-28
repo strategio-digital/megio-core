@@ -10,10 +10,8 @@ use Megio\Extension\Latte\Function\ViteFunction;
 
 class MegioExtension extends Extension
 {
-    public function __construct(protected RouteFunction $routeFunction)
-    {
-    }
-    
+    public function __construct(protected RouteFunction $routeFunction) {}
+
     /**
      * @return array<string, mixed>
      */

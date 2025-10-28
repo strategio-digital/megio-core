@@ -11,42 +11,41 @@ use Megio\Security\Auth\AuthUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class AuthCollectionFormRequest implements EventSubscriberInterface
 {
     protected OnFormStartEvent $event;
-    
+
     protected Request $request;
-    
+
     public function __construct(
         protected RouteCollection $routes,
-        protected AuthUser        $authUser
-    )
-    {
-    }
-    
+        protected AuthUser        $authUser,
+    ) {}
+
     public static function getSubscribedEvents(): array
     {
         return [
             Events::ON_FORM_START->value => ['onFormStartEvent'],
         ];
     }
-    
+
     public function onFormStartEvent(OnFormStartEvent $event): void
     {
         $this->event = $event;
         $this->request = $event->getRequest();
-        
+
         $routeName = $this->request->attributes->get('_route');
-        
+
         if ($routeName === null) {
             return;
         }
-        
-        /** @var \Symfony\Component\Routing\Route $currentRoute */
+
+        /** @var Route $currentRoute */
         $currentRoute = $this->routes->get($routeName);
-        
+
         if ($currentRoute->getOption('auth') === false) {
             return;
         }
@@ -54,13 +53,13 @@ class AuthCollectionFormRequest implements EventSubscriberInterface
         if ($this->authUser->get() instanceof Admin) {
             return;
         }
-        
+
         $recipeKey = $event->getRecipe()->key();
         $suffix = $this->event->isCreatingForm() ? 'create' : 'update';
-        
+
         $resourceName = Router::ROUTE_COLLECTION_PREFIX . $suffix . '.' . $recipeKey;
-        
-        if (!in_array($resourceName, $this->authUser->getResources())) {
+
+        if (!in_array($resourceName, $this->authUser->getResources(), true)) {
             $message = "Collection-resource '{$resourceName}' is not allowed for current user";
             $this->event->setResponse(new JsonResponse(['errors' => [$message]], 401));
         }

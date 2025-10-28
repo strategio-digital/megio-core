@@ -17,26 +17,28 @@ use Megio\Database\Interface\IJoinable;
 #[ORM\HasLifecycleCallbacks]
 class ArticleTag implements ICrudable, IJoinable
 {
-    use TId, TCreatedAt, TUpdatedAt;
-    
+    use TId;
+    use TCreatedAt;
+    use TUpdatedAt;
+
     ## DONE
     #[ORM\Column(length: 32)]
     protected string $name;
-    
+
     ## DONE
     #[ORM\Column(length: 32, unique: true)]
     protected string $slug;
-    
+
     ## TODO:
     /** @var Collection<int, Article> */
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'tags')]
     protected Collection $articles;
-    
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
     }
-    
+
     /**
      * @return array{fields: string[], format: string}
      */
@@ -44,7 +46,7 @@ class ArticleTag implements ICrudable, IJoinable
     {
         return [
             'fields' => ['name'],
-            'format' => '%s'
+            'format' => '%s',
         ];
     }
 }

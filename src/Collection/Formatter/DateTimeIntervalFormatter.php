@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Megio\Collection\Formatter;
 
+use DateInterval;
 use Megio\Collection\Formatter\Base\BaseFormatter;
 
 class DateTimeIntervalFormatter extends BaseFormatter
 {
     public function format(mixed $value, string $key): mixed
     {
-        if ($value instanceof \DateInterval) {
+        if ($value instanceof DateInterval) {
             return [
                 'is_positive' => $value->invert === 0,
                 'all_days' => $value->days,
@@ -20,10 +21,10 @@ class DateTimeIntervalFormatter extends BaseFormatter
                     'hours' => $value->h,
                     'minutes' => $value->i,
                     'seconds' => $value->s,
-                ]
+                ],
             ];
         }
-        
+
         return $value;
     }
 }

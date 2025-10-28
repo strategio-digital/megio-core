@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace Megio\Collection\WriteBuilder;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\Exception\SerializerException;
 use Megio\Collection\Helper\FieldCreator;
 use Megio\Collection\Helper\RuleCreator;
+use Megio\Collection\ICollectionRecipe;
 use Megio\Collection\IRecipeBuilder;
 use Megio\Collection\RecipeDbSchema;
+use Megio\Collection\RecipeEntityMetadata;
 use Megio\Collection\WriteBuilder\Field\Base\EmptyValue;
 use Megio\Collection\WriteBuilder\Field\Base\IField;
 use Megio\Collection\WriteBuilder\Field\Base\UndefinedValue;
@@ -15,41 +19,36 @@ use Megio\Collection\WriteBuilder\Field\ToManySelectField;
 use Megio\Collection\WriteBuilder\Field\ToOneSelectField;
 use Megio\Collection\WriteBuilder\Rule\NullableRule;
 use Megio\Collection\WriteBuilder\Rule\RequiredRule;
-use Megio\Collection\ICollectionRecipe;
-use Megio\Collection\RecipeEntityMetadata;
 use Megio\Helper\ArrayMove;
 
 class WriteBuilder implements IRecipeBuilder
 {
     private WriteBuilderEvent $event;
-    
+
     private ICollectionRecipe $recipe;
-    
+
     private RecipeEntityMetadata $metadata;
-    
+
     private RecipeDbSchema $dbSchema;
-    
+
     private ?string $rowId = null;
-    
+
     /** @var array<string, IField> */
     private array $fields = [];
-    
+
     /** @var array<string, string[]> */
     private array $errors = [];
-    
-    
-    /** @var array<string, string|int|float|bool|null> */
+
+    /** @var array<string, bool|float|int|string|null> */
     private array $values = [];
-    
+
     /** @var array<string, class-string[]> */
     private array $ignoredRules = [];
-    
+
     private bool $keepDbSchema = true;
-    
-    public function __construct(protected readonly EntityManagerInterface $em)
-    {
-    }
-    
+
+    public function __construct(protected readonly EntityManagerInterface $em) {}
+
     public function reset(): self
     {
         $this->rowId = null;
@@ -58,76 +57,76 @@ class WriteBuilder implements IRecipeBuilder
         $this->values = [];
         $this->ignoredRules = [];
         $this->keepDbSchema = true;
-        
+
         return $this;
     }
-    
+
     /**
-     * @param \Megio\Collection\ICollectionRecipe $recipe
-     * @param \Megio\Collection\WriteBuilder\WriteBuilderEvent $event
-     * @param array<string, string|int|float|bool|null> $values
-     * @param string|null $rowId
+     * @param array<string, bool|float|int|string|null> $values
+     *
+     * @throws CollectionException
+     *
      * @return $this
-     * @throws \Megio\Collection\Exception\CollectionException
      */
     public function create(ICollectionRecipe $recipe, WriteBuilderEvent $event, ?string $rowId = null, array $values = []): self
     {
         $this->reset();
-        
+
         $this->recipe = $recipe;
         $this->values = $values;
         $this->event = $event;
         $this->rowId = $rowId;
-        
+
         $this->metadata = $recipe->getEntityMetadata();
         $this->dbSchema = $this->metadata->getFullSchemaReflectedByDoctrine();
-        
+
         return $this;
     }
-    
+
     public function add(IField $field, ?string $moveBeforeName = null, ?string $moveAfterName = null): self
     {
         if ($this->keepDbSchema === false) {
             $this->fields = [];
             $this->keepDbSchema = true;
         }
-        
+
         $field->setBuilder($this);
         $this->fields[$field->getName()] = $field;
-        
+
         if ($moveBeforeName !== null) {
             $this->fields = ArrayMove::moveBefore($this->fields, $field->getName(), $moveBeforeName);
         }
-        
+
         if ($moveAfterName !== null) {
             $this->fields = ArrayMove::moveAfter($this->fields, $field->getName(), $moveAfterName);
         }
-        
+
         return $this;
     }
-    
+
     public function build(): self
     {
         $this->createValues();
         return $this;
     }
-    
+
     /**
      * @param string[] $exclude
-     * @throws \Megio\Collection\Exception\CollectionException
+     *
+     * @throws CollectionException
      */
     public function buildByDbSchema(array $exclude = [], bool $persist = false): self
     {
         $ignored = array_merge($exclude, ['id']);
-        
-        $unionColumns = array_filter($this->dbSchema->getUnionColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+
+        $unionColumns = array_filter($this->dbSchema->getUnionColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
         foreach ($unionColumns as $cs) {
             $field = FieldCreator::create($this, $cs['type'], $cs['name'], $cs['defaultValue']);
             $field = RuleCreator::createRulesByDbSchema($field, $this->recipe, $cs);
             $this->fields[$field->getName()] = $field;
         }
-        
-        $oneToOneColumns = array_filter($this->dbSchema->getOneToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+
+        $oneToOneColumns = array_filter($this->dbSchema->getOneToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
         foreach ($oneToOneColumns as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             if ($cs['nullable']) {
@@ -136,15 +135,15 @@ class WriteBuilder implements IRecipeBuilder
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
-        $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+
+        $oneToOneMany = array_filter($this->dbSchema->getOneToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
         foreach ($oneToOneMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
-        $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+
+        $manyToOne = array_filter($this->dbSchema->getManyToOneColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
         foreach ($manyToOne as $cs) {
             $field = new ToOneSelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             if ($cs['nullable']) {
@@ -153,32 +152,32 @@ class WriteBuilder implements IRecipeBuilder
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
-        $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored));
+
+        $manyToMany = array_filter($this->dbSchema->getManyToManyColumns(), fn($cs) => !in_array($cs['name'], $ignored, true));
         foreach ($manyToMany as $cs) {
             $field = new ToManySelectField($cs['name'], $cs['name'], $cs['reverseEntity']);
             $field->setBuilder($this);
             $this->fields[$field->getName()] = $field;
         }
-        
+
         $this->fields = ArrayMove::moveToStart($this->fields, 'id');
         $this->fields = ArrayMove::moveToEnd($this->fields, 'createdAt');
         $this->fields = ArrayMove::moveToEnd($this->fields, 'updatedAt');
-        
+
         $this->createValues();
-        
+
         $this->keepDbSchema = $persist;
-        
+
         return $this;
     }
-    
+
     public function validate(): self
     {
         $fieldNames = array_keys($this->fields);
         $valueNames = array_keys($this->values);
-        
+
         foreach ($valueNames as $valueName) {
-            if (!in_array($valueName, $fieldNames)) {
+            if (!in_array($valueName, $fieldNames, true)) {
                 $this->errors['@'][] = "Field '{$valueName}' is not defined in '{$this->recipe->key()}' recipe for '{$this->event->name}' action";
             }
         }
@@ -211,10 +210,10 @@ class WriteBuilder implements IRecipeBuilder
                 }
             }
         }
-        
+
         return $this;
     }
-    
+
     /**
      * @param array<string, class-string[]> $rules
      */
@@ -223,7 +222,7 @@ class WriteBuilder implements IRecipeBuilder
         $this->ignoredRules = $rules;
         return $this;
     }
-    
+
     /**
      * @return array<string, string[]>
      */
@@ -231,48 +230,48 @@ class WriteBuilder implements IRecipeBuilder
     {
         return $this->errors;
     }
-    
+
     public function getRecipe(): ICollectionRecipe
     {
         return $this->recipe;
     }
-    
+
     /** @return array<string, class-string[]> */
     public function getIgnoredRules(): array
     {
         return $this->ignoredRules;
     }
-    
+
     public function getEntityManager(): EntityManagerInterface
     {
         return $this->em;
     }
-    
+
     public function getEvent(): WriteBuilderEvent
     {
         return $this->event;
     }
-    
+
     public function getMetadata(): RecipeEntityMetadata
     {
         return $this->metadata;
     }
-    
+
     public function getRowId(): ?string
     {
         return $this->rowId;
     }
-    
+
     public function countFields(): int
     {
         return count($this->fields);
     }
-    
+
     public function isValid(): bool
     {
         return array_reduce($this->errors, fn($sum, $items) => $sum + count($items), 0) === 0;
     }
-    
+
     /**
      * @return array<int, mixed>
      */
@@ -286,26 +285,27 @@ class WriteBuilder implements IRecipeBuilder
                 $field->setValue($value);
             }
         }
-        
+
         $fields = array_values(array_map(fn($field) => $field->toArray(), $this->fields));
-        
+
         foreach ($fields as $key => $field) {
             if ($field['default_value'] instanceof UndefinedValue) {
                 unset($fields[$key]['default_value']);
             }
-            
+
             if ($field['value'] instanceof UndefinedValue || $field['value'] instanceof EmptyValue) {
                 unset($fields[$key]['value']);
             }
-            
+
         }
-        
+
         return $fields;
     }
-    
+
     /**
+     * @throws SerializerException
+     *
      * @return array<string, mixed>
-     * @throws \Megio\Collection\Exception\SerializerException
      */
     public function getSerializedValues(): array
     {
@@ -322,31 +322,31 @@ class WriteBuilder implements IRecipeBuilder
                 }
             }
         }
-        
+
         return $values;
     }
-    
+
     private function recreateRules(IField $field): IField
     {
         $rules = $field->getRules();
-        
+
         $ignoredRules = array_key_exists($field->getName(), $this->ignoredRules)
             ? $this->ignoredRules[$field->getName()]
             : [];
-        
+
         foreach ($rules as $rule) {
-            if (in_array($rule::class, $ignoredRules)) {
+            if (in_array($rule::class, $ignoredRules, true)) {
                 $field->removeRule($rule);
             }
-            
+
             $rule->setField($field);
             $rule->setRelatedFields($this->fields);
             $rule->setRelatedRules($rules);
         }
-        
+
         return $field;
     }
-    
+
     private function createValues(): void
     {
         foreach ($this->fields as $key => $field) {

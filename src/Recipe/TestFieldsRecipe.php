@@ -44,24 +44,24 @@ class TestFieldsRecipe extends CollectionRecipe
     {
         return Admin::class;
     }
-    
+
     public function key(): string
     {
         return 'test-fields';
     }
-    
+
     public function create(WriteBuilder $builder, CollectionRequest $request): WriteBuilder
     {
         $items = [
             new SelectField\Item(0, 'Test_1'),
-            new SelectField\Item(1, 'Test_2')
+            new SelectField\Item(1, 'Test_2'),
         ];
-        
+
         $schema = Expect::structure([
             'email' => Expect::email()->required(),
             'name' => Expect::string()->required()->min(3)->max(32),
         ]);
-        
+
         return $builder
             ->add(new HiddenField('hidden', 'Hidden', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false, defaultValue: 'yep'))
             ->add(new ArrayField('array', 'Array', rules: [new NullableRule(), new RequiredRule()], mapToEntity: false))

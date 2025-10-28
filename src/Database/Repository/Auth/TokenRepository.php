@@ -11,8 +11,7 @@ use Megio\Database\Entity\Auth\Token;
  * @method Token|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Token[] findAll()
  * @method Token[] findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, ?int $limit = null, ?int $offset = null)
+ *
  * @extends EntityRepository<Token>
  */
-class TokenRepository extends EntityRepository
-{
-}
+class TokenRepository extends EntityRepository {}

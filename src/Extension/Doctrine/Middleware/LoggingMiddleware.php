@@ -8,9 +8,7 @@ use Doctrine\DBAL\Driver\Middleware;
 
 readonly class LoggingMiddleware implements Middleware
 {
-    public function __construct(private QueryLogger $logger)
-    {
-    }
+    public function __construct(private QueryLogger $logger) {}
 
     public function wrap(Driver $driver): Driver
     {

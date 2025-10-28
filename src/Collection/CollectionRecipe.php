@@ -5,10 +5,11 @@ namespace Megio\Collection;
 
 use Doctrine\ORM\Mapping\Table;
 use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilder;
-use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Database\Interface\ICrudable;
+use ReflectionClass;
 
 abstract class CollectionRecipe implements ICollectionRecipe
 {
@@ -16,7 +17,7 @@ abstract class CollectionRecipe implements ICollectionRecipe
     public function sort(): array
     {
         return [
-            'createdAt' => 'DESC'
+            'createdAt' => 'DESC',
         ];
     }
 
@@ -64,15 +65,15 @@ abstract class CollectionRecipe implements ICollectionRecipe
     }
 
     /**
-     * @throws \Megio\Collection\Exception\CollectionException
+     * @throws CollectionException
      */
-    public final function getEntityMetadata(): RecipeEntityMetadata
+    final public function getEntityMetadata(): RecipeEntityMetadata
     {
         if (!is_subclass_of($this->source(), ICrudable::class)) {
             throw new CollectionException("Entity '{$this->source()}' does not implement ICrudable");
         }
 
-        $rf = new \ReflectionClass($this->source());
+        $rf = new ReflectionClass($this->source());
         $attr = $rf->getAttributes(Table::class);
 
         if (count($attr) === 0) {

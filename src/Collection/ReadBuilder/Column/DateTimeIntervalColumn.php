@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Megio\Collection\ReadBuilder\Column;
 
-use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
 use Megio\Collection\Formatter\Base\IFormatter;
 use Megio\Collection\Formatter\DateTimeIntervalFormatter;
+use Megio\Collection\ReadBuilder\Column\Base\BaseColumn;
 
 class DateTimeIntervalColumn extends BaseColumn
 {
@@ -17,19 +17,18 @@ class DateTimeIntervalColumn extends BaseColumn
         protected string $name,
         protected bool   $sortable = false,
         protected bool   $visible = true,
-        protected array  $formatters = []
-    )
-    {
+        protected array  $formatters = [],
+    ) {
         $formatters[] = new DateTimeIntervalFormatter();
         parent::__construct(
             key: $key,
             name: $name,
             sortable: $sortable,
             visible: $visible,
-            formatters: $formatters
+            formatters: $formatters,
         );
     }
-    
+
     public function renderer(): string
     {
         return 'date-time-interval-column-renderer';

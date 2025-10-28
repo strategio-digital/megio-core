@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Megio\Collection;
 
+use Megio\Collection\Exception\CollectionException;
+use Megio\Collection\ReadBuilder\ReadBuilder;
 use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilder;
-use Megio\Collection\ReadBuilder\ReadBuilder;
 
 interface ICollectionRecipe
 {
@@ -19,13 +20,13 @@ interface ICollectionRecipe
     /** @return  array<string, 'ASC'|'DESC'> */
     public function sort(): array;
 
-    /** @throws \Megio\Collection\Exception\CollectionException */
+    /** @throws CollectionException */
     public function read(
         ReadBuilder $builder,
         CollectionRequest $request,
     ): ReadBuilder;
 
-    /** @throws \Megio\Collection\Exception\CollectionException */
+    /** @throws CollectionException */
     public function readAll(
         ReadBuilder $builder,
         CollectionRequest $request,
@@ -46,6 +47,6 @@ interface ICollectionRecipe
         CollectionRequest $request,
     ): SearchBuilder;
 
-    /** @throws \Megio\Collection\Exception\CollectionException */
+    /** @throws CollectionException */
     public function getEntityMetadata(): RecipeEntityMetadata;
 }

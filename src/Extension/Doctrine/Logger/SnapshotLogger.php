@@ -4,25 +4,26 @@ declare(strict_types=1);
 namespace Megio\Extension\Doctrine\Logger;
 
 use Psr\Log\AbstractLogger;
+use Stringable;
 
 class SnapshotLogger extends AbstractLogger
 {
     /** @var array<int, array{level: mixed, message: string, context: mixed[], timestamp: int}> */
     protected array $snapshots = [];
-    
+
     /**
      * @param mixed[] $context
      */
-    public function log(mixed $level, \Stringable|string $message, array $context = []): void
+    public function log(mixed $level, Stringable|string $message, array $context = []): void
     {
         $this->snapshots[] = [
             'level' => $level,
-            'message' => (string) $message,
+            'message' => (string)$message,
             'context' => $context,
             'timestamp' => time(),
         ];
     }
-    
+
     /**
      * @return array<int, array{duration:int}>
      */

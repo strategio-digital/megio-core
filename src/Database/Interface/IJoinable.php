@@ -6,7 +6,7 @@ namespace Megio\Database\Interface;
 interface IJoinable
 {
     public function getId(): string;
-    
+
     /**
      * @return array{fields: string[], format: string}
      */

@@ -18,17 +18,17 @@ class RedirectToWww implements EventSubscriberInterface
             KernelEvents::REQUEST => ['onKernelRequest'],
         ];
     }
-    
+
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $envUri = new Uri($_ENV['APP_URL']);
         $envHost = $envUri->getHost();
-        
+
         $isProductionUrl = $envHost !== 'localhost';
         $isNonWww = !Strings::contains($request->getHost(), 'www.');
         $isTargetUrl = str_replace('www.', '', $envHost) === $request->getHost();
-        
+
         if ($isProductionUrl && $isNonWww && $isTargetUrl) {
             $url = $request->getScheme() . '://www.' . $request->getHttpHost() . $request->getRequestUri();
             $event->setResponse(new RedirectResponse($url, 301));

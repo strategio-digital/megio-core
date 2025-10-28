@@ -12,7 +12,7 @@ class SmtpMailer
 
     public function __construct()
     {
-        $encryption = $_ENV['SMTP_ENCRYPTION'] === 'tls'  || $_ENV['SMTP_ENCRYPTION'] === 'ssl'
+        $encryption = $_ENV['SMTP_ENCRYPTION'] === 'tls' || $_ENV['SMTP_ENCRYPTION'] === 'ssl'
             ? NetteSmtpMailer::EncryptionTLS
             : NetteSmtpMailer::EncryptionSSL;
 

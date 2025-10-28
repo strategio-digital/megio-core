@@ -11,33 +11,29 @@ use Megio\Database\Entity\Auth\Token;
 
 class EntityFinder
 {
-    const EXCLUDED_EVERYWHERE = [Role::class, Resource::class, Token::class];
-    
-    public function __construct(protected EntityManager $em)
-    {
-    }
-    
+    public const EXCLUDED_EVERYWHERE = [Role::class, Resource::class, Token::class];
+
+    public function __construct(protected EntityManager $em) {}
+
     /**
      * @return array<int, array{table: string, className: class-string}>
      */
     public function findAll(): array
     {
         $metadata = $this->em->getMetadataFactory()->getAllMetadata();
-        
+
         $entities = array_map(function (ClassMetadata $metadata) {
             $attr = $metadata->getReflectionClass()->getAttributes(Table::class)[0]->newInstance();
             return [
                 'table' => str_replace('`', '', $attr->name ?? ''),
-                'className' => $metadata->name
+                'className' => $metadata->name,
             ];
         }, $metadata);
-        
-        return array_filter($entities, fn($entity) => !in_array($entity['className'], self::EXCLUDED_EVERYWHERE));
+
+        return array_filter($entities, fn($entity) => !in_array($entity['className'], self::EXCLUDED_EVERYWHERE, true));
     }
-    
-    
+
     /**
-     * @param string $tableName
      * @return class-string|null
      */
     public function getClassName(string $tableName): ?string

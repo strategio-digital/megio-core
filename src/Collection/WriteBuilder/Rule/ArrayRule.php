@@ -12,19 +12,18 @@ class ArrayRule extends BaseRule
     {
         return $this->message ?: "Field must be an array. Example: [{\"a\": 1}, {\"b\": 2}]";
     }
-    
+
     /**
      * Return true if validation is passed
-     * @return bool
      */
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
+
         if (!is_object($value) && Arrays::isList($value)) {
             return true;
         }
-        
+
         return false;
     }
 }

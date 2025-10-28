@@ -9,15 +9,15 @@ use Megio\Collection\WriteBuilder\Serializer\Base\BaseSerializer;
 class CallableSerializer extends BaseSerializer
 {
     /**
-     * @var array<int, callable> $callback
+     * @var array<int, callable>
      */
     protected array $callback;
-    
+
     public function __construct(callable $callback)
     {
         $this->callback = [$callback];
     }
-    
+
     public function serialize(IField $field): mixed
     {
         return $this->callback[0]($field->getValue());

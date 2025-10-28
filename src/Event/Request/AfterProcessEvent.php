@@ -12,52 +12,44 @@ class AfterProcessEvent extends Event
         private mixed    $schema,
         private mixed    $data,
         private Response $response,
-    )
-    {
-    }
-    
+    ) {}
+
     /**
-     * @return mixed
      */
     public function getSchema(): mixed
     {
         return $this->schema;
     }
-    
+
     /**
-     * @param mixed $schema
      */
     public function setSchema(mixed $schema): void
     {
         $this->schema = $schema;
     }
-    
+
     /**
-     * @return mixed
      */
     public function getData(): mixed
     {
         return $this->data;
     }
-    
+
     /**
-     * @param mixed $data
      */
     public function setData(mixed $data): void
     {
         $this->data = $data;
     }
-    
+
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getResponse(): Response
     {
         return $this->response;
     }
-    
+
     /**
-     * @param \Symfony\Component\HttpFoundation\Response $response
      */
     public function setResponse(Response $response): void
     {

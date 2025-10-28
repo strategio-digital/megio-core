@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Megio\Debugger;
 
 use Megio\Extension\Doctrine\Middleware\QueryLogger;
-use Nette\DI\Container;
 use Megio\Extension\Doctrine\Tracy\SummaryHelper;
 use Megio\Security\Auth\AuthUser;
+use Nette\DI\Container;
 
 readonly class ResponseFormatter
 {
@@ -14,13 +14,12 @@ readonly class ResponseFormatter
         private Container $container,
         private AuthUser $user,
         private QueryLogger $queryLogger,
-    )
-    {
-    }
-    
+    ) {}
+
     /**
-     * @param array<string|int, mixed> $data
-     * @return array<string|int, mixed>
+     * @param array<int|string, mixed> $data
+     *
+     * @return array<int|string, mixed>
      */
     public function formatResponseData(array $data): array
     {
@@ -40,9 +39,9 @@ readonly class ResponseFormatter
                 'database' => [
                     'query_time' => number_format($queriesHelper->getTotalTime() * 1000, 1, '.') . 'ms',
                     'query_count' => $queriesHelper->count(),
-                    'queries' => $queriesHelper->count() ? array_values($this->queryLogger->queries) : []
-                ]
-            ]
+                    'queries' => $queriesHelper->count() ? array_values($this->queryLogger->queries) : [],
+                ],
+            ],
         ]);
     }
 }

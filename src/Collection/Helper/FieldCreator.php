@@ -25,6 +25,7 @@ use Megio\Collection\WriteBuilder\Field\UrlField;
 use Megio\Collection\WriteBuilder\Field\VideoLinkField;
 use Megio\Collection\WriteBuilder\WriteBuilder;
 use Nette\Utils\Strings;
+use ReflectionClass;
 
 class FieldCreator
 {
@@ -38,7 +39,7 @@ class FieldCreator
             'url' => new UrlField($name, $name, defaultValue: $defaultValue),
             'video' => new VideoLinkField($name, $name, defaultValue: $defaultValue),
         ];
-        
+
         $fieldByName = null;
         foreach ($namesMap as $key => $field) {
             if (Strings::contains($name, $key)) {
@@ -47,13 +48,13 @@ class FieldCreator
         }
 
         if (class_exists($columnType) === true) {
-            $reflection = new \ReflectionClass($columnType);
+            $reflection = new ReflectionClass($columnType);
             if ($reflection->isEnum()) {
                 return new EnumField($name, $name, $columnType);
             }
             unset($reflection);
         }
-        
+
         $instance = match ($columnType) {
             Types::ASCII_STRING,
             Types::BIGINT,
@@ -62,37 +63,37 @@ class FieldCreator
             Types::STRING,
             Types::BLOB,
             Types::TEXT => $fieldByName ?: new TextField($name, $name, defaultValue: $defaultValue),
-            
+
             Types::DECIMAL,
             Types::FLOAT => new DecimalField($name, $name, defaultValue: $defaultValue),
-            
+
             'int',
             Types::INTEGER,
             Types::SMALLINT => new IntegerField($name, $name, defaultValue: $defaultValue),
-            
+
             'bool',
             Types::BOOLEAN => new ToggleBtnField($name, $name, defaultValue: $defaultValue),
-            
+
             Types::DATE_MUTABLE,
             Types::DATE_IMMUTABLE => new DateField($name, $name, defaultValue: $defaultValue),
             Types::DATEINTERVAL => new DateTimeIntervalField($name, $name, defaultValue: $defaultValue),
-            
+
             Types::DATETIME_MUTABLE,
             Types::DATETIME_IMMUTABLE,
             Types::DATETIMETZ_MUTABLE,
             Types::DATETIMETZ_IMMUTABLE => new DateTimeField($name, $name, defaultValue: $defaultValue),
-            
+
             Types::JSON => new JsonField($name, $name),
             Types::SIMPLE_ARRAY => new ArrayField($name, $name, defaultValue: $defaultValue),
-            
+
             Types::TIME_MUTABLE,
             Types::TIME_IMMUTABLE => new TimeField($name, $name, defaultValue: $defaultValue),
-            
+
             default => new PureField($name, $name, defaultValue: $defaultValue),
         };
-        
+
         $instance->setBuilder($builder);
-        
+
         return $instance;
     }
 }

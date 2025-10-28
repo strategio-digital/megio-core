@@ -4,25 +4,28 @@ declare(strict_types=1);
 namespace Megio\Extension\Doctrine;
 
 use Doctrine\Common\EventManager;
+use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
-use Nette\Utils\FileSystem;
-use Megio\Helper\Path;
-use Doctrine\DBAL\Configuration;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\ORMSetup;
+use Megio\Extension\Doctrine\Middleware\LoggingMiddleware;
+use Megio\Extension\Doctrine\Middleware\QueryLogger;
+use Megio\Helper\Path;
+use Nette\Utils\FileSystem;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
-use Megio\Extension\Doctrine\Middleware\QueryLogger;
-use Megio\Extension\Doctrine\Middleware\LoggingMiddleware;
+use Symfony\Component\Cache\Exception\CacheException;
+
+use const CASE_LOWER;
 
 class Doctrine
 {
-    const string MIGRATION_TABLE = '_migration_versions';
+    public const string MIGRATION_TABLE = '_migration_versions';
 
     public EntityManager $entityManager {
         get {
@@ -42,14 +45,13 @@ class Doctrine
         }
     }
 
-
     protected Configuration $configuration;
 
     /** @var array<string, string> */
     protected array $connectionConfig = [];
 
     /**
-     * @throws \Symfony\Component\Cache\Exception\CacheException
+     * @throws CacheException
      */
     public function __construct(QueryLogger $queryLogger)
     {
@@ -62,13 +64,13 @@ class Doctrine
             file_exists($srcEntityPath) ? [$srcEntityPath] : [],
         );
 
-        $proxyAdapter =
-            $_ENV['APP_ENVIRONMENT'] === 'develop'
+        $proxyAdapter
+            = $_ENV['APP_ENVIRONMENT'] === 'develop'
                 ? new ArrayAdapter()
                 : new PhpFilesAdapter('dp', 0, Path::tempDir() . '/doctrine/proxy');
 
-        $metadataAdapter =
-            $_ENV['APP_ENVIRONMENT'] === 'develop'
+        $metadataAdapter
+            = $_ENV['APP_ENVIRONMENT'] === 'develop'
                 ? new ArrayAdapter()
                 : new PhpFilesAdapter('meta', 0, Path::tempDir() . '/doctrine/metadata');
 
@@ -101,11 +103,11 @@ class Doctrine
 
 
         $evm = new EventManager();
-        $dbalConfig = new \Doctrine\DBAL\Configuration();
+        $dbalConfig = new Configuration();
         $dbalConfig->setMiddlewares([new LoggingMiddleware($this->queryLogger)]);
 
         // Remove migrations table from default schema management
-        $dbalConfig->setSchemaAssetsFilter(static fn (string $assetName): bool => $assetName !== self::MIGRATION_TABLE);
+        $dbalConfig->setSchemaAssetsFilter(static fn(string $assetName): bool => $assetName !== self::MIGRATION_TABLE);
 
         $this->connection = DriverManager::getConnection($this->connectionConfig, $dbalConfig);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
@@ -131,10 +133,9 @@ class Doctrine
             'check_database_platform' => true,
             'organize_migrations' => 'none',
             'connection' => null,
-            'em' => null
+            'em' => null,
         ]);
 
         return DependencyFactory::fromEntityManager($conf, new ExistingEntityManager($this->entityManager));
     }
-
 }

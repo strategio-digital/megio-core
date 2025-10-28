@@ -11,8 +11,6 @@ use Megio\Database\Interface\IAuthenticable;
 class ClaimsFormatter
 {
     /**
-     * @param \Megio\Database\Interface\IAuthenticable $user
-     * @param \Megio\Database\Entity\Auth\Token $token
      * @return array<non-empty-string, mixed>
      */
     public function format(IAuthenticable $user, Token $token): array
@@ -23,8 +21,8 @@ class ClaimsFormatter
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
                 'roles' => $user->getRoles()->map(fn(Role $role) => $role->getName())->toArray(),
-                'resources' => $user->getResources()->map(fn(Resource $resource) => $resource->getName())->toArray()
-            ]
+                'resources' => $user->getResources()->map(fn(Resource $resource) => $resource->getName())->toArray(),
+            ],
         ];
     }
 }

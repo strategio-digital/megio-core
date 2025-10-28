@@ -16,28 +16,26 @@ class ToManySerializer extends BaseSerializer
     public function __construct(
         protected string $targetEntity,
         protected string $columnKey = 'id',
-    )
-    {
-    }
-    
+    ) {}
+
     public function serialize(IField $field): mixed
     {
         $value = $field->getValue();
-        
+
         if ($value === null) {
             return null;
         }
-        
+
         if (!is_array($value)) {
             throw new SerializerException("Invalid OneToMany serializer value in field '{$field->getName()}'");
         }
-        
+
         $em = $this->getBuilder()->getEntityManager();
-        
+
         $rows = $em
             ->getRepository($this->targetEntity)
             ->findBy([$this->columnKey => $value]);
-        
+
         return new ArrayCollection($rows);
     }
 }

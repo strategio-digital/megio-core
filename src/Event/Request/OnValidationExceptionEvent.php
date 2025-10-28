@@ -13,53 +13,45 @@ class OnValidationExceptionEvent extends Event
         private mixed                        $data,
         private mixed                        $schema,
         private readonly Request             $request,
-        private readonly ValidationException $exception
-    )
-    {
-    }
-    
+        private readonly ValidationException $exception,
+    ) {}
+
     /**
-     * @return mixed
      */
     public function getData(): mixed
     {
         return $this->data;
     }
-    
+
     /**
-     * @return mixed
      */
     public function getSchema(): mixed
     {
         return $this->schema;
     }
-    
+
     /**
-     * @return \Symfony\Component\HttpFoundation\Request
      */
     public function getRequest(): Request
     {
         return $this->request;
     }
-    
+
     /**
-     * @return \Nette\Schema\ValidationException
      */
     public function getException(): ValidationException
     {
         return $this->exception;
     }
-    
+
     /**
-     * @param mixed $data
      */
     public function setData(mixed $data): void
     {
         $this->data = $data;
     }
-    
+
     /**
-     * @param mixed $schema
      */
     public function setSchema(mixed $schema): void
     {

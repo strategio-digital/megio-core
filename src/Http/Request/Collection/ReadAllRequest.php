@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Collection;
 
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Exception\NotSupported;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Megio\Collection\CollectionRequest;
 use Megio\Collection\Exception\CollectionException;
@@ -14,12 +17,12 @@ use Megio\Collection\RecipeFinder;
 use Megio\Collection\SchemaFormatter;
 use Megio\Collection\SearchBuilder\SearchBuilder;
 use Megio\Database\EntityManager;
+use Megio\Event\Collection\Events;
 use Megio\Event\Collection\EventType;
+use Megio\Event\Collection\OnFinishEvent;
+use Megio\Event\Collection\OnStartEvent;
 use Megio\Http\Request\Request;
 use Nette\Schema\Expect;
-use Megio\Event\Collection\Events;
-use Megio\Event\Collection\OnStartEvent;
-use Megio\Event\Collection\OnFinishEvent;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReadAllRequest extends Request
@@ -51,14 +54,14 @@ class ReadAllRequest extends Request
                     Expect::structure([
                         'col' => Expect::string()->required(),
                         'operator' => Expect::anyOf('AND', 'OR')->required(),
-                        'value' => Expect::mixed()->required()
+                        'value' => Expect::mixed()->required(),
                     ])->castTo('array'),
                 )->min(0)->default([]),
             ])->castTo('array'),
             'orderBy' => Expect::arrayOf(
                 Expect::structure([
                     'col' => Expect::string()->required(),
-                    'desc' => Expect::bool()->required()
+                    'desc' => Expect::bool()->required(),
                 ])->castTo('array'),
             )->min(0)->default([]),
             'custom_data' => Expect::arrayOf('int|float|string|bool|null|array', 'string')->nullable()->default([]),
@@ -66,9 +69,9 @@ class ReadAllRequest extends Request
     }
 
     /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\Exception\NotSupported
-     * @throws \Doctrine\ORM\NoResultException
+     * @throws NonUniqueResultException
+     * @throws NotSupported
+     * @throws NoResultException
      */
     public function process(array $data): Response
     {
@@ -136,11 +139,11 @@ class ReadAllRequest extends Request
 
         // Order by only by sortable columns
         foreach ($data['orderBy'] as $param) {
-            if (in_array($param['col'], $sortableKeys)) {
+            if (in_array($param['col'], $sortableKeys, true)) {
                 $qb->addOrderBy("entity.{$param['col']}", $param['desc'] ? 'DESC' : 'ASC');
                 $responseSort[] = [
                     'col' => $param['col'],
-                    'desc' => $param['desc']
+                    'desc' => $param['desc'],
                 ];
             }
         }
@@ -150,7 +153,7 @@ class ReadAllRequest extends Request
                 $qb->addOrderBy("entity.{$columnName}", $direction);
                 $responseSort[] = [
                     'col' => $columnName,
-                    'desc' => $direction === 'DESC'
+                    'desc' => $direction === 'DESC',
                 ];
             }
         }
@@ -173,7 +176,7 @@ class ReadAllRequest extends Request
                 'itemsCountAll' => $count,
                 'orderBy' => $responseSort,
             ],
-            'items' => $items
+            'items' => $items,
         ];
 
         if ($data['schema']) {

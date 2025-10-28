@@ -15,7 +15,7 @@ trait TResourceMethods
     public function getResources(): Collection
     {
         $resources = new ArrayCollection();
-        
+
         foreach ($this->getRoles() as $role) {
             foreach ($role->getResources() as $resource) {
                 if ($resources->contains($resource) === false) {
@@ -23,7 +23,7 @@ trait TResourceMethods
                 }
             }
         }
-        
+
         return $resources;
     }
 }

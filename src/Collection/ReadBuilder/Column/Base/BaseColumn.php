@@ -15,37 +15,35 @@ abstract class BaseColumn implements IColumn
         protected string $name,
         protected bool   $sortable = false,
         protected bool   $visible = true,
-        protected array  $formatters = []
-    )
-    {
-    }
-    
+        protected array  $formatters = [],
+    ) {}
+
     public function getKey(): string
     {
         return $this->key;
     }
-    
+
     public function getName(): string
     {
         return $this->name;
     }
-    
+
     public function isSortable(): bool
     {
         return $this->sortable;
     }
-    
+
     public function isVisible(): bool
     {
         return $this->visible;
     }
-    
+
     /** @return IFormatter[] */
     public function getFormatters(): array
     {
         return $this->formatters;
     }
-    
+
     /** @return array{
      *     renderer: string,
      *     key: string,
@@ -58,7 +56,7 @@ abstract class BaseColumn implements IColumn
     public function toArray(): array
     {
         $formatters = array_map(fn($f) => $f::class, $this->getFormatters());
-        
+
         return [
             'renderer' => $this->renderer(),
             'key' => $this->getKey(),

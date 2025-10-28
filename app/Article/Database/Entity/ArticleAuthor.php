@@ -17,35 +17,37 @@ use Megio\Database\Interface\IJoinable;
 #[ORM\HasLifecycleCallbacks]
 class ArticleAuthor implements ICrudable, IJoinable
 {
-    use TId, TCreatedAt, TUpdatedAt;
-    
+    use TId;
+    use TCreatedAt;
+    use TUpdatedAt;
+
     ## DONE
     #[ORM\Column(length: 64)]
     protected string $firstName;
-    
+
     ## DONE
     #[ORM\Column(length: 64)]
     protected string $lastName;
-    
+
     ## DONE
     #[ORM\OneToOne(mappedBy: 'author', targetEntity: ArticleAuthorProfile::class)]
     protected ?ArticleAuthorProfile $profile = null;
-    
+
     ## DONE
     /** @var Collection<int, Article> */
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class, fetch: 'LAZY')]
     protected Collection $articles;
-    
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
     }
-    
+
     public function getProfile(): ?ArticleAuthorProfile
     {
         return $this->profile;
     }
-    
+
     /**
      * @return array{fields: string[], format: string}
      */
@@ -53,7 +55,7 @@ class ArticleAuthor implements ICrudable, IJoinable
     {
         return [
             'fields' => ['firstName', 'lastName'],
-            'format' => '%s %s'
+            'format' => '%s %s',
         ];
     }
 }

@@ -15,21 +15,23 @@ use Megio\Database\Interface\IJoinable;
 #[ORM\HasLifecycleCallbacks]
 class ArticleAuthorProfile implements ICrudable, IJoinable
 {
-    use TId, TCreatedAt, TUpdatedAt;
-    
+    use TId;
+    use TCreatedAt;
+    use TUpdatedAt;
+
     ## DONE
     #[ORM\Column(length: 64, unique: true)]
     protected string $nickname;
-    
+
     ## DONE
     #[ORM\Column(type: 'text')]
     protected string $biography;
-    
+
     ## DONE
     #[ORM\OneToOne(inversedBy: 'profile', targetEntity: ArticleAuthor::class)]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
     protected ?ArticleAuthor $author = null;
-    
+
     /**
      * @return array{fields: string[], format: string}
      */
@@ -37,7 +39,7 @@ class ArticleAuthorProfile implements ICrudable, IJoinable
     {
         return [
             'fields' => ['nickname'],
-            'format' => '%s'
+            'format' => '%s',
         ];
     }
 }

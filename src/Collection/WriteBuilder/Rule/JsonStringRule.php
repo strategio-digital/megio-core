@@ -14,29 +14,27 @@ class JsonStringRule extends BaseRule
 {
     public function __construct(
         protected ?Schema $schema = null,
-        protected ?string $message = null
-    )
-    {
+        protected ?string $message = null,
+    ) {
         parent::__construct($message);
     }
-    
+
     public function message(): string
     {
         return $this->message ?: "Field must be a valid JSON string";
     }
-    
+
     /**
      * Return true if validation is passed
-     * @return bool
      */
     public function validate(): bool
     {
         $value = $this->field->getValue();
-        
+
         if (!is_string($value)) {
             return false;
         }
-        
+
         try {
             $json = Json::decode($value);
             if ($this->schema) {
@@ -44,12 +42,12 @@ class JsonStringRule extends BaseRule
                 $processor->process($this->schema, $json);
             }
             return true;
-        } catch (JsonException | ValidationException $e) {
+        } catch (JsonException|ValidationException $e) {
             if ($e instanceof ValidationException) {
                 $this->message = implode(', ', $e->getMessages());
             }
         }
-        
+
         return false;
     }
 }

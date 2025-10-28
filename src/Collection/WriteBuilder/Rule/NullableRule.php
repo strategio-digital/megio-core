@@ -14,10 +14,9 @@ class NullableRule extends BaseRule
     {
         return $this->message ?: "Field can be null";
     }
-    
+
     /**
      * This method is always true. This rule exists only for detection nullability in other rules:
-     * @return bool
      */
     public function validate(): bool
     {

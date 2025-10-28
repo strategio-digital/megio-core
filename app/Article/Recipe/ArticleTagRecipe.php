@@ -12,7 +12,7 @@ class ArticleTagRecipe extends CollectionRecipe
     {
         return ArticleTag::class;
     }
-    
+
     public function key(): string
     {
         return 'article-tag';

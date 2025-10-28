@@ -9,7 +9,7 @@ use Nette\DI\CompilerExtension;
 
 class DoctrineExtension extends CompilerExtension
 {
-    public function loadConfiguration() : void
+    public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
 

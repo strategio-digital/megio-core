@@ -9,7 +9,7 @@ use Megio\Queue\IQueueWorkerEnum;
 enum QueueWorker: string implements IQueueWorkerEnum
 {
     case EXAMPLE_WORKER = 'example.worker';
-    
+
     public function className(): string
     {
         return match ($this) {
