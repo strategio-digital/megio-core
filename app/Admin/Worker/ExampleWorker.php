@@ -17,8 +17,10 @@ class ExampleWorker implements IQueueWorker
         protected EntityManager $em,
     ) {}
 
-    public function process(Queue $queueJob, OutputInterface $output): ?QueueDelay
-    {
+    public function process(
+        Queue $queueJob,
+        OutputInterface $output,
+    ): ?QueueDelay {
         $admin_id = $queueJob->getPayload()['admin_id'];
         $admin = $this->em->getAdminRepo()->findOneBy(['id' => $admin_id]);
 
