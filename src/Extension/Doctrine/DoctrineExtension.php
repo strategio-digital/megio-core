@@ -32,5 +32,12 @@ class DoctrineExtension extends CompilerExtension
         $this->initialization->addBody(
             '\Tracy\Debugger::getBar()->addPanel(new \Megio\Extension\Doctrine\Tracy\DoctrineTracyPanel($queryLogger));',
         );
+
+        // Register HideMigrationStorage as event listener for console commands
+        $this->initialization->addBody('$doctrine = $this->getService(?);', ['doctrine']);
+        $this->initialization->addBody('$eventDispatcher = $this->getService(?);', ['eventDispatcher']);
+        $this->initialization->addBody(
+            '$eventDispatcher->addListener(\Symfony\Component\Console\ConsoleEvents::COMMAND, [$doctrine->hideMigrationStorage, \'dispatch\']);',
+        );
     }
 }
