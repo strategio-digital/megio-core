@@ -13,6 +13,7 @@ use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\ORMSetup;
+use Megio\Extension\Doctrine\EventListener\HideMigrationStorage;
 use Megio\Extension\Doctrine\Middleware\LoggingMiddleware;
 use Megio\Extension\Doctrine\Middleware\QueryLogger;
 use Megio\Helper\Path;
@@ -30,6 +31,12 @@ class Doctrine
     public EntityManager $entityManager {
         get {
             return $this->entityManager;
+        }
+    }
+
+    public HideMigrationStorage $hideMigrationStorage {
+        get {
+            return $this->hideMigrationStorage;
         }
     }
 
@@ -101,14 +108,15 @@ class Doctrine
             FileSystem::createDir(Path::appDir() . '/../migrations');
         }
 
+        // Create event listener that hides migration table from schema validation
+        $this->hideMigrationStorage = new HideMigrationStorage(self::MIGRATION_TABLE);
+
         $evm = new EventManager();
         $dbalConfig = new Configuration();
         $dbalConfig->setMiddlewares([new LoggingMiddleware($this->queryLogger)]);
 
-        // Remove migrations table from default schema management
-        $dbalConfig->setSchemaAssetsFilter(static fn(
-            string $assetName,
-        ): bool => $assetName !== self::MIGRATION_TABLE);
+        // Filter out migration table from schema comparison
+        $dbalConfig->setSchemaAssetsFilter($this->hideMigrationStorage);
 
         $this->connection = DriverManager::getConnection($this->connectionConfig, $dbalConfig);
         $this->entityManager = new EntityManager($this->connection, $this->configuration, $evm);
