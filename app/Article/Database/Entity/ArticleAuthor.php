@@ -54,7 +54,10 @@ class ArticleAuthor implements ICrudable, IJoinable
     public function getJoinableLabel(): array
     {
         return [
-            'fields' => ['firstName', 'lastName'],
+            'fields' => [
+                'firstName',
+                'lastName',
+            ],
             'format' => '%s %s',
         ];
     }

@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
 
 use Megio\Bootstrap;
 use Megio\Debugger\JsonLogstashLogger;
@@ -9,11 +9,11 @@ use Megio\Http\Kernel\App;
 require __DIR__ . '/../vendor/autoload.php';
 
 $startedAt = microtime(true);
-$container = (new Bootstrap())
+$container = new Bootstrap()
     ->projectRootPath(__DIR__ . '/../')
     ->logger(new JsonLogstashLogger())
     ->configure(Path::configDir() . '/tests.neon', $startedAt);
 
-/** @var \Megio\Http\Kernel\App $app */
+/** @var App $app */
 $app = $container->getByType(App::class);
 $app->cmd();
