@@ -9,6 +9,7 @@ use Megio\Event\Request\BeforeValidationEvent;
 use Megio\Event\Request\Events;
 use Megio\Event\Request\OnValidationExceptionEvent;
 use Megio\Http\Controller\Base\Controller;
+use Megio\Http\Serializer\RequestSerializerException;
 use Nette\Schema\Expect;
 use Nette\Schema\Processor;
 use Nette\Schema\ValidationException;
@@ -24,6 +25,23 @@ use function method_exists;
 abstract class AbstractRequest extends Controller implements RequestInterface
 {
     protected SymfonyRequest $request;
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @throws RequestSerializerException
+     *
+     * @return T
+     */
+    public function requestToDto(string $class)
+    {
+        return $this->requestSerializer->denormalize(
+            class: $class,
+            json: $this->request->getContent(),
+        );
+    }
 
     /**
      * @param array<string, mixed>|null $data
@@ -78,11 +96,15 @@ abstract class AbstractRequest extends Controller implements RequestInterface
         $event = new BeforeProcessEvent($data, $schema, $this->request);
         $this->dispatcher->dispatch($event, Events::BEFORE_PROCESSING_DATA->value);
 
-        if (method_exists($this, 'processValidatedData')) {
+        if (method_exists($this, 'processValidatedData') === false) {
+            try {
+                $response = $this->process($request);
+            } catch (RequestSerializerException $exception) {
+                $response = $this->error($exception->getErrors());
+            }
+        } else {
             $data = $event->getData();
             $response = $this->processValidatedData($data);
-        } else {
-            $response = $this->process($request);
         }
 
         $event = new AfterProcessEvent($data, $schema, $response);

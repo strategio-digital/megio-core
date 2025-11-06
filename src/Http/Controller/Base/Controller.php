@@ -5,6 +5,7 @@ namespace Megio\Http\Controller\Base;
 
 use Latte\Engine;
 use Megio\Debugger\ResponseFormatter;
+use Megio\Http\Serializer\RequestSerializer;
 use Nette\DI\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\File\File;
@@ -18,6 +19,8 @@ abstract class Controller implements IController
 {
     protected EventDispatcher $dispatcher;
 
+    protected RequestSerializer $requestSerializer;
+
     private ResponseFormatter $formatter;
 
     private UrlGenerator $urlGenerator;
@@ -26,6 +29,7 @@ abstract class Controller implements IController
 
     public function __inject(Container $container): void
     {
+        $this->requestSerializer = $container->getByType(RequestSerializer::class);
         $this->formatter = $container->getByType(ResponseFormatter::class);
         $this->urlGenerator = $container->getByType(UrlGenerator::class);
         $this->latte = $container->getByType(Engine::class);

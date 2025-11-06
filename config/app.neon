@@ -14,6 +14,10 @@ services:
         setup:
             - fromRequest(@request)
 
+    validatorService:
+        factory: Megio\Http\Serializer\ValidatorFactory::create
+    - Megio\Http\Serializer\RequestSerializer(@validatorService)
+
     - Megio\Bootstrap
     - Megio\Http\Kernel\App
     - Megio\Storage\Storage
