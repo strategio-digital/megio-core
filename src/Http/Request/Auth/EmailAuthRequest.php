@@ -58,7 +58,7 @@ class EmailAuthRequest extends AbstractRequest
         $className = $this->entityFinder->getClassName($data['source']);
 
         if ($className === null || is_subclass_of($className, IAuthenticable::class) === false) {
-            return $this->error(['Invalid source']);
+            return $this->error(['errors' => ['Invalid source']]);
         }
 
         $userRepo = $this->em->getRepository($className);
@@ -67,11 +67,11 @@ class EmailAuthRequest extends AbstractRequest
         $user = $userRepo->findOneBy(['email' => $data['email']]);
 
         if ($user === null) {
-            return $this->error(['Invalid e-mail or password credentials'], 401);
+            return $this->error(['errors' => ['Invalid e-mail or password credentials']], 401);
         }
 
         if (new Passwords(PASSWORD_ARGON2ID)->verify($data['password'], $user->getPassword()) === false) {
-            return $this->error(['Invalid e-mail or password credentials'], 401);
+            return $this->error(['errors' => ['Invalid e-mail or password credentials']], 401);
         }
 
         $token = new Token();

@@ -84,7 +84,7 @@ class ReadAllRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $collectionRequest = new CollectionRequest($this->request, false, $data, null, []);
@@ -93,12 +93,12 @@ class ReadAllRequest extends AbstractRequest
             $defaultBuilder = $this->readBuilder->create($recipe, ReadBuilderEvent::READ_ALL);
             $builder = $recipe->readAll($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
+            return $this->error(['errors' => [$e->getMessage()]]);
         }
 
         /** @noinspection DuplicatedCode */
         if ($builder->countFields() === 1) {
-            return $this->error(["Collection '{$data['recipe']}' has no readable fields"]);
+            return $this->error(['errors' => ["Collection '{$data['recipe']}' has no readable fields"]]);
         }
 
         $event = new OnStartEvent(EventType::READ_ALL, $data, $recipe, $this->request);

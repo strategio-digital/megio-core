@@ -58,7 +58,7 @@ class DeleteRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $event = new OnStartEvent(EventType::DELETE, $data, $recipe, $this->request);
@@ -80,7 +80,7 @@ class DeleteRequest extends AbstractRequest
 
         if ($diff !== 0) {
             $e = new NotFoundHttpException("{$diff} of {$countItems} items you want to delete already does not exist");
-            $response = $this->error([$e->getMessage()], 404);
+            $response = $this->error(['errors' => [$e->getMessage()]], 404);
             $event = new OnExceptionEvent(EventType::DELETE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();
@@ -89,7 +89,7 @@ class DeleteRequest extends AbstractRequest
         try {
             $qb->delete()->getQuery()->execute();
         } catch (ConstraintViolationException $e) {
-            $response = $this->error([$e->getMessage()], 400);
+            $response = $this->error(['errors' => [$e->getMessage()]], 400);
             $event = new OnExceptionEvent(EventType::DELETE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();

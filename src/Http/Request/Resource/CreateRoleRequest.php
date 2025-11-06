@@ -34,7 +34,7 @@ class CreateRoleRequest extends AbstractRequest
         $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $name]);
 
         if ($role) {
-            return $this->error(['This role already exists']);
+            return $this->error(['errors' => ['This role already exists']]);
         }
 
         $role = new Role();

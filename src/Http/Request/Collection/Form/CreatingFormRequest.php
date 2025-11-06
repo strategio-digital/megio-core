@@ -45,7 +45,7 @@ class CreatingFormRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $event = new OnFormStartEvent(true, $data, $recipe, $this->request);
@@ -61,11 +61,11 @@ class CreatingFormRequest extends AbstractRequest
             $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::CREATE);
             $builder = $recipe->create($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
+            return $this->error(['errors' => [$e->getMessage()]]);
         }
 
         if ($builder->countFields() === 0) {
-            return $this->error(["Collection '{$data['recipe']}' has no creatable fields"]);
+            return $this->error(['errors' => ["Collection '{$data['recipe']}' has no creatable fields"]]);
         }
 
         return $this->json([

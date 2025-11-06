@@ -37,7 +37,7 @@ class UploadAvatarRequest extends AbstractRequest
         $user = $this->user->get();
 
         if (!$user) {
-            return $this->error(['You are not logged in']);
+            return $this->error(['errors' => ['You are not logged in']]);
         }
 
         $this->storage->get()->deleteFolder("user/{$user->getId()}/avatar/");

@@ -62,7 +62,7 @@ class CreateRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $event = new OnStartEvent(EventType::CREATE, $data, $recipe, $this->request);
@@ -81,7 +81,7 @@ class CreateRequest extends AbstractRequest
                 $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::CREATE, null, $row);
                 $builder = $recipe->create($defaultBuilder, $collectionRequest)->build();
             } catch (CollectionException $e) {
-                $response = $this->error([$e->getMessage()], 406);
+                $response = $this->error(['errors' => [$e->getMessage()]], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
@@ -110,7 +110,7 @@ class CreateRequest extends AbstractRequest
                 $this->em->persist($entity);
                 $ids[] = $entity->getId();
             } catch (CollectionException|SerializerException|EntityException $e) {
-                $response = $this->error([$e->getMessage()], 406);
+                $response = $this->error(['errors' => [$e->getMessage()]], 406);
                 $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
@@ -125,7 +125,7 @@ class CreateRequest extends AbstractRequest
             $this->em->commit();
         } catch (ConstraintViolationException $e) {
             $this->em->rollback();
-            $response = $this->error([$e->getMessage()]);
+            $response = $this->error(['errors' => [$e->getMessage()]]);
             $event = new OnExceptionEvent(EventType::CREATE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();

@@ -89,7 +89,7 @@ abstract class AbstractRequest extends Controller implements RequestInterface
                 $event = new OnValidationExceptionEvent($data, $schema, $this->request, $exception);
                 $this->dispatcher->dispatch($event, Events::ON_VALIDATION_EXCEPTION->value);
 
-                return $this->error($exception->getMessages());
+                return $this->error(['errors' => $exception->getMessages()]);
             }
         }
 
@@ -100,7 +100,7 @@ abstract class AbstractRequest extends Controller implements RequestInterface
             try {
                 $response = $this->process($request);
             } catch (RequestSerializerException $exception) {
-                $response = $this->error($exception->getErrors());
+                $response = $this->error(['errors' => $exception->getErrors()]);
             }
         } else {
             $data = $event->getData();

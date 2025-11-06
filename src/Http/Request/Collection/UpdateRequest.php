@@ -68,7 +68,7 @@ class UpdateRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $event = new OnStartEvent(EventType::UPDATE, $data, $recipe, $this->request);
@@ -99,7 +99,7 @@ class UpdateRequest extends AbstractRequest
             /** @noinspection DuplicatedCode */
             if (!$item) {
                 $e = new NotFoundHttpException("Item '{$row['id']}' not found");
-                $response = $this->error([$e->getMessage()], 404);
+                $response = $this->error(['errors' => [$e->getMessage()]], 404);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
@@ -111,7 +111,7 @@ class UpdateRequest extends AbstractRequest
                 $defaultBuilder = $this->builder->create($recipe, WriteBuilderEvent::UPDATE, $row['id'], $row['data']);
                 $builder = $recipe->update($defaultBuilder, $collectionRequest)->build();
             } catch (CollectionException $e) {
-                $response = $this->error([$e->getMessage()], 406);
+                $response = $this->error(['errors' => [$e->getMessage()]], 406);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
@@ -138,7 +138,7 @@ class UpdateRequest extends AbstractRequest
                 $values = $builder->getSerializedValues();
                 ArrayToEntity::update($builder->getMetadata(), $item, $values);
             } catch (CollectionException|SerializerException|EntityException $e) {
-                $response = $this->error([$e->getMessage()], 406);
+                $response = $this->error(['errors' => [$e->getMessage()]], 406);
                 $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
                 $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
                 return $dispatcher->getResponse();
@@ -153,7 +153,7 @@ class UpdateRequest extends AbstractRequest
             $this->em->commit();
         } catch (ConstraintViolationException $e) {
             $this->em->rollback();
-            $response = $this->error([$e->getMessage()]);
+            $response = $this->error(['errors' => [$e->getMessage()]]);
             $event = new OnExceptionEvent(EventType::UPDATE, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();

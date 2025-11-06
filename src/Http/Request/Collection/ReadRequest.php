@@ -61,7 +61,7 @@ class ReadRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $collectionRequest = new CollectionRequest($this->request, false, $data, null, []);
@@ -70,12 +70,12 @@ class ReadRequest extends AbstractRequest
             $defaultBuilder = $this->readBuilder->create($recipe, ReadBuilderEvent::READ_ONE);
             $builder = $recipe->read($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
+            return $this->error(['errors' => [$e->getMessage()]]);
         }
 
         /** @noinspection DuplicatedCode */
         if ($builder->countFields() === 1) {
-            return $this->error(["Collection '{$data['recipe']}' has no readable fields"]);
+            return $this->error(['errors' => ["Collection '{$data['recipe']}' has no readable fields"]]);
         }
 
         $event = new OnStartEvent(EventType::READ, $data, $recipe, $this->request);
@@ -95,7 +95,7 @@ class ReadRequest extends AbstractRequest
         /** @noinspection DuplicatedCode */
         if (!$item) {
             $e = new NotFoundHttpException("Item '{$data['id']}' not found");
-            $response = $this->error([$e->getMessage()], 404);
+            $response = $this->error(['errors' => [$e->getMessage()]], 404);
             $event = new OnExceptionEvent(EventType::READ, $data, $recipe, $e, $this->request, $response);
             $dispatcher = $this->dispatcher->dispatch($event, Events::ON_EXCEPTION->value);
             return $dispatcher->getResponse();

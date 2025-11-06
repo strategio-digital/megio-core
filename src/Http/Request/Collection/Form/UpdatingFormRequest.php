@@ -52,7 +52,7 @@ class UpdatingFormRequest extends AbstractRequest
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
         if ($recipe === null) {
-            return $this->error(["Collection '{$data['recipeKey']}' not found"]);
+            return $this->error(['errors' => ["Collection '{$data['recipeKey']}' not found"]]);
         }
 
         $event = new OnFormStartEvent(false, $data, $recipe, $this->request);
@@ -70,7 +70,7 @@ class UpdatingFormRequest extends AbstractRequest
             $schema = $recipe->getEntityMetadata()->getFullSchemaReflectedByDoctrine();
             $repo = $this->em->getRepository($recipe->source());
         } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
+            return $this->error(['errors' => [$e->getMessage()]]);
         }
 
         $qb = $readBuilder
@@ -84,7 +84,7 @@ class UpdatingFormRequest extends AbstractRequest
             ->getOneOrNullResult(AbstractQuery::HYDRATE_ARRAY);
 
         if ($row === null) {
-            return $this->error(["Item '{$data['id']}' not found"], 404);
+            return $this->error(['errors' => ["Item '{$data['id']}' not found"]], 404);
         }
 
         // Format one-to-one data
@@ -127,11 +127,11 @@ class UpdatingFormRequest extends AbstractRequest
             $defaultBuilder = $this->writeBuilder->create($recipe, WriteBuilderEvent::UPDATE, $rowId, $row);
             $builder = $recipe->update($defaultBuilder, $collectionRequest)->build();
         } catch (CollectionException $e) {
-            return $this->error([$e->getMessage()]);
+            return $this->error(['errors' => [$e->getMessage()]]);
         }
 
         if ($builder->countFields() === 0) {
-            return $this->error(["Collection '{$data['recipe']}' has no editable fields"]);
+            return $this->error(['errors' => ["Collection '{$data['recipe']}' has no editable fields"]]);
         }
 
         return $this->json([

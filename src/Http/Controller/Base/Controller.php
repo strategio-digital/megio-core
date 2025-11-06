@@ -59,14 +59,13 @@ abstract class Controller implements IController
     }
 
     /**
-     * @param array<int|string,mixed> $messages
+     * @param array<string, mixed> $messages
      */
     public function error(
         array $messages,
         int $code = 400,
     ): Response {
-        $data = ['errors' => $messages];
-        $data = $this->formatter->formatResponseData($data);
+        $data = $this->formatter->formatResponseData($messages);
 
         return new JsonResponse($data, $code);
     }

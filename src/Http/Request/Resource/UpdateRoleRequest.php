@@ -34,7 +34,7 @@ class UpdateRoleRequest extends AbstractRequest
         $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['role_id']]);
 
         if (!$role || !$resource) {
-            return $this->error(['Role or resource not found'], 404);
+            return $this->error(['errors' => ['Role or resource not found']], 404);
         }
 
         if ($data['enable'] === true) {

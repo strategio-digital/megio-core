@@ -31,7 +31,7 @@ class DeleteRoleRequest extends AbstractRequest
         $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['id']]);
 
         if (!$role) {
-            return $this->error(['This role is already deleted'], 404);
+            return $this->error(['errors' => ['This role is already deleted']], 404);
         }
 
         $this->em->remove($role);
