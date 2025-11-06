@@ -26,8 +26,12 @@ class ToManySerializer extends BaseSerializer
             return null;
         }
 
-        if (!is_array($value)) {
+        if (is_array($value) === false) {
             throw new SerializerException("Invalid OneToMany serializer value in field '{$field->getName()}'");
+        }
+
+        if (count($value) === 0) {
+            return new ArrayCollection();
         }
 
         $em = $this->getBuilder()->getEntityManager();
