@@ -5,15 +5,15 @@ namespace Megio\Database\Field;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Megio\Extension\Doctrine\Generator\UuidV6Generator;
+use Megio\Extension\Doctrine\Generator\UuidV7Generator;
 
 trait TId
 {
     #[ORM\Id]
     #[ORM\Column(type: Types::GUID, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidV6Generator::class)]
-    protected string $id;
+    #[ORM\CustomIdGenerator(class: UuidV7Generator::class)]
+    private string $id;
 
     /**
      */

@@ -6,7 +6,7 @@ namespace Megio\Collection\SearchBuilder;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Megio\Collection\CollectionRequest;
-use Symfony\Component\Uid\UuidV6;
+use Symfony\Component\Uid\UuidV7;
 
 class SearchBuilder
 {
@@ -85,7 +85,7 @@ class SearchBuilder
                 operator: '=',
                 enabled: fn(
                     $value,
-                ) => UuidV6::isValid($value),
+                ) => UuidV7::isValid($value),
             ),
         );
 
