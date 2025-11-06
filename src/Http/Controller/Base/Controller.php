@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Megio\Http\Controller\Base;
 
 use Latte\Engine;
-use Megio\Debugger\ResponseFormatter;
 use Megio\Http\Serializer\RequestSerializer;
 use Nette\DI\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -21,8 +20,6 @@ abstract class Controller implements IController
 
     protected RequestSerializer $requestSerializer;
 
-    private ResponseFormatter $formatter;
-
     private UrlGenerator $urlGenerator;
 
     private Engine $latte;
@@ -30,7 +27,6 @@ abstract class Controller implements IController
     public function __inject(Container $container): void
     {
         $this->requestSerializer = $container->getByType(RequestSerializer::class);
-        $this->formatter = $container->getByType(ResponseFormatter::class);
         $this->urlGenerator = $container->getByType(UrlGenerator::class);
         $this->latte = $container->getByType(Engine::class);
         $this->dispatcher = $container->getByType(EventDispatcher::class);
@@ -59,21 +55,18 @@ abstract class Controller implements IController
         int $status = 200,
         array $headers = [],
     ): Response {
-        $data = $this->formatter->formatResponseData($data);
         return new JsonResponse($data, $status, $headers);
     }
 
     /**
-     * @param array<string, mixed> $messages
+     * @param array<string, mixed> $data
      * @param array<string, string> $headers
      */
     public function error(
-        array $messages,
+        array $data = [],
         int $status = 400,
         array $headers = [],
     ): Response {
-        $data = $this->formatter->formatResponseData($messages);
-
         return new JsonResponse($data, $status, $headers);
     }
 

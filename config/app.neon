@@ -21,7 +21,6 @@ services:
     - Megio\Bootstrap
     - Megio\Http\Kernel\App
     - Megio\Storage\Storage
-    - Megio\Debugger\ResponseFormatter
 
     - Megio\Database\EntityFinder
     - Megio\Collection\RecipeFinder

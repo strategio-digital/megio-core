@@ -32,11 +32,11 @@ interface IController
     ): Response;
 
     /**
-     * @param array<string, mixed> $messages
+     * @param array<string, mixed> $data
      * @param array<string, string> $headers
      */
     public function error(
-        array $messages,
+        array $data,
         int $status = 400,
         array $headers = [],
     ): Response;
