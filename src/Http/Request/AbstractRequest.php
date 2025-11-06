@@ -100,7 +100,7 @@ abstract class AbstractRequest extends Controller implements RequestInterface
             try {
                 $response = $this->process($request);
             } catch (RequestSerializerException $exception) {
-                $response = $this->error(['errors' => $exception->getErrors()]);
+                $response = $this->error($exception->getErrors());
             }
         } else {
             $data = $event->getData();

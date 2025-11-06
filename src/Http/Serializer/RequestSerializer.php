@@ -69,7 +69,7 @@ readonly class RequestSerializer
      * @template T
      *
      * @param class-string<T> $class
-     * @param array<int|string, mixed> $data
+     * @param array<string, mixed> $data
      *
      * @throws RequestSerializerException
      *
