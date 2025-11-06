@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Megio\Http\Resolver;
 
-use Megio\Http\Request\IRequest;
+use Megio\Http\Request\RequestInterface;
 use Nette\DI\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -22,7 +22,7 @@ class DIValueResolver implements ValueResolverInterface
     ): iterable {
         $argumentType = $argument->getType();
 
-        if ($argumentType && class_exists($argumentType) && is_subclass_of($argumentType, IRequest::class)) {
+        if ($argumentType && class_exists($argumentType) && is_subclass_of($argumentType, RequestInterface::class)) {
             $instance = $this->container->createInstance($argumentType);
             $this->container->addService($argumentType, $instance);
             return [$instance];

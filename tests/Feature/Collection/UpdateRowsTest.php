@@ -56,7 +56,7 @@ class UpdateRowsTest extends TestCase
             ],
         ];
 
-        $response = $request->process($data);
+        $response = $request->processValidatedData($data);
         $this->assertEquals(200, $response->getStatusCode(), (string)$response->getContent());
 
         $row = $this->em->getAdminRepo()->findOneBy(['id' => $admin->getId()]);

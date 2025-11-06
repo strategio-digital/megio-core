@@ -4,21 +4,25 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Admin;
 
 use Exception;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Megio\Security\Auth\AuthUser;
 use Megio\Storage\Storage;
 use Nette\Schema\Expect;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UploadAvatarRequest extends Request
+class UploadAvatarRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly AuthUser $user,
         protected readonly Storage $storage,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         return ['avatar' => Expect::type(UploadedFile::class)->required()];
     }
@@ -28,7 +32,7 @@ class UploadAvatarRequest extends Request
      *
      * @throws Exception
      */
-    public function process(array $data): Response
+    public function processValidatedData(array $data): Response
     {
         $user = $this->user->get();
 
@@ -44,5 +48,10 @@ class UploadAvatarRequest extends Request
             'name' => $file->getFilename(),
             'destination' => $file->getPathname(),
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

@@ -3,14 +3,20 @@ declare(strict_types=1);
 
 namespace Megio\Http\Request\Resource;
 
+use Doctrine\ORM\Exception\ORMException;
 use Megio\Database\Enum\ResourceType;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateResourceRequest extends ReadAllRequest
 {
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @throws ORMException
+     */
+    public function processValidatedData(array $data): Response
     {
         $this->manager->updateResources(true, $data['view_resources'], ...ResourceType::cases());
-        return parent::process($data);
+        return parent::processValidatedData($data);
     }
 }

@@ -10,18 +10,22 @@ use Megio\Collection\WriteBuilder\WriteBuilder;
 use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Event\Collection\Events;
 use Megio\Event\Collection\OnFormStartEvent;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreatingFormRequest extends Request
+class CreatingFormRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly RecipeFinder $recipeFinder,
         protected readonly WriteBuilder $builder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $recipeKeys = array_map(fn(
             $r,
@@ -33,7 +37,10 @@ class CreatingFormRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
@@ -68,5 +75,10 @@ class CreatingFormRequest extends Request
             ],
             'form' => $builder->toArray(),
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

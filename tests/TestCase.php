@@ -7,7 +7,7 @@ use Exception;
 use Megio\Collection\CollectionRecipe;
 use Megio\Debugger\JsonLogstashLogger;
 use Megio\Helper\Path;
-use Megio\Http\Request\Request as MegioRequest;
+use Megio\Http\Request\AbstractRequest as MegioRequest;
 use Nette\DI\Container;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Symfony\Component\HttpFoundation\Request;

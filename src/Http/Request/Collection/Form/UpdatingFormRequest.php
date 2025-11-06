@@ -14,11 +14,12 @@ use Megio\Collection\WriteBuilder\WriteBuilderEvent;
 use Megio\Database\EntityManager;
 use Megio\Event\Collection\Events;
 use Megio\Event\Collection\OnFormStartEvent;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdatingFormRequest extends Request
+class UpdatingFormRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly EntityManager $em,
@@ -27,7 +28,10 @@ class UpdatingFormRequest extends Request
         protected readonly ReadBuilder $readBuilder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $recipeKeys = array_map(fn(
             $r,
@@ -40,7 +44,10 @@ class UpdatingFormRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
@@ -134,5 +141,10 @@ class UpdatingFormRequest extends Request
             ],
             'form' => $builder->toArray(),
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

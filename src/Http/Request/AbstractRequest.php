@@ -15,7 +15,13 @@ use Nette\Schema\ValidationException;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class Request extends Controller implements IRequest
+use function array_merge;
+use function count;
+use function is_string;
+use function json_decode;
+use function method_exists;
+
+abstract class AbstractRequest extends Controller implements RequestInterface
 {
     protected SymfonyRequest $request;
 
@@ -30,7 +36,7 @@ abstract class Request extends Controller implements IRequest
         array $structure,
     ): array|false {
         $schema = Expect::structure($structure)->castTo('array');
-        return (new Processor())->process($schema, $data);
+        return new Processor()->process($schema, $data);
     }
 
     /**
@@ -48,7 +54,11 @@ abstract class Request extends Controller implements IRequest
         $this->request = $request;
 
         $data = $this->getRequestData();
-        $schema = $this->schema($data);
+        $schema = [];
+
+        if (method_exists($this, 'schema')) {
+            $schema = $this->schema($data);
+        }
 
         if (count($schema) !== 0) {
             try {
@@ -68,7 +78,12 @@ abstract class Request extends Controller implements IRequest
         $event = new BeforeProcessEvent($data, $schema, $this->request);
         $this->dispatcher->dispatch($event, Events::BEFORE_PROCESSING_DATA->value);
 
-        $response = $this->process($data);
+        if (method_exists($this, 'processValidatedData')) {
+            $data = $event->getData();
+            $response = $this->processValidatedData($data);
+        } else {
+            $response = $this->process($request);
+        }
 
         $event = new AfterProcessEvent($data, $schema, $response);
         $this->dispatcher->dispatch($event, Events::AFTER_PROCESSING_DATA->value);

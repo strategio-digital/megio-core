@@ -8,14 +8,23 @@ use Megio\Database\Entity\Auth\Role;
 use Megio\Database\EntityManager;
 use Megio\Database\Enum\ResourceType;
 use Megio\Database\Manager\AuthResourceManager;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouteCollection;
 
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function implode;
+use function pathinfo;
+use function strlen;
+use function substr_replace;
+
 use const PATHINFO_EXTENSION;
 
-class ReadAllRequest extends Request
+class ReadAllRequest extends AbstractRequest
 {
     public function __construct(
         protected EntityManager $em,
@@ -23,7 +32,10 @@ class ReadAllRequest extends Request
         protected RouteCollection $routes,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         return [
             'view_resources' => Expect::arrayOf('string')->required(),
@@ -31,7 +43,10 @@ class ReadAllRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $resources = $this->em->getAuthResourceRepo()->findBy(
             [],
@@ -90,6 +105,11 @@ class ReadAllRequest extends Request
                 'to_remove' => $diff['removed'],
             ],
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 
     /**

@@ -9,16 +9,17 @@ use Megio\Database\Entity\Auth\Token;
 use Megio\Database\EntityFinder;
 use Megio\Database\EntityManager;
 use Megio\Database\Interface\IAuthenticable;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Megio\Security\JWT\ClaimsFormatter;
 use Megio\Security\JWT\JWTResolver;
 use Nette\Schema\Expect;
 use Nette\Security\Passwords;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use const PASSWORD_ARGON2ID;
 
-class EmailAuthRequest extends Request
+class EmailAuthRequest extends AbstractRequest
 {
     public const string EXPIRATION_TIME = '4hours';
 
@@ -29,7 +30,10 @@ class EmailAuthRequest extends Request
         private readonly EntityFinder $entityFinder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $all = $this->entityFinder->findAll();
         $filtered = array_filter($all, fn(
@@ -46,7 +50,10 @@ class EmailAuthRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $className = $this->entityFinder->getClassName($data['source']);
 
@@ -63,7 +70,7 @@ class EmailAuthRequest extends Request
             return $this->error(['Invalid e-mail or password credentials'], 401);
         }
 
-        if ((new Passwords(PASSWORD_ARGON2ID))->verify($data['password'], $user->getPassword()) === false) {
+        if (new Passwords(PASSWORD_ARGON2ID)->verify($data['password'], $user->getPassword()) === false) {
             return $this->error(['Invalid e-mail or password credentials'], 401);
         }
 
@@ -74,7 +81,7 @@ class EmailAuthRequest extends Request
 
         $time = array_key_exists('AUTH_EXPIRATION', $_ENV) ? $_ENV['AUTH_EXPIRATION'] : self::EXPIRATION_TIME;
 
-        $expiration = (new DateTime())->modify('+' . $time);
+        $expiration = new DateTime()->modify('+' . $time);
         $immutable = DateTimeImmutable::createFromMutable($expiration);
         $claims = $this->claims->format($user, $token);
         $jwt = $this->jwt->createToken($immutable, $claims);
@@ -89,5 +96,10 @@ class EmailAuthRequest extends Request
             'bearer_token' => $token->getToken(),
             ...$claims,
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

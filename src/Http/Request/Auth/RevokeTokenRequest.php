@@ -6,18 +6,22 @@ namespace Megio\Http\Request\Auth;
 use Megio\Database\EntityFinder;
 use Megio\Database\EntityManager;
 use Megio\Database\Interface\IAuthenticable;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RevokeTokenRequest extends Request
+class RevokeTokenRequest extends AbstractRequest
 {
     public function __construct(
         private readonly EntityManager $em,
         private readonly EntityFinder $entityFinder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $all = $this->entityFinder->findAll();
         $filtered = array_filter($all, fn(
@@ -33,7 +37,10 @@ class RevokeTokenRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $this->em->getAuthTokenRepo()->createQueryBuilder('token')
             ->delete()
@@ -45,5 +52,10 @@ class RevokeTokenRequest extends Request
             ->execute();
 
         return $this->json(['message' => "Users successfully revoked"]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

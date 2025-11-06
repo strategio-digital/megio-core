@@ -18,12 +18,13 @@ use Megio\Event\Collection\EventType;
 use Megio\Event\Collection\OnExceptionEvent;
 use Megio\Event\Collection\OnFinishEvent;
 use Megio\Event\Collection\OnStartEvent;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ReadRequest extends Request
+class ReadRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly EntityManager $em,
@@ -31,7 +32,10 @@ class ReadRequest extends Request
         protected readonly ReadBuilder $readBuilder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $recipeKeys = array_map(fn(
             $r,
@@ -47,10 +51,12 @@ class ReadRequest extends Request
     }
 
     /**
+     * @param array<string, mixed> $data
+     *
      * @throws NonUniqueResultException
      * @throws NotSupported
      */
-    public function process(array $data): Response
+    public function processValidatedData(array $data): Response
     {
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
@@ -108,5 +114,10 @@ class ReadRequest extends Request
         $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FINISH->value);
 
         return $dispatcher->getResponse();
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

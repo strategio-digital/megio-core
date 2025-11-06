@@ -5,23 +5,30 @@ namespace Megio\Http\Request\Resource;
 
 use Megio\Database\Entity\Auth\Role;
 use Megio\Database\EntityManager;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
 use Nette\Utils\Strings;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateRoleRequest extends Request
+class CreateRoleRequest extends AbstractRequest
 {
     public function __construct(protected EntityManager $em) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         return [
             'name' => Expect::string()->min(3)->max(32)->required(),
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $name = Strings::webalize($data['name']);
         $role = $this->em->getAuthRoleRepo()->findOneBy(['name' => $name]);
@@ -41,5 +48,10 @@ class CreateRoleRequest extends Request
             'name' => $role->getName(),
             'enabled' => false,
         ]);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

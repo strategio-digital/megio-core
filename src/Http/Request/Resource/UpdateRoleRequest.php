@@ -4,15 +4,19 @@ declare(strict_types=1);
 namespace Megio\Http\Request\Resource;
 
 use Megio\Database\EntityManager;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateRoleRequest extends Request
+class UpdateRoleRequest extends AbstractRequest
 {
     public function __construct(protected EntityManager $em) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         return [
             'resource_id' => Expect::string()->required(),
@@ -21,7 +25,10 @@ class UpdateRoleRequest extends Request
         ];
     }
 
-    public function process(array $data): Response
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function processValidatedData(array $data): Response
     {
         $resource = $this->em->getAuthResourceRepo()->findOneBy(['id' => $data['resource_id']]);
         $role = $this->em->getAuthRoleRepo()->findOneBy(['id' => $data['role_id']]);
@@ -39,5 +46,10 @@ class UpdateRoleRequest extends Request
         $this->em->flush();
 
         return $this->json(['message' => 'Resources successfully updated']);
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }

@@ -8,23 +8,25 @@ use Megio\Collection\RecipeFinder;
 use Megio\Database\Entity\Admin;
 use Megio\Database\Entity\Queue;
 use Megio\Helper\Router;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Megio\Security\Auth\AuthUser;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class NavbarRequest extends Request
+use function array_filter;
+use function array_map;
+use function in_array;
+use function strnatcasecmp;
+use function usort;
+
+class NavbarRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly AuthUser $authUser,
         protected readonly RecipeFinder $recipeFinder,
     ) {}
 
-    public function schema(array $data): array
-    {
-        return [];
-    }
-
-    public function process(array $data): Response
+    public function process(Request $request): Response
     {
         $excluded = [
             Admin::class,

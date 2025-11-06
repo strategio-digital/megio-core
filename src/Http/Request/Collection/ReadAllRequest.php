@@ -21,11 +21,12 @@ use Megio\Event\Collection\Events;
 use Megio\Event\Collection\EventType;
 use Megio\Event\Collection\OnFinishEvent;
 use Megio\Event\Collection\OnStartEvent;
-use Megio\Http\Request\Request;
+use Megio\Http\Request\AbstractRequest;
 use Nette\Schema\Expect;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ReadAllRequest extends Request
+class ReadAllRequest extends AbstractRequest
 {
     public function __construct(
         protected readonly EntityManager $em,
@@ -34,7 +35,10 @@ class ReadAllRequest extends Request
         protected readonly SearchBuilder $searchBuilder,
     ) {}
 
-    public function schema(array $data): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function schema(): array
     {
         $recipes = $this->recipeFinder->load()->getAll();
 
@@ -69,11 +73,13 @@ class ReadAllRequest extends Request
     }
 
     /**
+     * @param array<string, mixed> $data
+     *
      * @throws NonUniqueResultException
      * @throws NotSupported
      * @throws NoResultException
      */
-    public function process(array $data): Response
+    public function processValidatedData(array $data): Response
     {
         $recipe = $this->recipeFinder->findByKey($data['recipeKey']);
 
@@ -190,5 +196,10 @@ class ReadAllRequest extends Request
         $dispatcher = $this->dispatcher->dispatch($event, Events::ON_FINISH->value);
 
         return $dispatcher->getResponse();
+    }
+
+    public function process(Request $request): Response
+    {
+        return new Response('ProcessValidatedData() is deprecated', 500);
     }
 }
