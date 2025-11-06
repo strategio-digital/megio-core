@@ -12,26 +12,33 @@ interface IController
 {
     /**
      * @param array<string, mixed> $params
+     * @param array<string, string> $headers
      */
     public function render(
         string $path,
         array $params = [],
+        int $status = 200,
+        array $headers = ['content-type' => 'text/html'],
     ): Response;
 
     /**
      * @param array<int|string,mixed> $data
+     * @param array<string, string> $headers
      */
     public function json(
         array $data = [],
-        int $code = 200,
+        int $status = 200,
+        array $headers = [],
     ): Response;
 
     /**
-     * @param array<int|string,mixed> $messages
+     * @param array<string, mixed> $messages
+     * @param array<string, string> $headers
      */
     public function error(
         array $messages,
-        int $code = 400,
+        int $status = 400,
+        array $headers = [],
     ): Response;
 
     public function sendFile(File $file): Response;
@@ -41,14 +48,24 @@ interface IController
         string $fileName,
     ): Response;
 
-    public function redirectUrl(string $url): RedirectResponse;
+    /**
+     * @param array<string, string> $headers
+     */
+    public function redirectUrl(
+        string $url,
+        int $status = 302,
+        array $headers = [],
+    ): RedirectResponse;
 
     /**
      * @param array<string,int|string> $params
+     * @param array<string, string> $headers
      */
     public function redirect(
         string $route,
         array $params = [],
+        int $status = 302,
+        array $headers = [],
     ): RedirectResponse;
 
     public function __inject(Container $container): void;

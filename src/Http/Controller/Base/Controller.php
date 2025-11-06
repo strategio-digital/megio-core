@@ -38,36 +38,43 @@ abstract class Controller implements IController
 
     /**
      * @param array<string, mixed> $params
+     * @param array<string, string> $headers
      */
     public function render(
         string $path,
         array $params = [],
+        int $status = 200,
+        array $headers = ['content-type' => 'text/html'],
     ): Response {
         $html = $this->latte->renderToString($path, $params);
-        return new Response($html, 200, ['content-type' => 'text/html']);
+        return new Response($html, $status, $headers);
     }
 
     /**
      * @param array<int|string,mixed> $data
+     * @param array<string, string> $headers
      */
     public function json(
         array $data = [],
-        int $code = 200,
+        int $status = 200,
+        array $headers = [],
     ): Response {
         $data = $this->formatter->formatResponseData($data);
-        return new JsonResponse($data, $code);
+        return new JsonResponse($data, $status, $headers);
     }
 
     /**
      * @param array<string, mixed> $messages
+     * @param array<string, string> $headers
      */
     public function error(
         array $messages,
-        int $code = 400,
+        int $status = 400,
+        array $headers = [],
     ): Response {
         $data = $this->formatter->formatResponseData($messages);
 
-        return new JsonResponse($data, $code);
+        return new JsonResponse($data, $status, $headers);
     }
 
     public function sendFile(File $file): Response
@@ -84,19 +91,28 @@ abstract class Controller implements IController
         return new Response($content, 200, ['Content-Disposition' => $disposition]);
     }
 
-    public function redirectUrl(string $url): RedirectResponse
-    {
-        return new RedirectResponse($url);
+    /**
+     * @param array<string, string> $headers
+     */
+    public function redirectUrl(
+        string $url,
+        int $status = 302,
+        array $headers = [],
+    ): RedirectResponse {
+        return new RedirectResponse($url, $status, $headers);
     }
 
     /**
      * @param array<string,int|string> $params
+     * @param array<string, string> $headers
      */
     public function redirect(
         string $route,
         array $params = [],
+        int $status = 302,
+        array $headers = [],
     ): RedirectResponse {
         $url = $this->urlGenerator->generate($route, $params);
-        return new RedirectResponse($url);
+        return new RedirectResponse($url, $status, $headers);
     }
 }
