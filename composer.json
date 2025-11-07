@@ -52,7 +52,8 @@
         "tracy/tracy": "^2.10",
         "symfony/serializer": "^7.3",
         "symfony/validator": "^7.3",
-        "symfony/property-access": "^7.3"
+        "symfony/property-access": "^7.3",
+        "symfony/translation": "^7.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

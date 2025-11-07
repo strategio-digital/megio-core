@@ -6,9 +6,12 @@ use Megio\Http\Request\Admin as Admin;
 use Megio\Http\Request\Auth as Auth;
 use Megio\Http\Request\Collection as Collection;
 use Megio\Http\Request\Resource as Resource;
+use Megio\Translation\Http\Request as Translation;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-return static function (RoutingConfigurator $routes): void {
+return static function (
+    RoutingConfigurator $routes,
+): void {
     // App
     $routes->add(Router::ROUTE_APP, '/app{uri}')
         ->methods(['GET'])
@@ -97,4 +100,24 @@ return static function (RoutingConfigurator $routes): void {
         ->methods(['DELETE'])
         ->controller(Resource\DeleteRoleRequest::class)
         ->options(['inResources' => false]);
+
+    // Translation
+    $translation = $routes->collection('megio.translation.')->prefix('/megio/translation');
+
+    $translation->add('language.create', '/language/create')
+        ->methods(['POST'])
+        ->controller(Translation\LanguageCreateRequest::class);
+
+    $translation->add('language.update', '/language/update')
+        ->methods(['PATCH'])
+        ->controller(Translation\LanguageUpdateRequest::class);
+
+    $translation->add('update', '/update')
+        ->methods(['PATCH'])
+        ->controller(Translation\TranslationUpdateRequest::class);
+
+    $translation->add('fetch', '/fetch/{code}')
+        ->methods(['GET'])
+        ->controller(Translation\TranslationsFetchRequest::class)
+        ->options(['auth' => false]);
 };

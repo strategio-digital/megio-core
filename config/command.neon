@@ -3,6 +3,8 @@ services:
     - Megio\Console\PermissionsUpdateCommand
     - Megio\Console\AdminCreateCommand
     - Megio\Console\QueueWorkerCommand
+    - Megio\Translation\Console\TranslationImportCommand
+    - Megio\Translation\Console\TranslationListCommand
 
     # Doctrine ORM commands
     #- Doctrine\ORM\Tools\Console\Command\ClearCache\CollectionRegionCommand(@entityManagerProvider)

@@ -22,6 +22,11 @@ class Path
         return self::$projectPath . '/log';
     }
 
+    public static function localeDir(): string
+    {
+        return self::$projectPath . '/locale';
+    }
+
     public static function tempDir(): string
     {
         return self::$projectPath . '/temp';

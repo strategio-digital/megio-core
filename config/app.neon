@@ -33,6 +33,14 @@ services:
     - Megio\Security\Auth\AuthUser
     - Megio\Database\Manager\AuthResourceManager
 
+    - Megio\Translation\Parser\NeonParser
+    - Megio\Translation\Cache\TranslationCache
+    - Megio\Translation\Facade\LanguageFacade
+    - Megio\Translation\Facade\TranslationFacade
+    - Megio\Translation\Facade\TranslationImportFacade
+    - Megio\Translation\Service\TranslationService
+    - Megio\Translation\Translator
+
 includes:
     - command.neon
     - latte.neon

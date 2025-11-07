@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Megio Core is a PHP 8.3+ framework for building web applications, APIs, and console applications. It combines Symfony components with Nette DI/Latte and includes Doctrine ORM for database operations.
 
 **Key Technologies:**
-- PHP 8.3+ with strict types
+- PHP 8.4+ with strict types
 - Symfony HTTP Kernel, Console, Routing, EventDispatcher
 - Nette DI Container, Latte templating, Security
 - Doctrine ORM with PostgreSQL

@@ -10,11 +10,15 @@ use Megio\Database\Entity\Auth\Resource;
 use Megio\Database\Entity\Auth\Role;
 use Megio\Database\Entity\Auth\Token;
 use Megio\Database\Entity\Queue;
+use Megio\Database\Entity\Translation\Language;
+use Megio\Database\Entity\Translation\Translation;
 use Megio\Database\Repository\AdminRepository;
 use Megio\Database\Repository\Auth\ResourceRepository;
 use Megio\Database\Repository\Auth\RoleRepository;
 use Megio\Database\Repository\Auth\TokenRepository;
 use Megio\Database\Repository\QueueRepository;
+use Megio\Database\Repository\Translation\LanguageRepository;
+use Megio\Database\Repository\Translation\TranslationRepository;
 use Megio\Extension\Doctrine\Doctrine;
 
 // @phpstan-ignore-next-line
@@ -65,6 +69,22 @@ class EntityManager extends \Doctrine\ORM\EntityManager implements EntityManager
     {
         $repository = $this->getRepository(Queue::class);
         assert($repository instanceof QueueRepository);
+
+        return $repository;
+    }
+
+    public function getLanguageRepo(): LanguageRepository
+    {
+        $repository = $this->getRepository(Language::class);
+        assert($repository instanceof LanguageRepository);
+
+        return $repository;
+    }
+
+    public function getTranslationRepo(): TranslationRepository
+    {
+        $repository = $this->getRepository(Translation::class);
+        assert($repository instanceof TranslationRepository);
 
         return $repository;
     }
