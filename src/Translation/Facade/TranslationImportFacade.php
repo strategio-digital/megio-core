@@ -8,9 +8,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Megio\Database\Entity\Translation\Language;
 use Megio\Database\Entity\Translation\Translation;
 use Megio\Database\EntityManager;
-use Megio\Helper\EnvConvertor;
-use Megio\Translation\Facade\Exception\TranslationImportFacadeException;
-use Megio\Translation\Parser\NeonParser;
+use Megio\Translation\Loader\NeonTranslationLoader;
 use Nette\Neon\Exception;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -24,7 +22,8 @@ final readonly class TranslationImportFacade
 {
     public function __construct(
         private EntityManager $em,
-        private NeonParser $neonParser,
+        private NeonTranslationLoader $neonLoader,
+        private LanguageFacade $languageFacade,
     ) {}
 
     /**
@@ -38,7 +37,7 @@ final readonly class TranslationImportFacade
     public function importFromDirectory(string $directory): array
     {
         // Ensure default language exists
-        $this->ensureDefaultLanguageExists();
+        $this->languageFacade->ensureDefaultLanguageExists();
 
         $finder = new Finder();
         $finder->files()
@@ -73,49 +72,6 @@ final readonly class TranslationImportFacade
     }
 
     /**
-     * Ensure default language from ENV exists in database
-     *
-     * @throws ORMException
-     * @throws TranslationImportFacadeException
-     */
-    private function ensureDefaultLanguageExists(): void
-    {
-        $defaultLocale = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
-
-        if ($defaultLocale === '') {
-            throw new TranslationImportFacadeException(
-                'Default locale is not set in environment variable TRANSLATIONS_DEFAULT_LOCALE',
-            );
-        }
-
-        // Find or create default language
-        $language = $this->em->getLanguageRepo()->findByCode($defaultLocale);
-
-        if ($language === null) {
-            $language = new Language();
-            $language->setCode($defaultLocale);
-            $language->setName($defaultLocale);
-            $language->setIsDefault(true);
-            $language->setIsEnabled(true);
-            $this->em->persist($language);
-        }
-
-        // Remove default flag from other languages
-        $allLanguages = $this->em->getLanguageRepo()->findAll();
-
-        foreach ($allLanguages as $otherLanguage) {
-            if (
-                $otherLanguage->getId() !== $language->getId()
-                && $otherLanguage->isDefault() === true
-            ) {
-                $otherLanguage->setIsDefault(false);
-            }
-        }
-
-        $this->em->flush();
-    }
-
-    /**
      * @throws Exception
      * @throws ORMException
      *
@@ -141,7 +97,7 @@ final readonly class TranslationImportFacade
         }
 
         // Parse .neon file
-        $messages = $this->neonParser->parseFileToFlatten($file->getRealPath());
+        $messages = $this->neonLoader->loadFromFile($file->getRealPath());
 
         // Import translations
         return $this->importTranslations(
@@ -248,7 +204,7 @@ final readonly class TranslationImportFacade
                 continue;
             }
 
-            $messages = $this->neonParser->parseFileToFlatten($file->getRealPath());
+            $messages = $this->neonLoader->loadFromFile($file->getRealPath());
 
             if (array_key_exists($key, $messages) === true) {
                 return true;

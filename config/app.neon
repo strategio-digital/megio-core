@@ -35,6 +35,9 @@ services:
 
     - Megio\Translation\Parser\NeonParser
     - Megio\Translation\Cache\TranslationCache
+    - Megio\Translation\Loader\NeonTranslationLoader
+    - Megio\Translation\Loader\DatabaseTranslationLoader
+    - Megio\Translation\Facade\TranslationLoaderFacade
     - Megio\Translation\Facade\LanguageFacade
     - Megio\Translation\Facade\TranslationFacade
     - Megio\Translation\Facade\TranslationImportFacade

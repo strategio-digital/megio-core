@@ -7,6 +7,7 @@ namespace Megio\Translation\Facade;
 use Doctrine\ORM\Exception\ORMException;
 use Megio\Database\Entity\Translation\Language;
 use Megio\Database\EntityManager;
+use Megio\Helper\EnvConvertor;
 use Megio\Translation\Facade\Dto\LanguageStatisticsDto;
 use Megio\Translation\Facade\Exception\LanguageFacadeException;
 use Megio\Translation\Http\Request\Dto\LanguageCreateDto;
@@ -98,5 +99,48 @@ final readonly class LanguageFacade
         }
 
         return $statistics;
+    }
+
+    /**
+     * Ensure default language from ENV exists in database
+     *
+     * @throws ORMException
+     * @throws LanguageFacadeException
+     */
+    public function ensureDefaultLanguageExists(): void
+    {
+        $defaultLocale = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
+
+        if ($defaultLocale === '') {
+            throw new LanguageFacadeException(
+                'Default locale is not set in environment variable TRANSLATIONS_DEFAULT_LOCALE',
+            );
+        }
+
+        // Find or create default language
+        $language = $this->em->getLanguageRepo()->findByCode($defaultLocale);
+
+        if ($language === null) {
+            $language = new Language();
+            $language->setCode($defaultLocale);
+            $language->setName($defaultLocale);
+            $language->setIsDefault(true);
+            $language->setIsEnabled(true);
+            $this->em->persist($language);
+        }
+
+        // Remove default flag from other languages
+        $allLanguages = $this->em->getLanguageRepo()->findAll();
+
+        foreach ($allLanguages as $otherLanguage) {
+            if (
+                $otherLanguage->getId() !== $language->getId()
+                && $otherLanguage->isDefault() === true
+            ) {
+                $otherLanguage->setIsDefault(false);
+            }
+        }
+
+        $this->em->flush();
     }
 }
