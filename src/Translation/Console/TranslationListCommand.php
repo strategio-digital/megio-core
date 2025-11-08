@@ -29,39 +29,49 @@ class TranslationListCommand extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
+        $output->writeln('');
+        $output->writeln('<info>Available Languages:</info>');
+        $output->writeln('');
+
         $statistics = $this->languageFacade->getLanguageStatistics();
 
         if (count($statistics) === 0) {
             $output->writeln('<comment>No languages found</comment>');
+            $output->writeln('');
             return Command::SUCCESS;
         }
 
         $table = new Table($output);
         $table->setHeaders([
-            'Code',
-            'Name',
-            'Default',
-            'Enabled',
-            'Total',
-            'From Source',
-            'From DB',
-            'Deleted',
+            '<info>Code</info>',
+            '<info>Name</info>',
+            '<info>Default</info>',
+            '<info>Enabled</info>',
+            '<info>Total</info>',
+            '<info>From Neon</info>',
+            '<info>From DB</info>',
+            '<info>Deleted</info>',
         ]);
 
         foreach ($statistics as $stat) {
+            $defaultBadge = $stat->isDefault ? '<fg=green>✓</>' : '';
+            $enabledBadge = $stat->isEnabled ? '<fg=green>✓</>' : '<fg=red>✗</>';
+            $codeBadge = $stat->isDefault ? "<fg=green>{$stat->code}</>" : $stat->code;
+
             $table->addRow([
-                $stat->code,
+                $codeBadge,
                 $stat->name,
-                $stat->isDefault ? 'Yes' : 'No',
-                $stat->isEnabled ? 'Yes' : 'No',
+                $defaultBadge,
+                $enabledBadge,
                 $stat->total,
                 $stat->fromSource,
                 $stat->fromDb,
-                $stat->deleted,
+                $stat->deleted > 0 ? "<fg=red>{$stat->deleted}</>" : $stat->deleted,
             ]);
         }
 
         $table->render();
+        $output->writeln('');
 
         return Command::SUCCESS;
     }
