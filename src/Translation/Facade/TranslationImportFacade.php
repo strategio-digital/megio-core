@@ -8,6 +8,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Megio\Database\Entity\Translation\Language;
 use Megio\Database\Entity\Translation\Translation;
 use Megio\Database\EntityManager;
+use Megio\Translation\Facade\Dto\TranslationImportStatisticsDto;
 use Megio\Translation\Loader\NeonTranslationLoader;
 use Nette\Neon\Exception;
 use Symfony\Component\Finder\Finder;
@@ -27,25 +28,21 @@ final readonly class TranslationImportFacade
     ) {}
 
     /**
-     * Import translations from .neon files in specified directory
-     *
      * @throws Exception
      * @throws ORMException
-     *
-     * @return array{imported: int, updated: int, deleted: int}
      */
-    public function importFromDirectory(string $directory): array
+    public function importFromDirectory(string $directory): TranslationImportStatisticsDto
     {
-        // Ensure default language exists
         $this->languageFacade->ensureDefaultLanguageExists();
 
-        $finder = new Finder();
-        $finder->files()
+        $finder = new Finder()
+            ->files()
             ->in($directory)
             ->name('*.locale.*.neon');
 
         $totalImported = 0;
         $totalUpdated = 0;
+        $totalUnchanged = 0;
 
         foreach ($finder as $file) {
             $result = $this->importFile($file);
@@ -54,52 +51,44 @@ final readonly class TranslationImportFacade
                 continue;
             }
 
-            $totalImported += $result['imported'];
-            $totalUpdated += $result['updated'];
+            $totalImported += $result->imported;
+            $totalUpdated += $result->updated;
+            $totalUnchanged += $result->unchanged;
         }
 
-        // Mark missing translations as deleted
         $deleted = $this->markDeletedTranslations($finder);
 
-        // Flush all changes
         $this->em->flush();
 
-        return [
-            'imported' => $totalImported,
-            'updated' => $totalUpdated,
-            'deleted' => $deleted,
-        ];
+        return new TranslationImportStatisticsDto(
+            imported: $totalImported,
+            updated: $totalUpdated,
+            unchanged: $totalUnchanged,
+            deleted: $deleted,
+        );
     }
 
     /**
      * @throws Exception
      * @throws ORMException
-     *
-     * @return array{imported: int, updated: int}|null
      */
-    private function importFile(SplFileInfo $file): ?array
+    private function importFile(SplFileInfo $file): ?TranslationImportStatisticsDto
     {
-        // Extract locale from filename (e.g., user.locale.cs_CZ.neon -> cs_CZ)
         if (preg_match('/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/', $file->getFilename(), $matches) === 0) {
             return null;
         }
 
         $localeCode = $matches[1];
+        $domain = $this->extractDomainFromFilename($file->getFilename(), $localeCode);
 
-        // Extract domain from filename (e.g., user.locale.cs_CZ.neon -> user)
-        $domain = str_replace('.locale.' . $localeCode . '.neon', '', $file->getFilename());
-
-        // Find language or skip if doesn't exist
         $language = $this->em->getLanguageRepo()->findByCode($localeCode);
 
         if ($language === null) {
             return null;
         }
 
-        // Parse .neon file
         $messages = $this->neonLoader->loadFromFile($file->getRealPath());
 
-        // Import translations
         return $this->importTranslations(
             messages: $messages,
             domain: $domain,
@@ -108,21 +97,18 @@ final readonly class TranslationImportFacade
     }
 
     /**
-     * Import or update translations from messages array
-     *
-     * @param array<string, string> $messages Key-value pairs of translations
+     * @param array<string, string> $messages
      *
      * @throws ORMException
-     *
-     * @return array{imported: int, updated: int}
      */
     private function importTranslations(
         array $messages,
         string $domain,
         Language $language,
-    ): array {
+    ): TranslationImportStatisticsDto {
         $imported = 0;
         $updated = 0;
+        $unchanged = 0;
 
         foreach ($messages as $key => $value) {
             $translation = $this->em->getTranslationRepo()->findByKeyDomainAndLanguage(
@@ -141,17 +127,26 @@ final readonly class TranslationImportFacade
                 $this->em->persist($translation);
                 $imported++;
             } else {
+                $valueChanged = $translation->getValue() !== $value;
+
                 $translation->setValue($value);
                 $translation->setIsDeleted(false);
                 $translation->setIsFromSource(true);
-                $updated++;
+
+                if ($valueChanged === true) {
+                    $updated++;
+                } else {
+                    $unchanged++;
+                }
             }
         }
 
-        return [
-            'imported' => $imported,
-            'updated' => $updated,
-        ];
+        return new TranslationImportStatisticsDto(
+            imported: $imported,
+            updated: $updated,
+            unchanged: $unchanged,
+            deleted: 0,
+        );
     }
 
     /**
@@ -163,16 +158,11 @@ final readonly class TranslationImportFacade
         $allTranslations = $this->em->getTranslationRepo()->findSourceTranslations();
 
         foreach ($allTranslations as $translation) {
-            $localeCode = $translation->getLanguage()->getCode();
-            $domain = $translation->getDomain();
-            $key = $translation->getKey();
-
-            // Check if this translation still exists in .neon files
             $exists = $this->translationExistsInFiles(
                 finder: $finder,
-                localeCode: $localeCode,
-                domain: $domain,
-                key: $key,
+                localeCode: $translation->getLanguage()->getCode(),
+                domain: $translation->getDomain(),
+                key: $translation->getKey(),
             );
 
             if ($exists === false) {
@@ -198,7 +188,7 @@ final readonly class TranslationImportFacade
                 continue;
             }
 
-            $fileDomain = str_replace('.locale.' . $localeCode . '.neon', '', $file->getFilename());
+            $fileDomain = $this->extractDomainFromFilename($file->getFilename(), $localeCode);
 
             if ($fileDomain !== $domain) {
                 continue;
@@ -212,5 +202,10 @@ final readonly class TranslationImportFacade
         }
 
         return false;
+    }
+
+    private function extractDomainFromFilename(string $filename, string $localeCode): string
+    {
+        return str_replace('.locale.' . $localeCode . '.neon', '', $filename);
     }
 }
