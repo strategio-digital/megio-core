@@ -33,6 +33,14 @@ class Translator implements ITranslator
         return $this->translationService->getDefaultLocale();
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getFallbackLocales(): array
+    {
+        return $this->translationService->getFallbackLocales();
+    }
+
     public function translate(
         string|Stringable $message,
         mixed ...$parameters,

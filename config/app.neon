@@ -47,6 +47,8 @@ services:
     - Megio\Translation\Service\TranslationService
     - Megio\Translation\Translator
 
+    - Megio\Mailer\EmailTemplateFactory
+
 includes:
     - command.neon
     - latte.neon

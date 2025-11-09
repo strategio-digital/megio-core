@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Megio\Extension\Latte;
 
-use Latte\Engine;
 use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
@@ -24,7 +23,7 @@ class LatteExtension extends CompilerExtension
         $config = $this->getConfig();
         $builder = $this->getContainerBuilder();
 
-        // Setup latte engine
+        // Setup latte engine (use custom Engine with global params support)
         $d = $builder->addDefinition('latte')->setType(Engine::class);
         $this->initialization->addBody('$latte = $this->getService(?);', [$d->getName()]);
         $this->initialization->addBody('$latte->setAutoRefresh($_ENV["APP_ENVIRONMENT"] === "develop");');

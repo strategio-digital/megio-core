@@ -4,16 +4,10 @@ declare(strict_types=1);
 namespace Megio\Mailer;
 
 use InvalidArgumentException;
-use Latte\Engine;
 use Megio\Extension\Latte\Helper\Vite;
 use Megio\Helper\EnvConvertor;
-use Megio\Helper\Path;
 
 use function array_key_exists;
-use function ltrim;
-use function str_starts_with;
-use function strlen;
-use function substr;
 
 final readonly class EmailTemplate
 {
@@ -40,14 +34,6 @@ final readonly class EmailTemplate
     public function getAppName(): string
     {
         return EnvConvertor::toString($_ENV['APP_NAME']);
-    }
-
-    public function render(): string
-    {
-        $engine = new Engine();
-        $engine->setLoader(new EmailTemplateFileLoader(Path::tempDir() . '/latte-mail'));
-
-        return $engine->renderToString($this->normalizeFilePath(), ['template' => $this]);
     }
 
     public function getFile(): string
@@ -90,22 +76,5 @@ final readonly class EmailTemplate
     public function getAppUrl(): string
     {
         return EnvConvertor::toString($_ENV['APP_URL']);
-    }
-
-    /**
-     * Normalize file path - converts absolute paths to relative.
-     */
-    private function normalizeFilePath(): string
-    {
-        $viewDir = Path::viewDir();
-
-        // If path starts with viewDir, remove that prefix and prepend 'view/'
-        if (str_starts_with($this->file, $viewDir) === true) {
-            $relativePath = ltrim(substr($this->file, strlen($viewDir)), '/');
-            return 'view/' . $relativePath;
-        }
-
-        // Otherwise return as-is (already relative)
-        return $this->file;
     }
 }
