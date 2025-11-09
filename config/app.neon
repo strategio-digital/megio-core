@@ -27,6 +27,7 @@ services:
     - Megio\Collection\ReadBuilder\ReadBuilder
     - Megio\Collection\WriteBuilder\WriteBuilder
     - Megio\Collection\SearchBuilder\SearchBuilder
+    - Megio\Mailer\EmailTemplateFactory
 
     - Megio\Security\JWT\JWTResolver
     - Megio\Security\JWT\ClaimsFormatter
@@ -46,8 +47,6 @@ services:
     - Megio\Translation\Service\TranslationImportService
     - Megio\Translation\Service\TranslationService
     - Megio\Translation\Translator
-
-    - Megio\Mailer\EmailTemplateFactory
 
 includes:
     - command.neon
