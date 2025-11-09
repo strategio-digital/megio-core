@@ -41,6 +41,9 @@ services:
     - Megio\Translation\Facade\LanguageFacade
     - Megio\Translation\Facade\TranslationFacade
     - Megio\Translation\Facade\TranslationImportFacade
+    - Megio\Translation\Facade\TranslationSyncFacade
+    - Megio\Translation\Facade\TranslationDeletionFacade
+    - Megio\Translation\Service\TranslationImportService
     - Megio\Translation\Service\TranslationService
     - Megio\Translation\Translator
 

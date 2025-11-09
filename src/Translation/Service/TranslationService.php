@@ -19,25 +19,31 @@ use function explode;
 
 class TranslationService
 {
-    private SymfonyTranslator $translator;
+    private SymfonyTranslator $symfonyTranslator;
 
     public function __construct(
         private readonly TranslationLoaderFacade $loaderFacade,
     ) {
-        $fallbackLocales = explode(
-            separator: ',',
-            string: EnvConvertor::toString($_ENV['TRANSLATIONS_FALLBACK_LOCALES']),
-        );
-
         // Use custom IcuMessageFormatter for ICU MessageFormat support (plurals, select, etc.)
-        $this->translator = new SymfonyTranslator($this->getDefaultLocale(), new IcuMessageFormatter());
-        $this->translator->setFallbackLocales($fallbackLocales);
-        $this->translator->addLoader('array', new ArrayLoader());
+        $this->symfonyTranslator = new SymfonyTranslator($this->getDefaultLocale(), new IcuMessageFormatter());
+        $this->symfonyTranslator->setFallbackLocales($this->getFallbackLocales());
+        $this->symfonyTranslator->addLoader('array', new ArrayLoader());
     }
 
     public function getDefaultLocale(): string
     {
         return EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getFallbackLocales(): array
+    {
+        return explode(
+            separator: ',',
+            string: EnvConvertor::toString($_ENV['TRANSLATIONS_FALLBACK_LOCALES']),
+        );
     }
 
     /**
@@ -54,20 +60,21 @@ class TranslationService
         $locale = $locale ?? $this->getDefaultLocale();
         $this->loadMessages($locale);
 
-        return $this->translator->trans($key, $params, null, $locale);
+        return $this->symfonyTranslator->trans($key, $params, null, $locale);
     }
 
     /**
-     * @throws InvalidArgumentException
      * @throws Exception
+     * @throws InvalidArgumentException
      *
      * @return array<string, string>
      */
     public function getAllMessages(string $locale): array
     {
         $this->loadMessages($locale);
-        $catalogue = $this->translator->getCatalogue($locale);
-        assert(($catalogue instanceof MessageCatalogue) === true);
+        $catalogue = $this->symfonyTranslator->getCatalogue($locale);
+        assert($catalogue instanceof MessageCatalogue === true);
+
         return $catalogue->all();
     }
 
@@ -82,16 +89,22 @@ class TranslationService
      */
     private function loadMessages(string $locale): void
     {
-        // Check if already loaded
-        $catalogue = $this->translator->getCatalogue($locale);
-        assert(($catalogue instanceof MessageCatalogue) === true);
-        if (count($catalogue->all()) > 0) {
-            return;
+        // Get all locales to load: requested + fallbacks
+        $localesToLoad = array_unique(array_merge([$locale], $this->getFallbackLocales()));
+
+        foreach ($localesToLoad as $localeToLoad) {
+            // Check if already loaded
+            $catalogue = $this->symfonyTranslator->getCatalogue($localeToLoad);
+            assert($catalogue instanceof MessageCatalogue === true);
+
+            if (count($catalogue->all()) > 0) {
+                continue;
+            }
+
+            // Load from facade (handles cache, .neon, and database)
+            $messages = $this->loaderFacade->loadMessages($localeToLoad);
+
+            $this->symfonyTranslator->addResource('array', $messages, $localeToLoad);
         }
-
-        // Load from facade (handles cache, .neon, and database)
-        $messages = $this->loaderFacade->loadMessages($locale);
-
-        $this->translator->addResource('array', $messages, $locale);
     }
 }

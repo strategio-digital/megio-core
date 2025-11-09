@@ -18,6 +18,10 @@ class EnvConvertor
             throw new InvalidArgumentException("Value is not a string.");
         }
 
+        if ($value === '') {
+            throw new InvalidArgumentException("Value is an empty string.");
+        }
+
         return $value;
     }
 

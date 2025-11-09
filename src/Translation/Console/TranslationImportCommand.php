@@ -6,7 +6,8 @@ namespace Megio\Translation\Console;
 
 use Doctrine\ORM\Exception\ORMException;
 use Megio\Helper\Path;
-use Megio\Translation\Facade\TranslationImportFacade;
+use Megio\Translation\Facade\LanguageFacade;
+use Megio\Translation\Service\TranslationImportService;
 use Megio\Translation\Service\TranslationService;
 use Nette\Neon\Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -22,8 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TranslationImportCommand extends Command
 {
     public function __construct(
-        private readonly TranslationImportFacade $translationImportFacade,
+        private readonly TranslationImportService $translationImportService,
         private readonly TranslationService $translationService,
+        private readonly LanguageFacade $languageFacade,
     ) {
         parent::__construct();
     }
@@ -40,26 +42,47 @@ class TranslationImportCommand extends Command
         $output->writeln('<info>Starting translation import from .neon files...</info>');
         $output->writeln('');
 
-        $result = $this->translationImportFacade->importFromDirectory(Path::localeDir());
+        $this->translationImportService->importFromDirectory(Path::localeDir());
         $this->translationService->invalidateCache();
 
-        $output->writeln('<comment>Import Summary:</comment>');
+        $output->writeln('<info>Import completed successfully!</info>');
+        $output->writeln('<info>Translation cache invalidated</info>');
         $output->writeln('');
+        $output->writeln('<comment>Current Language Statistics:</comment>');
+        $output->writeln('');
+
+        $statistics = $this->languageFacade->getLanguageStatistics();
 
         $table = new Table($output);
-        $table->setHeaders(['<info>Status</info>', '<info>Count</info>', '<info>Description</info>']);
-        $table->setRows([
-            ['<fg=green>Imported</>', $result->imported, 'New translations added to database'],
-            ['<fg=yellow>Updated</>', $result->updated, 'Existing translations modified'],
-            ['<fg=blue>Unchanged</>', $result->unchanged, 'Translations without changes'],
-            ['<fg=red>Deleted</>', $result->deleted, 'Translations marked as deleted'],
+        $table->setHeaders([
+            '<info>Code</info>',
+            '<info>Name</info>',
+            '<info>Default</info>',
+            '<info>Enabled</info>',
+            '<info>Total</info>',
+            '<info>From Neon</info>',
+            '<info>From DB</info>',
+            '<info>Deleted</info>',
         ]);
-        $table->render();
 
-        $total = $result->imported + $result->updated + $result->unchanged;
-        $output->writeln('');
-        $output->writeln("<info>Total processed: {$total} translations</info>");
-        $output->writeln('<info>Translation cache invalidated successfully</info>');
+        foreach ($statistics as $stat) {
+            $defaultBadge = $stat->isDefault ? '<fg=green>✓</>' : '';
+            $enabledBadge = $stat->isEnabled ? '<fg=green>✓</>' : '<fg=red>✗</>';
+            $codeBadge = $stat->isDefault ? "<fg=green>{$stat->code}</>" : $stat->code;
+
+            $table->addRow([
+                $codeBadge,
+                $stat->name,
+                $defaultBadge,
+                $enabledBadge,
+                $stat->total,
+                $stat->fromSource,
+                $stat->fromDb,
+                $stat->deleted > 0 ? "<fg=red>{$stat->deleted}</>" : $stat->deleted,
+            ]);
+        }
+
+        $table->render();
         $output->writeln('');
 
         return Command::SUCCESS;

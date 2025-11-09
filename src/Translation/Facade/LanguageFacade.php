@@ -74,6 +74,42 @@ final readonly class LanguageFacade
     }
 
     /**
+     * Synchronize default language from ENV with database
+     *
+     * @throws ORMException
+     */
+    public function syncDefaultLanguage(): void
+    {
+        $defaultLocale = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
+        $allLanguages = $this->em->getLanguageRepo()->findAll();
+
+        // Find default language from ENV and unset all defaults
+        $defaultLanguage = null;
+        foreach ($allLanguages as $language) {
+            if ($language->getCode() === $defaultLocale) {
+                $defaultLanguage = $language;
+            }
+
+            // Unset default for all languages
+            $language->setIsDefault(false);
+        }
+
+        // Create if doesn't exist
+        if ($defaultLanguage === null) {
+            $defaultLanguage = new Language();
+            $defaultLanguage->setCode($defaultLocale);
+            $defaultLanguage->setName($defaultLocale);
+            $this->em->persist($defaultLanguage);
+        }
+
+        // Set default flag for selected language
+        $defaultLanguage->setIsDefault(true);
+        $defaultLanguage->setIsEnabled(true);
+
+        $this->em->flush();
+    }
+
+    /**
      * @return LanguageStatisticsDto[]
      */
     public function getLanguageStatistics(): array
@@ -99,48 +135,5 @@ final readonly class LanguageFacade
         }
 
         return $statistics;
-    }
-
-    /**
-     * Ensure default language from ENV exists in database
-     *
-     * @throws ORMException
-     * @throws LanguageFacadeException
-     */
-    public function ensureDefaultLanguageExists(): void
-    {
-        $defaultLocale = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
-
-        if ($defaultLocale === '') {
-            throw new LanguageFacadeException(
-                'Default locale is not set in environment variable TRANSLATIONS_DEFAULT_LOCALE',
-            );
-        }
-
-        // Find or create default language
-        $language = $this->em->getLanguageRepo()->findByCode($defaultLocale);
-
-        if ($language === null) {
-            $language = new Language();
-            $language->setCode($defaultLocale);
-            $language->setName($defaultLocale);
-            $language->setIsDefault(true);
-            $language->setIsEnabled(true);
-            $this->em->persist($language);
-        }
-
-        // Remove default flag from other languages
-        $allLanguages = $this->em->getLanguageRepo()->findAll();
-
-        foreach ($allLanguages as $otherLanguage) {
-            if (
-                $otherLanguage->getId() !== $language->getId()
-                && $otherLanguage->isDefault() === true
-            ) {
-                $otherLanguage->setIsDefault(false);
-            }
-        }
-
-        $this->em->flush();
     }
 }
