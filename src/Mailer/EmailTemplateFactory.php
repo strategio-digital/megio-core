@@ -14,7 +14,7 @@ use function substr;
 
 final readonly class EmailTemplateFactory
 {
-    private const string VIEW_DIR_PREFIX = 'view/';
+    private const string TEMP_DIR_FOLDER = '/latte-mail';
 
     public function __construct(
         private Engine $engine,
@@ -22,7 +22,7 @@ final readonly class EmailTemplateFactory
 
     public function render(EmailTemplate $template): string
     {
-        $this->engine->setLoader(new EmailTemplateFileLoader(Path::tempDir() . '/latte-mail'));
+        $this->engine->setLoader(new EmailTemplateFileLoader(Path::tempDir() . self::TEMP_DIR_FOLDER));
 
         return $this->engine->renderToString(
             $this->normalizeFilePath($template),
@@ -35,13 +35,12 @@ final readonly class EmailTemplateFactory
      */
     private function normalizeFilePath(EmailTemplate $template): string
     {
-        $viewDir = Path::viewDir();
+        $projectRoot = Path::projectRootDir();
         $file = $template->getFile();
 
-        // If path starts with viewDir, remove that prefix and prepend 'view/'
-        if (str_starts_with($file, $viewDir) === true) {
-            $relativePath = ltrim(substr($file, strlen($viewDir)), '/');
-            return self::VIEW_DIR_PREFIX . $relativePath;
+        // If path is absolute and starts with project root, make it relative
+        if (str_starts_with($file, $projectRoot) === true) {
+            return ltrim(substr($file, strlen($projectRoot)), '/');
         }
 
         // Otherwise return as-is (already relative)

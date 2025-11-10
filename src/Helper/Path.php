@@ -12,6 +12,11 @@ class Path
         self::$projectPath = $projectPath;
     }
 
+    public static function projectRootDir(): string
+    {
+        return self::$projectPath;
+    }
+
     public static function appDir(): string
     {
         return self::$projectPath . '/app';
