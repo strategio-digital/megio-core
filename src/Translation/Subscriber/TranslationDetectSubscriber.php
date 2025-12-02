@@ -42,9 +42,9 @@ final readonly class TranslationDetectSubscriber implements EventSubscriberInter
         }
 
         $browserHeader = $request->headers->get('Accept-Language');
-        $posixLocale = $this->languageFacade->recognizeLanguagePosix($locale, $browserHeader);
+        $posix = $this->languageFacade->recognizeLanguagePosix($locale, $browserHeader);
 
-        if ($posixLocale === null) {
+        if ($posix === null) {
             $response = new JsonResponse(
                 data: [
                     'success' => false,
@@ -58,6 +58,6 @@ final readonly class TranslationDetectSubscriber implements EventSubscriberInter
             return;
         }
 
-        $this->translator->setPosix($posixLocale);
+        $this->translator->setPosix($posix);
     }
 }

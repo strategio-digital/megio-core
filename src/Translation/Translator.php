@@ -10,6 +10,8 @@ use Stringable;
 
 use function count;
 use function is_array;
+use function str_replace;
+use function substr;
 
 class Translator implements ITranslator
 {
@@ -19,11 +21,17 @@ class Translator implements ITranslator
         private readonly TranslationService $translationService,
     ) {}
 
+    /**
+     * Sets locale in POSIX format (e.g., en_US)
+     */
     public function setPosix(string $posix): void
     {
         $this->posix = $posix;
     }
 
+    /**
+     * Returns locale in POSIX format (e.g., en_US)
+     */
     public function getPosix(): string
     {
         if ($this->posix !== null) {
@@ -31,6 +39,14 @@ class Translator implements ITranslator
         }
 
         return $this->translationService->getDefaultPosixFromEnv();
+    }
+
+    /**
+     * Returns short code (first two letters) of the locale
+     */
+    public function getShortCode(): string
+    {
+        return substr($this->getPosix(), 0, 2);
     }
 
     /**
