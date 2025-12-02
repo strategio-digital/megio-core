@@ -65,6 +65,16 @@ class Translator implements ITranslator
         return $this->translationService->getPosixFallbacks();
     }
 
+    public function getDefaultPosixFromEnv(): string
+    {
+        return $this->translationService->getDefaultPosixFromEnv();
+    }
+
+    public function getDefaultShortCodeFromEnv(): string
+    {
+        return substr($this->getDefaultPosixFromEnv(), 0, 2);
+    }
+
     public function translate(
         string|Stringable $message,
         mixed ...$parameters,
