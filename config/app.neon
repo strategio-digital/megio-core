@@ -15,7 +15,7 @@ services:
             - fromRequest(@request)
 
     validatorService:
-        factory: Megio\Http\Serializer\ValidatorFactory::create
+        factory: Megio\Http\Serializer\ValidatorFactory::create(@Megio\Translation\Translator)
     - Megio\Http\Serializer\RequestSerializer(@validatorService)
 
     - Megio\Bootstrap
