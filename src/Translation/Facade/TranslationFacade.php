@@ -32,8 +32,8 @@ final readonly class TranslationFacade
         $this->em->flush();
 
         // Invalidate cache for this language
-        $languageCode = $translation->getLanguage()->getCode();
-        $this->translationCache->delete("translations.{$languageCode}");
+        $posix = $translation->getLanguage()->getPosix();
+        $this->translationCache->delete("translations.{$posix}");
 
         return $translation;
     }

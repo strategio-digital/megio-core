@@ -11,7 +11,7 @@ readonly class LanguageCreateDto
     public function __construct(
         #[Assert\NotBlank]
         #[Assert\Regex(pattern: '/^[a-z]{2}_[A-Z]{2}$/', message: 'Code must be POSIX format: cs_CZ, en_US, sk_SK')]
-        public string $code,
+        public string $posix,
         #[Assert\NotBlank]
         #[Assert\Length(min: 2, max: 50)]
         public string $name,

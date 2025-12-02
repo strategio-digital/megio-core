@@ -15,6 +15,8 @@ use function str_replace;
 
 final readonly class TranslationDeletionFacade
 {
+    public const string NEON_LOCALE_REGEX = '/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/';
+
     public function __construct(
         private EntityManager $em,
         private NeonTranslationLoader $neonLoader,
@@ -73,22 +75,22 @@ final readonly class TranslationDeletionFacade
             return []; // No default language = no active keys
         }
 
-        $defaultLocale = $defaultLanguage->getCode();
+        $defaultPosix = $defaultLanguage->getPosix();
         $activeKeys = [];
 
         foreach ($finder as $file) {
-            if (preg_match('/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/', $file->getFilename(), $matches) === 0) {
+            if (preg_match(self::NEON_LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
                 continue;
             }
 
-            $localeCode = $matches[1];
+            $posix = $matches[1];
 
             // FILTER: Process ONLY default language .neon files
-            if ($localeCode !== $defaultLocale) {
+            if ($posix !== $defaultPosix) {
                 continue; // Skip en_US.neon if default is cs_CZ
             }
 
-            $domain = $this->extractDomainFromFilename($file->getFilename(), $localeCode);
+            $domain = $this->extractDomainFromFilename($file->getFilename(), $posix);
             $messages = $this->neonLoader->loadFromFile($file->getRealPath());
 
             foreach ($messages as $key => $value) {
@@ -102,8 +104,8 @@ final readonly class TranslationDeletionFacade
         return $activeKeys;
     }
 
-    private function extractDomainFromFilename(string $filename, string $localeCode): string
+    private function extractDomainFromFilename(string $filename, string $posix): string
     {
-        return str_replace('.locale.' . $localeCode . '.neon', '', $filename);
+        return str_replace('.locale.' . $posix . '.neon', '', $filename);
     }
 }

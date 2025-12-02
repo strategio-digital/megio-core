@@ -116,7 +116,7 @@ return static function (
         ->methods(['PATCH'])
         ->controller(Translation\TranslationUpdateRequest::class);
 
-    $translation->add('fetch', '/fetch/{code}')
+    $translation->add('fetch', '/fetch/{locale}')
         ->methods(['GET'])
         ->controller(Translation\TranslationsFetchRequest::class)
         ->options(['auth' => false]);

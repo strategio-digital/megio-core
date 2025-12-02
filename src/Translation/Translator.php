@@ -13,38 +13,46 @@ use function is_array;
 
 class Translator implements ITranslator
 {
-    private ?string $locale = null;
+    private ?string $posix = null;
 
     public function __construct(
         private readonly TranslationService $translationService,
     ) {}
 
-    public function setLocale(string $locale): void
+    public function setPosix(string $posix): void
     {
-        $this->locale = $locale;
+        $this->posix = $posix;
     }
 
-    public function getLocale(): string
+    public function getPosix(): string
     {
-        if ($this->locale !== null) {
-            return $this->locale;
+        if ($this->posix !== null) {
+            return $this->posix;
         }
 
-        return $this->translationService->getDefaultLocale();
+        return $this->translationService->getDefaultPosixFromEnv();
+    }
+
+    /**
+     * Returns locale in BCP 47 format for HTML lang attribute
+     */
+    public function getBcp47Locale(): string
+    {
+        return str_replace('_', '-', $this->getPosix());
     }
 
     /**
      * @return array<string>
      */
-    public function getFallbackLocales(): array
+    public function getPosixFallbacks(): array
     {
-        return $this->translationService->getFallbackLocales();
+        return $this->translationService->getPosixFallbacks();
     }
 
     public function translate(
         string|Stringable $message,
         mixed ...$parameters,
-    ): string|Stringable {
+    ): string {
         $key = (string)$message;
 
         // Latte passes parameters as single array argument
@@ -61,7 +69,7 @@ class Translator implements ITranslator
         return $this->translationService->trans(
             key: $key,
             params: $params,
-            locale: $this->getLocale(),
+            posix: $this->getPosix(),
         );
     }
 }

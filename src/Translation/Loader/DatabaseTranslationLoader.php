@@ -17,11 +17,11 @@ final readonly class DatabaseTranslationLoader
      *
      * @return array<string, string>
      */
-    public function load(string $locale): array
+    public function load(string $posix): array
     {
         $messages = [];
 
-        $translations = $this->em->getTranslationRepo()->findByLanguageCode($locale, false);
+        $translations = $this->em->getTranslationRepo()->findByLanguagePosix($posix);
 
         foreach ($translations as $translation) {
             $fullKey = $translation->getDomain() . '.' . $translation->getKey();

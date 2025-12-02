@@ -47,6 +47,7 @@ services:
     - Megio\Translation\Service\TranslationImportService
     - Megio\Translation\Service\TranslationService
     - Megio\Translation\Translator
+    - Megio\Translation\Resolver\PosixResolver
 
 includes:
     - command.neon

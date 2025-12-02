@@ -5,3 +5,4 @@ events:
     - Megio\Subscriber\AuthCollectionFormRequest
     - Megio\Subscriber\CorsRequest
     - Megio\Subscriber\CSPResponse
+    - Megio\Translation\Subscriber\TranslationDetectSubscriber

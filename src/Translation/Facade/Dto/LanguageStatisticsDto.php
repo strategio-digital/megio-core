@@ -7,7 +7,8 @@ namespace Megio\Translation\Facade\Dto;
 readonly class LanguageStatisticsDto
 {
     public function __construct(
-        public string $code,
+        public string $posix,
+        public string $shortCode,
         public string $name,
         public bool $isDefault,
         public bool $isEnabled,

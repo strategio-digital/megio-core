@@ -18,6 +18,8 @@ use function str_replace;
 
 final readonly class TranslationImportFacade
 {
+    public const string NEON_LOCALE_REGEX = '/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/';
+
     public function __construct(
         private EntityManager $em,
         private NeonTranslationLoader $neonLoader,
@@ -49,14 +51,14 @@ final readonly class TranslationImportFacade
      */
     private function importFile(SplFileInfo $file): void
     {
-        if (preg_match('/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/', $file->getFilename(), $matches) === 0) {
+        if (preg_match(self::NEON_LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
             return;
         }
 
-        $localeCode = $matches[1];
-        $domain = $this->extractDomainFromFilename($file->getFilename(), $localeCode);
+        $localePosix = $matches[1];
+        $domain = $this->extractDomainFromFilename($file->getFilename(), $localePosix);
 
-        $language = $this->em->getLanguageRepo()->findByCode($localeCode);
+        $language = $this->em->getLanguageRepo()->findOneByPosix($localePosix);
 
         if ($language === null) {
             return;
@@ -124,8 +126,8 @@ final readonly class TranslationImportFacade
         $translation->setIsFromSource($language->isDefault());
     }
 
-    private function extractDomainFromFilename(string $filename, string $localeCode): string
+    private function extractDomainFromFilename(string $filename, string $posix): string
     {
-        return str_replace('.locale.' . $localeCode . '.neon', '', $filename);
+        return str_replace('.locale.' . $posix . '.neon', '', $filename);
     }
 }

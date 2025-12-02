@@ -25,12 +25,12 @@ class TranslationService
         private readonly TranslationLoaderFacade $loaderFacade,
     ) {
         // Use custom IcuMessageFormatter for ICU MessageFormat support (plurals, select, etc.)
-        $this->symfonyTranslator = new SymfonyTranslator($this->getDefaultLocale(), new IcuMessageFormatter());
-        $this->symfonyTranslator->setFallbackLocales($this->getFallbackLocales());
+        $this->symfonyTranslator = new SymfonyTranslator($this->getDefaultPosixFromEnv(), new IcuMessageFormatter());
+        $this->symfonyTranslator->setFallbackLocales($this->getPosixFallbacks());
         $this->symfonyTranslator->addLoader('array', new ArrayLoader());
     }
 
-    public function getDefaultLocale(): string
+    public function getDefaultPosixFromEnv(): string
     {
         return EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
     }
@@ -38,7 +38,7 @@ class TranslationService
     /**
      * @return array<string>
      */
-    public function getFallbackLocales(): array
+    public function getPosixFallbacks(): array
     {
         return explode(
             separator: ',',
@@ -55,12 +55,12 @@ class TranslationService
     public function trans(
         string $key,
         array $params = [],
-        ?string $locale = null,
+        ?string $posix = null,
     ): string {
-        $locale = $locale ?? $this->getDefaultLocale();
-        $this->loadMessages($locale);
+        $posix = $posix ?? $this->getDefaultPosixFromEnv();
+        $this->loadMessages($posix);
 
-        return $this->symfonyTranslator->trans($key, $params, null, $locale);
+        return $this->symfonyTranslator->trans($key, $params, null, $posix);
     }
 
     /**
@@ -69,32 +69,32 @@ class TranslationService
      *
      * @return array<string, string>
      */
-    public function getAllMessages(string $locale): array
+    public function getAllMessages(string $posix): array
     {
-        $this->loadMessages($locale);
-        $catalogue = $this->symfonyTranslator->getCatalogue($locale);
+        $this->loadMessages($posix);
+        $catalogue = $this->symfonyTranslator->getCatalogue($posix);
         assert($catalogue instanceof MessageCatalogue === true);
 
         return $catalogue->all();
     }
 
-    public function invalidateCache(?string $locale = null): void
+    public function invalidateCache(?string $posix = null): void
     {
-        $this->loaderFacade->invalidateCache($locale);
+        $this->loaderFacade->invalidateCache($posix);
     }
 
     /**
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    private function loadMessages(string $locale): void
+    private function loadMessages(string $posix): void
     {
         // Get all locales to load: requested + fallbacks
-        $localesToLoad = array_unique(array_merge([$locale], $this->getFallbackLocales()));
+        $posixToLoads = array_unique(array_merge([$posix], $this->getPosixFallbacks()));
 
-        foreach ($localesToLoad as $localeToLoad) {
+        foreach ($posixToLoads as $posixToLoad) {
             // Check if already loaded
-            $catalogue = $this->symfonyTranslator->getCatalogue($localeToLoad);
+            $catalogue = $this->symfonyTranslator->getCatalogue($posixToLoad);
             assert($catalogue instanceof MessageCatalogue === true);
 
             if (count($catalogue->all()) > 0) {
@@ -102,9 +102,9 @@ class TranslationService
             }
 
             // Load from facade (handles cache, .neon, and database)
-            $messages = $this->loaderFacade->loadMessages($localeToLoad);
+            $messages = $this->loaderFacade->loadMessages($posixToLoad);
 
-            $this->symfonyTranslator->addResource('array', $messages, $localeToLoad);
+            $this->symfonyTranslator->addResource('array', $messages, $posixToLoad);
         }
     }
 }

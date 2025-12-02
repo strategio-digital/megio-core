@@ -55,6 +55,7 @@ class TranslationImportCommand extends Command
 
         $table = new Table($output);
         $table->setHeaders([
+            '<info>Posix</info>',
             '<info>Code</info>',
             '<info>Name</info>',
             '<info>Default</info>',
@@ -68,10 +69,11 @@ class TranslationImportCommand extends Command
         foreach ($statistics as $stat) {
             $defaultBadge = $stat->isDefault ? '<fg=green>✓</>' : '';
             $enabledBadge = $stat->isEnabled ? '<fg=green>✓</>' : '<fg=red>✗</>';
-            $codeBadge = $stat->isDefault ? "<fg=green>{$stat->code}</>" : $stat->code;
+            $posixBadge = $stat->isDefault ? "<fg=green>{$stat->posix}</>" : $stat->posix;
 
             $table->addRow([
-                $codeBadge,
+                $posixBadge,
+                $stat->shortCode,
                 $stat->name,
                 $defaultBadge,
                 $enabledBadge,

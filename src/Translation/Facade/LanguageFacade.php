@@ -12,12 +12,26 @@ use Megio\Translation\Facade\Dto\LanguageStatisticsDto;
 use Megio\Translation\Facade\Exception\LanguageFacadeException;
 use Megio\Translation\Http\Request\Dto\LanguageCreateDto;
 use Megio\Translation\Http\Request\Dto\LanguageUpdateDto;
+use Megio\Translation\Resolver\PosixResolver;
+
+use function substr;
 
 final readonly class LanguageFacade
 {
     public function __construct(
         private EntityManager $em,
+        private PosixResolver $posixResolver,
     ) {}
+
+    /**
+     * Rozpozná POSIX locale z vstupu
+     */
+    public function recognizeLanguagePosix(
+        string $locale,
+        ?string $browserHeader = null,
+    ): ?string {
+        return $this->posixResolver->resolve($locale, $browserHeader);
+    }
 
     /**
      * @throws LanguageFacadeException
@@ -25,10 +39,10 @@ final readonly class LanguageFacade
      */
     public function createLanguage(LanguageCreateDto $dto): Language
     {
-        $exists = $this->em->getLanguageRepo()->findByCode($dto->code);
+        $exists = $this->em->getLanguageRepo()->findOneByPosix($dto->posix);
 
         if ($exists !== null) {
-            throw new LanguageFacadeException('Language with this code already exists');
+            throw new LanguageFacadeException('Language with this POSIX already exists');
         }
 
         // If setting as default, unset other defaults
@@ -37,7 +51,8 @@ final readonly class LanguageFacade
         }
 
         $language = new Language();
-        $language->setCode($dto->code);
+        $language->setPosix($dto->posix);
+        $language->setShortCode(substr($dto->posix, 0, 2));
         $language->setName($dto->name);
         $language->setIsDefault($dto->isDefault);
         $language->setIsEnabled($dto->isEnabled);
@@ -80,13 +95,13 @@ final readonly class LanguageFacade
      */
     public function syncDefaultLanguage(): void
     {
-        $defaultLocale = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
+        $defaultPosix = EnvConvertor::toString($_ENV['TRANSLATIONS_DEFAULT_LOCALE']);
         $allLanguages = $this->em->getLanguageRepo()->findAll();
 
         // Find default language from ENV and unset all defaults
         $defaultLanguage = null;
         foreach ($allLanguages as $language) {
-            if ($language->getCode() === $defaultLocale) {
+            if ($language->getPosix() === $defaultPosix) {
                 $defaultLanguage = $language;
             }
 
@@ -97,8 +112,9 @@ final readonly class LanguageFacade
         // Create if doesn't exist
         if ($defaultLanguage === null) {
             $defaultLanguage = new Language();
-            $defaultLanguage->setCode($defaultLocale);
-            $defaultLanguage->setName($defaultLocale);
+            $defaultLanguage->setPosix($defaultPosix);
+            $defaultLanguage->setShortCode(substr($defaultPosix, 0, 2));
+            $defaultLanguage->setName($defaultPosix);
             $this->em->persist($defaultLanguage);
         }
 
@@ -123,7 +139,8 @@ final readonly class LanguageFacade
             $deleted = $this->em->getTranslationRepo()->countDeletedByLanguage($language);
 
             $statistics[] = new LanguageStatisticsDto(
-                code: $language->getCode(),
+                posix: $language->getPosix(),
+                shortCode: $language->getShortCode(),
                 name: $language->getName(),
                 isDefault: $language->isDefault(),
                 isEnabled: $language->isEnabled(),

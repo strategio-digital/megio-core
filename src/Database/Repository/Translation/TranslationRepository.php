@@ -42,14 +42,14 @@ class TranslationRepository extends EntityRepository
     /**
      * @return Translation[]
      */
-    public function findByLanguageCode(
-        string $code,
+    public function findByLanguagePosix(
+        string $posix,
         bool $includeDeleted = false,
     ): array {
         $qb = $this->createQueryBuilder('t')
             ->join('t.language', 'l')
-            ->where('l.code = :code')
-            ->setParameter('code', $code);
+            ->where('l.posix = :posix')
+            ->setParameter('posix', $posix);
 
         if ($includeDeleted === false) {
             $qb->andWhere('t.isDeleted = :deleted')

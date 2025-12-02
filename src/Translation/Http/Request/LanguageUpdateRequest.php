@@ -35,7 +35,8 @@ class LanguageUpdateRequest extends AbstractRequest
 
         return $this->json([
             'id' => $language->getId(),
-            'code' => $language->getCode(),
+            'posix' => $language->getPosix(),
+            'shortCode' => $language->getShortCode(),
             'name' => $language->getName(),
             'isDefault' => $language->isDefault(),
             'isEnabled' => $language->isEnabled(),

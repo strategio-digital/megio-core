@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Megio\Database\Repository\Translation;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Megio\Database\Entity\Translation\Language;
 
@@ -12,9 +14,9 @@ use Megio\Database\Entity\Translation\Language;
  */
 class LanguageRepository extends EntityRepository
 {
-    public function findByCode(string $code): ?Language
+    public function findOneByPosix(string $posix): ?Language
     {
-        return $this->findOneBy(['code' => $code]);
+        return $this->findOneBy(['posix' => $posix]);
     }
 
     public function findDefault(): ?Language
@@ -23,11 +25,21 @@ class LanguageRepository extends EntityRepository
     }
 
     /**
-     * @return Language[]
+     * @return Collection<int, Language>
      */
-    public function findEnabled(): array
+    public function findEnabled(): Collection
     {
-        return $this->findBy(['isEnabled' => true]);
+        $result = $this->findBy(['isEnabled' => true]);
+        return new ArrayCollection($result);
+    }
+
+    /**
+     * @return Collection<int, Language>
+     */
+    public function findByShortCode(string $shortCode): Collection
+    {
+        $result = $this->findBy(['shortCode' => $shortCode]);
+        return new ArrayCollection($result);
     }
 
     public function unsetAllDefaults(): void

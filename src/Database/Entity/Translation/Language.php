@@ -24,7 +24,13 @@ class Language
      * POSIX locale format: cs_CZ, en_US, sk_SK, en_GB, de_DE
      */
     #[ORM\Column(length: 20, unique: true)]
-    private string $code;
+    private string $posix;
+
+    /**
+     * Short locale format: cs, en, sk, de
+     */
+    #[ORM\Column(length: 5)]
+    private string $shortCode;
 
     #[ORM\Column]
     private string $name;
@@ -35,14 +41,24 @@ class Language
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isEnabled = true;
 
-    public function getCode(): string
+    public function getPosix(): string
     {
-        return $this->code;
+        return $this->posix;
     }
 
-    public function setCode(string $code): void
+    public function setPosix(string $posix): void
     {
-        $this->code = $code;
+        $this->posix = $posix;
+    }
+
+    public function getShortCode(): string
+    {
+        return $this->shortCode;
+    }
+
+    public function setShortCode(string $shortCode): void
+    {
+        $this->shortCode = $shortCode;
     }
 
     public function getName(): string
