@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Megio\Translation\Subscriber;
 
-use Megio\Translation\Facade\LanguageFacade;
+use Megio\Translation\Resolver\PosixResolver;
 use Megio\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +18,7 @@ final readonly class TranslationDetectSubscriber implements EventSubscriberInter
 {
     public function __construct(
         private Translator $translator,
-        private LanguageFacade $languageFacade,
+        private PosixResolver $posixResolver,
     ) {}
 
     /**
@@ -42,7 +42,7 @@ final readonly class TranslationDetectSubscriber implements EventSubscriberInter
         }
 
         $browserHeader = $request->headers->get('Accept-Language');
-        $posix = $this->languageFacade->recognizeLanguagePosix($locale, $browserHeader);
+        $posix = $this->posixResolver->resolve($locale, $browserHeader);
 
         if ($posix === null) {
             $response = new JsonResponse(

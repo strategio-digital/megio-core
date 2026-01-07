@@ -8,18 +8,16 @@ use Doctrine\ORM\Exception\ORMException;
 use Megio\Database\Entity\Translation\Language;
 use Megio\Database\Entity\Translation\Translation;
 use Megio\Database\EntityManager;
+use Megio\Translation\Helper\NeonFilenameHelper;
 use Megio\Translation\Loader\NeonTranslationLoader;
 use Nette\Neon\Exception;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 use function preg_match;
-use function str_replace;
 
 final readonly class TranslationImportFacade
 {
-    public const string NEON_LOCALE_REGEX = '/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/';
-
     public function __construct(
         private EntityManager $em,
         private NeonTranslationLoader $neonLoader,
@@ -51,12 +49,12 @@ final readonly class TranslationImportFacade
      */
     private function importFile(SplFileInfo $file): void
     {
-        if (preg_match(self::NEON_LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
+        if (preg_match(NeonFilenameHelper::LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
             return;
         }
 
         $localePosix = $matches[1];
-        $domain = $this->extractDomainFromFilename($file->getFilename(), $localePosix);
+        $domain = NeonFilenameHelper::extractDomain($file->getFilename(), $localePosix);
 
         $language = $this->em->getLanguageRepo()->findOneByPosix($localePosix);
 
@@ -124,10 +122,5 @@ final readonly class TranslationImportFacade
         $translation->setValue($value);
         $translation->setIsDeleted(false);
         $translation->setIsFromSource($language->isDefault());
-    }
-
-    private function extractDomainFromFilename(string $filename, string $posix): string
-    {
-        return str_replace('.locale.' . $posix . '.neon', '', $filename);
     }
 }

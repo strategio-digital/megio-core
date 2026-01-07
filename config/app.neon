@@ -39,13 +39,16 @@ services:
     - Megio\Translation\Loader\NeonTranslationLoader
     - Megio\Translation\Loader\DatabaseTranslationLoader
     - Megio\Translation\Facade\TranslationLoaderFacade
-    - Megio\Translation\Facade\LanguageFacade
+    - Megio\Translation\Facade\CreateLanguageFacade
+    - Megio\Translation\Facade\UpdateLanguageFacade
+    - Megio\Translation\Facade\SyncDefaultLanguageFacade
     - Megio\Translation\Facade\TranslationFacade
     - Megio\Translation\Facade\TranslationImportFacade
     - Megio\Translation\Facade\TranslationSyncFacade
     - Megio\Translation\Facade\TranslationDeletionFacade
-    - Megio\Translation\Service\TranslationImportService
-    - Megio\Translation\Service\TranslationService
+    - Megio\Translation\Assembler\LanguageStatisticsAssembler
+    - Megio\Translation\Console\LanguageStatisticsTableRenderer
+    - Megio\Translation\TranslationManager
     - Megio\Translation\Translator
     - Megio\Translation\Resolver\PosixResolver
 

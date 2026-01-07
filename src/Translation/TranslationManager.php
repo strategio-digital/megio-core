@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Megio\Translation\Service;
+namespace Megio\Translation;
 
 use Megio\Helper\EnvConvertor;
 use Megio\Translation\Facade\TranslationLoaderFacade;
@@ -17,7 +17,7 @@ use function assert;
 use function count;
 use function explode;
 
-class TranslationService
+class TranslationManager
 {
     private SymfonyTranslator $symfonyTranslator;
 
@@ -76,11 +76,6 @@ class TranslationService
         assert($catalogue instanceof MessageCatalogue === true);
 
         return $catalogue->all();
-    }
-
-    public function invalidateCache(?string $posix = null): void
-    {
-        $this->loaderFacade->invalidateCache($posix);
     }
 
     /**

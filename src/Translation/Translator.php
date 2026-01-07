@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Megio\Translation;
 
-use Megio\Translation\Service\TranslationService;
+use Megio\Translation\Helper\PosixHelper;
 use Nette\Localization\Translator as ITranslator;
 use Stringable;
 
 use function count;
 use function is_array;
-use function str_replace;
-use function substr;
 
 class Translator implements ITranslator
 {
     private ?string $posix = null;
 
     public function __construct(
-        private readonly TranslationService $translationService,
+        private readonly TranslationManager $translationManager,
     ) {}
 
     /**
@@ -38,7 +36,7 @@ class Translator implements ITranslator
             return $this->posix;
         }
 
-        return $this->translationService->getDefaultPosixFromEnv();
+        return $this->translationManager->getDefaultPosixFromEnv();
     }
 
     /**
@@ -46,7 +44,7 @@ class Translator implements ITranslator
      */
     public function getShortCode(): string
     {
-        return substr($this->getPosix(), 0, 2);
+        return PosixHelper::extractShortCode($this->getPosix());
     }
 
     /**
@@ -54,7 +52,7 @@ class Translator implements ITranslator
      */
     public function getBcp47Locale(): string
     {
-        return str_replace('_', '-', $this->getPosix());
+        return PosixHelper::toBcp47($this->getPosix());
     }
 
     /**
@@ -62,17 +60,17 @@ class Translator implements ITranslator
      */
     public function getPosixFallbacks(): array
     {
-        return $this->translationService->getPosixFallbacks();
+        return $this->translationManager->getPosixFallbacks();
     }
 
     public function getDefaultPosixFromEnv(): string
     {
-        return $this->translationService->getDefaultPosixFromEnv();
+        return $this->translationManager->getDefaultPosixFromEnv();
     }
 
     public function getDefaultShortCodeFromEnv(): string
     {
-        return substr($this->getDefaultPosixFromEnv(), 0, 2);
+        return PosixHelper::extractShortCode($this->getDefaultPosixFromEnv());
     }
 
     public function translate(
@@ -92,7 +90,7 @@ class Translator implements ITranslator
             $params = $parameters;
         }
 
-        return $this->translationService->trans(
+        return $this->translationManager->trans(
             key: $key,
             params: $params,
             posix: $this->getPosix(),

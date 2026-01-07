@@ -7,7 +7,7 @@ namespace Megio\Translation\Http\Request;
 use Megio\Helper\EnvConvertor;
 use Megio\Http\Request\AbstractRequest;
 use Megio\Translation\Resolver\PosixResolver;
-use Megio\Translation\Service\TranslationService;
+use Megio\Translation\TranslationManager;
 use Nette\Neon\Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +19,7 @@ class TranslationsFetchRequest extends AbstractRequest
     private const int CACHE_TTL_IN_SECONDS = 7200;
 
     public function __construct(
-        private readonly TranslationService $translationManager,
+        private readonly TranslationManager $translationManager,
         private readonly PosixResolver $posixResolver,
     ) {}
 

@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Megio\Translation\Facade;
 
 use Megio\Database\EntityManager;
+use Megio\Translation\Helper\NeonFilenameHelper;
 use Megio\Translation\Loader\NeonTranslationLoader;
 use Nette\Neon\Exception;
 use Symfony\Component\Finder\Finder;
 
 use function in_array;
 use function preg_match;
-use function str_replace;
 
 final readonly class TranslationDeletionFacade
 {
-    public const string NEON_LOCALE_REGEX = '/\.locale\.([a-z]{2}_[A-Z]{2})\.neon$/';
-
     public function __construct(
         private EntityManager $em,
         private NeonTranslationLoader $neonLoader,
@@ -79,7 +77,7 @@ final readonly class TranslationDeletionFacade
         $activeKeys = [];
 
         foreach ($finder as $file) {
-            if (preg_match(self::NEON_LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
+            if (preg_match(NeonFilenameHelper::LOCALE_REGEX, $file->getFilename(), $matches) === 0) {
                 continue;
             }
 
@@ -90,7 +88,7 @@ final readonly class TranslationDeletionFacade
                 continue; // Skip en_US.neon if default is cs_CZ
             }
 
-            $domain = $this->extractDomainFromFilename($file->getFilename(), $posix);
+            $domain = NeonFilenameHelper::extractDomain($file->getFilename(), $posix);
             $messages = $this->neonLoader->loadFromFile($file->getRealPath());
 
             foreach ($messages as $key => $value) {
@@ -102,10 +100,5 @@ final readonly class TranslationDeletionFacade
         }
 
         return $activeKeys;
-    }
-
-    private function extractDomainFromFilename(string $filename, string $posix): string
-    {
-        return str_replace('.locale.' . $posix . '.neon', '', $filename);
     }
 }
