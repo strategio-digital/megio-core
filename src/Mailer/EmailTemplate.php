@@ -6,6 +6,7 @@ namespace Megio\Mailer;
 use InvalidArgumentException;
 use Megio\Extension\Latte\Helper\Vite;
 use Megio\Helper\EnvConvertor;
+use Megio\Translation\Helper\PosixHelper;
 
 use function array_key_exists;
 
@@ -54,6 +55,11 @@ final readonly class EmailTemplate
     public function getLocale(): string
     {
         return $this->locale;
+    }
+
+    public function getBcp47Locale(): string
+    {
+        return PosixHelper::toBcp47($this->locale);
     }
 
     /**
