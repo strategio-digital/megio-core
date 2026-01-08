@@ -7,30 +7,53 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\ObjectUploader;
 use Aws\S3\S3Client;
 use Exception;
+use Megio\Helper\EnvConvertor;
 use Megio\Storage\StorageAdapter;
 use Nette\Utils\Strings;
 use SplFileInfo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function file_put_contents;
+use function is_string;
+use function ltrim;
+use function parse_url;
+use function pathinfo;
+use function rtrim;
+
 use const FILE_APPEND;
 use const PATHINFO_FILENAME;
 use const PHP_EOL;
+use const PHP_URL_PATH;
 
 class S3Storage implements StorageAdapter
 {
     private S3Client $client;
 
-    public function __construct()
+    public function __construct(?S3Client $client = null)
     {
-        $this->client = new S3Client([
+        // For mocking in tests
+        if ($client !== null) {
+            $this->client = $client;
+            return;
+        }
+
+        $config = [
             'version' => 'latest',
-            'endpoint' => $_ENV['S3_ENDPOINT'],
-            'region' => $_ENV['S3_REGION'],
+            'endpoint' => EnvConvertor::toString($_ENV['S3_ENDPOINT']),
+            'region' => EnvConvertor::toString($_ENV['S3_REGION']),
             'credentials' => [
-                'key' => $_ENV['S3_KEY'],
-                'secret' => $_ENV['S3_SECRET'],
+                'key' => EnvConvertor::toString($_ENV['S3_KEY']),
+                'secret' => EnvConvertor::toString($_ENV['S3_SECRET']),
             ],
-        ]);
+        ];
+
+        // MinIO requires path-style endpoint (optional, default false)
+        $usePathStyle = $_ENV['S3_USE_PATH_STYLE_ENDPOINT'] ?? '';
+        if ($usePathStyle !== '') {
+            $config['use_path_style_endpoint'] = EnvConvertor::toBool($usePathStyle);
+        }
+
+        $this->client = new S3Client($config);
     }
 
     public function getS3Client(): S3Client
@@ -48,11 +71,12 @@ class S3Storage implements StorageAdapter
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
 
         $fileName = ($name ?? $originalName) . ".{$ext}";
+        $destination = $this->applySubfolder($destination);
         $destination = Strings::replace("{$destination}/{$fileName}", '~\/+~', '/');
 
         $uploader = new ObjectUploader(
             $this->client,
-            $_ENV['S3_BUCKET'],
+            EnvConvertor::toString($_ENV['S3_BUCKET']),
             $destination,
             $file->getContent(),
             $publish ? 'public-read' : 'private',
@@ -70,21 +94,20 @@ class S3Storage implements StorageAdapter
 
     public function get(string $destination): ?string
     {
+        $destination = $this->applySubfolder($destination);
         $destination = Strings::replace($destination, '~\/+~', '/');
 
         try {
-            $res = $this->client->getObject(
-                [
-                    'Bucket' => $_ENV['S3_BUCKET'],
-                    'Key' => $destination,
-                ],
-            );
-            return $res->get('@metadata')['effectiveUri'];
+            $res = $this->client->getObject([
+                'Bucket' => EnvConvertor::toString($_ENV['S3_BUCKET']),
+                'Key' => $destination,
+            ]);
+
+            $url = $res->get('@metadata')['effectiveUri'];
+
+            return $this->applyCdnUrl($url);
         } catch (S3Exception $exception) {
-            if ($exception->getStatusCode() === 404) {
-                return null;
-            }
-            throw $exception;
+            return $this->handleS3Exception($exception);
         }
     }
 
@@ -92,34 +115,38 @@ class S3Storage implements StorageAdapter
         string $destination,
         string $newLine,
     ): void {
+        $destination = $this->applySubfolder($destination);
         $destination = Strings::replace($destination, '~\/+~', '/');
 
         $this->client->registerStreamWrapperV2();
-        if (!@file_put_contents(
+        if (@file_put_contents(
             "s3://{$_ENV['S3_BUCKET']}/{$destination}",
             $newLine . PHP_EOL,
             FILE_APPEND, /*| LOCK_EX*/
-        )) {
+        ) === false) {
             throw new Exception("Cannot write stream into AWS S3 file '{$destination}'");
         }
     }
 
     public function delete(SplFileInfo $file): void
     {
-        $destination = Strings::replace($file->getPathname(), '~\/+~', '/');
+        $destination = $this->applySubfolder($file->getPathname());
+        $destination = Strings::replace($destination, '~\/+~', '/');
 
-        $prefix = $file->getPath() . '/';
+        $prefix = $this->applySubfolder($file->getPath() . '/');
         $baseName = $file->getBasename('.' . $file->getExtension());
         $regex = "/{$baseName}--thumb(.*){$file->getExtension()}/";
 
-        $this->client->deleteMatchingObjectsAsync($_ENV['S3_BUCKET'], $prefix, $regex);
-        $this->client->deleteMatchingObjectsAsync($_ENV['S3_BUCKET'], $destination)->wait();
+        $bucket = EnvConvertor::toString($_ENV['S3_BUCKET']);
+        $this->client->deleteMatchingObjectsAsync($bucket, $prefix, $regex);
+        $this->client->deleteMatchingObjectsAsync($bucket, $destination)->wait();
     }
 
     public function deleteFolder(string $destination): void
     {
+        $destination = $this->applySubfolder($destination);
         $destination = Strings::replace($destination, '~\/+~', '/');
-        $this->client->deleteMatchingObjects($_ENV['S3_BUCKET'], $destination);
+        $this->client->deleteMatchingObjects(EnvConvertor::toString($_ENV['S3_BUCKET']), $destination);
     }
 
     /**
@@ -127,10 +154,11 @@ class S3Storage implements StorageAdapter
      */
     public function list(string $destination): array
     {
+        $destination = $this->applySubfolder($destination);
         $destination = Strings::replace($destination, '~\/+~', '/');
 
         $results = $this->client->getPaginator('ListObjects', [
-            'Bucket' => $_ENV['S3_BUCKET'],
+            'Bucket' => EnvConvertor::toString($_ENV['S3_BUCKET']),
             'Prefix' => $destination,
         ]);
 
@@ -144,5 +172,49 @@ class S3Storage implements StorageAdapter
         }
 
         return $files;
+    }
+
+    private function applySubfolder(string $destination): string
+    {
+        $subfolder = $_ENV['S3_SUBFOLDER'] ?? '';
+
+        if ($subfolder !== '') {
+            return rtrim($subfolder, '/') . '/' . ltrim($destination, '/');
+        }
+
+        return $destination;
+    }
+
+    /**
+     * Replaces the domain with CDN URL if configured.
+     * Works for both virtual-hosted (bucket.s3.region.amazonaws.com) and path-style (endpoint/bucket).
+     */
+    private function applyCdnUrl(string $url): string
+    {
+        $cdnUrl = $_ENV['S3_CDN_URL'] ?? '';
+
+        if (is_string($cdnUrl) === false || $cdnUrl === '') {
+            return $url;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH);
+
+        if (is_string($path) === false) {
+            return $url;
+        }
+
+        return rtrim($cdnUrl, '/') . $path;
+    }
+
+    /**
+     * @throws S3Exception
+     */
+    private function handleS3Exception(S3Exception $exception): ?string
+    {
+        if ($exception->getStatusCode() === 404) {
+            return null;
+        }
+
+        throw $exception;
     }
 }
