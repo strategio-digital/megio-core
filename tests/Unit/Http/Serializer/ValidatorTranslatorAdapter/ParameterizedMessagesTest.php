@@ -105,7 +105,7 @@ class ParameterizedMessagesTest extends TestCase
     #[DataProvider('snakeToCamelProvider')]
     public function testSnakeToCamelConversion(string $input, string $expected): void
     {
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('translate')
             ->willReturnCallback(function (string $key, array $params) {
