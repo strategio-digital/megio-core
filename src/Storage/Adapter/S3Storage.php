@@ -209,7 +209,7 @@ class S3Storage implements StorageAdapter
     /**
      * @throws S3Exception
      */
-    private function handleS3Exception(S3Exception $exception): ?string
+    private function handleS3Exception(S3Exception $exception): null
     {
         if ($exception->getStatusCode() === 404) {
             return null;

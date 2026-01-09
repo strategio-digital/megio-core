@@ -61,8 +61,7 @@ class UniqueRule extends BaseRule
         }
 
         if (
-            $row
-            && $row[$this->columnName] === $this->getValue()
+            $row[$this->columnName] === $this->getValue()
             && $row[$this->primaryKey] === $this->getBuilder()->getRowId()
         ) {
             return true;
