@@ -88,6 +88,7 @@ class Doctrine
             cache: $proxyAdapter,
         );
 
+        $this->configuration->enableNativeLazyObjects(true);
         $this->configuration->setMetadataCache($metadataAdapter);
         $this->configuration->setNamingStrategy(new UnderscoreNamingStrategy(CASE_LOWER));
 
