@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Megio\Http\Serializer;
 
 use Megio\Http\Serializer\Dto\ResponseDtoInterface;
+use Megio\Http\Serializer\Normalizer\ConstraintTypeExtractor;
 use Megio\Http\Serializer\Normalizer\PlainEnumNormalizer;
 use Megio\Http\Serializer\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +37,10 @@ readonly class RequestSerializer
                 new DateTimeNormalizer(),
                 new BackedEnumNormalizer(),
                 new PlainEnumNormalizer(),
-                new ObjectNormalizer(classMetadataFactory: $classMetadataFactory),
+                new ObjectNormalizer(
+                    classMetadataFactory: $classMetadataFactory,
+                    propertyTypeExtractor: new ConstraintTypeExtractor(),
+                ),
                 new ArrayDenormalizer(),
             ],
             encoders: [new JsonEncoder()],
